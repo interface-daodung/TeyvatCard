@@ -12,7 +12,7 @@ export default class SwordTraveler extends Weapon {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordTraveler.DEFAULT.name, SwordTraveler.DEFAULT.id, SwordTraveler.DEFAULT.type);
+        super(scene, x, y, index, SwordTraveler.DEFAULT.name, SwordTraveler.DEFAULT.id);
         (this as any).rarity = SwordTraveler.DEFAULT.rarity;
         this.description = SwordTraveler.DEFAULT.description;
         this.durability = this.GetRandom(4, 10);

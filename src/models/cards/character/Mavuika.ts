@@ -12,7 +12,7 @@ export default class Mavuika extends Character {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Mavuika.DEFAULT.name, Mavuika.DEFAULT.id, 'character');
+        super(scene, x, y, index, Mavuika.DEFAULT.name, Mavuika.DEFAULT.id);
         (this as any).element = Mavuika.DEFAULT.element;
         this.description = Mavuika.DEFAULT.description;
         this.createCard();

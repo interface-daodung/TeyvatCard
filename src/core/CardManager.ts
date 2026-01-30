@@ -1,13 +1,12 @@
 import Phaser from 'phaser';
 import cardFactory from '../modules/CardFactory.js';
 
-interface Card extends Omit<Phaser.GameObjects.Container, 'type' | 'setInteractive' | 'disableInteractive'> {
+/** Card: Container + field/method dùng trong game. Không Omit type/name/setInteractive/disableInteractive để tương thích GameObject. */
+interface Card extends Phaser.GameObjects.Container {
     index?: number;
-    type?: string;
     nameId?: string;
-    disableInteractive?: () => void;
-    setInteractive?: () => void;
     resonance?: () => void;
+    processCreation?: () => void;
 }
 
 interface SceneWithGameManager extends Phaser.Scene {

@@ -12,7 +12,7 @@ export default class Nahida extends Character {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Nahida.DEFAULT.name, Nahida.DEFAULT.id, 'character');
+        super(scene, x, y, index, Nahida.DEFAULT.name, Nahida.DEFAULT.id);
         (this as any).element = Nahida.DEFAULT.element;
         this.description = Nahida.DEFAULT.description;
         this.createCard();

@@ -12,7 +12,7 @@ export default class SwordSkyward extends Weapon {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordSkyward.DEFAULT.name, SwordSkyward.DEFAULT.id, SwordSkyward.DEFAULT.type);
+        super(scene, x, y, index, SwordSkyward.DEFAULT.name, SwordSkyward.DEFAULT.id);
         (this as any).rarity = SwordSkyward.DEFAULT.rarity;
         this.description = SwordSkyward.DEFAULT.description;
         this.durability = this.GetRandom(8, 15);

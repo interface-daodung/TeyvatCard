@@ -17,10 +17,10 @@ interface MovementItem {
 interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: {
         cardManager: {
-            getCard: (index: number) => Phaser.GameObjects.Container | null;
+            getCard: (index: number) => Phaser.GameObjects.GameObject | null;
             getGridPositionCoordinates: (index: number) => { x: number; y: number } | null;
             swapCard: (fromIndex: number, toIndex: number) => boolean;
-            getAllCards: () => (Phaser.GameObjects.Container | null)[];
+            getAllCards: () => Phaser.GameObjects.GameObject[];
         };
     };
     tweens: Phaser.Tweens.TweenManager;
@@ -159,7 +159,7 @@ export default class AnimationManager {
                 const originalDepth = (card as any).depth || 0;
 
                 // Đặt z-index cao hơn cho card đang di chuyển
-                card.setDepth(100);
+                (card as any).setDepth(100);
 
                 this.scene.tweens.add({
                     targets: card,
@@ -169,7 +169,7 @@ export default class AnimationManager {
                     ease: 'Power2',
                     onComplete: () => {
                         // Khôi phục z-index về bình thường
-                        card.setDepth(originalDepth);
+                        (card as any).setDepth(originalDepth);
 
                         completedAnimations++;
 

@@ -22,13 +22,14 @@ interface SceneWithGameManager extends Phaser.Scene {
     add: Phaser.GameObjects.GameObjectFactory;
 }
 
+/** Card dùng trong GameManager: tương thích Container, thêm method/field của game. */
 interface Card extends Phaser.GameObjects.Container {
     CardEffect?: () => boolean;
     ProgressDestroy?: () => void;
     processCreation?: () => void;
     index?: number;
-    name?: string;
-    type?: string;
+    name: string;
+    type: string;
 }
 
 // Khởi tạo instance
@@ -108,8 +109,9 @@ export default class GameManager {
                 // Tạo card mới ở vị trí cuối của movement
                 const newCardIndex = movement[movement.length - 1].from;
                 const newCard = this.cardManager.cardFactory.createRandomCard(this.scene, newCardIndex) as Card;
-                if (newCard && newCard.processCreation) {
-                    this.cardManager.addCard(newCard, newCardIndex).processCreation();
+                const addedCard = this.cardManager.addCard(newCard, newCardIndex);
+                if (newCard && (addedCard as Card).processCreation) {
+                    (addedCard as Card).processCreation!();
                 }
                 // Emit event completeMove để tất cả card có thể xử lý
                 this.emitter.emit('completeMove');

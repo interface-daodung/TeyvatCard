@@ -13,7 +13,7 @@ export default class HydroSamachurl extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, HydroSamachurl.DEFAULT.name, HydroSamachurl.DEFAULT.id, HydroSamachurl.DEFAULT.type);
+        super(scene, x, y, index, HydroSamachurl.DEFAULT.name, HydroSamachurl.DEFAULT.id);
         (this as any).element = HydroSamachurl.DEFAULT.element;
         this.description = HydroSamachurl.DEFAULT.description;
         (this as any).rarity = HydroSamachurl.DEFAULT.rarity;

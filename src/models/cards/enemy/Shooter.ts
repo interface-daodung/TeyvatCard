@@ -13,7 +13,7 @@ export default class Shooter extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Shooter.DEFAULT.name, Shooter.DEFAULT.id, Shooter.DEFAULT.type);
+        super(scene, x, y, index, Shooter.DEFAULT.name, Shooter.DEFAULT.id);
         (this as any).element = Shooter.DEFAULT.element;
         this.description = Shooter.DEFAULT.description;
         (this as any).rarity = Shooter.DEFAULT.rarity;

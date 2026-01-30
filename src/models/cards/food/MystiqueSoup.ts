@@ -11,7 +11,7 @@ export default class MystiqueSoup extends Food {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, MystiqueSoup.DEFAULT.name, MystiqueSoup.DEFAULT.id, MystiqueSoup.DEFAULT.type);
+        super(scene, x, y, index, MystiqueSoup.DEFAULT.name, MystiqueSoup.DEFAULT.id);
         (this as any).rarity = MystiqueSoup.DEFAULT.rarity;
         this.description = MystiqueSoup.DEFAULT.description;
         this.food = this.GetRandom(1, 9);

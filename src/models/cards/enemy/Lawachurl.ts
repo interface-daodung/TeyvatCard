@@ -13,7 +13,7 @@ export default class Lawachurl extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Lawachurl.DEFAULT.name, Lawachurl.DEFAULT.id, Lawachurl.DEFAULT.type);
+        super(scene, x, y, index, Lawachurl.DEFAULT.name, Lawachurl.DEFAULT.id);
         (this as any).element = Lawachurl.DEFAULT.element;
         this.description = Lawachurl.DEFAULT.description;
         (this as any).rarity = Lawachurl.DEFAULT.rarity;

@@ -13,7 +13,7 @@ export default class WoodenShieldwall extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, WoodenShieldwall.DEFAULT.name, WoodenShieldwall.DEFAULT.id, WoodenShieldwall.DEFAULT.type);
+        super(scene, x, y, index, WoodenShieldwall.DEFAULT.name, WoodenShieldwall.DEFAULT.id);
         (this as any).element = WoodenShieldwall.DEFAULT.element;
         this.description = WoodenShieldwall.DEFAULT.description;
         (this as any).rarity = WoodenShieldwall.DEFAULT.rarity;

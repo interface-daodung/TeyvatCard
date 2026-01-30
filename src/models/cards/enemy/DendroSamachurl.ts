@@ -13,7 +13,7 @@ export default class DendroSamachurl extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, DendroSamachurl.DEFAULT.name, DendroSamachurl.DEFAULT.id, DendroSamachurl.DEFAULT.type);
+        super(scene, x, y, index, DendroSamachurl.DEFAULT.name, DendroSamachurl.DEFAULT.id);
         (this as any).element = DendroSamachurl.DEFAULT.element;
         this.description = DendroSamachurl.DEFAULT.description;
         (this as any).rarity = DendroSamachurl.DEFAULT.rarity;

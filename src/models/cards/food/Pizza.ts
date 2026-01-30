@@ -11,7 +11,7 @@ export default class Pizza extends Food {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Pizza.DEFAULT.name, Pizza.DEFAULT.id, Pizza.DEFAULT.type);
+        super(scene, x, y, index, Pizza.DEFAULT.name, Pizza.DEFAULT.id);
         (this as any).rarity = Pizza.DEFAULT.rarity;
         this.description = Pizza.DEFAULT.description;
         this.food = this.GetRandom(3, 9);

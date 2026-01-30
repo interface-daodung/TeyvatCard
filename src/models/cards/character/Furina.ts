@@ -12,7 +12,7 @@ export default class Furina extends Character {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Furina.DEFAULT.name, Furina.DEFAULT.id, 'character');
+        super(scene, x, y, index, Furina.DEFAULT.name, Furina.DEFAULT.id);
         (this as any).element = Furina.DEFAULT.element;
         this.description = Furina.DEFAULT.description;
         this.createCard();

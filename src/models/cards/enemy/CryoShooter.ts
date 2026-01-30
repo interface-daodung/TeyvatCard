@@ -13,7 +13,7 @@ export default class CryoShooter extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, CryoShooter.DEFAULT.name, CryoShooter.DEFAULT.id, CryoShooter.DEFAULT.type);
+        super(scene, x, y, index, CryoShooter.DEFAULT.name, CryoShooter.DEFAULT.id);
         (this as any).element = CryoShooter.DEFAULT.element;
         this.description = CryoShooter.DEFAULT.description;
         (this as any).rarity = CryoShooter.DEFAULT.rarity;

@@ -13,7 +13,7 @@ export default class AbyssCall extends Trap {
     declare enemyLevel: number;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, AbyssCall.DEFAULT.name, AbyssCall.DEFAULT.id, AbyssCall.DEFAULT.type);
+        super(scene, x, y, index, AbyssCall.DEFAULT.name, AbyssCall.DEFAULT.id);
         (this as any).rarity = (AbyssCall.DEFAULT as any).rarity;
         this.description = AbyssCall.DEFAULT.description;
         this.enemyCount = this.GetRandom(1, 3);

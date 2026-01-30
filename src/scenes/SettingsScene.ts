@@ -14,17 +14,27 @@ interface ThemeButton {
     theme: string;
 }
 
-interface WindowWithGameEvents extends Window {
+type WindowWithGameEvents = Window & {
     gameEvents?: {
         on: (event: string, callback: () => void, context?: any) => void;
         off: (event: string, callback: () => void, context?: any) => void;
     };
+};
+
+/** Thiết kế base: 720 x 1280. Tỷ lệ dùng để scale nút/panel theo màn hình. */
+const DESIGN_WIDTH = 720;
+const DESIGN_HEIGHT = 1280;
+
+/** Chuyển hex "#rrggbb" sang số màu Phaser (parseInt("#rrggbb") trả về NaN). */
+function hexToColorValue(hex: string): number {
+    return Phaser.Display.Color.HexStringToColor(hex).color;
 }
 
 export default class SettingsScene extends Phaser.Scene {
-    public titleText!: Phaser.GameObjects.Text;
+    public titleText!: Phaser.GameObjects.Image;
     private languageButtons!: LanguageButton[];
     private themeButtons!: ThemeButton[];
+    private backButtonText?: Phaser.GameObjects.Text;
 
     constructor() {
         super({ key: 'SettingsScene' });
@@ -70,9 +80,9 @@ export default class SettingsScene extends Phaser.Scene {
     }
 
     createTopBackButton(width: number, height: number): void {
-        // Nút quay lại ở góc trên trái
+        const topBackSize = Math.round(32 * (height / DESIGN_HEIGHT));
         const backButton = this.add.text(width * 0.1, height * 0.08, '←', {
-            fontSize: '32px',
+            fontSize: `${Math.max(24, topBackSize)}px`,
             color: themeManager.getColor('textPrimary'),
             fontFamily: themeManager.getFont('primary'),
             fontStyle: 'bold'
@@ -86,7 +96,7 @@ export default class SettingsScene extends Phaser.Scene {
         // Thêm hiệu ứng hover
         backButton.on('pointerover', () => {
             backButton.setScale(1.2);
-            backButton.setTint(parseInt(themeManager.getColor('buttonHover')));
+            backButton.setTint(hexToColorValue(themeManager.getColor('buttonHover')));
         });
         backButton.on('pointerout', () => {
             backButton.setScale(1);
@@ -96,46 +106,55 @@ export default class SettingsScene extends Phaser.Scene {
 
     createTitle(width: number, height: number): void {
         const titleText = localizationManager.t('settings');
+        const fontSize = Math.round(24 * (height / DESIGN_HEIGHT));
         this.titleText = GradientText.createGradientText(this, {
             text: titleText,
             x: width / 2,
             y: height * 0.1,
-            fontSize: '24px', // Giảm từ default xuống 24px
+            fontSize: Math.max(20, fontSize),
             gradientColors: themeManager.getCurrentTheme().colors.gradientGold,
-            strokeColor: themeManager.getColor('textGoldStroke')
+            strokeColor: hexToColorValue(themeManager.getColor('textGoldStroke'))
         });
     }
 
     createLanguagePanel(width: number, height: number): void {
-        const panelY = height * 0.2;
-        
+        const panelY = height * 0.18;
+        const labelH = Math.round(50 * (height / DESIGN_HEIGHT));
+        const labelPad = labelH / 2;
+        const marginX = width * 0.1;
+        const panelW = width * 0.8;
+
         // Language label với background đẹp
         const labelBg = this.add.graphics();
-        labelBg.fillStyle(parseInt(themeManager.getColor('cardBackground')));
-        labelBg.fillRoundedRect(width * 0.1, panelY - 25, width * 0.8, 50, 10);
-        labelBg.lineStyle(2, parseInt(themeManager.getColor('cardBorder')));
-        labelBg.strokeRoundedRect(width * 0.1, panelY - 25, width * 0.8, 50, 10);
-        
+        labelBg.fillStyle(hexToColorValue(themeManager.getColor('cardBackground')));
+        labelBg.fillRoundedRect(marginX, panelY - labelPad, panelW, labelH, 10);
+        labelBg.lineStyle(2, hexToColorValue(themeManager.getColor('cardBorder')));
+        labelBg.strokeRoundedRect(marginX, panelY - labelPad, panelW, labelH, 10);
+
+        const labelFontSize = Math.round(22 * (height / DESIGN_HEIGHT));
         this.add.text(width / 2, panelY, localizationManager.t('language'), {
-            fontSize: '22px', // Giảm từ 28px xuống 22px
+            fontSize: `${Math.max(16, labelFontSize)}px`,
             color: themeManager.getColor('textPrimary'),
             fontFamily: themeManager.getFont('primary'),
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        // Language buttons với auto-layout
+        // Nút language: scale theo 720x1280 (button ~172x51, spacing ~14, row gap ~58)
         const languages = localizationManager.getAvailableLanguages();
-        const buttonWidth = Math.min(100, width * 0.25); // Responsive width
-        const buttonHeight = 45;
-        const maxButtonsPerRow = Math.floor(width / (buttonWidth + 20)); // Tính số nút tối đa trên 1 hàng
-        const spacing = width / (maxButtonsPerRow + 1); // Spacing tự động
-        
+        const buttonWidth = Math.round(172 * (width / DESIGN_WIDTH));
+        const buttonHeight = Math.round(51 * (height / DESIGN_HEIGHT));
+        const buttonGap = Math.round(14 * (width / DESIGN_WIDTH));
+        const rowGap = Math.round(58 * (height / DESIGN_HEIGHT));
+        const maxButtonsPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
+        const totalButtonW = maxButtonsPerRow * buttonWidth + (maxButtonsPerRow - 1) * buttonGap;
+        const startX = (width - totalButtonW) / 2 + buttonWidth / 2 + buttonGap / 2;
+
         this.languageButtons = [];
         languages.forEach((lang, index) => {
             const row = Math.floor(index / maxButtonsPerRow);
             const col = index % maxButtonsPerRow;
-            const x = spacing * (col + 1) - buttonWidth / 2;
-            const y = panelY + 80 + (row * 60); // Mỗi hàng cách nhau 60px
+            const x = startX + col * (buttonWidth + buttonGap);
+            const y = panelY + labelPad + rowGap + row * (buttonHeight + rowGap);
             
             const isActive = lang === localizationManager.currentLanguage;
             
@@ -146,7 +165,7 @@ export default class SettingsScene extends Phaser.Scene {
                 y,
                 buttonWidth,
                 buttonHeight,
-                isActive ? themeManager.getColor('gradientButton') : ['#666666', '#444444', '#222222']
+                isActive ? themeManager.getCurrentTheme().colors.gradientButton : ['#666666', '#444444', '#222222']
             );
             
             button.setInteractive({ useHandCursor: true });
@@ -160,40 +179,46 @@ export default class SettingsScene extends Phaser.Scene {
     }
 
     createThemePanel(width: number, height: number): void {
-        // Tính toán vị trí dựa trên số lượng nút language
+        const marginX = width * 0.1;
+        const labelH = Math.round(50 * (height / DESIGN_HEIGHT));
+        const labelPad = labelH / 2;
+        const buttonWidth = Math.round(172 * (width / DESIGN_WIDTH));
+        const buttonHeight = Math.round(51 * (height / DESIGN_HEIGHT));
+        const buttonGap = Math.round(14 * (width / DESIGN_WIDTH));
+        const rowGap = Math.round(58 * (height / DESIGN_HEIGHT));
+
         const languages = localizationManager.getAvailableLanguages();
-        const langButtonWidth = Math.min(100, width * 0.25);
-        const langMaxButtonsPerRow = Math.floor(width / (langButtonWidth + 20));
+        const langMaxButtonsPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
         const languageRows = Math.ceil(languages.length / langMaxButtonsPerRow);
-        const panelY = height * 0.2 + 80 + (languageRows * 60) + 50; // Dynamic positioning
-        
+        const sectionGap = Math.round(50 * (height / DESIGN_HEIGHT));
+        const panelY = height * 0.18 + labelPad + rowGap + (buttonHeight + rowGap) * languageRows + sectionGap;
+
         // Theme label với background đẹp
         const labelBg = this.add.graphics();
-        labelBg.fillStyle(parseInt(themeManager.getColor('cardBackground')));
-        labelBg.fillRoundedRect(width * 0.1, panelY - 25, width * 0.8, 50, 10);
-        labelBg.lineStyle(2, parseInt(themeManager.getColor('cardBorder')));
-        labelBg.strokeRoundedRect(width * 0.1, panelY - 25, width * 0.8, 50, 10);
-        
+        labelBg.fillStyle(hexToColorValue(themeManager.getColor('cardBackground')));
+        labelBg.fillRoundedRect(marginX, panelY - labelPad, width * 0.8, labelH, 10);
+        labelBg.lineStyle(2, hexToColorValue(themeManager.getColor('cardBorder')));
+        labelBg.strokeRoundedRect(marginX, panelY - labelPad, width * 0.8, labelH, 10);
+
+        const labelFontSize = Math.round(22 * (height / DESIGN_HEIGHT));
         this.add.text(width / 2, panelY, localizationManager.t('theme'), {
-            fontSize: '22px', // Giảm từ 28px xuống 22px
+            fontSize: `${Math.max(16, labelFontSize)}px`,
             color: themeManager.getColor('textPrimary'),
             fontFamily: themeManager.getFont('primary'),
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        // Theme buttons với auto-layout
+        const themeMaxButtonsPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
+        const totalButtonW = themeMaxButtonsPerRow * buttonWidth + (themeMaxButtonsPerRow - 1) * buttonGap;
+        const startX = (width - totalButtonW) / 2 + buttonWidth / 2 + buttonGap / 2;
+
         const themes = themeManager.getAvailableThemes();
-        const themeButtonWidth = Math.min(100, width * 0.25); // Responsive width
-        const themeButtonHeight = 45;
-        const themeMaxButtonsPerRow = Math.floor(width / (themeButtonWidth + 20)); // Tính số nút tối đa trên 1 hàng
-        const themeSpacing = width / (themeMaxButtonsPerRow + 1); // Spacing tự động
-        
         this.themeButtons = [];
         themes.forEach((theme, index) => {
             const row = Math.floor(index / themeMaxButtonsPerRow);
             const col = index % themeMaxButtonsPerRow;
-            const x = themeSpacing * (col + 1) - themeButtonWidth / 2;
-            const y = panelY + 80 + (row * 60); // Mỗi hàng cách nhau 60px
+            const x = startX + col * (buttonWidth + buttonGap);
+            const y = panelY + labelPad + rowGap + row * (buttonHeight + rowGap);
             
             const isActive = theme.key === themeManager.currentTheme;
             
@@ -202,9 +227,9 @@ export default class SettingsScene extends Phaser.Scene {
                 theme.name,
                 x,
                 y,
-                themeButtonWidth,
-                themeButtonHeight,
-                isActive ? themeManager.getColor('gradientButton') : ['#666666', '#444444', '#222222']
+                buttonWidth,
+                buttonHeight,
+                isActive ? themeManager.getCurrentTheme().colors.gradientButton : ['#666666', '#444444', '#222222']
             );
             
             button.setInteractive({ useHandCursor: true });
@@ -219,26 +244,38 @@ export default class SettingsScene extends Phaser.Scene {
 
 
     createBackButton(width: number, height: number): void {
-        // Tính toán vị trí dựa trên số lượng nút theme
+        const marginX = width * 0.1;
+        const labelH = Math.round(50 * (height / DESIGN_HEIGHT));
+        const labelPad = labelH / 2;
+        const buttonWidth = Math.round(172 * (width / DESIGN_WIDTH));
+        const buttonHeight = Math.round(51 * (height / DESIGN_HEIGHT));
+        const buttonGap = Math.round(14 * (width / DESIGN_WIDTH));
+        const rowGap = Math.round(58 * (height / DESIGN_HEIGHT));
+        const sectionGap = Math.round(50 * (height / DESIGN_HEIGHT));
+
+        const languages = localizationManager.getAvailableLanguages();
         const themes = themeManager.getAvailableThemes();
-        const backButtonWidth = Math.min(100, width * 0.25);
-        const backMaxButtonsPerRow = Math.floor(width / (backButtonWidth + 20));
-        const themeRows = Math.ceil(themes.length / backMaxButtonsPerRow);
-        const languageRows = Math.ceil(localizationManager.getAvailableLanguages().length / backMaxButtonsPerRow);
-        
-        // Vị trí back button = vị trí theme panel + chiều cao theme buttons + khoảng cách
-        const backButtonY = height * 0.2 + 80 + (languageRows * 60) + 50 + 80 + (themeRows * 60) + 50;
-        
+        const langMaxPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
+        const themeMaxPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
+        const languageRows = Math.ceil(languages.length / langMaxPerRow);
+        const themeRows = Math.ceil(themes.length / themeMaxPerRow);
+
+        const panelYTheme = height * 0.18 + labelPad + rowGap + (buttonHeight + rowGap) * languageRows + sectionGap;
+        const backButtonY = panelYTheme + labelPad + rowGap + (buttonHeight + rowGap) * themeRows + sectionGap;
+
+        const backW = Math.round(252 * (width / DESIGN_WIDTH));
+        const backH = Math.round(60 * (height / DESIGN_HEIGHT));
+
         const backButton = GradientButton.createGradientButton(
             this,
             localizationManager.t('back'),
             width / 2,
             backButtonY,
-            250,
-            60,
-            themeManager.getColor('gradientButton')
+            backW,
+            backH,
+            themeManager.getCurrentTheme().colors.gradientButton
         );
-        
+        this.backButtonText = backButton.buttonText;
         backButton.setInteractive({ useHandCursor: true });
         backButton.on('pointerdown', () => {
             this.scene.start('MenuScene');
@@ -287,13 +324,9 @@ export default class SettingsScene extends Phaser.Scene {
         // Update button texts
         this.updateLanguageButtons();
         this.updateThemeButtons();
-        
-        // Update back button
-        this.children.list.forEach(child => {
-            if ((child as any).buttonText && (child as any).buttonText.text === localizationManager.t('back')) {
-                (child as any).buttonText.setText(localizationManager.t('back'));
-            }
-        });
+        if (this.backButtonText) {
+            this.backButtonText.setText(localizationManager.t('back'));
+        }
     }
 
     updateLanguageButtons(): void {
@@ -303,7 +336,7 @@ export default class SettingsScene extends Phaser.Scene {
             
             // Update button colors based on active state
             if (isActive) {
-                button.setTint(parseInt(themeManager.getColor('buttonPrimary')));
+                button.setTint(hexToColorValue(themeManager.getColor('buttonPrimary')));
             } else {
                 button.clearTint();
             }
@@ -316,20 +349,19 @@ export default class SettingsScene extends Phaser.Scene {
             
             // Update button colors based on active state
             if (isActive) {
-                button.setTint(parseInt(themeManager.getColor('buttonPrimary')));
+                button.setTint(hexToColorValue(themeManager.getColor('buttonPrimary')));
             } else {
                 button.clearTint();
             }
         });
     }
 
-    destroy(): void {
-        // Clean up event listeners
+    shutdown(): void {
+        // Clean up event listeners (Scene không có destroy(), dùng shutdown khi scene dừng)
         const win = window as WindowWithGameEvents;
         if (win.gameEvents) {
             win.gameEvents.off('themeChanged', this.updateTheme, this);
             win.gameEvents.off('languageChanged', this.updateLanguage, this);
         }
-        super.destroy();
     }
 }

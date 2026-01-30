@@ -27,7 +27,7 @@ export default class BreatheFire extends Trap {
     trapId!: string;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, BreatheFire.DEFAULT.name, BreatheFire.DEFAULT.id, BreatheFire.DEFAULT.type);
+        super(scene, x, y, index, BreatheFire.DEFAULT.name, BreatheFire.DEFAULT.id);
         (this as any).rarity = BreatheFire.DEFAULT.rarity;
         this.description = BreatheFire.DEFAULT.description;
         this.damage = this.GetRandom(1, 7);

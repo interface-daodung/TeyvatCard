@@ -13,7 +13,7 @@ export default class Blazing extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Blazing.DEFAULT.name, Blazing.DEFAULT.id, Blazing.DEFAULT.type);
+        super(scene, x, y, index, Blazing.DEFAULT.name, Blazing.DEFAULT.id);
         (this as any).element = Blazing.DEFAULT.element;
         this.description = Blazing.DEFAULT.description;
         (this as any).rarity = Blazing.DEFAULT.rarity;

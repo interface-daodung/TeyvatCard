@@ -11,7 +11,7 @@ export default class RoastChicken extends Food {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, RoastChicken.DEFAULT.name, RoastChicken.DEFAULT.id, RoastChicken.DEFAULT.type);
+        super(scene, x, y, index, RoastChicken.DEFAULT.name, RoastChicken.DEFAULT.id);
         (this as any).rarity = RoastChicken.DEFAULT.rarity;
         this.description = RoastChicken.DEFAULT.description;
         this.food = this.GetRandom(1, 6);

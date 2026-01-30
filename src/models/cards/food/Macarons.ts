@@ -11,7 +11,7 @@ export default class Macarons extends Food {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Macarons.DEFAULT.name, Macarons.DEFAULT.id, Macarons.DEFAULT.type);
+        super(scene, x, y, index, Macarons.DEFAULT.name, Macarons.DEFAULT.id);
         (this as any).rarity = Macarons.DEFAULT.rarity;
         this.description = Macarons.DEFAULT.description;
         this.food = this.GetRandom(6, 9);

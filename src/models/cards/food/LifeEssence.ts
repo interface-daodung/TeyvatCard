@@ -10,7 +10,7 @@ export default class LifeEssence extends Food {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, LifeEssence.DEFAULT.name, LifeEssence.DEFAULT.id, LifeEssence.DEFAULT.type);
+        super(scene, x, y, index, LifeEssence.DEFAULT.name, LifeEssence.DEFAULT.id);
         (this as any).rarity = (LifeEssence.DEFAULT as any).rarity;
         this.description = LifeEssence.DEFAULT.description;
         this.food = this.GetRandom(1, 9);

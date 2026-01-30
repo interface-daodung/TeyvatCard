@@ -12,7 +12,7 @@ export default class Venti extends Character {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Venti.DEFAULT.name, Venti.DEFAULT.id, 'character');
+        super(scene, x, y, index, Venti.DEFAULT.name, Venti.DEFAULT.id);
         (this as any).element = Venti.DEFAULT.element;
         this.description = Venti.DEFAULT.description;
         this.createCard();

@@ -11,7 +11,7 @@ export default class Quicksand extends Trap {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Quicksand.DEFAULT.name, Quicksand.DEFAULT.id, Quicksand.DEFAULT.type);
+        super(scene, x, y, index, Quicksand.DEFAULT.name, Quicksand.DEFAULT.id);
         (this as any).rarity = Quicksand.DEFAULT.rarity;
         this.description = Quicksand.DEFAULT.description;
         this.damage = this.GetRandom(5, 12);

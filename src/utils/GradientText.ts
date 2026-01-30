@@ -9,7 +9,8 @@ export interface GradientTextOptions {
     fontSize?: number;
     fontFamily?: string;
     gradientColors?: string[];
-    strokeColor?: string;
+    /** Hex string "#rrggbb" hoặc số màu (0xrrggbb). */
+    strokeColor?: string | number;
     strokeWidth?: number;
 }
 
@@ -33,9 +34,12 @@ export class GradientText {
             fontSize,
             fontFamily = 'Arial',
             gradientColors = ['#cbbd1bff', '#c57826ff', '#8c3c0eff'],
-            strokeColor = '#1f0612ff',
             strokeWidth
         } = options;
+        const rawStroke = options.strokeColor ?? '#1f0612ff';
+        const strokeColor = typeof rawStroke === 'number'
+            ? '#' + rawStroke.toString(16).padStart(6, '0')
+            : rawStroke;
 
         // Lấy kích thước game nếu không truyền width/height
         const gameWidth = width || scene.scale.width;

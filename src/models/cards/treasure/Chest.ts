@@ -11,7 +11,7 @@ export default class Chest extends Treasure {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Chest.DEFAULT.name, Chest.DEFAULT.id, Chest.DEFAULT.type);
+        super(scene, x, y, index, Chest.DEFAULT.name, Chest.DEFAULT.id);
         (this as any).rarity = Chest.DEFAULT.rarity;
         this.description = Chest.DEFAULT.description;
         this.durability = this.GetRandom(5, 10);

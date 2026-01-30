@@ -11,7 +11,7 @@ export default class Bribery extends Treasure {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Bribery.DEFAULT.name, Bribery.DEFAULT.id, Bribery.DEFAULT.type);
+        super(scene, x, y, index, Bribery.DEFAULT.name, Bribery.DEFAULT.id);
         (this as any).rarity = Bribery.DEFAULT.rarity;
         this.description = Bribery.DEFAULT.description;
         this.durability = this.GetRandom(5, 10);

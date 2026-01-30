@@ -13,7 +13,7 @@ export default class Berserker extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Berserker.DEFAULT.name, Berserker.DEFAULT.id, Berserker.DEFAULT.type);
+        super(scene, x, y, index, Berserker.DEFAULT.name, Berserker.DEFAULT.id);
         (this as any).element = Berserker.DEFAULT.element;
         this.description = Berserker.DEFAULT.description;
         (this as any).rarity = Berserker.DEFAULT.rarity;

@@ -11,7 +11,7 @@ export default class GoldMine extends Treasure {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, GoldMine.DEFAULT.name, GoldMine.DEFAULT.id, GoldMine.DEFAULT.type);
+        super(scene, x, y, index, GoldMine.DEFAULT.name, GoldMine.DEFAULT.id);
         (this as any).rarity = GoldMine.DEFAULT.rarity;
         this.description = GoldMine.DEFAULT.description;
         this.durability = this.GetRandom(5, 10);

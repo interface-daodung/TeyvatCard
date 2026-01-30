@@ -13,7 +13,7 @@ export default class Crackling extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Crackling.DEFAULT.name, Crackling.DEFAULT.id, Crackling.DEFAULT.type);
+        super(scene, x, y, index, Crackling.DEFAULT.name, Crackling.DEFAULT.id);
         (this as any).element = Crackling.DEFAULT.element;
         this.description = Crackling.DEFAULT.description;
         (this as any).rarity = Crackling.DEFAULT.rarity;

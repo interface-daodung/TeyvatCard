@@ -13,7 +13,7 @@ export default class ElectroSamachurl extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, ElectroSamachurl.DEFAULT.name, ElectroSamachurl.DEFAULT.id, ElectroSamachurl.DEFAULT.type);
+        super(scene, x, y, index, ElectroSamachurl.DEFAULT.name, ElectroSamachurl.DEFAULT.id );
         (this as any).element = ElectroSamachurl.DEFAULT.element;
         this.description = ElectroSamachurl.DEFAULT.description;
         (this as any).rarity = ElectroSamachurl.DEFAULT.rarity;

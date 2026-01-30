@@ -12,7 +12,7 @@ export default class SwordSacrificial extends Weapon {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordSacrificial.DEFAULT.name, SwordSacrificial.DEFAULT.id, SwordSacrificial.DEFAULT.type);
+        super(scene, x, y, index, SwordSacrificial.DEFAULT.name, SwordSacrificial.DEFAULT.id);
         (this as any).rarity = SwordSacrificial.DEFAULT.rarity;
         this.description = SwordSacrificial.DEFAULT.description;
         this.durability = this.GetRandom(5, 12);

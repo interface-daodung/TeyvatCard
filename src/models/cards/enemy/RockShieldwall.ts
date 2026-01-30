@@ -13,7 +13,7 @@ export default class RockShieldwall extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, RockShieldwall.DEFAULT.name, RockShieldwall.DEFAULT.id, RockShieldwall.DEFAULT.type);
+        super(scene, x, y, index, RockShieldwall.DEFAULT.name, RockShieldwall.DEFAULT.id);
         (this as any).element = RockShieldwall.DEFAULT.element;
         this.description = RockShieldwall.DEFAULT.description;
         (this as any).rarity = RockShieldwall.DEFAULT.rarity;

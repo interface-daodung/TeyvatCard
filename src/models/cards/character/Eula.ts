@@ -12,7 +12,7 @@ export default class Eula extends Character {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Eula.DEFAULT.name, Eula.DEFAULT.id, 'character');
+        super(scene, x, y, index, Eula.DEFAULT.name, Eula.DEFAULT.id);
         (this as any).element = Eula.DEFAULT.element;
         this.description = Eula.DEFAULT.description;
         this.createCard();

@@ -13,7 +13,7 @@ export default class HilistrayWater extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, HilistrayWater.DEFAULT.name, HilistrayWater.DEFAULT.id, HilistrayWater.DEFAULT.type);
+        super(scene, x, y, index, HilistrayWater.DEFAULT.name, HilistrayWater.DEFAULT.id);
         (this as any).element = HilistrayWater.DEFAULT.element;
         this.description = HilistrayWater.DEFAULT.description;
         (this as any).rarity = HilistrayWater.DEFAULT.rarity;

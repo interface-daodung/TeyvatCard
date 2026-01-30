@@ -13,7 +13,7 @@ export default class ElectroShooter extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, ElectroShooter.DEFAULT.name, ElectroShooter.DEFAULT.id, ElectroShooter.DEFAULT.type);
+        super(scene, x, y, index, ElectroShooter.DEFAULT.name, ElectroShooter.DEFAULT.id );
         (this as any).element = ElectroShooter.DEFAULT.element;
         this.description = ElectroShooter.DEFAULT.description;
         (this as any).rarity = ElectroShooter.DEFAULT.rarity;

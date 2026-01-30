@@ -34,7 +34,7 @@ export default class MenuScene extends Phaser.Scene {
         HeaderUI.createHeaderUI(this, width, height);
 
         // Tạo tiêu đề game với gradient text
-        GradientText.createGameTitle(this, 'DUNGEON CARD', width / 2, height * 0.18);
+        GradientText.createGameTitle(this, 'TEYVAT CARD', width / 2, height * 0.18);
 
         // Tạo container có 3 hình ảnh kiểu xòe bài
         this.createCardSpreadContainer(width / 2, height * 0.5);

@@ -13,7 +13,7 @@ export default class GeoSamachurl extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, GeoSamachurl.DEFAULT.name, GeoSamachurl.DEFAULT.id, GeoSamachurl.DEFAULT.type);
+        super(scene, x, y, index, GeoSamachurl.DEFAULT.name, GeoSamachurl.DEFAULT.id);
         (this as any).element = GeoSamachurl.DEFAULT.element;
         this.description = GeoSamachurl.DEFAULT.description;
         (this as any).rarity = GeoSamachurl.DEFAULT.rarity;

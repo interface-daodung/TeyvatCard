@@ -3,6 +3,8 @@ import type { SceneWithGameManager } from '../../../modules/Card.js';
 import CalculatePositionCard from '../../../utils/CalculatePositionCard.js';
 
 export default class Explosive extends Bomb {
+    declare rarity: number;
+
     static DEFAULT = {
         id: 'explosive',
         name: 'Explosive',
@@ -12,7 +14,7 @@ export default class Explosive extends Bomb {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Explosive.DEFAULT.name, Explosive.DEFAULT.id, Explosive.DEFAULT.type);
+        super(scene, x, y, index, Explosive.DEFAULT.name, Explosive.DEFAULT.id);
         this.rarity = Explosive.DEFAULT.rarity;
         this.description = Explosive.DEFAULT.description;
         this.damage = this.GetRandom(1, 3);

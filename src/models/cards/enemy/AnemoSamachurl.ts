@@ -13,7 +13,7 @@ export default class AnemoSamachurl extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, AnemoSamachurl.DEFAULT.name, AnemoSamachurl.DEFAULT.id, AnemoSamachurl.DEFAULT.type);
+        super(scene, x, y, index, AnemoSamachurl.DEFAULT.name, AnemoSamachurl.DEFAULT.id);
         (this as any).element = AnemoSamachurl.DEFAULT.element;
         this.description = AnemoSamachurl.DEFAULT.description;
         (this as any).rarity = AnemoSamachurl.DEFAULT.rarity;

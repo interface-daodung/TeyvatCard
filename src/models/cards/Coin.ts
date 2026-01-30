@@ -1,15 +1,24 @@
 import Card from '../../modules/Card.js';
-import type { SceneWithGameManager } from '../../modules/Card.js';
+import type { SceneWithGameManager, CardDefault } from '../../modules/Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../../modules/Card.js';
 
 export type ElementKey = 'pyro' | 'hydro' | 'geo' | 'anemo' | 'electro' | 'cryo' | 'dendro';
+
+/** Dữ liệu mặc định theo element; Card.DEFAULT yêu cầu id/name/description là string nên cast khi gán. */
+type CoinStaticDefault = {
+    type: string;
+    rarity: number;
+    id: Record<ElementKey, string>;
+    name: Record<ElementKey, string>;
+    description: Record<ElementKey, string> & { resonance: Record<ElementKey, string> };
+};
 
 export default class Coin extends Card {
     score!: number;
     rarity!: number;
     coinDisplay!: CreateDisplayResult;
 
-    static DEFAULT = {
+    static DEFAULT = ({
         type: 'coin',
         rarity: 1,
         name: {
@@ -48,12 +57,13 @@ export default class Coin extends Card {
                 dendro: 'Nguyên Tố Cộng Hưởng Thảo nhặt có thể đổi Xu và hồi nhiều năng lượng.'
             } as Record<ElementKey, string>
         }
-    };
+    } as unknown) as CardDefault;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, element: ElementKey) {
-        if (!(Coin.DEFAULT.id as Record<string, string>)[element]) {
+        const Def = Coin.DEFAULT as unknown as CoinStaticDefault;
+        if (!Def.id[element]) {
             throw new Error(
-                `Element '${element}' không tồn tại trong Coin.DEFAULT.id. Các element hợp lệ: ${Object.keys(Coin.DEFAULT.id).join(', ')}`
+                `Element '${element}' không tồn tại trong Coin.DEFAULT.id. Các element hợp lệ: ${Object.keys(Def.id).join(', ')}`
             );
         }
         super(
@@ -61,13 +71,13 @@ export default class Coin extends Card {
             x,
             y,
             index,
-            (Coin.DEFAULT.name as Record<string, string>)[element],
-            (Coin.DEFAULT.id as Record<string, string>)[element],
-            Coin.DEFAULT.type
+            Def.name[element],
+            Def.id[element],
+            Def.type
         );
         this.score = this.GetRandom(1, 9);
-        this.rarity = Coin.DEFAULT.rarity;
-        this.description = (Coin.DEFAULT.description as Record<string, string>)[element];
+        this.rarity = Def.rarity;
+        this.description = Def.description[element];
         this.createCard();
         scene.add.existing(this);
     }
@@ -97,7 +107,7 @@ export default class Coin extends Card {
         this.score *= 2;
         this.name = this.name.replace('Mảnh Vỡ Nguyên Tố', 'Nguyên Tố Cộng Hưởng');
         this.nameId = this.nameId.replace('fragment', 'resonance');
-        const resonanceDesc = (Coin.DEFAULT.description as any).resonance;
+        const resonanceDesc = (Coin.DEFAULT as unknown as CoinStaticDefault).description.resonance;
         this.description = resonanceDesc[this.nameId.replace('-resonance', '')];
         this.cardImage.setTexture(this.type, this.nameId);
         this.coinDisplay.updateText(this.score);

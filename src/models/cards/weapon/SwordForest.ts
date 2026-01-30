@@ -12,7 +12,7 @@ export default class SwordForest extends Weapon {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordForest.DEFAULT.name, SwordForest.DEFAULT.id, SwordForest.DEFAULT.type);
+        super(scene, x, y, index, SwordForest.DEFAULT.name, SwordForest.DEFAULT.id);
         (this as any).rarity = SwordForest.DEFAULT.rarity;
         this.description = SwordForest.DEFAULT.description;
         this.durability = this.GetRandom(6, 12);

@@ -13,7 +13,7 @@ export default class HilichurlFighter extends Enemy {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, HilichurlFighter.DEFAULT.name, HilichurlFighter.DEFAULT.id, HilichurlFighter.DEFAULT.type);
+        super(scene, x, y, index, HilichurlFighter.DEFAULT.name, HilichurlFighter.DEFAULT.id);
         (this as any).element = HilichurlFighter.DEFAULT.element;
         this.description = HilichurlFighter.DEFAULT.description;
         (this as any).rarity = HilichurlFighter.DEFAULT.rarity;

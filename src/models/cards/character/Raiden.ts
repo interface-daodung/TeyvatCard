@@ -12,7 +12,7 @@ export default class Raiden extends Character {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Raiden.DEFAULT.name, Raiden.DEFAULT.id, 'character');
+        super(scene, x, y, index, Raiden.DEFAULT.name, Raiden.DEFAULT.id);
         (this as any).element = Raiden.DEFAULT.element;
         this.description = Raiden.DEFAULT.description;
         this.createCard();

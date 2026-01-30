@@ -12,7 +12,7 @@ export default class Zhongli extends Character {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Zhongli.DEFAULT.name, Zhongli.DEFAULT.id, 'character');
+        super(scene, x, y, index, Zhongli.DEFAULT.name, Zhongli.DEFAULT.id);
         (this as any).element = Zhongli.DEFAULT.element;
         this.description = Zhongli.DEFAULT.description;
         this.createCard();

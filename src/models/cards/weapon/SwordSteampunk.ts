@@ -12,7 +12,7 @@ export default class SwordSteampunk extends Weapon {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordSteampunk.DEFAULT.name, SwordSteampunk.DEFAULT.id, SwordSteampunk.DEFAULT.type);
+        super(scene, x, y, index, SwordSteampunk.DEFAULT.name, SwordSteampunk.DEFAULT.id);
         (this as any).rarity = SwordSteampunk.DEFAULT.rarity;
         this.description = SwordSteampunk.DEFAULT.description;
         this.durability = this.GetRandom(3, 12);

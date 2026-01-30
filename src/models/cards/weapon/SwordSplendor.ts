@@ -12,7 +12,7 @@ export default class SwordSplendor extends Weapon {
     };
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordSplendor.DEFAULT.name, SwordSplendor.DEFAULT.id, SwordSplendor.DEFAULT.type);
+        super(scene, x, y, index, SwordSplendor.DEFAULT.name, SwordSplendor.DEFAULT.id);
         (this as any).rarity = SwordSplendor.DEFAULT.rarity;
         this.description = SwordSplendor.DEFAULT.description;
         this.durability = this.GetRandom(5, 12);
