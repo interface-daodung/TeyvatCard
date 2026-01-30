@@ -1,0 +1,149 @@
+{
+  "frames": {
+    "anemo-samachurl": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "electro-samachurl": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hydro-samachurl": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "dendro-samachurl": {
+      "frame": {
+        "x": 1260,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "geo-samachurl": {
+      "frame": {
+        "x": 1680,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "shooter": {
+      "frame": {
+        "x": 2100,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "electro-shooter": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "cryo-shooter": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "crackling": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "blazing": {
+      "frame": {
+        "x": 1260,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "berserker": {
+      "frame": {
+        "x": 1680,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "fighter": {
+      "frame": {
+        "x": 2100,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "ice-shieldwall": {
+      "frame": {
+        "x": 0,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "rock-shieldwall": {
+      "frame": {
+        "x": 420,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "wooden-shieldwall": {
+      "frame": {
+        "x": 840,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "lawachurl": {
+      "frame": {
+        "x": 1260,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hilistray-water": {
+      "frame": {
+        "x": 1680,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-hilichurl.webp",
+    "size": {
+      "w": 2520,
+      "h": 2160
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\hilichurl\\enemy-hilichurl.webp"
+  }
+}

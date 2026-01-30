@@ -1,0 +1,77 @@
+{
+  "frames": {
+    "bow-forest": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "bow-elegy": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "bow-skyward": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "bow-sacrificial": {
+      "frame": {
+        "x": 1260,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "bow-raven": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "bow-amos": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "bow-simulacra": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "bow-fish": {
+      "frame": {
+        "x": 1260,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "weapon-bow.webp",
+    "size": {
+      "w": 1680,
+      "h": 1440
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\weapon\\bow\\weapon-bow.webp"
+  }
+}

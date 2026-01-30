@@ -1,0 +1,37 @@
+{
+  "frames": {
+    "bribery": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "gold-mine": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "chest": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "treasure.webp",
+    "size": {
+      "w": 840,
+      "h": 1440
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\treasure\\treasure.webp"
+  }
+}

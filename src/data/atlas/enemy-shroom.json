@@ -1,0 +1,53 @@
+{
+  "frames": {
+    "geoshroom": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hydroshroom": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "pyro-flower": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "cryoshroom": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "dendroshroom": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-shroom.webp",
+    "size": {
+      "w": 1260,
+      "h": 1440
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\shroom\\enemy-shroom.webp"
+  }
+}

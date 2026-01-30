@@ -1,0 +1,53 @@
+{
+  "frames": {
+    "macarons": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "mystique-soup": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "pizza": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "roast-chicken": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "life-essence": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "food.webp",
+    "size": {
+      "w": 1260,
+      "h": 1440
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\food\\food.webp"
+  }
+}

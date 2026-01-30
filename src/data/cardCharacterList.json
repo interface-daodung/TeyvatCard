@@ -1,0 +1,51 @@
+[
+  {
+    "id": "eula",
+    "name": "Eula",
+    "description": "Eula – nữ thần của thủy quyền, đại diện cho sự cân bằng giữa lực lượng và tình cảm. Bên ngoài là vị thần đầy sức mạnh, nhưng bên trong là người phụ nữ đầy tình cảm và nhạy cảm.",
+    "hp": 10,
+    "element": "cryo"
+  },
+  {
+    "id": "furina",
+    "name": "Furina",
+    "description": "Furina – nữ thần của thủy quyền, đại diện cho sự cân bằng giữa lực lượng và tình cảm. Bên ngoài là vị thần đầy sức mạnh, nhưng bên trong là người phụ nữ đầy tình cảm và nhạy cảm.",
+    "hp": 12,
+    "element": "hydro"
+  },
+  {
+    "id": "mavuika",
+    "name": "Mavuika",
+    "description": "Mavuika – Hỏa Thần Natlan, biểu tượng của sức mạnh và ý chí bất khuất. Ngọn lửa trong nàng cháy rực như tinh thần chiến binh, soi sáng con đường tự do và khát vọng vĩnh cửu.",
+    "hp": 11,
+    "element": "pyro"
+  },
+  {
+    "id": "nahida",
+    "name": "Nahida",
+    "description": "Nahida – Tiểu Vương Kusanali, vị Thảo Thần bé nhỏ của Sumeru. Với trái tim thuần khiết và trí tuệ hiền hòa, nàng mang khát vọng dẫn dắt nhân loại đến sự khai sáng và tự do.",
+    "hp": 9,
+    "element": "dendro"
+  },
+  {
+    "id": "raiden",
+    "name": "Raiden",
+    "description": "Raiden Shogun – vĩnh hằng thống trị Inazuma, kiếm thần uy nghiêm với quyết tâm bất diệt. Bên ngoài lạnh lùng nhưng ẩn sâu là khát vọng giữ trọn lời hứa và bảo vệ thần dân.",
+    "hp": 10,
+    "element": "electro"
+  },
+  {
+    "id": "venti",
+    "name": "Venti",
+    "description": "Venti – nhà thơ du ca tự do, chính là Phong Thần Mondstadt. Dáng vẻ nghịch ngợm và phóng khoáng, nhưng bên trong là vị thần nhân từ luôn dùng âm nhạc để xoa dịu lòng người.",
+    "hp": 8,
+    "element": "anemo"
+  },
+  {
+    "id": "zhongli",
+    "name": "Zhongli",
+    "description": "Zhongli – hiền giả tao nhã, thực chất là Nham Thần Liyue. Với trí tuệ hàng ngàn năm và phong thái điềm tĩnh, ông là hiện thân của vững bền, mang gánh nặng lịch sử nặng nề.",
+    "hp": 10,
+    "element": "geo"
+  }
+]

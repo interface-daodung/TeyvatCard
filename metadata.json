@@ -1,0 +1,5 @@
+{
+  "name": "Phaser I18n Adventure",
+  "description": "A demo showcasing a Phaser game integrated with a type-safe internationalization system and React for UI control.",
+  "requestFramePermissions": []
+}
