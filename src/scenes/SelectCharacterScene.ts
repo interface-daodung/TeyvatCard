@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import cardCharacterList from '../data/cardCharacterList.json';
@@ -126,7 +127,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
             align: 'center'
         }).setOrigin(0.5);
 
-        this.cardHPText = this.add.text(width * 0.5, height * 0.32, '❤️ 7', {
+        this.cardHPText = this.add.text(width * 0.5, height * 0.32, localizationManager.t('hp_label', { hp: 7 }), {
             fontSize: '32px',
             color: '#ffffff',
             fontFamily: 'Arial, sans-serif',
@@ -137,7 +138,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
         this.cardHPText.hp = 7;
 
         // Nút Upgrade
-        this.upgradeButton = this.add.text(width * 0.5, height * 0.36, 'UPGRADE', {
+        this.upgradeButton = this.add.text(width * 0.5, height * 0.36, localizationManager.t('upgrade'), {
             fontSize: '24px',
             color: '#ffffff',
             fontFamily: 'Arial, sans-serif',
@@ -153,14 +154,14 @@ export default class SelectCharacterScene extends Phaser.Scene {
                 this.upgradeButton.setTint(0xd1d1d1); // Màu vàng gold
                 this.upgradeButton.setScale(1.1);
                 this.upgradeButton.setStyle({ color: '#ffee8dff' });
-                this.cardHPText.setText(`🪙${this.upgradeCharacterPrice()}`);
+                this.cardHPText.setText(localizationManager.t('coin_amount', { amount: this.upgradeCharacterPrice() }));
             }
         });
         this.upgradeButton.on('pointerout', () => {
             this.upgradeButton.clearTint();
             this.upgradeButton.setScale(1);
             this.upgradeButton.setStyle({ color: '#ffffff' });
-            this.cardHPText.setText(`❤️ ${this.cardHPText.hp}`);
+            this.cardHPText.setText(localizationManager.t('hp_label', { hp: this.cardHPText.hp }));
         });
         this.upgradeButton.on('pointerdown', () => {
             // Chỉ upgrade nếu chưa max level
@@ -233,7 +234,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
     }
 
     createBackButton(width: number, height: number): void {
-        this.backButton = this.add.text(width * 0.5, height * 0.9, 'SELECT', {
+        this.backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('select'), {
             fontSize: '24px',
             color: '#ffffff',
             fontFamily: 'Arial, sans-serif',
@@ -293,7 +294,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         // Hiển thị level hoặc MAX
         if ((currentCard.level || 1) >= 9) {
-            this.upgradeButton.setText('MAX LEVEL');
+            this.upgradeButton.setText(localizationManager.t('level_max'));
             this.upgradeButton.setStyle({ color: '#FFFFFF' });
             this.upgradeButton.setScale(1);
         } else {

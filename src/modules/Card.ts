@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import type GameManager from '../core/GameManager.js';
 
@@ -170,7 +171,7 @@ export default class Card extends Phaser.GameObjects.Container {
         });
         nameText.setOrigin(0.5);
 
-        const typeText = this.scene.add.text(0, -100, `Type: ${this.type}`, {
+        const typeText = this.scene.add.text(0, -100, localizationManager.t('type_label', { type: localizationManager.t(this.type) || this.type }), {
             fontSize: '16px',
             color: '#ffb3d9',
             fontFamily: 'Arial'
@@ -192,7 +193,7 @@ export default class Card extends Phaser.GameObjects.Container {
         closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
         closeBtn.setPosition(0, 190);
 
-        const closeText = this.scene.add.text(0, 190, 'X', {
+        const closeText = this.scene.add.text(0, 190, localizationManager.t('close'), {
             fontSize: '24px',
             color: '#ffffff',
             fontFamily: 'Arial'

@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import cardCharacterList from '../data/cardCharacterList.json';
 
@@ -11,6 +12,11 @@ interface CardCharacter {
 
 export default class MenuScene extends Phaser.Scene {
     private cards: CardCharacter[];
+    private libraryButton?: { text: Phaser.GameObjects.Text };
+    private exploreButton?: { text: Phaser.GameObjects.Text };
+    private equipButton?: { text: Phaser.GameObjects.Text };
+    private testDevButton?: Phaser.GameObjects.Text;
+    private boundOnLanguageChanged!: () => void;
 
     constructor() {
         super({ key: 'MenuScene' });
@@ -26,6 +32,9 @@ export default class MenuScene extends Phaser.Scene {
         // Lấy kích thước game
         const { width, height } = this.scale;
 
+        // Bind language change listener
+        this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
+
         // Tạo background thực tế
         const background = this.add.image(width / 2, height / 2, 'background');
         background.setDisplaySize(width, height);
@@ -40,39 +49,69 @@ export default class MenuScene extends Phaser.Scene {
         this.createCardSpreadContainer(width / 2, height * 0.5);
 
         // Tạo nút library
-        this.createButton(width / 2 - width * 0.3, height * 0.8, 'library', 'Thư viện', 'LibraryScene');
+        this.libraryButton = this.createButton(width / 2 - width * 0.3, height * 0.8, 'library', localizationManager.t('library'), 'LibraryScene') as any;
 
         // Tạo nút Start Game compass 
-        this.createButton(width / 2, height * 0.8, 'compass', 'Thám hiểm', 'MapScenes');
+        this.exploreButton = this.createButton(width / 2, height * 0.8, 'compass', localizationManager.t('explore'), 'MapScenes') as any;
         // Tạo nút equip Game
-        this.createButton(width / 2 + width * 0.3, height * 0.8, 'equip', 'Trang bị', 'EquipScene');
+        this.equipButton = this.createButton(width / 2 + width * 0.3, height * 0.8, 'equip', localizationManager.t('equip'), 'EquipScene') as any;
 
         // Tạo nút Test Graphics
         // this.createButton(width / 2, height * 0.7, 'sword', 'Test Graphics', 'TestGraphicsRenderTexture');
 
         // Nút Options - đặt ở 75% height
-        const optionsButton = this.add.text(width / 2, height * 0.95, 'Test dev', {
+        this.testDevButton = this.add.text(width / 2, height * 0.95, localizationManager.t('test_dev'), {
             fontSize: '24px',
             color: '#95a5a6',
             fontFamily: 'Arial',
             stroke: '#2c3e50',
             strokeThickness: 1
         }).setOrigin(0.5);
-        optionsButton.on('pointerdown', () => {
+        this.testDevButton.on('pointerdown', () => {
             // Chuyển qua LoadingScene để load assets cho scene đích
             this.scene.stop('GameScene');
             this.scene.start('LoadingScene', { targetScene: 'GameScene' });
         });
-        optionsButton.setInteractive({ useHandCursor: true });
-        optionsButton.on('pointerover', () => {
-            optionsButton.setStyle({ color: '#7f8c8d' });
+        this.testDevButton.setInteractive({ useHandCursor: true });
+        this.testDevButton.on('pointerover', () => {
+            this.testDevButton!.setStyle({ color: '#7f8c8d' });
         });
-        optionsButton.on('pointerout', () => {
-            optionsButton.setStyle({ color: '#95a5a6' });
+        this.testDevButton.on('pointerout', () => {
+            this.testDevButton!.setStyle({ color: '#95a5a6' });
         });
+
+        // Listen for language changes
+        const win = window as any;
+        if (win.gameEvents?.on) {
+            win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
+        }
     }
 
-    createButton(x: number, y: number, iconName: string, buttonText: string, sceneName: string): void {
+    onLanguageChanged(): void {
+        console.log('[MenuScene] onLanguageChanged event received');
+        // Update all button texts
+        if (this.libraryButton?.text) {
+            this.libraryButton.text.setText(localizationManager.t('library'));
+        }
+        if (this.exploreButton?.text) {
+            this.exploreButton.text.setText(localizationManager.t('explore'));
+        }
+        if (this.equipButton?.text) {
+            this.equipButton.text.setText(localizationManager.t('equip'));
+        }
+        if (this.testDevButton) {
+            this.testDevButton.setText(localizationManager.t('test_dev'));
+        }
+    }
+
+    shutdown(): void {
+        const win = window as any;
+        if (win.gameEvents?.off && this.boundOnLanguageChanged) {
+            win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
+        }
+    }
+
+    createButton(x: number, y: number, iconName: string, buttonText: string, sceneName: string): { text: Phaser.GameObjects.Text; container: Phaser.GameObjects.Container } {
         // Tạo container cho nút
         const button = this.add.container(x, y);
 
@@ -122,6 +161,8 @@ export default class MenuScene extends Phaser.Scene {
             });
             button.setScale(1);
         });
+
+        return { text, container: button };
     }
 
     /**

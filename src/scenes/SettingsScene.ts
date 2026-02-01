@@ -1,367 +1,168 @@
 import Phaser from 'phaser';
-import { GradientButton } from '../utils/GradientButton.js';
-import { GradientText } from '../utils/GradientText.js';
-import { localizationManager } from '../utils/LocalizationManager.js';
-import { themeManager } from '../utils/ThemeManager.js';
+import { localizationManager, type GameLanguageCode } from '../utils/LocalizationManager.js';
 
-interface LanguageButton {
-    button: any;
-    lang: string;
-}
-
-interface ThemeButton {
-    button: any;
-    theme: string;
-}
-
-type WindowWithGameEvents = Window & {
-    gameEvents?: {
-        on: (event: string, callback: () => void, context?: any) => void;
-        off: (event: string, callback: () => void, context?: any) => void;
-    };
+/** Nút: Rectangle + Text, có setActiveState */
+type LangButton = Phaser.GameObjects.Container & {
+  rect?: Phaser.GameObjects.Rectangle;
+  text?: Phaser.GameObjects.Text;
+  setActiveState?: (active: boolean) => void;
 };
 
-/** Thiết kế base: 720 x 1280. Tỷ lệ dùng để scale nút/panel theo màn hình. */
-const DESIGN_WIDTH = 720;
-const DESIGN_HEIGHT = 1280;
-
-/** Chuyển hex "#rrggbb" sang số màu Phaser (parseInt("#rrggbb") trả về NaN). */
-function hexToColorValue(hex: string): number {
-    return Phaser.Display.Color.HexStringToColor(hex).color;
-}
-
 export default class SettingsScene extends Phaser.Scene {
-    public titleText!: Phaser.GameObjects.Image;
-    private languageButtons!: LanguageButton[];
-    private themeButtons!: ThemeButton[];
-    private backButtonText?: Phaser.GameObjects.Text;
+  private titleText?: Phaser.GameObjects.Text;
+  private backButton?: Phaser.GameObjects.Text;
+  private langButtons: LangButton[] = [];
+  private boundOnLanguageChanged!: () => void;
 
-    constructor() {
-        super({ key: 'SettingsScene' });
+  constructor() {
+    super({ key: 'SettingsScene' });
+  }
+
+  create(): void {
+    const { width, height } = this.scale;
+
+    this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
+
+    // Background - tham khảo MapScenes
+    this.add.image(width / 2, height / 2, 'background');
+    this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
+
+    // Tiêu đề - dùng GradientText như MapScenes
+    this.createTitle(width, height);
+
+    // Container cho các nút ngôn ngữ - xếp thẳng hàng dọc như MapScenes
+    this.createLanguageButtons(width, height);
+
+    // Nút Back
+    this.createBackButton(width, height);
+
+    const win = window as any;
+    if (win.gameEvents?.on) {
+      win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
     }
+  }
 
-    create(): void {
-        const { width, height } = this.scale;
-        
-        // Background với gradient
-        this.createBackground(width, height);
-        
-        // Back button ở góc trên trái
-        this.createTopBackButton(width, height);
-        
-        // Title
-        this.createTitle(width, height);
-        
-        // Settings panels
-        this.createLanguagePanel(width, height);
-        this.createThemePanel(width, height);
-        
-        // Bottom back button
-        this.createBackButton(width, height);
-        
-        // Listen for theme changes
-        const win = window as WindowWithGameEvents;
-        if (win.gameEvents) {
-            win.gameEvents.on('themeChanged', this.updateTheme, this);
-            win.gameEvents.on('languageChanged', this.updateLanguage, this);
-        }
+  createTitle(width: number, height: number): void {
+    const titleStr = localizationManager.t('settings');
+    this.titleText = this.add.text(width / 2, height * 0.18, titleStr.toUpperCase(), {
+      fontSize: '48px',
+      fontFamily: 'Arial',
+      fontStyle: 'bold',
+      color: '#cbbd1b',
+      stroke: '#1f0612',
+      strokeThickness: 3
+    }).setOrigin(0.5);
+  }
+
+  /**
+   * Tạo các nút ngôn ngữ xếp theo đường thẳng dọc (tham khảo MapScenes)
+   */
+  createLanguageButtons(width: number, height: number): void {
+    const container = this.add.container(width / 2, height * 0.5);
+    const buttonWidth = width * 0.7;
+    const buttonHeight = height * 0.08;
+    const buttonSpacing = 20;
+
+    const languages = localizationManager.getAvailableLanguages();
+    const n = languages.length;
+
+    languages.forEach((lang, i) => {
+      // Vị trí Y: xếp thẳng từ trên xuống, căn giữa theo chiều dọc
+      const buttonY = (i - (n - 1) / 2) * (buttonHeight + buttonSpacing);
+
+      const isActive = lang === localizationManager.currentLanguage;
+      const fillColor = isActive ? 0x95245b : 0x622945;
+      const strokeColor = isActive ? 0xffffff : 0x96576a;
+
+      const rect = this.add.rectangle(0, buttonY, buttonWidth, buttonHeight, fillColor);
+      rect.setStrokeStyle(3, strokeColor);
+      rect.setInteractive();
+
+      const label = localizationManager.getLanguageName(lang);
+      const text = this.add.text(0, buttonY, label, {
+        fontSize: '32px',
+        color: '#ffffff',
+        fontFamily: 'Arial',
+        stroke: '#000000',
+        strokeThickness: 2
+      }).setOrigin(0.5);
+
+      rect.on('pointerover', () => {
+        rect.setFillStyle(0x95245b);
+        rect.setStrokeStyle(3, 0xffffff);
+      });
+      rect.on('pointerout', () => {
+        const active = lang === localizationManager.currentLanguage;
+        rect.setFillStyle(active ? 0x95245b : 0x622945);
+        rect.setStrokeStyle(3, active ? 0xffffff : 0x96576a);
+      });
+      rect.on('pointerdown', () => {
+        localizationManager.setLanguage(lang as GameLanguageCode);
+        this.updateAllTexts();
+      });
+
+      const btnContainer = this.add.container(0, 0, [rect, text]) as LangButton;
+      btnContainer.rect = rect;
+      btnContainer.text = text;
+      btnContainer.setActiveState = (active: boolean) => {
+        rect.setFillStyle(active ? 0x95245b : 0x622945);
+        rect.setStrokeStyle(3, active ? 0xffffff : 0x96576a);
+      };
+
+      this.langButtons.push(btnContainer);
+      container.add(btnContainer);
+    });
+  }
+
+  createBackButton(width: number, height: number): void {
+    const buttonY = height * 0.8;
+    this.backButton = this.add.text(width / 2, buttonY, localizationManager.t('back'), {
+      fontSize: '36px',
+      color: '#ffffff',
+      fontFamily: 'Arial',
+      stroke: '#000000',
+      strokeThickness: 2
+    }).setOrigin(0.5);
+
+    this.backButton.setInteractive({ useHandCursor: true });
+    this.backButton.on('pointerdown', () => {
+      this.scene.start('MenuScene');
+    });
+    this.backButton.on('pointerover', () => this.backButton!.setStyle({ color: '#ffd700' }));
+    this.backButton.on('pointerout', () => this.backButton!.setStyle({ color: '#ffffff' }));
+  }
+
+  updateAllTexts(): void {
+    const titleStr = localizationManager.t('settings');
+    if (this.titleText) {
+      this.titleText.setText(titleStr.toUpperCase());
     }
-
-    createBackground(width: number, height: number): void {
-        // Tạo background gradient đẹp
-        const bg = this.add.graphics();
-        bg.fillGradientStyle(
-            Phaser.Display.Color.HexStringToColor(themeManager.getColor('background')).color,
-            Phaser.Display.Color.HexStringToColor(themeManager.getColor('cardBackground')).color,
-            Phaser.Display.Color.HexStringToColor(themeManager.getColor('background')).color,
-            Phaser.Display.Color.HexStringToColor(themeManager.getColor('cardBackground')).color
-        );
-        bg.fillRect(0, 0, width, height);
+    if (this.backButton) {
+      this.backButton.setText(localizationManager.t('back'));
     }
+    this.refreshLanguageButtons();
+  }
 
-    createTopBackButton(width: number, height: number): void {
-        const topBackSize = Math.round(32 * (height / DESIGN_HEIGHT));
-        const backButton = this.add.text(width * 0.1, height * 0.08, '←', {
-            fontSize: `${Math.max(24, topBackSize)}px`,
-            color: themeManager.getColor('textPrimary'),
-            fontFamily: themeManager.getFont('primary'),
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-        
-        backButton.setInteractive({ useHandCursor: true });
-        backButton.on('pointerdown', () => {
-            this.scene.start('MenuScene');
-        });
-        
-        // Thêm hiệu ứng hover
-        backButton.on('pointerover', () => {
-            backButton.setScale(1.2);
-            backButton.setTint(hexToColorValue(themeManager.getColor('buttonHover')));
-        });
-        backButton.on('pointerout', () => {
-            backButton.setScale(1);
-            backButton.clearTint();
-        });
+  refreshLanguageButtons(): void {
+    const languages = localizationManager.getAvailableLanguages();
+    languages.forEach((lang, i) => {
+      const btn = this.langButtons[i];
+      if (btn && btn.setActiveState && btn.text) {
+        const isActive = lang === localizationManager.currentLanguage;
+        btn.setActiveState(isActive);
+        btn.text.setText(localizationManager.getLanguageName(lang));
+      }
+    });
+  }
+
+  onLanguageChanged(): void {
+    this.updateAllTexts();
+  }
+
+  shutdown(): void {
+    const win = window as any;
+    if (win.gameEvents?.off && this.boundOnLanguageChanged) {
+      win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
     }
-
-    createTitle(width: number, height: number): void {
-        const titleText = localizationManager.t('settings');
-        const fontSize = Math.round(24 * (height / DESIGN_HEIGHT));
-        this.titleText = GradientText.createGradientText(this, {
-            text: titleText,
-            x: width / 2,
-            y: height * 0.1,
-            fontSize: Math.max(20, fontSize),
-            gradientColors: themeManager.getCurrentTheme().colors.gradientGold,
-            strokeColor: hexToColorValue(themeManager.getColor('textGoldStroke'))
-        });
-    }
-
-    createLanguagePanel(width: number, height: number): void {
-        const panelY = height * 0.18;
-        const labelH = Math.round(50 * (height / DESIGN_HEIGHT));
-        const labelPad = labelH / 2;
-        const marginX = width * 0.1;
-        const panelW = width * 0.8;
-
-        // Language label với background đẹp
-        const labelBg = this.add.graphics();
-        labelBg.fillStyle(hexToColorValue(themeManager.getColor('cardBackground')));
-        labelBg.fillRoundedRect(marginX, panelY - labelPad, panelW, labelH, 10);
-        labelBg.lineStyle(2, hexToColorValue(themeManager.getColor('cardBorder')));
-        labelBg.strokeRoundedRect(marginX, panelY - labelPad, panelW, labelH, 10);
-
-        const labelFontSize = Math.round(22 * (height / DESIGN_HEIGHT));
-        this.add.text(width / 2, panelY, localizationManager.t('language'), {
-            fontSize: `${Math.max(16, labelFontSize)}px`,
-            color: themeManager.getColor('textPrimary'),
-            fontFamily: themeManager.getFont('primary'),
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        // Nút language: scale theo 720x1280 (button ~172x51, spacing ~14, row gap ~58)
-        const languages = localizationManager.getAvailableLanguages();
-        const buttonWidth = Math.round(172 * (width / DESIGN_WIDTH));
-        const buttonHeight = Math.round(51 * (height / DESIGN_HEIGHT));
-        const buttonGap = Math.round(14 * (width / DESIGN_WIDTH));
-        const rowGap = Math.round(58 * (height / DESIGN_HEIGHT));
-        const maxButtonsPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
-        const totalButtonW = maxButtonsPerRow * buttonWidth + (maxButtonsPerRow - 1) * buttonGap;
-        const startX = (width - totalButtonW) / 2 + buttonWidth / 2 + buttonGap / 2;
-
-        this.languageButtons = [];
-        languages.forEach((lang, index) => {
-            const row = Math.floor(index / maxButtonsPerRow);
-            const col = index % maxButtonsPerRow;
-            const x = startX + col * (buttonWidth + buttonGap);
-            const y = panelY + labelPad + rowGap + row * (buttonHeight + rowGap);
-            
-            const isActive = lang === localizationManager.currentLanguage;
-            
-            const button = GradientButton.createGradientButton(
-                this,
-                localizationManager.getLanguageName(lang),
-                x,
-                y,
-                buttonWidth,
-                buttonHeight,
-                isActive ? themeManager.getCurrentTheme().colors.gradientButton : ['#666666', '#444444', '#222222']
-            );
-            
-            button.setInteractive({ useHandCursor: true });
-            button.on('pointerdown', () => {
-                localizationManager.setLanguage(lang);
-                this.updateLanguageButtons();
-            });
-            
-            this.languageButtons.push({ button, lang });
-        });
-    }
-
-    createThemePanel(width: number, height: number): void {
-        const marginX = width * 0.1;
-        const labelH = Math.round(50 * (height / DESIGN_HEIGHT));
-        const labelPad = labelH / 2;
-        const buttonWidth = Math.round(172 * (width / DESIGN_WIDTH));
-        const buttonHeight = Math.round(51 * (height / DESIGN_HEIGHT));
-        const buttonGap = Math.round(14 * (width / DESIGN_WIDTH));
-        const rowGap = Math.round(58 * (height / DESIGN_HEIGHT));
-
-        const languages = localizationManager.getAvailableLanguages();
-        const langMaxButtonsPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
-        const languageRows = Math.ceil(languages.length / langMaxButtonsPerRow);
-        const sectionGap = Math.round(50 * (height / DESIGN_HEIGHT));
-        const panelY = height * 0.18 + labelPad + rowGap + (buttonHeight + rowGap) * languageRows + sectionGap;
-
-        // Theme label với background đẹp
-        const labelBg = this.add.graphics();
-        labelBg.fillStyle(hexToColorValue(themeManager.getColor('cardBackground')));
-        labelBg.fillRoundedRect(marginX, panelY - labelPad, width * 0.8, labelH, 10);
-        labelBg.lineStyle(2, hexToColorValue(themeManager.getColor('cardBorder')));
-        labelBg.strokeRoundedRect(marginX, panelY - labelPad, width * 0.8, labelH, 10);
-
-        const labelFontSize = Math.round(22 * (height / DESIGN_HEIGHT));
-        this.add.text(width / 2, panelY, localizationManager.t('theme'), {
-            fontSize: `${Math.max(16, labelFontSize)}px`,
-            color: themeManager.getColor('textPrimary'),
-            fontFamily: themeManager.getFont('primary'),
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        const themeMaxButtonsPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
-        const totalButtonW = themeMaxButtonsPerRow * buttonWidth + (themeMaxButtonsPerRow - 1) * buttonGap;
-        const startX = (width - totalButtonW) / 2 + buttonWidth / 2 + buttonGap / 2;
-
-        const themes = themeManager.getAvailableThemes();
-        this.themeButtons = [];
-        themes.forEach((theme, index) => {
-            const row = Math.floor(index / themeMaxButtonsPerRow);
-            const col = index % themeMaxButtonsPerRow;
-            const x = startX + col * (buttonWidth + buttonGap);
-            const y = panelY + labelPad + rowGap + row * (buttonHeight + rowGap);
-            
-            const isActive = theme.key === themeManager.currentTheme;
-            
-            const button = GradientButton.createGradientButton(
-                this,
-                theme.name,
-                x,
-                y,
-                buttonWidth,
-                buttonHeight,
-                isActive ? themeManager.getCurrentTheme().colors.gradientButton : ['#666666', '#444444', '#222222']
-            );
-            
-            button.setInteractive({ useHandCursor: true });
-            button.on('pointerdown', () => {
-                themeManager.setTheme(theme.key);
-                this.updateThemeButtons();
-            });
-            
-            this.themeButtons.push({ button, theme: theme.key });
-        });
-    }
-
-
-    createBackButton(width: number, height: number): void {
-        const marginX = width * 0.1;
-        const labelH = Math.round(50 * (height / DESIGN_HEIGHT));
-        const labelPad = labelH / 2;
-        const buttonWidth = Math.round(172 * (width / DESIGN_WIDTH));
-        const buttonHeight = Math.round(51 * (height / DESIGN_HEIGHT));
-        const buttonGap = Math.round(14 * (width / DESIGN_WIDTH));
-        const rowGap = Math.round(58 * (height / DESIGN_HEIGHT));
-        const sectionGap = Math.round(50 * (height / DESIGN_HEIGHT));
-
-        const languages = localizationManager.getAvailableLanguages();
-        const themes = themeManager.getAvailableThemes();
-        const langMaxPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
-        const themeMaxPerRow = Math.max(1, Math.floor((width - 2 * marginX + buttonGap) / (buttonWidth + buttonGap)));
-        const languageRows = Math.ceil(languages.length / langMaxPerRow);
-        const themeRows = Math.ceil(themes.length / themeMaxPerRow);
-
-        const panelYTheme = height * 0.18 + labelPad + rowGap + (buttonHeight + rowGap) * languageRows + sectionGap;
-        const backButtonY = panelYTheme + labelPad + rowGap + (buttonHeight + rowGap) * themeRows + sectionGap;
-
-        const backW = Math.round(252 * (width / DESIGN_WIDTH));
-        const backH = Math.round(60 * (height / DESIGN_HEIGHT));
-
-        const backButton = GradientButton.createGradientButton(
-            this,
-            localizationManager.t('back'),
-            width / 2,
-            backButtonY,
-            backW,
-            backH,
-            themeManager.getCurrentTheme().colors.gradientButton
-        );
-        this.backButtonText = backButton.buttonText;
-        backButton.setInteractive({ useHandCursor: true });
-        backButton.on('pointerdown', () => {
-            this.scene.start('MenuScene');
-        });
-        
-        // Thêm hiệu ứng hover
-        backButton.on('pointerover', () => {
-            backButton.setScale(1.05);
-        });
-        backButton.on('pointerout', () => {
-            backButton.setScale(1);
-        });
-    }
-
-    updateTheme(): void {
-        const { width, height } = this.scale;
-        
-        // Recreate background
-        this.children.list.forEach(child => {
-            if (child.type === 'Graphics') {
-                child.destroy();
-            }
-        });
-        this.createBackground(width, height);
-        
-        // Update title
-        if (this.titleText) {
-            this.titleText.destroy();
-            this.createTitle(width, height);
-        }
-        
-        // Update buttons
-        this.updateLanguageButtons();
-        this.updateThemeButtons();
-    }
-
-    updateLanguage(): void {
-        const { width, height } = this.scale;
-        
-        // Recreate title with new language
-        if (this.titleText) {
-            this.titleText.destroy();
-            this.createTitle(width, height);
-        }
-        
-        // Update button texts
-        this.updateLanguageButtons();
-        this.updateThemeButtons();
-        if (this.backButtonText) {
-            this.backButtonText.setText(localizationManager.t('back'));
-        }
-    }
-
-    updateLanguageButtons(): void {
-        this.languageButtons.forEach(({ button, lang }) => {
-            const isActive = lang === localizationManager.currentLanguage;
-            button.buttonText.setText(localizationManager.getLanguageName(lang));
-            
-            // Update button colors based on active state
-            if (isActive) {
-                button.setTint(hexToColorValue(themeManager.getColor('buttonPrimary')));
-            } else {
-                button.clearTint();
-            }
-        });
-    }
-
-    updateThemeButtons(): void {
-        this.themeButtons.forEach(({ button, theme }) => {
-            const isActive = theme === themeManager.currentTheme;
-            
-            // Update button colors based on active state
-            if (isActive) {
-                button.setTint(hexToColorValue(themeManager.getColor('buttonPrimary')));
-            } else {
-                button.clearTint();
-            }
-        });
-    }
-
-    shutdown(): void {
-        // Clean up event listeners (Scene không có destroy(), dùng shutdown khi scene dừng)
-        const win = window as WindowWithGameEvents;
-        if (win.gameEvents) {
-            win.gameEvents.off('themeChanged', this.updateTheme, this);
-            win.gameEvents.off('languageChanged', this.updateLanguage, this);
-        }
-    }
+  }
 }

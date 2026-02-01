@@ -1,248 +1,81 @@
 /**
- * Quản lý đa ngôn ngữ cho game
+ * LocalizationManager - Utility quản lý đa ngôn ngữ cho game
+ * Ngôn ngữ lưu trong i18n/locales/*.json, dễ thêm/sửa
+ *
+ * Thêm ngôn ngữ:
+ *   1. Tạo file i18n/locales/xx.json (copy từ en.json rồi dịch)
+ *   2. Import trong i18n/game-translations.ts và thêm vào GAME_TRANSLATIONS, LANGUAGE_NAMES
  */
-export type LanguageCode = 'vi' | 'en' | 'ja';
-export type TranslationsMap = Record<string, Record<string, string>>;
+import {
+  GAME_TRANSLATIONS,
+  LANGUAGE_NAMES,
+  type GameLanguageCode
+} from '../../i18n/game-translations.js';
+
+export type { GameLanguageCode };
 
 export class LocalizationManager {
-    currentLanguage: string;
-    translations: TranslationsMap;
+  /** Ngôn ngữ hiện tại đang dùng (vi, en, ja, ...) */
+  currentLanguage: GameLanguageCode;
 
-    constructor() {
-        this.currentLanguage = localStorage.getItem('gameLanguage') || 'vi';
-        this.translations = {};
-        this.loadTranslations();
+  /** Bảng dịch từ game-translations, key = mã ngôn ngữ, value = { key: translatedText } */
+  private translations = GAME_TRANSLATIONS;
+
+  constructor() {
+    // Đọc ngôn ngữ đã lưu từ localStorage
+    const saved = localStorage.getItem('gameLanguage') as GameLanguageCode | null;
+    // Nếu có lưu và hợp lệ thì dùng, không thì mặc định 'vi'
+    this.currentLanguage =
+      saved && this.translations[saved] ? saved : ('vi' as GameLanguageCode);
+  }
+
+  /**
+   * Lấy text đã dịch theo key
+   * @param key - Key trong file locale (vd: 'settings', 'back', 'language')
+   * @param params - Thay thế {name} trong text (vd: { score: '100' } cho "Score: {score}")
+   * @returns Chuỗi đã dịch, fallback: locale hiện tại → vi → key gốc
+   */
+  t(key: string, params: Record<string, string | number> = {}): string {
+    // Fallback về tiếng Việt nếu thiếu key ở ngôn ngữ hiện tại
+    const fallback = this.translations.vi ?? {};
+    let text =
+      this.translations[this.currentLanguage]?.[key] ?? fallback[key] ?? key;
+
+    // Thay thế placeholder {param} bằng giá trị thực
+    Object.keys(params).forEach((param) => {
+      text = text.replace(new RegExp(`\\{${param}\\}`, 'g'), String(params[param]));
+    });
+
+    return text;
+  }
+
+  /**
+   * Đổi ngôn ngữ game, lưu vào localStorage và emit event để các scene cập nhật UI
+   * @param code - Mã ngôn ngữ (vi, en, ja)
+   */
+  setLanguage(code: GameLanguageCode): void {
+    if (this.translations[code]) {
+      this.currentLanguage = code;
+      localStorage.setItem('gameLanguage', code);
+
+      // Emit event để các scene (MenuScene, SettingsScene, ...) lắng nghe và cập nhật text
+      const win = window as { gameEvents?: { emit: (e: string) => void } };
+      if (win.gameEvents?.emit) {
+        win.gameEvents.emit('languageChanged');
+      }
     }
+  }
 
-    /**
-     * Load translations từ các file JSON
-     */
-    loadTranslations(): void {
-        // Vietnamese (default)
-        this.translations.vi = {
-            // UI Elements
-            'menu': '☰',
-            'settings': '⚙️',
-            'coin': '🪙',
-            'high_score': 'High Score',
-            'stage': 'Stage',
-            'upgrade': 'UPGRADE',
-            'sell': 'SELL',
-            'buy': 'BUY',
-            'start': 'START',
-            'continue': 'CONTINUE',
-            'back': 'BACK',
-            'next': 'NEXT',
-            'confirm': 'CONFIRM',
-            'cancel': 'CANCEL',
+  /** Danh sách mã ngôn ngữ có sẵn (vi, en, ja, ...) */
+  getAvailableLanguages(): GameLanguageCode[] {
+    return Object.keys(this.translations) as GameLanguageCode[];
+  }
 
-            // Game States
-            'game_over': 'GAME OVER',
-            'victory': 'VICTORY',
-            'paused': 'PAUSED',
-            'loading': 'LOADING...',
-
-            // Character Names
-            'raiden': 'Raiden Shogun',
-            'zhongli': 'Zhongli',
-            'venti': 'Venti',
-            'nahida': 'Nahida',
-            'furina': 'Furina',
-            'eula': 'Eula',
-            'mavuika': 'Mavuika',
-
-            // Element Names
-            'electro': 'Electro',
-            'pyro': 'Pyro',
-            'hydro': 'Hydro',
-            'cryo': 'Cryo',
-            'anemo': 'Anemo',
-            'geo': 'Geo',
-            'dendro': 'Dendro',
-
-            // Card Types
-            'character': 'Character',
-            'weapon': 'Weapon',
-            'enemy': 'Enemy',
-            'trap': 'Trap',
-            'treasure': 'Treasure',
-            'food': 'Food',
-            'bomb': 'Bomb',
-
-            // Settings
-            'language': 'Language',
-            'theme': 'Theme',
-            'sound': 'Sound',
-            'music': 'Music',
-            'volume': 'Volume'
-        };
-
-        // English
-        this.translations.en = {
-            'menu': '☰',
-            'settings': '⚙️',
-            'coin': '🪙',
-            'high_score': 'High Score',
-            'stage': 'Stage',
-            'upgrade': 'UPGRADE',
-            'sell': 'SELL',
-            'buy': 'BUY',
-            'start': 'START',
-            'continue': 'CONTINUE',
-            'back': 'BACK',
-            'next': 'NEXT',
-            'confirm': 'CONFIRM',
-            'cancel': 'CANCEL',
-
-            'game_over': 'GAME OVER',
-            'victory': 'VICTORY',
-            'paused': 'PAUSED',
-            'loading': 'LOADING...',
-
-            'raiden': 'Raiden Shogun',
-            'zhongli': 'Zhongli',
-            'venti': 'Venti',
-            'nahida': 'Nahida',
-            'furina': 'Furina',
-            'eula': 'Eula',
-            'mavuika': 'Mavuika',
-
-            'electro': 'Electro',
-            'pyro': 'Pyro',
-            'hydro': 'Hydro',
-            'cryo': 'Cryo',
-            'anemo': 'Anemo',
-            'geo': 'Geo',
-            'dendro': 'Dendro',
-
-            'character': 'Character',
-            'coin': 'Coin',
-            'weapon': 'Weapon',
-            'enemy': 'Enemy',
-            'trap': 'Trap',
-            'treasure': 'Treasure',
-            'food': 'Food',
-            'bomb': 'Bomb',
-
-            'language': 'Language',
-            'theme': 'Theme',
-            'sound': 'Sound',
-            'music': 'Music',
-            'volume': 'Volume'
-        };
-
-        // Japanese
-        this.translations.ja = {
-            'menu': '☰',
-            'settings': '⚙️',
-            'coin': '🪙',
-            'high_score': 'ハイスコア',
-            'stage': 'ステージ',
-            'upgrade': 'アップグレード',
-            'sell': '売却',
-            'buy': '購入',
-            'start': '開始',
-            'continue': '続行',
-            'back': '戻る',
-            'next': '次へ',
-            'confirm': '確認',
-            'cancel': 'キャンセル',
-
-            'game_over': 'ゲームオーバー',
-            'victory': '勝利',
-            'paused': '一時停止',
-            'loading': '読み込み中...',
-
-            'raiden': '雷電将軍',
-            'zhongli': '鍾離',
-            'venti': 'ヴェンティ',
-            'nahida': 'ナヒーダ',
-            'furina': 'フリーナ',
-            'eula': 'エウルア',
-            'mavuika': 'マヴィカ',
-
-            'electro': '雷',
-            'pyro': '炎',
-            'hydro': '水',
-            'cryo': '氷',
-            'anemo': '風',
-            'geo': '岩',
-            'dendro': '草',
-
-            'character': 'キャラクター',
-            'coin': 'コイン',
-            'weapon': '武器',
-            'enemy': '敵',
-            'trap': '罠',
-            'treasure': '宝箱',
-            'food': '食べ物',
-            'bomb': '爆弾',
-
-            'language': '言語',
-            'theme': 'テーマ',
-            'sound': 'サウンド',
-            'music': '音楽',
-            'volume': '音量'
-        };
-    }
-
-    /**
-     * Lấy text đã dịch
-     * @param key - Key của text cần dịch
-     * @param params - Tham số để thay thế trong text
-     * @returns Text đã dịch
-     */
-    t(key: string, params: Record<string, string | number> = {}): string {
-        let text = this.translations[this.currentLanguage]?.[key] ||
-            this.translations.vi[key] ||
-            key;
-
-        // Thay thế tham số trong text (ví dụ: "High Score: {score}")
-        Object.keys(params).forEach(param => {
-            text = text.replace(`{${param}}`, String(params[param]));
-        });
-
-        return text;
-    }
-
-    /**
-     * Thay đổi ngôn ngữ
-     * @param language - Mã ngôn ngữ (vi, en, ja)
-     */
-    setLanguage(language: string): void {
-        if (this.translations[language]) {
-            this.currentLanguage = language;
-            localStorage.setItem('gameLanguage', language);
-
-            // Emit event để các component cập nhật
-            if (typeof window !== 'undefined' && window.gameEvents) {
-                window.gameEvents.emit('languageChanged', language);
-            }
-        }
-    }
-
-    /**
-     * Lấy danh sách ngôn ngữ có sẵn
-     * @returns Mảng các mã ngôn ngữ
-     */
-    getAvailableLanguages(): string[] {
-        return Object.keys(this.translations);
-    }
-
-    /**
-     * Lấy tên ngôn ngữ theo mã
-     * @param code - Mã ngôn ngữ
-     * @returns Tên ngôn ngữ
-     */
-    getLanguageName(code: string): string {
-        const names: Record<string, string> = {
-            'vi': 'Tiếng Việt',
-            'en': 'English',
-            'ja': '日本語'
-        };
-        return names[code] || code;
-    }
+  /** Tên hiển thị của ngôn ngữ (vd: 'vi' → 'Tiếng Việt') */
+  getLanguageName(code: string): string {
+    return LANGUAGE_NAMES[code as GameLanguageCode] ?? code;
+  }
 }
 
-// Singleton instance
+/** Singleton instance - dùng chung cho toàn game */
 export const localizationManager = new LocalizationManager();

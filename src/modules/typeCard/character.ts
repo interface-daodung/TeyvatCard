@@ -126,7 +126,7 @@ export default class Character extends Card {
         if (weapon.durability > currentDurability) {
             this.weapon = weapon;
             this.weaponDisplay.updateText(this.weapon.durability);
-            this.weaponBadgeDisplay.updateTexture((this.weapon as any).default?.id + '-badge' ?? '');
+            this.weaponBadgeDisplay.updateTexture(((this.weapon as any).default?.id ?? '') + '-badge');
             (this.scene as any).sellButton?.updateButton();
         } else {
             this.scene.gameManager?.addCoin(weapon.durability);

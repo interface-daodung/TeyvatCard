@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import GameManager from '../core/GameManager.js';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import itemFactory from '../modules/ItemFactory.js';
 import dungeonList from '../data/dungeonList.json';
 
@@ -113,7 +114,7 @@ export default class GameScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         //high score
-        this.highScoreText = this.add.text(width * 0.5, height * 0.07, `High Score: ${this.gameManager.highScore}`, {
+        this.highScoreText = this.add.text(width * 0.5, height * 0.07, localizationManager.t('high_score_label', { score: this.gameManager.highScore }), {
             fontSize: '20px',
             color: '#ffffff',
             fontFamily: 'Arial, sans-serif',
@@ -172,7 +173,7 @@ export default class GameScene extends Phaser.Scene {
                 clearTimeout(this.textItemNotUseTimeout);
             }
             
-            this.textItemNotUse = this.add.text(width * 0.5, height * 0.5, 'Item chưa đủ điều kiện để sử dụng', {
+            this.textItemNotUse = this.add.text(width * 0.5, height * 0.5, localizationManager.t('item_not_ready'), {
                 fontSize: '24px',
                 color: '#ffffff',
                 fontFamily: 'Arial, sans-serif',

@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import libraryCardsData from '../data/libraryCards.json';
 
 interface CardData {
@@ -133,7 +134,7 @@ export default class LibraryScene extends Phaser.Scene {
 
     createBackButton(width: number, height: number): void {
         // Nút quay về Menu
-        const backButton = this.add.text(width * 0.5, height * 0.9, 'BACK', {
+        const backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('back_short'), {
             fontSize: '24px',
             color: '#ffffff',
             fontFamily: 'Arial, sans-serif',
@@ -412,7 +413,7 @@ export default class LibraryScene extends Phaser.Scene {
         nameText.setOrigin(0.5);
 
         // Tạo text cho loại thẻ
-        const typeText = this.add.text(0, -100, `Type: ${cardData.type}`, {
+        const typeText = this.add.text(0, -100, localizationManager.t('type_label', { type: localizationManager.t(cardData.type) || cardData.type }), {
             fontSize: '16px',
             color: '#ffb3d9',
             fontFamily: 'Arial'
@@ -437,7 +438,7 @@ export default class LibraryScene extends Phaser.Scene {
         // Đặt vị trí của nút
         closeBtn.setPosition(0, 190);
 
-        const closeText = this.add.text(0, 190, 'X', {
+        const closeText = this.add.text(0, 190, localizationManager.t('close'), {
             fontSize: '24px',
             color: '#ffffff',
             fontFamily: 'Arial'

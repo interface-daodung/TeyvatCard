@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { assetManager } from '../core/AssetManager.js';
+import { localizationManager } from '../utils/LocalizationManager.js';
 
 interface SceneData {
     targetScene?: string;
@@ -37,7 +38,7 @@ export default class LoadingScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Text "loading" bên dưới icon (căn giữa)
-        const loadingText = this.add.text(width / 2, height * 0.5 + 48, 'loading', {
+        const loadingText = this.add.text(width / 2, height * 0.5 + 48, localizationManager.t('loading'), {
             fontSize: '48px',
             fontStyle: 'bold',
             stroke: '#000000',
@@ -80,7 +81,7 @@ export default class LoadingScene extends Phaser.Scene {
                 // Animation dấu chấm: loading → loading. → loading.. → loading...
                 dotCount = (dotCount + 1) % 4;
                 const dots = '.'.repeat(dotCount);
-                loadingText.setText('loading' + dots);
+                loadingText.setText(localizationManager.t('loading') + dots);
             },
             loop: true
         });

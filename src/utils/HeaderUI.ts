@@ -1,5 +1,5 @@
-
 import Phaser from 'phaser';
+import { localizationManager } from './LocalizationManager.js';
 
 /**
  * Utility để tạo HeaderUI có thể tái sử dụng
@@ -15,7 +15,7 @@ export class HeaderUI {
     static createHeaderUI(scene: Phaser.Scene, width: number, height: number): { updateCoinDisplay: (newCoin: string | number) => void } {
         // Hiển thị số coin từ localStorage
         const totalCoin = localStorage.getItem('totalCoin') || '0';
-        const coinDisplay = scene.add.text(width * 0.05, height * 0.05, `🪙 : ${totalCoin}`, {
+        const coinDisplay = scene.add.text(width * 0.05, height * 0.05, localizationManager.t('coin_header', { amount: totalCoin }), {
             fontSize: '32px',
             color: '#ffffffff',
             fontFamily: 'Arial, sans-serif',
@@ -25,7 +25,7 @@ export class HeaderUI {
         });
 
         // Nút Settings (⚙️) ở góc trên bên phải
-        const settingsButton = scene.add.text(width * 0.935, height * 0.065, '⚙️', {
+        const settingsButton = scene.add.text(width * 0.935, height * 0.065, localizationManager.t('settings_icon'), {
             fontSize: '32px',
             fontFamily: 'Arial, sans-serif'
         }).setOrigin(0.5, 0.5); // Căn giữa

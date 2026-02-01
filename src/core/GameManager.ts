@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import CalculatePositionCard from '../utils/CalculatePositionCard.js';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import CardManager from './CardManager.js';
 import AnimationManager from './AnimationManager.js';
 import PriorityEmitter from '../utils/PriorityEmitter.js';
@@ -184,7 +185,7 @@ export default class GameManager {
         }
         // Cập nhật hiển thị coin trong GameScene
         if (this.scene && this.scene.coinText) {
-            this.scene.coinText.setText(`🪙${this.coin}`);
+            this.scene.coinText.setText(localizationManager.t('coin_amount', { amount: this.coin }));
             console.log(`GameManager: UI coin updated to ${this.coin}`);
         } else {
             console.warn(`GameManager: Cannot update coin UI - scene: ${!!this.scene}, coinText: ${!!this.scene?.coinText}`);
@@ -275,7 +276,7 @@ export default class GameManager {
         dialogContainer.add(title);
 
         // Thông tin điểm số với màu chữ tương phản
-        const scoreText = this.scene.add.text(0, -50, `Coin: ${this.coin}`, {
+        const scoreText = this.scene.add.text(0, -50, localizationManager.t('coin_amount', { amount: this.coin }), {
             fontSize: '24px',
             color: '#cbbd1b',
             fontFamily: 'Arial, sans-serif'
@@ -293,7 +294,7 @@ export default class GameManager {
         dialogContainer.add(highScoreText);
 
         // Nút Restart với màu chữ tương phản
-        const restartButton = this.scene.add.text(0, 50, 'Restart', {
+        const restartButton = this.scene.add.text(0, 50, localizationManager.t('restart'), {
             fontSize: '24px',
             color: '#2ecc71',
             fontFamily: 'Arial, sans-serif',
@@ -314,7 +315,7 @@ export default class GameManager {
         dialogContainer.add(restartButton);
 
         // Nút Menu với màu chữ tương phản
-        const menuButton = this.scene.add.text(0, 100, 'Menu', {
+        const menuButton = this.scene.add.text(0, 100, localizationManager.t('menu_button'), {
             fontSize: '24px',
             color: '#f0f0f0',
             fontFamily: 'Arial, sans-serif',

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import itemFactory from '../modules/ItemFactory.js';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
@@ -358,7 +359,7 @@ export default class EquipScene extends Phaser.Scene {
 
         // Tiêu đề levelText
         const levelText = this.add.text(0, -dialogHeight / 2 + 60,
-            `Level: ${item.level}`, {
+            localizationManager.t('level_label', { level: item.level }), {
             fontSize: '16px', // Tăng font size
             color: '#ffffff', // Chữ trắng
             fontFamily: 'Arial, sans-serif',
@@ -396,7 +397,7 @@ export default class EquipScene extends Phaser.Scene {
         powerBg.strokeRoundedRect(powerX - powerWidth / 2, powerY - powerHeight / 2, powerWidth, powerHeight, 10);
 
         // Text cho Power
-        const powerText = this.add.text(powerX, powerY, `Power⚔️ : ${item.power}`, {
+        const powerText = this.add.text(powerX, powerY, localizationManager.t('power_label', { power: item.power }), {
             fontSize: '18px',
             color: '#ffffff', // Chữ trắng
             fontFamily: 'Arial, sans-serif',
@@ -417,7 +418,7 @@ export default class EquipScene extends Phaser.Scene {
         cooldownBg.strokeRoundedRect(cooldownX - cooldownWidth / 2, cooldownY - cooldownHeight / 2, cooldownWidth, cooldownHeight, 10);
 
         // Text cho Cooldown
-        const cooldownText = this.add.text(cooldownX, cooldownY, `Cooldown⏱️ : ${item.cooldown}`, {
+        const cooldownText = this.add.text(cooldownX, cooldownY, localizationManager.t('cooldown_label', { cooldown: item.cooldown }), {
             fontSize: '18px',
             color: '#ffffff', // Chữ trắng
             fontFamily: 'Arial, sans-serif',
@@ -428,7 +429,7 @@ export default class EquipScene extends Phaser.Scene {
         const buttonContainer = this.add.container(0, dialogHeight / 2 - 50);
 
         // Tạo priceText ở cùng tầng với upgradeButton
-        const priceText = this.add.text(-200, -42, `🪙${item.getPrice()}`, {
+        const priceText = this.add.text(-200, -42, localizationManager.t('coin_amount', { amount: item.getPrice() }), {
             fontSize: '20px',
             color: '#ffffff',
             fontStyle: 'bold',
@@ -440,10 +441,10 @@ export default class EquipScene extends Phaser.Scene {
 
         // Nút Upgrade - luôn hiển thị, thay đổi trạng thái theo level
         const upgradeButton = this.add.text(-200, 0, item.level === 0
-            ? 'UNLOCK'
+            ? localizationManager.t('unlock')
             : item.isUpgrade()
-                ? 'UPGRADE'
-                : 'LEVEL MAX', {
+                ? localizationManager.t('upgrade')
+                : localizationManager.t('level_max'), {
             fontSize: '20px', // Tăng font size thêm
             color: '#ffffff', // Chữ trắng
             fontFamily: 'Arial, sans-serif',
@@ -475,17 +476,17 @@ export default class EquipScene extends Phaser.Scene {
                 if (item.upgrade()) {
                     // Cập nhật thông tin hiển thị
                     descriptionText.setText(item.description);
-                    powerText.setText(`Power⚔️ : ${item.power}`);
-                    cooldownText.setText(`Cooldown⏱️ : ${item.cooldown}`);
-                    levelText.setText(`Level: ${item.level}`);
+                    powerText.setText(localizationManager.t('power_label', { power: item.power }));
+                    cooldownText.setText(localizationManager.t('cooldown_label', { cooldown: item.cooldown }));
+                    levelText.setText(localizationManager.t('level_label', { level: item.level }));
 
                     // Cập nhật priceText sau khi upgrade
-                    priceText.setText(`🪙${item.getPrice()}`);
+                    priceText.setText(localizationManager.t('coin_amount', { amount: item.getPrice() }));
 
                     // Cập nhật nút upgrade sau khi upgrade
                     if (!item.isUpgrade()) {
                         // Đã max level - đổi text và màu, không cho tương tác
-                        upgradeButton.setText('LEVEL MAX');
+                        upgradeButton.setText(localizationManager.t('level_max'));
                         upgradeButton.setStyle({ backgroundColor: '#45162c' });
                         upgradeButton.disableInteractive();
                         upgradeButton.off('pointerover');
@@ -496,7 +497,7 @@ export default class EquipScene extends Phaser.Scene {
                         priceText.setAlpha(0);
                     } else {
                         if (item.level > 0) {
-                            upgradeButton.setText('UPGRADE');
+                            upgradeButton.setText(localizationManager.t('upgrade'));
                         }
                     }
                 }
@@ -507,7 +508,7 @@ export default class EquipScene extends Phaser.Scene {
         }
 
         // Nút Select (ở giữa)
-        const selectButton = this.add.text(0, 0, equipSlot ? 'DESELECT' : 'SELECT', {
+        const selectButton = this.add.text(0, 0, equipSlot ? localizationManager.t('deselect') : localizationManager.t('select'), {
             fontSize: '20px', // Tăng font size thêm
             color: '#ffffff', // Chữ trắng
             fontFamily: 'Arial, sans-serif',
@@ -553,7 +554,7 @@ export default class EquipScene extends Phaser.Scene {
         }
 
         // Nút Close
-        const closeButton = this.add.text(200, 0, 'CLOSE', {
+        const closeButton = this.add.text(200, 0, localizationManager.t('back_short'), {
             fontSize: '20px', // Tăng font size thêm
             color: '#ffffff', // Chữ trắng
             fontFamily: 'Arial, sans-serif',
@@ -604,7 +605,7 @@ export default class EquipScene extends Phaser.Scene {
 
     createBackButton(width: number, height: number): void {
         // Nút quay về Menu
-        const backButton = this.add.text(width * 0.5, height * 0.9, 'SELECT', {
+        const backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('select'), {
             fontSize: '24px',
             color: '#ffffff',
             fontFamily: 'Arial, sans-serif',
