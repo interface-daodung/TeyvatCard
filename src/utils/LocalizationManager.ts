@@ -4,13 +4,13 @@
  *
  * Thêm ngôn ngữ:
  *   1. Tạo file i18n/locales/xx.json (copy từ en.json rồi dịch)
- *   2. Import trong i18n/game-translations.ts và thêm vào GAME_TRANSLATIONS, LANGUAGE_NAMES
+ *   2. Import trong i18n/translations.ts và thêm vào TRANSLATIONS, LANGUAGE_NAMES
  */
 import {
-  GAME_TRANSLATIONS,
+  TRANSLATIONS,
   LANGUAGE_NAMES,
   type GameLanguageCode
-} from '../../i18n/game-translations.js';
+} from '../../i18n/translations.js';
 
 export type { GameLanguageCode };
 
@@ -18,8 +18,8 @@ export class LocalizationManager {
   /** Ngôn ngữ hiện tại đang dùng (vi, en, ja, ...) */
   currentLanguage: GameLanguageCode;
 
-  /** Bảng dịch từ game-translations, key = mã ngôn ngữ, value = { key: translatedText } */
-  private translations = GAME_TRANSLATIONS;
+  /** Bảng dịch từ translations, key = mã ngôn ngữ, value = { key: translatedText } */
+  private translations = TRANSLATIONS;
 
   constructor() {
     // Đọc ngôn ngữ đã lưu từ localStorage
@@ -54,15 +54,26 @@ export class LocalizationManager {
    * @param code - Mã ngôn ngữ (vi, en, ja)
    */
   setLanguage(code: GameLanguageCode): void {
+    console.log('[LocalizationManager] setLanguage() called with:', code);
+    console.log('[LocalizationManager] Current language before change:', this.currentLanguage);
+    
     if (this.translations[code]) {
       this.currentLanguage = code;
       localStorage.setItem('gameLanguage', code);
+      console.log('[LocalizationManager] Language changed to:', code);
+      console.log('[LocalizationManager] Saved to localStorage');
 
       // Emit event để các scene (MenuScene, SettingsScene, ...) lắng nghe và cập nhật text
       const win = window as { gameEvents?: { emit: (e: string) => void } };
       if (win.gameEvents?.emit) {
+        console.log('[LocalizationManager] Emitting languageChanged event');
         win.gameEvents.emit('languageChanged');
+        console.log('[LocalizationManager] Event emitted');
+      } else {
+        console.warn('[LocalizationManager] gameEvents not available!');
       }
+    } else {
+      console.warn('[LocalizationManager] Invalid language code:', code);
     }
   }
 

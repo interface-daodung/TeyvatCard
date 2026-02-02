@@ -17,10 +17,29 @@ class GameEventsManager extends EventEmitter {
 
     /**
      * Emit event với data
+     * Wrap trong try-catch để đảm bảo tất cả listeners đều được gọi
      */
     override emit(event: string, ...args: any[]): boolean {
         console.log(`GameEvent: ${event}`, args);
-        return super.emit(event, ...args);
+        const listeners = this.listeners(event);
+        console.log(`GameEvent: ${event} - Number of listeners:`, listeners.length);
+        
+        // Gọi từng listener với try-catch để không làm interrupt nếu một listener có lỗi
+        let hasError = false;
+        listeners.forEach((listener, index) => {
+            try {
+                console.log(`GameEvent: ${event} - Calling listener ${index}`);
+                if (typeof listener === 'function') {
+                    listener(...args);
+                }
+            } catch (error) {
+                console.error(`GameEvent: ${event} - Error in listener ${index}:`, error);
+                hasError = true;
+                // Tiếp tục gọi các listener khác
+            }
+        });
+        
+        return !hasError;
     }
 
     /**

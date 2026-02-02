@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
+import { localizationManager } from '../utils/LocalizationManager.js';
 import dungeonList from '../data/dungeonList.json';
 
 interface DungeonData {
@@ -41,7 +42,7 @@ export default class MapScenes extends Phaser.Scene {
         this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
 
         // Tạo tiêu đề game với gradient text
-        GradientText.createGameTitle(this, 'DUNGEON MAP', width / 2, height * 0.18);
+        GradientText.createGameTitle(this, localizationManager.t('dungeon_map'), width / 2, height * 0.18);
 
         // Tạo container cho các nút dungeon
         this.dungeonContainer = this.add.container(width / 2, height * 0.5);

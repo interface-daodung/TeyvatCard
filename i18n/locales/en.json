@@ -1,7 +1,7 @@
 {
   "menu": "☰",
   "menu_button": "Menu",
-  "settings": "⚙️ Settings",
+  "settings": "Settings",
   "settings_icon": "⚙️",
   "coin": "🪙",
   "high_score": "High Score",
@@ -12,7 +12,6 @@
   "start": "START",
   "continue": "CONTINUE",
   "back": "Back",
-  "next": "Next",
   "confirm": "Confirm",
   "cancel": "Cancel",
 
@@ -61,7 +60,11 @@
   "library": "Library",
   "library_title": "Library Cards",
   "explore": "Explore",
+  "dungeon_map": "DUNGEON MAP",
   "equip": "Equip",
+  "equip_title": "EQUIP",
+  "character_title": "CHARACTER",
+  "level_text": "level {level}",
   "test_dev": "Test dev",
   "restart": "Restart",
   "select": "Select",

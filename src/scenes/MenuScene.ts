@@ -89,18 +89,30 @@ export default class MenuScene extends Phaser.Scene {
 
     onLanguageChanged(): void {
         console.log('[MenuScene] onLanguageChanged event received');
-        // Update all button texts
-        if (this.libraryButton?.text) {
-            this.libraryButton.text.setText(localizationManager.t('library'));
+        // Chỉ update nếu scene đang active và visible
+        if (!this.scene.isActive() || !this.scene.isVisible()) {
+            console.log('[MenuScene] Scene not active/visible, skipping update');
+            return;
         }
-        if (this.exploreButton?.text) {
-            this.exploreButton.text.setText(localizationManager.t('explore'));
-        }
-        if (this.equipButton?.text) {
-            this.equipButton.text.setText(localizationManager.t('equip'));
-        }
-        if (this.testDevButton) {
-            this.testDevButton.setText(localizationManager.t('test_dev'));
+        
+        try {
+            // Update all button texts
+            if (this.libraryButton?.text && this.libraryButton.text.active) {
+                this.libraryButton.text.setText(localizationManager.t('library'));
+            }
+            if (this.exploreButton?.text && this.exploreButton.text.active) {
+                this.exploreButton.text.setText(localizationManager.t('explore'));
+            }
+            if (this.equipButton?.text && this.equipButton.text.active) {
+                this.equipButton.text.setText(localizationManager.t('equip'));
+            }
+            if (this.testDevButton && this.testDevButton.active) {
+                this.testDevButton.setText(localizationManager.t('test_dev'));
+            }
+            console.log('[MenuScene] onLanguageChanged completed successfully');
+        } catch (error) {
+            console.error('[MenuScene] Error in onLanguageChanged:', error);
+            // Không throw error để không làm interrupt event chain
         }
     }
 

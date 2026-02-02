@@ -28,9 +28,12 @@ const COLOR_DARK = 0x1f0614;       // Màu tối (nâu rất đậm) - dùng cho
 export default class LibraryScene extends Phaser.Scene {
     public cardInfoDialog?: Phaser.GameObjects.Container;
     private escKey?: Phaser.Input.Keyboard.Key;
+    private titleImage?: Phaser.GameObjects.Image;
+    private boundOnLanguageChanged: () => void;
 
     constructor() {
         super({ key: 'LibraryScene' });
+        this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
     }
 
     preload(): void {
@@ -48,7 +51,7 @@ export default class LibraryScene extends Phaser.Scene {
         this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
 
         // Tiêu đề
-        GradientText.createGameTitle(this, 'Library Cards', width / 2, height * 0.12);
+        this.titleImage = GradientText.createGameTitle(this, localizationManager.t('library_title'), width / 2, height * 0.12);
 
         // Tạo UI header (coin và settings)
         HeaderUI.createHeaderUI(this, width, height);
@@ -129,6 +132,42 @@ export default class LibraryScene extends Phaser.Scene {
 
         // Nút quay về Menu
         this.createBackButton(width, height);
+
+        // Listen for language changes
+        const win = window as any;
+        if (win.gameEvents?.on) {
+            win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
+        }
+    }
+
+    onLanguageChanged(): void {
+        console.log('[LibraryScene] onLanguageChanged event received');
+        // Chỉ update nếu scene đang active và visible
+        if (!this.scene.isActive() || !this.scene.isVisible()) {
+            console.log('[LibraryScene] Scene not active/visible, skipping update');
+            return;
+        }
+        
+        try {
+            // Update title
+            if (this.titleImage && this.titleImage.active) {
+                const { width, height } = this.scale;
+                const x = this.titleImage.x;
+                const y = this.titleImage.y;
+                this.titleImage.destroy();
+                this.titleImage = GradientText.createGameTitle(this, localizationManager.t('library_title'), x, y);
+            }
+            console.log('[LibraryScene] onLanguageChanged completed successfully');
+        } catch (error) {
+            console.error('[LibraryScene] Error in onLanguageChanged:', error);
+        }
+    }
+
+    shutdown(): void {
+        const win = window as any;
+        if (win.gameEvents?.off && this.boundOnLanguageChanged) {
+            win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
+        }
     }
 
 

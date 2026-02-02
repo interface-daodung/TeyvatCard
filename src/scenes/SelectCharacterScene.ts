@@ -37,6 +37,8 @@ export default class SelectCharacterScene extends Phaser.Scene {
     public prevButton!: Phaser.GameObjects.Text;
     public nextButton!: Phaser.GameObjects.Text;
     public backButton!: Phaser.GameObjects.Text;
+    private titleImage?: Phaser.GameObjects.Image;
+    private boundOnLanguageChanged: () => void;
 
     constructor() {
         super({ key: 'SelectCharacterScene' });
@@ -45,6 +47,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         // Khởi tạo currentCardIndex với logic thông minh
         this.currentCardIndex = this.initializeCurrentCardIndex();
+        this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
     }
 
     init(): void {
@@ -67,7 +70,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
         this.headerUI = HeaderUI.createHeaderUI(this, width, height);
 
         // Tiêu đề
-        GradientText.createGameTitle(this, 'CHARACTER', width / 2, height * 0.12);
+        this.titleImage = GradientText.createGameTitle(this, localizationManager.t('character_title'), width / 2, height * 0.12);
 
         // Panel thông tin thẻ (phía trên)
         this.createInfoPanel(width, height);
@@ -83,6 +86,46 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         // Hiển thị thẻ đầu tiên
         this.updateCardDisplay();
+
+        // Listen for language changes
+        const win = window as any;
+        if (win.gameEvents?.on) {
+            win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
+        }
+    }
+
+    onLanguageChanged(): void {
+        console.log('[SelectCharacterScene] onLanguageChanged event received');
+        // Chỉ update nếu scene đang active và visible
+        if (!this.scene.isActive() || !this.scene.isVisible()) {
+            console.log('[SelectCharacterScene] Scene not active/visible, skipping update');
+            return;
+        }
+        
+        try {
+            // Update title
+            if (this.titleImage && this.titleImage.active) {
+                const { width, height } = this.scale;
+                const x = this.titleImage.x;
+                const y = this.titleImage.y;
+                this.titleImage.destroy();
+                this.titleImage = GradientText.createGameTitle(this, localizationManager.t('character_title'), x, y);
+            }
+            
+            // Update card display texts
+            this.updateCardDisplay();
+            
+            console.log('[SelectCharacterScene] onLanguageChanged completed successfully');
+        } catch (error) {
+            console.error('[SelectCharacterScene] Error in onLanguageChanged:', error);
+        }
+    }
+
+    shutdown(): void {
+        const win = window as any;
+        if (win.gameEvents?.off && this.boundOnLanguageChanged) {
+            win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
+        }
     }
 
     createInfoPanel(width: number, height: number): void {
@@ -283,10 +326,10 @@ export default class SelectCharacterScene extends Phaser.Scene {
         this.cardNameText.setText(currentCard.name);
         this.cardElementImage.setTexture('element', `element-${currentCard.element.toLowerCase()}`);
         this.cardDescriptionText.setText(currentCard.description);
-        this.cardHPText.setText(`❤️ ${currentCard.hp + (currentCard.level || 1) - 1}`);
-        this.cardLevelText.setText(`level ${currentCard.level || 1}`);
+        this.cardHPText.setText(localizationManager.t('hp_label', { hp: currentCard.hp + (currentCard.level || 1) - 1 }));
+        this.cardLevelText.setText(localizationManager.t('level_text', { level: currentCard.level || 1 }));
         if (this.HighScores[currentCard.id]) {
-            this.cardHighScoreText.setText(`High Score: ${this.HighScores[currentCard.id]}`);
+            this.cardHighScoreText.setText(localizationManager.t('high_score_label', { score: this.HighScores[currentCard.id] }));
         } else {
             this.cardHighScoreText.setText('');
         }
@@ -298,7 +341,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
             this.upgradeButton.setStyle({ color: '#FFFFFF' });
             this.upgradeButton.setScale(1);
         } else {
-            this.upgradeButton.setText(`UPGRADE`);
+            this.upgradeButton.setText(localizationManager.t('upgrade'));
         }
 
         this.cardHPText.hp = currentCard.hp + (currentCard.level || 1) - 1;

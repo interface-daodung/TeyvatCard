@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { GradientText } from '../utils/GradientText.js';
 import { localizationManager, type GameLanguageCode } from '../utils/LocalizationManager.js';
 
 /** Nút: Rectangle + Text, có setActiveState */
@@ -6,10 +7,11 @@ type LangButton = Phaser.GameObjects.Container & {
   rect?: Phaser.GameObjects.Rectangle;
   text?: Phaser.GameObjects.Text;
   setActiveState?: (active: boolean) => void;
+  lang?: string; // Lưu mã ngôn ngữ để dễ truy cập
 };
 
 export default class SettingsScene extends Phaser.Scene {
-  private titleText?: Phaser.GameObjects.Text;
+  private titleImage?: Phaser.GameObjects.Image;
   private backButton?: Phaser.GameObjects.Text;
   private langButtons: LangButton[] = [];
   private boundOnLanguageChanged!: () => void;
@@ -43,15 +45,7 @@ export default class SettingsScene extends Phaser.Scene {
   }
 
   createTitle(width: number, height: number): void {
-    const titleStr = localizationManager.t('settings');
-    this.titleText = this.add.text(width / 2, height * 0.18, titleStr.toUpperCase(), {
-      fontSize: '48px',
-      fontFamily: 'Arial',
-      fontStyle: 'bold',
-      color: '#cbbd1b',
-      stroke: '#1f0612',
-      strokeThickness: 3
-    }).setOrigin(0.5);
+    this.titleImage = GradientText.createGameTitle(this, localizationManager.t('settings'), width / 2, height * 0.18);
   }
 
   /**
@@ -87,23 +81,37 @@ export default class SettingsScene extends Phaser.Scene {
         strokeThickness: 2
       }).setOrigin(0.5);
 
+      // Lưu reference đến lang để dùng trong callbacks
+      const currentLang = lang;
+      
       rect.on('pointerover', () => {
-        rect.setFillStyle(0x95245b);
-        rect.setStrokeStyle(3, 0xffffff);
+        // Kiểm tra lại active state mỗi lần hover (vì có thể đã thay đổi)
+        const isActive = currentLang === localizationManager.currentLanguage;
+        // Chỉ apply hover style nếu không phải nút đang active
+        if (!isActive) {
+          rect.setFillStyle(0x95245b);
+          rect.setStrokeStyle(3, 0xffffff);
+        }
       });
       rect.on('pointerout', () => {
-        const active = lang === localizationManager.currentLanguage;
-        rect.setFillStyle(active ? 0x95245b : 0x622945);
-        rect.setStrokeStyle(3, active ? 0xffffff : 0x96576a);
+        // Kiểm tra lại active state khi pointer out
+        const isActive = currentLang === localizationManager.currentLanguage;
+        rect.setFillStyle(isActive ? 0x95245b : 0x622945);
+        rect.setStrokeStyle(3, isActive ? 0xffffff : 0x96576a);
       });
       rect.on('pointerdown', () => {
-        localizationManager.setLanguage(lang as GameLanguageCode);
-        this.updateAllTexts();
+        // Reset tất cả nút về trạng thái đúng trước khi đổi ngôn ngữ
+        this.resetAllButtonHoverStates();
+        
+        // Đổi ngôn ngữ - sẽ tự động trigger 'languageChanged' event
+        // onLanguageChanged() sẽ gọi updateAllTexts() để update UI
+        localizationManager.setLanguage(currentLang as GameLanguageCode);
       });
 
       const btnContainer = this.add.container(0, 0, [rect, text]) as LangButton;
       btnContainer.rect = rect;
       btnContainer.text = text;
+      btnContainer.lang = lang; // Lưu mã ngôn ngữ
       btnContainer.setActiveState = (active: boolean) => {
         rect.setFillStyle(active ? 0x95245b : 0x622945);
         rect.setStrokeStyle(3, active ? 0xffffff : 0x96576a);
@@ -133,9 +141,12 @@ export default class SettingsScene extends Phaser.Scene {
   }
 
   updateAllTexts(): void {
-    const titleStr = localizationManager.t('settings');
-    if (this.titleText) {
-      this.titleText.setText(titleStr.toUpperCase());
+    // Update title
+    if (this.titleImage && this.titleImage.active) {
+      const x = this.titleImage.x;
+      const y = this.titleImage.y;
+      this.titleImage.destroy();
+      this.titleImage = GradientText.createGameTitle(this, localizationManager.t('settings'), x, y);
     }
     if (this.backButton) {
       this.backButton.setText(localizationManager.t('back'));
@@ -143,20 +154,48 @@ export default class SettingsScene extends Phaser.Scene {
     this.refreshLanguageButtons();
   }
 
-  refreshLanguageButtons(): void {
-    const languages = localizationManager.getAvailableLanguages();
-    languages.forEach((lang, i) => {
-      const btn = this.langButtons[i];
-      if (btn && btn.setActiveState && btn.text) {
-        const isActive = lang === localizationManager.currentLanguage;
-        btn.setActiveState(isActive);
-        btn.text.setText(localizationManager.getLanguageName(lang));
+  /**
+   * Reset tất cả nút về trạng thái không hover (loại bỏ hover style)
+   * Đơn giản chỉ set lại style dựa trên active state
+   */
+  resetAllButtonHoverStates(): void {
+    this.langButtons.forEach((btn, index) => {
+      if (btn && btn.rect && btn.lang) {
+        const isActive = btn.lang === localizationManager.currentLanguage;
+        // Force reset về style đúng dựa trên active state
+        btn.rect.setFillStyle(isActive ? 0x95245b : 0x622945);
+        btn.rect.setStrokeStyle(3, isActive ? 0xffffff : 0x96576a);
       }
     });
   }
 
+  refreshLanguageButtons(): void {
+    this.langButtons.forEach((btn, index) => {
+      if (btn && btn.setActiveState && btn.text && btn.lang) {
+        const isActive = btn.lang === localizationManager.currentLanguage;
+        btn.setActiveState(isActive);
+        const langName = localizationManager.getLanguageName(btn.lang);
+        btn.text.setText(langName);
+      }
+    });
+    // Reset hover states sau khi update
+    this.resetAllButtonHoverStates();
+  }
+
   onLanguageChanged(): void {
-    this.updateAllTexts();
+    // Chỉ update nếu scene đang active và visible
+    if (!this.scene.isActive() || !this.scene.isVisible()) {
+      return;
+    }
+    
+    try {
+      // Update UI khi ngôn ngữ thay đổi (từ event hoặc từ nơi khác)
+      this.updateAllTexts();
+      // Reset hover states sau khi update để đảm bảo không còn hover style
+      this.resetAllButtonHoverStates();
+    } catch (error) {
+      // Không throw error để không làm interrupt event chain
+    }
   }
 
   shutdown(): void {

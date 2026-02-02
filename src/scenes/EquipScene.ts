@@ -31,6 +31,8 @@ export default class EquipScene extends Phaser.Scene {
     public equipmentSlots: EquipmentSlot[];
     public headerUI!: any;
     public listItems!: Map<string, ItemData>;
+    private titleImage?: Phaser.GameObjects.Image;
+    private boundOnLanguageChanged: () => void;
 
     constructor() {
         super({ key: 'EquipScene' });
@@ -39,6 +41,7 @@ export default class EquipScene extends Phaser.Scene {
             item: null,
             image: null as any
         }));
+        this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
     }
 
     preload(): void {
@@ -55,7 +58,7 @@ export default class EquipScene extends Phaser.Scene {
         this.headerUI = HeaderUI.createHeaderUI(this, width, height);
 
         // Tiêu đề "TRANG BỊ" Tạo hiệu ứng gradient cho viền bằng cách thêm nhiều layer text
-        GradientText.createGameTitle(this, 'TRANG BỊ', width / 2, height * 0.18);
+        this.titleImage = GradientText.createGameTitle(this, localizationManager.t('equip_title'), width / 2, height * 0.18);
 
         // Tạo lưới 4x3 các item
         this.createItemGrid(width, height);
@@ -69,6 +72,40 @@ export default class EquipScene extends Phaser.Scene {
         // Khởi tạo equipment slots từ localStorage
         this.initializeEquipmentSlots();
 
+        // Listen for language changes
+        const win = window as any;
+        if (win.gameEvents?.on) {
+            win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
+        }
+    }
+
+    onLanguageChanged(): void {
+        console.log('[EquipScene] onLanguageChanged event received');
+        // Chỉ update nếu scene đang active và visible
+        if (!this.scene.isActive() || !this.scene.isVisible()) {
+            console.log('[EquipScene] Scene not active/visible, skipping update');
+            return;
+        }
+        
+        try {
+            // Update title
+            if (this.titleImage && this.titleImage.active) {
+                const x = this.titleImage.x;
+                const y = this.titleImage.y;
+                this.titleImage.destroy();
+                this.titleImage = GradientText.createGameTitle(this, localizationManager.t('equip_title'), x, y);
+            }
+            console.log('[EquipScene] onLanguageChanged completed successfully');
+        } catch (error) {
+            console.error('[EquipScene] Error in onLanguageChanged:', error);
+        }
+    }
+
+    shutdown(): void {
+        const win = window as any;
+        if (win.gameEvents?.off && this.boundOnLanguageChanged) {
+            win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
+        }
     }
 
     /**

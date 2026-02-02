@@ -1,7 +1,7 @@
 {
   "menu": "☰",
   "menu_button": "メニュー",
-  "settings": "⚙️ 設定",
+  "settings": "設定",
   "settings_icon": "⚙️",
   "coin": "🪙",
   "high_score": "ハイスコア",
@@ -12,7 +12,6 @@
   "start": "開始",
   "continue": "続行",
   "back": "戻る",
-  "next": "次へ",
   "confirm": "確認",
   "cancel": "キャンセル",
 
@@ -61,7 +60,11 @@
   "library": "図書館",
   "library_title": "カード図書館",
   "explore": "探検",
+  "dungeon_map": "ダンジョンマップ",
   "equip": "装備",
+  "equip_title": "装備",
+  "character_title": "キャラクター",
+  "level_text": "レベル {level}",
   "test_dev": "Test dev",
   "restart": "再開",
   "select": "選択",
