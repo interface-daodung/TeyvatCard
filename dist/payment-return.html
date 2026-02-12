@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kết quả thanh toán</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 20px;
+    }
+    .box {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid #95245b;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      max-width: 400px;
+    }
+    h1 { font-size: 24px; margin-bottom: 16px; color: #ffd700; }
+    p { font-size: 16px; margin-bottom: 24px; color: #e0e0e0; }
+    .close-btn {
+      background: #95245b;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .close-btn:hover { background: #b52d6b; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1 id="title">Đang xử lý...</h1>
+    <p id="msg">Cửa sổ này sẽ tự đóng.</p>
+    <button class="close-btn" onclick="window.close()">Đóng cửa sổ</button>
+  </div>
+  <script>
+    (function() {
+      const params = new URLSearchParams(location.search);
+      const orderCode = params.get('orderCode');
+      const cancel = params.get('cancel');
+      const title = document.getElementById('title');
+      const msg = document.getElementById('msg');
+
+      if (cancel === '1') {
+        title.textContent = 'Đã hủy thanh toán';
+        msg.textContent = 'Bạn có thể đóng cửa sổ này.';
+      } else if (orderCode && window.opener) {
+        try {
+          window.opener.postMessage({ type: 'payos_return', orderCode: parseInt(orderCode, 10), cancel: false }, '*');
+          title.textContent = 'Thanh toán thành công!';
+          msg.textContent = 'Cửa sổ game sẽ cập nhật số xu. Bạn có thể đóng cửa sổ này.';
+        } catch (e) {
+          title.textContent = 'Đã chuyển hướng';
+          msg.textContent = 'Vui lòng quay lại game để kiểm tra.';
+        }
+      } else {
+        title.textContent = 'Hoàn tất';
+        msg.textContent = 'Bạn có thể đóng cửa sổ này.';
+      }
+      setTimeout(function() { window.close(); }, 3000);
+    })();
+  </script>
+</body>
+</html>

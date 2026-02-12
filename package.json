@@ -1,7 +1,7 @@
 {
-  "name": "phaser-i18n-adventure",
+  "name": "teyvat-card",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,11 +15,21 @@
   "devDependencies": {
     "@types/node": "^22.14.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vite-plugin-pwa": "^1.2.0",
+    "workbox-window": "^7.4.0"
   },
-  "description": "<div align=\"center\"> <img width=\"1200\" height=\"475\" alt=\"GHBanner\" src=\"https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6\" /> </div>",
+  "description": "A turn-based card combat game built with Phaser 3 and TypeScript, featuring a rich progression system, modern UI, and multi-language support.",
   "main": "index.js",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "phaser",
+    "game",
+    "card-game",
+    "typescript",
+    "vite",
+    "turn-based",
+    "combat"
+  ],
+  "author": "Đào Mạnh Dũng <interface.daodung@gmail.com>",
   "license": "ISC"
 }

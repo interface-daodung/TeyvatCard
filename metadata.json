@@ -1,5 +1,5 @@
 {
-  "name": "Phaser I18n Adventure",
-  "description": "A demo showcasing a Phaser game integrated with a type-safe internationalization system and React for UI control.",
+  "name": "Teyvat Card",
+  "description": "A turn-based card combat game built with Phaser 3 and TypeScript, featuring a rich progression system, modern UI, and multi-language support.",
   "requestFramePermissions": []
 }

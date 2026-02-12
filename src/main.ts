@@ -8,8 +8,12 @@ import LibraryScene from './scenes/LibraryScene.js';
 import MapScenes from './scenes/MapScenes.js';
 import SelectCharacterScene from './scenes/SelectCharacterScene.js';
 import SettingsScene from './scenes/SettingsScene.js';
+import PaymentScene from './scenes/PaymentScene.js';
+import LoginScene from './scenes/LoginScene.js';
+import RegisterScene from './scenes/RegisterScene.js';
 import TestGraphicsRenderTexture from './scenes/TestGraphicsRenderTexture.js';
 import './utils/GameEventsManager.js';
+import { setupPWA } from './pwa/register';
 
 // Cấu hình game
 const config: Phaser.Types.Core.GameConfig = {
@@ -31,8 +35,11 @@ const config: Phaser.Types.Core.GameConfig = {
       }
     ]
   },
-  scene: [LoadingScene, MenuScene, SelectCharacterScene, EquipScene, LibraryScene, MapScenes, GameScene, SettingsScene, TestGraphicsRenderTexture]
+  scene: [LoadingScene, MenuScene, SelectCharacterScene, EquipScene, LibraryScene, MapScenes, GameScene, SettingsScene, PaymentScene, LoginScene, RegisterScene, TestGraphicsRenderTexture]
 };
+
+// Khởi tạo PWA (tách riêng để dễ bật/tắt và debug)
+setupPWA();
 
 // Khởi tạo game
 const game = new Phaser.Game(config);
