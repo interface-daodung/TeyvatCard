@@ -3,6 +3,7 @@ import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
+import { soundManager } from '../core/SoundManager.js';
 import cardCharacterList from '../data/cardCharacterList.json';
 
 interface CardCharacter {
@@ -84,6 +85,17 @@ export default class MenuScene extends Phaser.Scene {
         const win = window as any;
         if (win.gameEvents?.on) {
             win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
+        }
+
+        // Lớp phủ vô hình chỉ khi chưa phát BGM trong session (không lưu local — reload mất quyền phát)
+        if (soundManager.needsBGMOverlay()) {
+            const bgmOverlay = this.add.rectangle(width / 2, height / 2, width + 100, height + 100, 0x000000, 0);
+            bgmOverlay.setInteractive({ useHandCursor: false });
+            bgmOverlay.setDepth(1000);
+            bgmOverlay.once('pointerdown', () => {
+                bgmOverlay.destroy();
+                soundManager.playBGM();
+            });
         }
     }
 

@@ -28,7 +28,8 @@ import {
     BACKGROUND_ASSETS,
     CHARACTER_SPRITE_ASSETS,
     SOUND_EFFECT_ASSETS,
-    ANIMATIONS_ASSETS
+    ANIMATIONS_ASSETS,
+    BGM_ASSETS
 } from '../utils/AssetConstants.js';
 
 import item from '../data/atlas/item.json';
@@ -118,6 +119,7 @@ export default class AssetManager {
                 this.loadAtlas(item);
                 this.loadAtlas(character);
                 this.loadImages([...BACKGROUND_ASSETS, ...CHARACTER_SPRITE_ASSETS]);
+                this.loadAudios([...BGM_ASSETS]);
                 break;
 
             case 'GameScene':
