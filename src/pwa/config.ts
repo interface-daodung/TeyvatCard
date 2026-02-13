@@ -8,11 +8,7 @@ export const pwaOptions: VitePWAOptions = {
   injectRegister: 'auto',
   // general behavior
   registerType: 'prompt',
-  includeAssets: [
-    'icon-192.png',
-    'icon-512.png',
-    'apple-touch-icon.png',
-  ],
+  includeAssets: ['favicon.ico', 'icon-192.webp'],
   manifest: {
     name: 'Teyvat Card',
     short_name: 'TeyvatCard',
@@ -22,16 +18,34 @@ export const pwaOptions: VitePWAOptions = {
     display: 'standalone',
     orientation: 'portrait',
     start_url: '/',
+    id: '/',
     icons: [
       {
-        src: 'icon-192.png',
+        src: '/favicon.ico',
+        sizes: '32x32',
+        type: 'image/x-icon',
+        purpose: 'any',
+      },
+      // Installability requires at least one PNG/WebP icon >= 144px. Add public/icon-192.webp (192×192).
+      {
+        src: '/icon-192.webp',
         sizes: '192x192',
-        type: 'image/png',
+        type: 'image/webp',
+        purpose: 'any',
+      },
+    ],
+    screenshots: [
+      {
+        src: '/assets/images/ui/screenshots.webp',
+        sizes: '720x1280',
+        label: 'Teyvat Card',
+        form_factor: 'wide',
       },
       {
-        src: 'icon-512.png',
-        sizes: '512x512',
-        type: 'image/png',
+        src: '/assets/images/ui/screenshots.webp',
+        sizes: '720x1280',
+        label: 'Teyvat Card',
+        form_factor: 'narrow',
       },
     ],
   },

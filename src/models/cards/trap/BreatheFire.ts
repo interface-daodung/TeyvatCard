@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Trap from '../../../modules/typeCard/trap.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
+import { soundManager } from '../../../core/SoundManager.js';
 
 type ArrowDirection = 'top' | 'bottom' | 'left' | 'right';
 
@@ -46,7 +47,7 @@ export default class BreatheFire extends Trap {
     }
 
     CardEffect(): boolean {
-        this.scene.sound.play('breathe-fire-sound');
+        soundManager.play('breathe-fire-sound');
         this.scene.gameManager?.animationManager.startBreatheFireAnimation(
             this.damage,
             this.findAdjacentTargets(),

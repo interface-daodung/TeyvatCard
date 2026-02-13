@@ -10,7 +10,7 @@ import {
   TRANSLATIONS,
   LANGUAGE_NAMES,
   type GameLanguageCode
-} from '../../i18n/translations.js';
+} from '../i18n/translations.js';
 
 export type { GameLanguageCode };
 

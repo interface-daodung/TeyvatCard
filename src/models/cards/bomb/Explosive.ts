@@ -1,6 +1,7 @@
 import Bomb from '../../../modules/typeCard/bomb.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import CalculatePositionCard from '../../../utils/CalculatePositionCard.js';
+import { soundManager } from '../../../core/SoundManager.js';
 
 export default class Explosive extends Bomb {
     declare rarity: number;
@@ -40,7 +41,7 @@ export default class Explosive extends Bomb {
     }
 
     Detonation(): void {
-        this.scene.sound.play('bomb-sound');
+        soundManager.play('bomb-sound');
         const adjacentPositions = CalculatePositionCard.getAdjacentPositions(this.index);
         this.scene.gameManager?.animationManager.startExplosiveAnimation(
             this.damage,

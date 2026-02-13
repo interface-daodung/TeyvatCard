@@ -2,6 +2,7 @@ import Card from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
+import { soundManager } from '../../core/SoundManager.js';
 
 export default class Enemy extends Card {
     poisoning: boolean;
@@ -46,7 +47,7 @@ export default class Enemy extends Card {
         this.hpDisplay.updateText(this.health.toString());
         if (type === 'slash') {
             SpritesheetWrapper.animationSlash(this.scene, this.x, this.y);
-            this.scene.sound.play('sword-sound');
+            soundManager.play('sword-sound');
         }
         this.showPopup(damage, 'damage');
         this.cardImage.setTint(0xe05656);

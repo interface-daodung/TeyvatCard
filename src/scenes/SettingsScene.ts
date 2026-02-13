@@ -1,6 +1,18 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
 import { localizationManager, type GameLanguageCode } from '../utils/LocalizationManager.js';
+import { soundManager } from '../core/SoundManager.js';
+import aboutData from '../data/About.json';
+
+interface AboutBlock {
+  type: string;
+  size?: number;
+  text: string;
+}
+
+interface AboutJson {
+  blocks: AboutBlock[];
+}
 
 /** Nút: Rectangle + Text, có setActiveState */
 type LangButton = Phaser.GameObjects.Container & {
@@ -14,11 +26,26 @@ export default class SettingsScene extends Phaser.Scene {
   private titleImage?: Phaser.GameObjects.Image;
   private backButton?: Phaser.GameObjects.Text;
   private languageButton?: Phaser.GameObjects.Container;
+  private gameSettingButton?: Phaser.GameObjects.Container;
+  private aboutButton?: Phaser.GameObjects.Container;
+  private volumeSliderContainer?: Phaser.GameObjects.Container;
   private langPopupTitle?: Phaser.GameObjects.Text;
   private mainUIContainer?: Phaser.GameObjects.Container;
   private langPopupContainer?: Phaser.GameObjects.Container;
+  private gameSettingPopupContainer?: Phaser.GameObjects.Container;
+  private aboutPopupContainer?: Phaser.GameObjects.Container;
   private langButtons: LangButton[] = [];
   private boundOnLanguageChanged!: () => void;
+  private volumeValue: number = 1;
+  private volumeThumb?: Phaser.GameObjects.Rectangle;
+  private volumeIconRight?: Phaser.GameObjects.Text;
+  private volumeTrackWidth: number = 0;
+  private volumeTrackX: number = 0;
+  private volumeTrackY: number = 0;
+  private volumeHoldMoveHandler = (ptr: Phaser.Input.Pointer) => {
+    if (ptr.isDown) this.updateVolumeFromPointer(ptr.worldX);
+  };
+  private volumeHoldUpHandler = () => this.stopVolumeTrackHold();
 
   constructor() {
     super({ key: 'SettingsScene' });
@@ -38,10 +65,15 @@ export default class SettingsScene extends Phaser.Scene {
     this.mainUIContainer.setDepth(100);
     this.createTitle(width, height);
     this.createLanguageButton(width, height);
+    this.createGameSettingButton(width, height);
+    this.createAboutButton(width, height);
+    this.createVolumeSlider(width, height);
     this.createBackButton(width, height);
 
     // Popup chọn ngôn ngữ (ẩn ban đầu) - depth thấp hơn title và back button
     this.createLanguagePopup(width, height);
+    this.createGameSettingPopup(width, height);
+    this.createAboutPopup(width, height);
 
     const win = window as any;
     if (win.gameEvents?.on) {
@@ -58,7 +90,7 @@ export default class SettingsScene extends Phaser.Scene {
   createLanguageButton(width: number, height: number): void {
     const buttonWidth = width * 0.6;
     const buttonHeight = height * 0.08;
-    const buttonY = height * 0.45;
+    const buttonY = height * 0.40;
 
     const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, 0x622945);
     rect.setStrokeStyle(3, 0x96576a);
@@ -86,6 +118,179 @@ export default class SettingsScene extends Phaser.Scene {
 
     this.languageButton = this.add.container(0, 0, [rect, text]);
     this.mainUIContainer!.add(this.languageButton);
+  }
+
+  /** Nút Game Setting - bấm vào mở popup cài đặt game */
+  createGameSettingButton(width: number, height: number): void {
+    const buttonWidth = width * 0.6;
+    const buttonHeight = height * 0.08;
+    const buttonY = height * 0.50;
+
+    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, 0x622945);
+    rect.setStrokeStyle(3, 0x96576a);
+    rect.setInteractive({ useHandCursor: true });
+
+    const text = this.add.text(width / 2, buttonY, localizationManager.t('gameSetting'), {
+      fontSize: '32px',
+      color: '#ffffff',
+      fontFamily: 'Arial',
+      stroke: '#000000',
+      strokeThickness: 2
+    }).setOrigin(0.5);
+
+    rect.on('pointerover', () => {
+      rect.setFillStyle(0x95245b);
+      rect.setStrokeStyle(3, 0xffffff);
+    });
+    rect.on('pointerout', () => {
+      rect.setFillStyle(0x622945);
+      rect.setStrokeStyle(3, 0x96576a);
+    });
+    rect.on('pointerdown', () => {
+      this.showGameSettingPopup();
+    });
+
+    this.gameSettingButton = this.add.container(0, 0, [rect, text]);
+    this.mainUIContainer!.add(this.gameSettingButton);
+  }
+
+  /** Nút About - bấm vào mở popup thông tin */
+  createAboutButton(width: number, height: number): void {
+    const buttonWidth = width * 0.6;
+    const buttonHeight = height * 0.08;
+    const buttonY = height * 0.60;
+
+    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, 0x622945);
+    rect.setStrokeStyle(3, 0x96576a);
+    rect.setInteractive({ useHandCursor: true });
+
+    const text = this.add.text(width / 2, buttonY, localizationManager.t('about'), {
+      fontSize: '32px',
+      color: '#ffffff',
+      fontFamily: 'Arial',
+      stroke: '#000000',
+      strokeThickness: 2
+    }).setOrigin(0.5);
+
+    rect.on('pointerover', () => {
+      rect.setFillStyle(0x95245b);
+      rect.setStrokeStyle(3, 0xffffff);
+    });
+    rect.on('pointerout', () => {
+      rect.setFillStyle(0x622945);
+      rect.setStrokeStyle(3, 0x96576a);
+    });
+    rect.on('pointerdown', () => {
+      this.showAboutPopup();
+    });
+
+    this.aboutButton = this.add.container(0, 0, [rect, text]);
+    this.mainUIContainer!.add(this.aboutButton);
+  }
+
+  /** Thanh âm lượng = 1 khối tổng thể (icon + track) bằng chiều rộng nút (width*0.6) */
+  createVolumeSlider(width: number, height: number): void {
+    const sliderY = height * 0.70;
+    const totalWidth = width * 0.6;
+    const iconZone = 52;
+    const trackWidth = (totalWidth - iconZone)*0.92;
+    const trackHeight = 18;
+    const thumbRadius = 18;
+    const centerX = width / 2;
+    const leftEdge = centerX - totalWidth / 2;
+    const trackLeft = leftEdge + iconZone + 10;
+    const trackCenterX = trackLeft + trackWidth / 2;
+    this.volumeValue = soundManager.getVolume();
+    this.volumeTrackWidth = trackWidth;
+    this.volumeTrackX = trackLeft;
+    this.volumeTrackY = sliderY;
+
+    const container = this.add.container(0, 0);
+
+    const iconLeft = this.add.text(leftEdge + iconZone / 2, sliderY, this.volumeValue === 0 ? '🔇' : '🔊', {
+      fontSize: '32px',
+      fontFamily: 'Arial'
+    }).setOrigin(0.5);
+    iconLeft.setInteractive({ useHandCursor: true });
+    iconLeft.on('pointerdown', () => this.toggleVolumeMute());
+    container.add(iconLeft);
+    this.volumeIconRight = iconLeft;
+
+    const track = this.add.rectangle(trackCenterX, sliderY, trackWidth, trackHeight, 0x333333);
+    track.setStrokeStyle(2, 0x96576a);
+    track.setInteractive({ useHandCursor: true });
+    track.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
+      this.updateVolumeFromPointer(ptr.worldX);
+      this.startVolumeTrackHold();
+    });
+    container.add(track);
+
+    const fillWidth = trackWidth * this.volumeValue;
+    const fill = this.add.rectangle(trackLeft, sliderY, fillWidth, trackHeight - 4, 0x95245b).setOrigin(0, 0.5);
+    fill.setPosition(trackLeft, sliderY);
+    fill.setSize(fillWidth, trackHeight - 4);
+    fill.setOrigin(0, 0.5);
+    container.add(fill);
+
+    const thumbX = trackLeft + this.volumeValue * trackWidth;
+    const thumbSize = thumbRadius * 2;
+    const thumb = this.add.rectangle(thumbX, sliderY, thumbSize, thumbSize, 0xffffff);
+    thumb.setStrokeStyle(2, 0x95245b);
+    thumb.setInteractive({ useHandCursor: true });
+    this.volumeThumb = thumb;
+    this.input.setDraggable(thumb);
+    thumb.on('drag', (_ptr: Phaser.Input.Pointer, _go: Phaser.GameObjects.GameObject, dragX: number) => {
+      this.updateVolumeFromPointer(dragX);
+    });
+    thumb.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
+      this.updateVolumeFromPointer(ptr.worldX);
+    });
+    container.add(thumb);
+
+    this.volumeSliderContainer = container;
+    this.mainUIContainer!.add(container);
+    this.syncVolumeUI();
+  }
+
+  private startVolumeTrackHold(): void {
+    this.input.on('pointermove', this.volumeHoldMoveHandler);
+    this.input.once('pointerup', this.volumeHoldUpHandler);
+  }
+
+  private stopVolumeTrackHold(): void {
+    this.input.off('pointermove', this.volumeHoldMoveHandler);
+    this.input.off('pointerup', this.volumeHoldUpHandler);
+  }
+
+  private toggleVolumeMute(): void {
+    soundManager.toggleMute();
+    this.volumeValue = soundManager.getVolume();
+    this.syncVolumeUI();
+  }
+
+  private updateVolumeFromPointer(worldX: number): void {
+    const left = this.volumeTrackX;
+    this.volumeValue = Math.max(0, Math.min(1, (worldX - left) / this.volumeTrackWidth));
+    soundManager.setVolume(this.volumeValue);
+    this.syncVolumeUI();
+  }
+
+  private syncVolumeUI(): void {
+    if (!this.volumeThumb || !this.volumeSliderContainer) return;
+    const trackWidth = this.volumeTrackWidth;
+    const left = this.volumeTrackX;
+    const thumbX = left + this.volumeValue * trackWidth;
+    this.volumeThumb.setPosition(thumbX, this.volumeTrackY);
+    const fill = this.volumeSliderContainer.getAt(2) as Phaser.GameObjects.Rectangle; // icon=0, track=1, fill=2, thumb=3
+    if (fill) {
+      const fillWidth = trackWidth * this.volumeValue;
+      fill.setSize(fillWidth, fill.height);
+      fill.setPosition(left, this.volumeTrackY);
+      fill.setOrigin(0, 0.5);
+    }
+    if (this.volumeIconRight) {
+      this.volumeIconRight.setText(this.volumeValue === 0 ? '🔇' : '🔊');
+    }
   }
 
   /** Tạo popup chọn ngôn ngữ - chiếm gần hết màn hình */
@@ -139,14 +344,182 @@ export default class SettingsScene extends Phaser.Scene {
     overlay.on('pointerdown', () => this.hideLanguagePopup());
   }
 
+  /** Tạo popup Game Setting */
+  createGameSettingPopup(width: number, height: number): void {
+    this.gameSettingPopupContainer = this.add.container(width / 2, height / 2);
+    this.gameSettingPopupContainer.setDepth(50);
+
+    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, 0x000000, 0.25);
+    overlay.setInteractive({ useHandCursor: false });
+
+    const panelWidth = width * 0.75;
+    const panelHeight = height * 0.5;
+    const radius = Math.min(panelWidth, panelHeight) * 0.04;
+    const panel = this.add.graphics();
+    panel.fillStyle(0x1a1a2e, 0.7);
+    panel.lineStyle(3, 0x95245b);
+    panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
+    panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
+
+    const title = this.add.text(0, -panelHeight / 2 + 80, localizationManager.t('gameSetting'), {
+      fontSize: '36px',
+      color: '#cbbd1b',
+      fontFamily: 'Arial',
+      fontStyle: 'bold',
+      stroke: '#1f0612',
+      strokeThickness: 2
+    }).setOrigin(0.5);
+
+    const closeBtn = this.add.text(panelWidth / 2 - 35, -panelHeight / 2 + 30, '✕', {
+      fontSize: '32px',
+      color: '#ffffff',
+      fontFamily: 'Arial'
+    }).setOrigin(0.5);
+    closeBtn.setInteractive({ useHandCursor: true });
+    closeBtn.on('pointerdown', () => this.hideGameSettingPopup());
+    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: '#ff6b6b' }));
+    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: '#ffffff' }));
+
+    const placeholder = this.add.text(0, 0, localizationManager.t('settings'), {
+      fontSize: '20px',
+      color: '#aaaaaa',
+      fontFamily: 'Arial'
+    }).setOrigin(0.5);
+    placeholder.setAlpha(0.7);
+
+    this.gameSettingPopupContainer.add([overlay, panel, title, closeBtn, placeholder]);
+    this.gameSettingPopupContainer.setVisible(false);
+    overlay.on('pointerdown', () => this.hideGameSettingPopup());
+  }
+
+  /** Xử lý text block: /n → xuống dòng, /tab → tab */
+  private formatParagraphText(raw: string): string {
+    return raw
+      .replace(/\/n/g, '\n')
+      .replace(/\/tab/g, '\t')
+      .toLowerCase();
+  }
+
+  /** Font size cho heading theo size (1 = lớn, 2 = nhỏ hơn, ...) */
+  private getHeadingFontSize(size?: number): number {
+    if (size === 1) return 28;
+    if (size === 2) return 24;
+    return size && size > 0 ? Math.max(18, 32 - size * 4) : 28;
+  }
+
+  /** Tạo popup About - hiển thị nội dung từ About.json */
+  createAboutPopup(width: number, height: number): void {
+    this.aboutPopupContainer = this.add.container(width / 2, height / 2);
+    this.aboutPopupContainer.setDepth(50);
+
+    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, 0x000000, 0.25);
+    overlay.setInteractive({ useHandCursor: false });
+
+    const panelWidth = width * 0.85;
+    const panelHeight = height * 0.75;
+    const radius = Math.min(panelWidth, panelHeight) * 0.04;
+    const panel = this.add.graphics();
+    panel.fillStyle(0x1a1a2e, 0.7);
+    panel.lineStyle(3, 0x95245b);
+    panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
+    panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
+
+    const title = this.add.text(0, -panelHeight / 2 + 120, localizationManager.t('about'), {
+      fontSize: '36px',
+      color: '#cbbd1b',
+      fontFamily: 'Arial',
+      fontStyle: 'bold',
+      stroke: '#1f0612',
+      strokeThickness: 2
+    }).setOrigin(0.5);
+
+    const closeBtn = this.add.text(panelWidth / 2 - 35, -panelHeight / 2 + 30, '✕', {
+      fontSize: '32px',
+      color: '#ffffff',
+      fontFamily: 'Arial'
+    }).setOrigin(0.5);
+    closeBtn.setInteractive({ useHandCursor: true });
+    closeBtn.on('pointerdown', () => this.hideAboutPopup());
+    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: '#ff6b6b' }));
+    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: '#ffffff' }));
+
+    const contentContainer = this.add.container(0, -panelHeight / 2 + 180);
+    const data = aboutData as AboutJson;
+    let currentY = 0;
+    const lineSpacing = 20;
+    const blockSpacing = 35;
+
+    data.blocks.forEach((block) => {
+      const isParagraph = block.type === 'paragraph';
+      const displayText = isParagraph
+        ? this.formatParagraphText(block.text)
+        : (block.text || '').toUpperCase();
+      const fontSize = isParagraph ? 18 : this.getHeadingFontSize(block.size);
+
+      const textObj = this.add.text(0, currentY, displayText, {
+        fontSize: `${fontSize}px`,
+        color: '#ffffff',
+        fontFamily: 'Arial',
+        wordWrap: { width: panelWidth - 80 },
+        align: 'center'
+      }).setOrigin(0.5, 0);
+
+      contentContainer.add(textObj);
+      currentY += textObj.height + (isParagraph ? lineSpacing : blockSpacing);
+    });
+
+    this.aboutPopupContainer.add([overlay, panel, title, closeBtn, contentContainer]);
+    this.aboutPopupContainer.setVisible(false);
+
+    overlay.on('pointerdown', () => this.hideAboutPopup());
+  }
+
+  showAboutPopup(): void {
+    this.languageButton?.setVisible(false);
+    this.gameSettingButton?.setVisible(false);
+    this.aboutButton?.setVisible(false);
+    this.volumeSliderContainer?.setVisible(false);
+    this.aboutPopupContainer?.setVisible(true);
+  }
+
+  hideAboutPopup(): void {
+    this.languageButton?.setVisible(true);
+    this.gameSettingButton?.setVisible(true);
+    this.aboutButton?.setVisible(true);
+    this.volumeSliderContainer?.setVisible(true);
+    this.aboutPopupContainer?.setVisible(false);
+  }
+
   showLanguagePopup(): void {
     this.languageButton?.setVisible(false);
+    this.gameSettingButton?.setVisible(false);
+    this.aboutButton?.setVisible(false);
+    this.volumeSliderContainer?.setVisible(false);
     this.langPopupContainer?.setVisible(true);
   }
 
   hideLanguagePopup(): void {
     this.languageButton?.setVisible(true);
+    this.gameSettingButton?.setVisible(true);
+    this.aboutButton?.setVisible(true);
+    this.volumeSliderContainer?.setVisible(true);
     this.langPopupContainer?.setVisible(false);
+  }
+
+  showGameSettingPopup(): void {
+    this.languageButton?.setVisible(false);
+    this.gameSettingButton?.setVisible(false);
+    this.aboutButton?.setVisible(false);
+    this.volumeSliderContainer?.setVisible(false);
+    this.gameSettingPopupContainer?.setVisible(true);
+  }
+
+  hideGameSettingPopup(): void {
+    this.languageButton?.setVisible(true);
+    this.gameSettingButton?.setVisible(true);
+    this.aboutButton?.setVisible(true);
+    this.volumeSliderContainer?.setVisible(true);
+    this.gameSettingPopupContainer?.setVisible(false);
   }
 
   /** Tạo các nút ngôn ngữ trong container (dùng cho popup) */
@@ -212,7 +585,7 @@ export default class SettingsScene extends Phaser.Scene {
   }
 
   createBackButton(width: number, height: number): void {
-    const buttonY = height * 0.8;
+    const buttonY = height * 0.84;
     this.backButton = this.add.text(width / 2, buttonY, localizationManager.t('back'), {
       fontSize: '36px',
       color: '#ffffff',
@@ -246,6 +619,15 @@ export default class SettingsScene extends Phaser.Scene {
     const langBtnText = this.languageButton?.getAt(1) as Phaser.GameObjects.Text | undefined;
     if (langBtnText) {
       langBtnText.setText(localizationManager.t('language'));
+    }
+    const gameSettingBtnText = this.gameSettingButton?.getAt(1) as Phaser.GameObjects.Text | undefined;
+    if (gameSettingBtnText) {
+      gameSettingBtnText.setText(localizationManager.t('gameSetting'));
+    }
+    // Update about button text
+    const aboutBtnText = this.aboutButton?.getAt(1) as Phaser.GameObjects.Text | undefined;
+    if (aboutBtnText) {
+      aboutBtnText.setText(localizationManager.t('about'));
     }
     if (this.langPopupTitle) {
       this.langPopupTitle.setText(localizationManager.t('language'));
@@ -298,6 +680,7 @@ export default class SettingsScene extends Phaser.Scene {
   }
 
   shutdown(): void {
+    this.stopVolumeTrackHold();
     const win = window as any;
     if (win.gameEvents?.off && this.boundOnLanguageChanged) {
       win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);

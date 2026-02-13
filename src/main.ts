@@ -14,6 +14,7 @@ import RegisterScene from './scenes/RegisterScene.js';
 import TestGraphicsRenderTexture from './scenes/TestGraphicsRenderTexture.js';
 import './utils/GameEventsManager.js';
 import { setupPWA } from './pwa/register';
+import { soundManager } from './core/SoundManager.js';
 
 // Cấu hình game
 const config: Phaser.Types.Core.GameConfig = {
@@ -43,6 +44,7 @@ setupPWA();
 
 // Khởi tạo game
 const game = new Phaser.Game(config);
+soundManager.setGame(game);
 
 // Export để có thể truy cập từ console
 (window as Window & { game?: Phaser.Game }).game = game;

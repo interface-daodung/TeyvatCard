@@ -33,6 +33,10 @@ export const SOUND_EFFECT_ASSETS = [
     { key: 'move-sound', path: 'assets/sounds/SE/move.mp3' }
 ];
 
+export const BGM_ASSETS = [
+    { key: 'bgm-ormos', path: 'assets/sounds/BGM/Ormos.ogg' }
+];
+
 // Character cards
 export const CHARACTER_ASSETS = [
     { key: 'eula', path: 'resources/cards/character/eula.webp' },
