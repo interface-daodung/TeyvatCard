@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
-import { localizationManager, type GameLanguageCode } from '../../utils/LocalizationManager.js';
+import { localizationManager, type GameLanguageCode } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 import type { LangButton } from './types.js';
 
 export interface LanguagePopupResult {
@@ -31,7 +32,7 @@ export function createLanguagePopup(
     panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
     panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
 
-    const titleText = scene.add.text(0, -panelHeight / 2 + 120, localizationManager.t('language'), {
+    const titleText = new I18nText(scene, 0, -panelHeight / 2 + 120, 'language', {
         fontSize: '36px',
         color: themeManager.getAccent(),
         fontFamily: 'Arial',

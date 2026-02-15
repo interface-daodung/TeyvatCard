@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
+import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 import { createCardImage } from './libraryCardAtlas.js';
 import type { LibraryCardData } from './types.js';
 
@@ -60,7 +61,7 @@ export function showCardInfoDialog(
     closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
     closeBtn.setPosition(0, 190);
 
-    const closeText = scene.add.text(0, 190, localizationManager.t('close'), {
+    const closeText = new I18nText(scene, 0, 190, 'close', {
         fontSize: '24px',
         color: themeManager.getText(),
         fontFamily: 'Arial'

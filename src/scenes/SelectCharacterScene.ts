@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
@@ -18,6 +18,7 @@ import {
     type CharacterCardDisplayRefs,
     type NavigationButtonsRefs
 } from '../components/SelectCharacterScene/index.js';
+import { I18nText } from '../components/shared/index.js';
 
 export default class SelectCharacterScene extends Phaser.Scene {
     private cards: CardCharacter[];
@@ -31,7 +32,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
     public cardLevelText!: Phaser.GameObjects.Text;
     public cardElementImage!: Phaser.GameObjects.Image;
     public cardDescriptionText!: Phaser.GameObjects.Text;
-    public cardHPText!: Phaser.GameObjects.Text & { hp: number };
+    public cardHPText!: I18nText & { hp: number };
     public upgradeButton!: Phaser.GameObjects.Text;
     public currentCardContainer!: Phaser.GameObjects.Container;
     public currentCardImage!: Phaser.GameObjects.Image | Phaser.GameObjects.Container;
@@ -67,14 +68,14 @@ export default class SelectCharacterScene extends Phaser.Scene {
                     this.upgradeButton.setTint(themeManager.getNeutralPhaser());
                     this.upgradeButton.setScale(1.1);
                     this.upgradeButton.setStyle({ color: themeManager.getAccent() });
-                    this.cardHPText.setText(localizationManager.t('coin_amount', { amount: this.upgradeCharacterPrice() }));
+                    this.cardHPText.setI18nKey('coin_amount').setI18nParams({ amount: this.upgradeCharacterPrice() });
                 }
             },
             onUpgradeOut: () => {
                 this.upgradeButton.clearTint();
                 this.upgradeButton.setScale(1);
                 this.upgradeButton.setStyle({ color: themeManager.getText() });
-                this.cardHPText.setText(localizationManager.t('hp_label', { hp: this.cardHPText.hp }));
+                this.cardHPText.setI18nKey('hp_label').setI18nParams({ hp: this.cardHPText.hp });
             }
         });
         Object.assign(this, panelRefs as CharacterInfoPanelRefs);
@@ -128,9 +129,9 @@ export default class SelectCharacterScene extends Phaser.Scene {
         this.cardElementImage.setTexture('element', `element-${currentCard.element.toLowerCase()}`);
         this.cardDescriptionText.setText(currentCard.description);
         const hp = currentCard.hp + (currentCard.level ?? 1) - 1;
-        this.cardHPText.setText(localizationManager.t('hp_label', { hp }));
         this.cardHPText.hp = hp;
-        this.cardLevelText.setText(localizationManager.t('level_text', { level: currentCard.level ?? 1 }));
+        this.cardHPText.setI18nKey('hp_label').setI18nParams({ hp });
+        (this.cardLevelText as I18nText).setI18nParams({ level: currentCard.level ?? 1 });
         this.cardHighScoreText.setText(
             this.HighScores[currentCard.id]
                 ? localizationManager.t('high_score_label', { score: this.HighScores[currentCard.id] })
@@ -138,11 +139,11 @@ export default class SelectCharacterScene extends Phaser.Scene {
         );
 
         if ((currentCard.level ?? 1) >= 9) {
-            this.upgradeButton.setText(localizationManager.t('level_max'));
+            (this.upgradeButton as I18nText).setI18nKey('level_max');
             this.upgradeButton.setStyle({ color: themeManager.getText() });
             this.upgradeButton.setScale(1);
         } else {
-            this.upgradeButton.setText(localizationManager.t('upgrade'));
+            (this.upgradeButton as I18nText).setI18nKey('upgrade');
         }
 
         if ((currentCard.level ?? 1) > 2) {

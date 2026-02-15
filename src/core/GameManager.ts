@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import CalculatePositionCard from '../utils/CalculatePositionCard.js';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from './LocalizationManager.js';
+import { I18nText } from '../components/shared/index.js';
 import CardManager from './CardManager.js';
 import AnimationManager from './AnimationManager.js';
 import PriorityEmitter from '../utils/PriorityEmitter.js';
@@ -172,7 +173,7 @@ export default class GameManager {
         }
         // Cập nhật hiển thị coin trong GameScene
         if (this.scene && this.scene.coinText) {
-            this.scene.coinText.setText(localizationManager.t('coin_amount', { amount: this.coin }));
+            (this.scene.coinText as I18nText).setI18nParams({ amount: this.coin });
             console.log(`GameManager: UI coin updated to ${this.coin}`);
         } else {
             console.warn(`GameManager: Cannot update coin UI - scene: ${!!this.scene}, coinText: ${!!this.scene?.coinText}`);
@@ -252,7 +253,7 @@ export default class GameManager {
         dialogContainer.add(dialogBg);
 
         // Tiêu đề – Error (đỏ)
-        const title = this.scene.add.text(0, -100, 'GAME OVER', {
+        const title = I18nText.create(this.scene, 0, -100, 'game_over', {
             fontSize: '32px',
             color: themeManager.getError(),
             fontFamily: 'Arial, sans-serif',
@@ -262,25 +263,25 @@ export default class GameManager {
         dialogContainer.add(title);
 
         // Thông tin điểm số – Warning (vàng)
-        const scoreText = this.scene.add.text(0, -50, localizationManager.t('coin_amount', { amount: this.coin }), {
+        const scoreText = new I18nText(this.scene, 0, -50, 'coin_amount', {
             fontSize: '24px',
             color: themeManager.getWarning(),
             fontFamily: 'Arial, sans-serif'
-        });
+        }, { amount: this.coin });
         scoreText.setOrigin(0.5);
         dialogContainer.add(scoreText);
 
         // High score – Neutral/Text
-        const highScoreText = this.scene.add.text(0, -10, `High Score: ${this.highScore}`, {
+        const highScoreText = I18nText.create(this.scene, 0, -10, 'high_score_label', {
             fontSize: '20px',
             color: themeManager.getNeutral(),
             fontFamily: 'Arial, sans-serif'
-        });
+        }, { score: this.highScore });
         highScoreText.setOrigin(0.5);
         dialogContainer.add(highScoreText);
 
         // Nút Restart – Success (xanh)
-        const restartButton = this.scene.add.text(0, 50, localizationManager.t('restart'), {
+        const restartButton = I18nText.create(this.scene, 0, 50, 'restart', {
             fontSize: '24px',
             color: themeManager.getSuccess(),
             fontFamily: 'Arial, sans-serif',
@@ -301,7 +302,7 @@ export default class GameManager {
         dialogContainer.add(restartButton);
 
         // Nút Menu – Text
-        const menuButton = this.scene.add.text(0, 100, localizationManager.t('menu_button'), {
+        const menuButton = I18nText.create(this.scene, 0, 100, 'menu_button', {
             fontSize: '24px',
             color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',

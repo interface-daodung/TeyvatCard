@@ -1,5 +1,5 @@
 import { themeManager } from '../../core/ThemeManager.js';
-import { localizationManager } from '../../utils/LocalizationManager.js';
+import { localizationManager } from '../../core/LocalizationManager.js';
 import { ApiConfig } from '../../utils/ApiConfig.js';
 
 export interface LoginFormCallbacks {

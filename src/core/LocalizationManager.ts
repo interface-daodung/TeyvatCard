@@ -11,7 +11,7 @@ import {
   LANGUAGE_NAMES,
   type GameLanguageCode
 } from '../i18n/translations.js';
-import { dataManager } from '../core/DataManager.js';
+import { dataManager } from './DataManager.js';
 
 export type { GameLanguageCode };
 

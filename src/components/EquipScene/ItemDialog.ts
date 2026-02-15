@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 import type { Item, EquipItemData } from './types.js';
 
 export interface ShowItemDialogOptions {
@@ -42,12 +42,12 @@ export function showItemDialog(
         fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    const levelText = scene.add.text(0, -dialogHeight / 2 + 60, localizationManager.t('level_label', { level: item.level }), {
+    const levelText = new I18nText(scene, 0, -dialogHeight / 2 + 60, 'level_label', {
         fontSize: '16px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold'
-    }).setOrigin(0.5);
+    }, { level: item.level }).setOrigin(0.5);
 
     const itemIcon = scene.add.image(0, -120, 'item', item.image);
     itemIcon.setDisplaySize(180, 180);
@@ -65,36 +65,37 @@ export function showItemDialog(
     powerBg.lineStyle(2, themeManager.getSurfacePhaser(), 1);
     powerBg.fillRoundedRect(-210, 60, 180, 40, 10);
     powerBg.strokeRoundedRect(-210, 60, 180, 40, 10);
-    const powerText = scene.add.text(-120, 80, localizationManager.t('power_label', { power: item.power }), {
+    const powerText = new I18nText(scene, -120, 80, 'power_label', {
         fontSize: '18px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold'
-    }).setOrigin(0.5);
+    }, { power: item.power }).setOrigin(0.5);
 
     const cooldownBg = scene.add.graphics();
     cooldownBg.fillStyle(themeManager.getSecondaryPhaser(), 0.9);
     cooldownBg.lineStyle(2, themeManager.getSurfacePhaser(), 1);
     cooldownBg.fillRoundedRect(30, 60, 180, 40, 10);
     cooldownBg.strokeRoundedRect(30, 60, 180, 40, 10);
-    const cooldownText = scene.add.text(120, 80, localizationManager.t('cooldown_label', { cooldown: item.cooldown }), {
+    const cooldownText = new I18nText(scene, 120, 80, 'cooldown_label', {
         fontSize: '18px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold'
-    }).setOrigin(0.5);
+    }, { cooldown: item.cooldown }).setOrigin(0.5);
 
     const buttonContainer = scene.add.container(0, dialogHeight / 2 - 50);
 
-    const priceText = scene.add.text(-200, -42, localizationManager.t('coin_amount', { amount: item.getPrice() }), {
+    const upgradeKey = item.level === 0 ? 'unlock' : item.isUpgrade() ? 'upgrade' : 'level_max';
+    const priceText = new I18nText(scene, -200, -42, 'coin_amount', {
         fontSize: '20px',
         color: themeManager.getText(),
         fontStyle: 'bold',
         fontFamily: 'Arial, sans-serif'
-    }).setOrigin(0.5);
+    }, { amount: item.getPrice() }).setOrigin(0.5);
     priceText.setAlpha(0);
 
-    const upgradeButton = scene.add.text(-200, 0, item.level === 0 ? localizationManager.t('unlock') : item.isUpgrade() ? localizationManager.t('upgrade') : localizationManager.t('level_max'), {
+    const upgradeButton = new I18nText(scene, -200, 0, upgradeKey, {
         fontSize: '20px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
@@ -117,12 +118,12 @@ export function showItemDialog(
         upgradeButton.on('pointerdown', () => {
             if (item.upgrade()) {
                 descriptionText.setText(item.description);
-                powerText.setText(localizationManager.t('power_label', { power: item.power }));
-                cooldownText.setText(localizationManager.t('cooldown_label', { cooldown: item.cooldown }));
-                levelText.setText(localizationManager.t('level_label', { level: item.level }));
-                priceText.setText(localizationManager.t('coin_amount', { amount: item.getPrice() }));
+                powerText.setI18nParams({ power: item.power });
+                cooldownText.setI18nParams({ cooldown: item.cooldown });
+                levelText.setI18nParams({ level: item.level });
+                priceText.setI18nParams({ amount: item.getPrice() });
                 if (!item.isUpgrade()) {
-                    upgradeButton.setText(localizationManager.t('level_max'));
+                    upgradeButton.setI18nKey('level_max');
                     upgradeButton.setStyle({ backgroundColor: themeManager.getPrimary() });
                     upgradeButton.disableInteractive();
                     upgradeButton.off('pointerover');
@@ -130,7 +131,7 @@ export function showItemDialog(
                     upgradeButton.off('pointerdown');
                     priceText.setAlpha(0);
                 } else if (item.level > 0) {
-                    upgradeButton.setText(localizationManager.t('upgrade'));
+                    upgradeButton.setI18nKey('upgrade');
                 }
             }
         });
@@ -138,7 +139,7 @@ export function showItemDialog(
         upgradeButton.disableInteractive();
     }
 
-    const selectButton = scene.add.text(0, 0, equipSlot ? localizationManager.t('deselect') : localizationManager.t('select'), {
+    const selectButton = new I18nText(scene, 0, 0, equipSlot ? 'deselect' : 'select', {
         fontSize: '20px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
@@ -166,7 +167,7 @@ export function showItemDialog(
         });
     }
 
-    const closeButton = scene.add.text(200, 0, localizationManager.t('back_short'), {
+    const closeButton = new I18nText(scene, 200, 0, 'back_short', {
         fontSize: '20px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',

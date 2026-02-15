@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
 import { dataManager } from '../../core/DataManager.js';
 import itemFactory from '../../modules/ItemFactory.js';
-import { localizationManager } from '../../utils/LocalizationManager.js';
+import { I18nText } from '../shared/index.js';
 import type { ItemData, ItemButton } from './types.js';
 
 export function createItemButtonsFromStorage(): ItemData[] {
@@ -96,7 +96,7 @@ export function createItemButton(
 /** Hiển thị toast "item not ready" giữa màn, tự xóa sau 1s. */
 export function showItemNotReadyToast(scene: Phaser.Scene): void {
     const { width, height } = scene.scale;
-    const t = scene.add.text(width * 0.5, height * 0.5, localizationManager.t('item_not_ready'), {
+    const t = I18nText.create(scene, width * 0.5, height * 0.5, 'item_not_ready', {
         fontSize: '24px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',

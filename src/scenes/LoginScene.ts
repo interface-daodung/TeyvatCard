@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { dataManager } from '../core/DataManager.js';
 import { GradientText } from '../utils/GradientText.js';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { ApiConfig } from '../utils/ApiConfig.js';
 import { themeManager } from '../core/ThemeManager.js';

@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import { assetManager } from '../core/AssetManager.js';
 import { themeManager } from '../core/ThemeManager.js';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
+import { I18nText } from '../components/shared/index.js';
 
 interface SceneData {
     targetScene?: string;
@@ -42,7 +43,7 @@ export default class LoadingScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Text "loading" bên dưới icon (căn giữa)
-        const loadingText = this.add.text(width / 2, height * 0.5 + 48, localizationManager.t('loading'), {
+        const loadingText = I18nText.create(this, width / 2, height * 0.5 + 48, 'loading', {
             fontSize: '48px',
             fontStyle: 'bold',
             stroke: themeManager.getBackground(),

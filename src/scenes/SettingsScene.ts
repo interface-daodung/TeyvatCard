@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
 import { soundManager } from '../core/SoundManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import {
@@ -148,13 +148,6 @@ export default class SettingsScene extends Phaser.Scene {
             this.titleImage = GradientText.createGameTitle(this, localizationManager.t('settings'), x, y);
             this.mainUIContainer.add(this.titleImage);
         }
-        if (this.backButton?.active) this.backButton.setText(localizationManager.t('back_short'));
-        const langText = this.languageButton.getAt(1) as Phaser.GameObjects.Text;
-        if (langText) langText.setText(localizationManager.t('language'));
-        const gameText = this.gameSettingButton.getAt(1) as Phaser.GameObjects.Text;
-        if (gameText) gameText.setText(localizationManager.t('gameSetting'));
-        const aboutText = this.aboutButton.getAt(1) as Phaser.GameObjects.Text;
-        if (aboutText) aboutText.setText(localizationManager.t('about'));
         this.setLangPopupTitle(localizationManager.t('language'));
         this.refreshLanguageButtons();
     }

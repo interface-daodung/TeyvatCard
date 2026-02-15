@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
+import { I18nText } from '../components/shared/index.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { ApiConfig } from '../utils/ApiConfig.js';
 import { themeManager } from '../core/ThemeManager.js';
@@ -59,7 +60,7 @@ export default class PaymentScene extends Phaser.Scene {
             );
         });
 
-        const backButton = this.add.text(width / 2, height * 0.88, localizationManager.t('back'), {
+        const backButton = I18nText.create(this, width / 2, height * 0.88, 'back', {
             fontSize: '36px',
             color: themeManager.getText(),
             fontFamily: 'Arial',

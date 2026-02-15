@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 
 export function createGameSettingPopup(
     scene: Phaser.Scene,
@@ -24,7 +24,7 @@ export function createGameSettingPopup(
     panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
     panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
 
-    const title = scene.add.text(0, -panelHeight / 2 + 80, localizationManager.t('gameSetting'), {
+    const title = new I18nText(scene, 0, -panelHeight / 2 + 80, 'gameSetting', {
         fontSize: '36px',
         color: themeManager.getAccent(),
         fontFamily: 'Arial',
@@ -43,7 +43,7 @@ export function createGameSettingPopup(
     closeBtn.on('pointerover', () => closeBtn.setStyle({ color: themeManager.getAccent() }));
     closeBtn.on('pointerout', () => closeBtn.setStyle({ color: themeManager.getText() }));
 
-    const placeholder = scene.add.text(0, 0, localizationManager.t('settings'), {
+    const placeholder = new I18nText(scene, 0, 0, 'settings', {
         fontSize: '20px',
         color: themeManager.getNeutral(),
         fontFamily: 'Arial'

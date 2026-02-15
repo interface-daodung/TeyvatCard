@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { createBackButton } from '../components/shared/index.js';

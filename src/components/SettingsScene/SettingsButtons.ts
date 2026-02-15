@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 
 /**
  * Tạo nút rect + text (Language, Game Setting, About style). Click gọi onClick.
+ * Text dùng I18nText nên tự cập nhật khi đổi ngôn ngữ.
  */
 export function createRectTextButton(
     scene: Phaser.Scene,
@@ -21,7 +22,7 @@ export function createRectTextButton(
     rect.setStrokeStyle(3, themeManager.getSecondaryPhaser());
     rect.setInteractive({ useHandCursor: true });
 
-    const text = scene.add.text(width / 2, buttonY, localizationManager.t(labelKey), {
+    const text = I18nText.create(scene, width / 2, buttonY, labelKey, {
         fontSize: '32px',
         color: themeManager.getText(),
         fontFamily: 'Arial',

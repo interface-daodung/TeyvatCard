@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
+import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 import type { PackageDef } from './types.js';
 
 /**
@@ -30,14 +31,10 @@ export function createPackageButton(
     rect.setStrokeStyle(3, strokeColor);
     if (!isDisabled) rect.setInteractive({ useHandCursor: true });
 
-    const titleText = isStarter
-        ? localizationManager.t('package_starter')
-        : localizationManager.t(pkg.priceKey);
-    const descText = isStarter
-        ? localizationManager.t('package_starter_desc')
-        : localizationManager.t(pkg.coinsKey);
+    const titleKey = isStarter ? 'package_starter' : pkg.priceKey;
+    const descKey = isStarter ? 'package_starter_desc' : pkg.coinsKey;
 
-    const title = scene.add.text(x, y - 12, titleText, {
+    const title = I18nText.create(scene, x, y - 12, titleKey, {
         fontSize: '26px',
         color: isDisabled ? themeManager.getNeutral() : themeManager.getText(),
         fontFamily: 'Arial',
@@ -45,14 +42,14 @@ export function createPackageButton(
         strokeThickness: 2
     }).setOrigin(0.5);
 
-    const desc = scene.add.text(x, y + 12, descText, {
+    const desc = I18nText.create(scene, x, y + 12, descKey, {
         fontSize: '20px',
         color: isDisabled ? themeManager.getNeutral() : themeManager.getText(),
         fontFamily: 'Arial'
     }).setOrigin(0.5);
 
     if (isDisabled) {
-        const soldOut = scene.add.text(x, y + 12, localizationManager.t('package_sold_out'), {
+        const soldOut = I18nText.create(scene, x, y + 12, 'package_sold_out', {
             fontSize: '20px',
             color: themeManager.getAccent(),
             fontFamily: 'Arial',

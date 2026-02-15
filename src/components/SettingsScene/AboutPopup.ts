@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 import aboutData from '../../data/About.json';
 import type { AboutJson } from './types.js';
 
@@ -36,7 +36,7 @@ export function createAboutPopup(
     panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
     panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
 
-    const title = scene.add.text(0, -panelHeight / 2 + 120, localizationManager.t('about'), {
+    const title = new I18nText(scene, 0, -panelHeight / 2 + 120, 'about', {
         fontSize: '36px',
         color: themeManager.getAccent(),
         fontFamily: 'Arial',

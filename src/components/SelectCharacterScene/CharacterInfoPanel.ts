@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 
 export interface CharacterInfoPanelRefs {
     cardNameText: Phaser.GameObjects.Text;
@@ -8,7 +8,7 @@ export interface CharacterInfoPanelRefs {
     cardLevelText: Phaser.GameObjects.Text;
     cardElementImage: Phaser.GameObjects.Image;
     cardDescriptionText: Phaser.GameObjects.Text;
-    cardHPText: Phaser.GameObjects.Text & { hp: number };
+    cardHPText: I18nText & { hp: number };
     upgradeButton: Phaser.GameObjects.Text;
 }
 
@@ -44,12 +44,12 @@ export function createInfoPanel(
         fontStyle: 'bold'
     }).setAlpha(0.5).setOrigin(0.5);
 
-    const cardLevelText = scene.add.text(width * 0.82, height * 0.18, 'level 1', {
+    const cardLevelText = I18nText.create(scene, width * 0.82, height * 0.18, 'level_text', {
         fontSize: '20px',
         color: themeManager.getAccent(),
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold'
-    }).setOrigin(0.5);
+    }, { level: 1 }).setOrigin(0.5);
 
     const cardElementImage = scene.add.image(width * 0.1 + 32, height * 0.15 + 32, 'element', 'element-cryo');
     cardElementImage.setDisplaySize(32, 32);
@@ -62,17 +62,17 @@ export function createInfoPanel(
         align: 'center'
     }).setOrigin(0.5);
 
-    const cardHPText = scene.add.text(width * 0.5, height * 0.32, localizationManager.t('hp_label', { hp: 7 }), {
+    const cardHPText = I18nText.create(scene, width * 0.5, height * 0.32, 'hp_label', {
         fontSize: '32px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
         wordWrap: { width: width * 0.75 },
         align: 'center'
-    }) as Phaser.GameObjects.Text & { hp: number };
+    }, { hp: 7 }) as I18nText & { hp: number };
     cardHPText.setOrigin(0.5);
     cardHPText.hp = 7;
 
-    const upgradeButton = scene.add.text(width * 0.5, height * 0.36, localizationManager.t('upgrade'), {
+    const upgradeButton = I18nText.create(scene, width * 0.5, height * 0.36, 'upgrade', {
         fontSize: '24px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../../utils/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 import type { GameUIRefs } from './types.js';
 
 export function createGameUI(
@@ -39,19 +39,19 @@ export function createGameUI(
         strokeThickness: 2
     }).setOrigin(0.5);
 
-    const highScoreText = scene.add.text(width * 0.5, height * 0.07, localizationManager.t('high_score_label', { score: highScore }), {
+    const highScoreText = I18nText.create(scene, width * 0.5, height * 0.07, 'high_score_label', {
         fontSize: '20px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif'
-    }).setOrigin(0.5).setAlpha(0.8);
+    }, { score: highScore }).setOrigin(0.5).setAlpha(0.8);
 
-    const coinText = scene.add.text(width * 0.75, height * 0.13, `🪙${coin}`, {
+    const coinText = I18nText.create(scene, width * 0.75, height * 0.13, 'coin_amount', {
         fontSize: '32px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold',
         strokeThickness: 2
-    });
+    }, { amount: coin });
 
     return { stageText, highScoreText, coinText };
 }

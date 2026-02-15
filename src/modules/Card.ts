@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
-import { localizationManager } from '../utils/LocalizationManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import { themeManager } from '../core/ThemeManager.js';
+import { I18nText } from '../components/shared/index.js';
 import type GameManager from '../core/GameManager.js';
 
 export interface SceneWithGameManager extends Phaser.Scene {
@@ -172,11 +173,11 @@ export default class Card extends Phaser.GameObjects.Container {
         });
         nameText.setOrigin(0.5);
 
-        const typeText = this.scene.add.text(0, -100, localizationManager.t('type_label', { type: localizationManager.t(this.type) || this.type }), {
+        const typeText = new I18nText(this.scene, 0, -100, 'type_label', {
             fontSize: '16px',
             color: themeManager.getSecondary(),
             fontFamily: 'Arial'
-        });
+        }, { type: localizationManager.t(this.type) || this.type });
         typeText.setOrigin(0.5);
 
         const description = this.getDescription();
@@ -194,7 +195,7 @@ export default class Card extends Phaser.GameObjects.Container {
         closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
         closeBtn.setPosition(0, 190);
 
-        const closeText = this.scene.add.text(0, 190, localizationManager.t('close'), {
+        const closeText = new I18nText(this.scene, 0, 190, 'close', {
             fontSize: '24px',
             color: themeManager.getText(),
             fontFamily: 'Arial'

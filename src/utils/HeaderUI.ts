@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
-import { localizationManager } from './LocalizationManager.js';
 import { AuthManager } from './AuthManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { dataManager } from '../core/DataManager.js';
+import { I18nText } from '../components/shared/index.js';
 
 /**
  * Utility để tạo HeaderUI có thể tái sử dụng
@@ -18,14 +18,14 @@ export class HeaderUI {
     static createHeaderUI(scene: Phaser.Scene, width: number, height: number): { updateCoinDisplay: (newCoin: string | number) => void } {
         // Hiển thị số coin từ dataManager
         const totalCoin = String(dataManager.get<number>('totalCoin') ?? 0);
-        const coinDisplay = scene.add.text(width * 0.05, height * 0.05, localizationManager.t('coin_header', { amount: totalCoin }), {
+        const coinDisplay = I18nText.create(scene, width * 0.05, height * 0.05, 'coin_header', {
             fontSize: '32px',
             color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
             stroke: themeManager.getBackground(),
             strokeThickness: 2
-        });
+        }, { amount: totalCoin });
 
         // Nút dấu cộng (+) cạnh coinDisplay - luôn đặt sau số tiền, cập nhật vị trí khi số tiền thay đổi
         const plusBtnSize = 36;
@@ -69,7 +69,7 @@ export class HeaderUI {
         updatePlusButtonPosition(); // Vị trí ban đầu
 
         // Nút Settings (⚙️) ở góc trên bên phải
-        const settingsButton = scene.add.text(width * 0.935, height * 0.065, localizationManager.t('settings_icon'), {
+        const settingsButton = I18nText.create(scene, width * 0.935, height * 0.065, 'settings_icon', {
             fontSize: '32px',
             fontFamily: 'Arial, sans-serif'
         }).setOrigin(0.5, 0.5); // Căn giữa
@@ -97,7 +97,7 @@ export class HeaderUI {
         // Trả về method để cập nhật coin display
         return {
             updateCoinDisplay: (newCoin: string | number) => {
-                coinDisplay.setText(localizationManager.t('coin_header', { amount: String(newCoin) }));
+                coinDisplay.setI18nParams({ amount: String(newCoin) });
                 updatePlusButtonPosition(); // Cập nhật vị trí nút + khi số tiền thay đổi
             }
         };
