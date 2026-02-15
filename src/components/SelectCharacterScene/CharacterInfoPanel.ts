@@ -1,6 +1,15 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
 import { I18nText } from '../shared/index.js';
+import type { CardCharacter } from './types.js';
+
+/** Dữ liệu đã load sẵn để tạo panel với đúng thông tin từ đầu, tránh cache mặc định */
+export interface CharacterInfoInitialData {
+    card: CardCharacter;
+    hp: number;
+    highScore: string;
+    level: number;
+}
 
 export interface CharacterInfoPanelRefs {
     cardNameText: Phaser.GameObjects.Text;
@@ -22,7 +31,8 @@ export function createInfoPanel(
     scene: Phaser.Scene,
     width: number,
     height: number,
-    callbacks: CharacterInfoPanelCallbacks
+    callbacks: CharacterInfoPanelCallbacks,
+    initialData?: CharacterInfoInitialData
 ): CharacterInfoPanelRefs {
     const panelBg = scene.add.graphics();
     panelBg.fillStyle(themeManager.getSecondaryPhaser(), 0.8);
@@ -30,14 +40,21 @@ export function createInfoPanel(
     panelBg.lineStyle(3, themeManager.getSurfacePhaser(), 1);
     panelBg.strokeRoundedRect(width * 0.1, height * 0.15, width * 0.8, height * 0.25, 20);
 
-    const cardNameText = scene.add.text(width * 0.5, height * 0.18, '', {
+    const name = initialData?.card?.name ?? '';
+    const level = initialData?.level ?? 1;
+    const hp = initialData?.hp ?? 7;
+    const elementKey = initialData?.card?.element?.toLowerCase() ?? 'cryo';
+    const description = initialData?.card?.description ?? '';
+    const highScore = initialData?.highScore ?? '';
+
+    const cardNameText = scene.add.text(width * 0.5, height * 0.18, name, {
         fontSize: '32px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    const cardHighScoreText = scene.add.text(width * 0.5, height * 0.202, '', {
+    const cardHighScoreText = scene.add.text(width * 0.5, height * 0.202, highScore, {
         fontSize: '16px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
@@ -49,12 +66,12 @@ export function createInfoPanel(
         color: themeManager.getAccent(),
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold'
-    }, { level: 1 }).setOrigin(0.5);
+    }, { level }).setOrigin(0.5);
 
-    const cardElementImage = scene.add.image(width * 0.1 + 32, height * 0.15 + 32, 'element', 'element-cryo');
+    const cardElementImage = scene.add.image(width * 0.1 + 32, height * 0.15 + 32, 'element', `element-${elementKey}`);
     cardElementImage.setDisplaySize(32, 32);
 
-    const cardDescriptionText = scene.add.text(width * 0.5, height * 0.26, '', {
+    const cardDescriptionText = scene.add.text(width * 0.5, height * 0.26, description, {
         fontSize: '20px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
@@ -68,11 +85,11 @@ export function createInfoPanel(
         fontFamily: 'Arial, sans-serif',
         wordWrap: { width: width * 0.75 },
         align: 'center'
-    }, { hp: 7 }) as I18nText & { hp: number };
+    }, { hp }) as I18nText & { hp: number };
     cardHPText.setOrigin(0.5);
-    cardHPText.hp = 7;
+    cardHPText.hp = hp;
 
-    const upgradeButton = I18nText.create(scene, width * 0.5, height * 0.36, 'upgrade', {
+    const upgradeButton = I18nText.create(scene, width * 0.5, height * 0.36, level >= 9 ? 'level_max' : 'upgrade', {
         fontSize: '24px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',

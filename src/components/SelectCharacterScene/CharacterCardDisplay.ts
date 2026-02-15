@@ -7,9 +7,14 @@ export interface CharacterCardDisplayRefs {
     cardBorder: Phaser.GameObjects.Graphics;
 }
 
-export function createCurrentCardDisplay(scene: Phaser.Scene, width: number, height: number): CharacterCardDisplayRefs {
+export function createCurrentCardDisplay(
+    scene: Phaser.Scene,
+    width: number,
+    height: number,
+    initialCardId: string
+): CharacterCardDisplayRefs {
     const currentCardContainer = scene.add.container(width / 2, height * 0.65);
-    const currentCardImage = scene.add.image(0, 0, 'character', 'eula');
+    const currentCardImage = scene.add.image(0, 0, 'character', initialCardId);
     currentCardImage.setDisplaySize(300, 514);
 
     const cardBorder = scene.add.graphics();

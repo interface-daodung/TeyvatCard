@@ -50,6 +50,9 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
     init(): void {
         this.HighScores = dataManager.get<HighScores>('characterHighScores') ?? {};
+        // Refresh currentCardIndex from localStorage when scene starts (constructor runs once at game boot).
+        const selectedCharacter = dataManager.get<string>('selectedCharacter');
+        this.currentCardIndex = initializeCurrentCardIndex(this.cards, selectedCharacter);
     }
 
     create(): void {
@@ -58,6 +61,22 @@ export default class SelectCharacterScene extends Phaser.Scene {
         this.add.image(width / 2, height / 2, 'background').setDisplaySize(width, height);
         HeaderUI.createHeaderUI(this, width, height);
         GameTitle.create(this, width / 2, height * 0.12, 'character_title');
+
+        // Load toàn bộ thông tin từ local một lần khi vào scene, tránh cache mặc định
+        const currentCard = this.cards[this.currentCardIndex];
+        const levelData = dataManager.get<Record<string, number>>('characterLevel');
+        currentCard.level = levelData?.[currentCard.id] ?? 1;
+        const hp = currentCard.hp + (currentCard.level ?? 1) - 1;
+        const highScoreStr = this.HighScores[currentCard.id]
+            ? localizationManager.t('high_score_label', { score: this.HighScores[currentCard.id] })
+            : '';
+
+        const initialData = {
+            card: currentCard,
+            hp,
+            highScore: highScoreStr,
+            level: currentCard.level ?? 1
+        };
 
         const panelRefs = createInfoPanel(this, width, height, {
             onUpgradeClick: () => this.upgradeCharacter(),
@@ -75,10 +94,10 @@ export default class SelectCharacterScene extends Phaser.Scene {
                 this.upgradeButton.setStyle({ color: themeManager.getText() });
                 this.cardHPText.setI18nKey('hp_label').setI18nParams({ hp: this.cardHPText.hp });
             }
-        });
+        }, initialData);
         Object.assign(this, panelRefs as CharacterInfoPanelRefs);
 
-        const cardRefs = createCurrentCardDisplay(this, width, height);
+        const cardRefs = createCurrentCardDisplay(this, width, height, currentCard.id);
         Object.assign(this, cardRefs as CharacterCardDisplayRefs);
 
         const navRefs = createNavigationButtons(this, width, height, () => this.previousCard(), () => this.nextCard());
