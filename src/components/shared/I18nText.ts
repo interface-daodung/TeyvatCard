@@ -26,10 +26,7 @@ export class I18nText extends Phaser.GameObjects.Text {
         this.i18nParams = { ...i18nParams };
         this.boundRefresh = this.refreshText.bind(this);
 
-        const win = window as { gameEvents?: { on: (e: string, fn: () => void) => void } };
-        if (win.gameEvents?.on) {
-            win.gameEvents.on('languageChanged', this.boundRefresh);
-        }
+        scene.game.events.on('languageChanged', this.boundRefresh);
     }
 
     /** Cập nhật lại text từ key + params hiện tại (gọi khi đổi ngôn ngữ hoặc khi params thay đổi). */
@@ -51,10 +48,7 @@ export class I18nText extends Phaser.GameObjects.Text {
     }
 
     override destroy(fromScene?: boolean): void {
-        const win = window as { gameEvents?: { off: (e: string, fn: () => void) => void } };
-        if (win.gameEvents?.off) {
-            win.gameEvents.off('languageChanged', this.boundRefresh);
-        }
+        this.scene?.game?.events?.off('languageChanged', this.boundRefresh);
         super.destroy(fromScene);
     }
 

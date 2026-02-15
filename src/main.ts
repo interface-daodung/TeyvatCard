@@ -12,7 +12,6 @@ import PaymentScene from './scenes/PaymentScene.js';
 import LoginScene from './scenes/LoginScene.js';
 import RegisterScene from './scenes/RegisterScene.js';
 import TestGraphicsRenderTexture from './scenes/TestGraphicsRenderTexture.js';
-import './utils/GameEventsManager.js';
 import { setupPWA } from './pwa/register';
 import { soundManager } from './core/SoundManager.js';
 import { themeManager } from './core/ThemeManager.js';

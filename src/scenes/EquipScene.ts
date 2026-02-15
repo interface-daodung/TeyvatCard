@@ -1,7 +1,5 @@
 import Phaser from 'phaser';
 import { dataManager } from '../core/DataManager.js';
-import { localizationManager } from '../core/LocalizationManager.js';
-import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
 import {
@@ -14,17 +12,15 @@ import {
     type EquipmentSlot,
     type EquipItemData
 } from '../components/EquipScene/index.js';
+import { GameTitle } from '../components/shared/index.js';
 
 export default class EquipScene extends Phaser.Scene {
     public equipmentSlots: EquipmentSlot[];
     public listItems!: Map<string, EquipItemData>;
-    private titleImage?: Phaser.GameObjects.Image;
-    private boundOnLanguageChanged: () => void;
 
     constructor() {
         super({ key: 'EquipScene' });
         this.equipmentSlots = new Array(3).fill(null).map(() => ({ item: null, image: null as any }));
-        this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
     }
 
     preload(): void {}
@@ -34,7 +30,7 @@ export default class EquipScene extends Phaser.Scene {
 
         this.add.image(width / 2, height / 2, 'background');
         HeaderUI.createHeaderUI(this, width, height);
-        this.titleImage = GradientText.createGameTitle(this, localizationManager.t('equip_title'), width / 2, height * 0.18);
+        GameTitle.create(this, width / 2, height * 0.18, 'equip_title');
 
         this.listItems = createItemGrid(this, width, height, (item: Item) => this.showItemDialog(item, false));
         createEquipmentSlots(this, width, height, this.equipmentSlots, (index: number) => {
@@ -51,32 +47,9 @@ export default class EquipScene extends Phaser.Scene {
         }, 'select');
 
         this.initializeEquipmentSlots();
-
-        const win = window as any;
-        if (win.gameEvents?.on) {
-            win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
-        }
     }
 
-    onLanguageChanged(): void {
-        if (!this.scene.isActive() || !this.scene.isVisible()) return;
-        try {
-            if (this.titleImage?.active) {
-                const { x, y } = { x: this.titleImage.x, y: this.titleImage.y };
-                this.titleImage.destroy();
-                this.titleImage = GradientText.createGameTitle(this, localizationManager.t('equip_title'), x, y);
-            }
-        } catch (error) {
-            console.error('[EquipScene] Error in onLanguageChanged:', error);
-        }
-    }
-
-    shutdown(): void {
-        const win = window as any;
-        if (win.gameEvents?.off && this.boundOnLanguageChanged) {
-            win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
-        }
-    }
+    shutdown(): void {}
 
     wake(): void {
         this.initializeEquipmentSlots();

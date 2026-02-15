@@ -1,11 +1,10 @@
 import Phaser from 'phaser';
 import { dataManager } from '../core/DataManager.js';
-import { GradientText } from '../utils/GradientText.js';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { ApiConfig } from '../utils/ApiConfig.js';
 import { themeManager } from '../core/ThemeManager.js';
-import { createBackButton } from '../components/shared/index.js';
+import { createBackButton, GameTitle } from '../components/shared/index.js';
 import { createLoginForm } from '../components/LoginScene/index.js';
 
 export default class LoginScene extends Phaser.Scene {
@@ -28,7 +27,7 @@ export default class LoginScene extends Phaser.Scene {
     this.add.image(width / 2, height / 2, 'background');
     this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
-    GradientText.createGameTitle(this, localizationManager.t('login'), width / 2, height * 0.12);
+    GameTitle.create(this, width / 2, height * 0.12, 'login');
 
     const formApi = createLoginForm(this, width, height, {
       onLogin: (email, password) => this.handleLogin(email, password),
@@ -44,10 +43,7 @@ export default class LoginScene extends Phaser.Scene {
     }, 'back_short');
 
     this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
-    const win = window as { gameEvents?: { on: (e: string, fn: () => void) => void } };
-    if (win.gameEvents?.on) {
-      win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
-    }
+    this.game.events.on('languageChanged', this.boundOnLanguageChanged);
   }
 
   private onLanguageChanged(): void {
@@ -138,9 +134,8 @@ export default class LoginScene extends Phaser.Scene {
   }
 
   shutdown(): void {
-    const win = window as { gameEvents?: { off: (e: string, fn: () => void) => void } };
-    if (win.gameEvents?.off && this.boundOnLanguageChanged) {
-      win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
+    if (this.boundOnLanguageChanged) {
+      this.game.events.off('languageChanged', this.boundOnLanguageChanged);
     }
     this.removeForm();
   }

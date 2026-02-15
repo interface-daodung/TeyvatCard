@@ -1,9 +1,8 @@
 import Phaser from 'phaser';
-import { GradientText } from '../utils/GradientText.js';
-import { localizationManager } from '../core/LocalizationManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import dungeonList from '../data/dungeonList.json';
 import { createDungeonButtons, createPaginationButtons } from '../components/MapScene/index.js';
+import { GameTitle } from '../components/shared/index.js';
 import type { DungeonData } from '../components/MapScene/index.js';
 
 export default class MapScenes extends Phaser.Scene {
@@ -29,7 +28,7 @@ export default class MapScenes extends Phaser.Scene {
 
         this.add.image(width / 2, height / 2, 'background');
         this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
-        GradientText.createGameTitle(this, localizationManager.t('dungeon_map'), width / 2, height * 0.18);
+        GameTitle.create(this, width / 2, height * 0.18, 'dungeon_map');
 
         const dungeonResult = createDungeonButtons(this, width, height, this.itemsPerPage, (stageId: string) => {
             this.scene.stop('GameScene');

@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import { localizationManager } from '../core/LocalizationManager.js';
-import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { dataManager } from '../core/DataManager.js';
@@ -18,13 +17,12 @@ import {
     type CharacterCardDisplayRefs,
     type NavigationButtonsRefs
 } from '../components/SelectCharacterScene/index.js';
-import { I18nText } from '../components/shared/index.js';
+import { GameTitle, I18nText } from '../components/shared/index.js';
 
 export default class SelectCharacterScene extends Phaser.Scene {
     private cards: CardCharacter[];
     private currentCardIndex: number;
     private HighScores!: HighScores;
-    private titleImage?: Phaser.GameObjects.Image;
     private boundOnLanguageChanged: () => void;
 
     public cardNameText!: Phaser.GameObjects.Text;
@@ -59,7 +57,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         this.add.image(width / 2, height / 2, 'background').setDisplaySize(width, height);
         HeaderUI.createHeaderUI(this, width, height);
-        this.titleImage = GradientText.createGameTitle(this, localizationManager.t('character_title'), width / 2, height * 0.12);
+        GameTitle.create(this, width / 2, height * 0.12, 'character_title');
 
         const panelRefs = createInfoPanel(this, width, height, {
             onUpgradeClick: () => this.upgradeCharacter(),
@@ -93,20 +91,12 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         this.updateCardDisplay();
 
-        const win = window as any;
-        if (win.gameEvents?.on) {
-            win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
-        }
+        this.game.events.on('languageChanged', this.boundOnLanguageChanged);
     }
 
     onLanguageChanged(): void {
         if (!this.scene.isActive() || !this.scene.isVisible()) return;
         try {
-            if (this.titleImage?.active) {
-                const { x, y } = { x: this.titleImage.x, y: this.titleImage.y };
-                this.titleImage.destroy();
-                this.titleImage = GradientText.createGameTitle(this, localizationManager.t('character_title'), x, y);
-            }
             this.updateCardDisplay();
         } catch (error) {
             console.error('[SelectCharacterScene] Error in onLanguageChanged:', error);
@@ -114,9 +104,8 @@ export default class SelectCharacterScene extends Phaser.Scene {
     }
 
     shutdown(): void {
-        const win = window as any;
-        if (win.gameEvents?.off && this.boundOnLanguageChanged) {
-            win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
+        if (this.boundOnLanguageChanged) {
+            this.game.events.off('languageChanged', this.boundOnLanguageChanged);
         }
     }
 

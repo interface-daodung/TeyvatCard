@@ -1,11 +1,10 @@
 import Phaser from 'phaser';
 import { dataManager } from '../core/DataManager.js';
-import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { soundManager } from '../core/SoundManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import cardCharacterList from '../data/cardCharacterList.json';
-import { I18nText } from '../components/shared/index.js';
+import { GameTitle, I18nText } from '../components/shared/index.js';
 import {
     createCardSpreadContainer,
     createMenuButton,
@@ -36,7 +35,7 @@ export default class MenuScene extends Phaser.Scene {
         background.setDisplaySize(width, height);
 
         HeaderUI.createHeaderUI(this, width, height);
-        GradientText.createGameTitle(this, 'TEYVAT CARD', width / 2, height * 0.18);
+        GameTitle.create(this, width / 2, height * 0.18, 'menu_title');
 
         const selectedCharacter = dataManager.get<string>('selectedCharacter') ?? null;
         const characterLevel = dataManager.get<Record<string, number>>('characterLevel') ?? null;

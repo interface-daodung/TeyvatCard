@@ -15,7 +15,7 @@ export function setupPWA() {
     onNeedRefresh() {
       console.log('[PWA] New content available. Reload to update.');
       // Hook this into an in-game UI popup if you want:
-      // e.g. GameEventsManager.emit('pwa:update-available');
+      // e.g. (window as any).game?.events.emit('pwa:update-available');
     },
     onOfflineReady() {
       console.log('[PWA] App is ready to work offline.');

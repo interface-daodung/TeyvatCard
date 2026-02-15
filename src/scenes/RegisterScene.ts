@@ -1,9 +1,7 @@
 import Phaser from 'phaser';
-import { GradientText } from '../utils/GradientText.js';
-import { localizationManager } from '../core/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { themeManager } from '../core/ThemeManager.js';
-import { createBackButton } from '../components/shared/index.js';
+import { createBackButton, GameTitle } from '../components/shared/index.js';
 import { createRegisterForm } from '../components/RegisterScene/index.js';
 
 export default class RegisterScene extends Phaser.Scene {
@@ -24,7 +22,7 @@ export default class RegisterScene extends Phaser.Scene {
     this.add.image(width / 2, height / 2, 'background');
     this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
-    GradientText.createGameTitle(this, localizationManager.t('register'), width / 2, height * 0.1);
+    GameTitle.create(this, width / 2, height * 0.1, 'register');
 
     const formApi = createRegisterForm(this, width, height, {
       onRegister: (email, password, confirm) => this.handleRegister(email, password, confirm),

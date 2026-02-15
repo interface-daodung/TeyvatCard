@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { GradientText } from '../utils/GradientText.js';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { soundManager } from '../core/SoundManager.js';
 import { themeManager } from '../core/ThemeManager.js';
@@ -12,9 +11,9 @@ import {
     createAboutPopup,
     SETTINGS_UI_Y
 } from '../components/SettingsScene/index.js';
+import { GameTitle } from '../components/shared/index.js';
 
 export default class SettingsScene extends Phaser.Scene {
-    private titleImage?: Phaser.GameObjects.Image;
     private backButton?: Phaser.GameObjects.Text;
     private mainUIContainer!: Phaser.GameObjects.Container;
     private languageButton!: Phaser.GameObjects.Container;
@@ -43,8 +42,8 @@ export default class SettingsScene extends Phaser.Scene {
         this.mainUIContainer = this.add.container(0, 0);
         this.mainUIContainer.setDepth(100);
 
-        this.titleImage = GradientText.createGameTitle(this, localizationManager.t('settings'), width / 2, height * SETTINGS_UI_Y.TITLE);
-        this.mainUIContainer.add(this.titleImage);
+        const titleObj = GameTitle.create(this, width / 2, height * SETTINGS_UI_Y.TITLE, 'settings');
+        this.mainUIContainer.add(titleObj);
 
         this.languageButton = createRectTextButton(this, width, height, SETTINGS_UI_Y.LANGUAGE, 'language', () => this.showLanguagePopup());
         this.mainUIContainer.add(this.languageButton);
@@ -89,10 +88,7 @@ export default class SettingsScene extends Phaser.Scene {
         this.gameSettingPopupContainer = createGameSettingPopup(this, width, height, () => this.hideGameSettingPopup());
         this.aboutPopupContainer = createAboutPopup(this, width, height, () => this.hideAboutPopup());
 
-        const win = window as any;
-        if (win.gameEvents?.on) {
-            win.gameEvents.on('languageChanged', this.boundOnLanguageChanged);
-        }
+        this.game.events.on('languageChanged', this.boundOnLanguageChanged);
     }
 
     private hideMainUI(): void {
@@ -142,12 +138,6 @@ export default class SettingsScene extends Phaser.Scene {
     }
 
     updateAllTexts(): void {
-        if (this.titleImage?.active) {
-            const { x, y } = { x: this.titleImage.x, y: this.titleImage.y };
-            this.titleImage.destroy();
-            this.titleImage = GradientText.createGameTitle(this, localizationManager.t('settings'), x, y);
-            this.mainUIContainer.add(this.titleImage);
-        }
         this.setLangPopupTitle(localizationManager.t('language'));
         this.refreshLanguageButtons();
     }
@@ -162,9 +152,8 @@ export default class SettingsScene extends Phaser.Scene {
     }
 
     shutdown(): void {
-        const win = window as any;
-        if (win.gameEvents?.off && this.boundOnLanguageChanged) {
-            win.gameEvents.off('languageChanged', this.boundOnLanguageChanged);
+        if (this.boundOnLanguageChanged) {
+            this.game.events.off('languageChanged', this.boundOnLanguageChanged);
         }
     }
 }

@@ -18,6 +18,7 @@
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-remove-console": "^2.2.0",
     "workbox-window": "^7.4.0"
   },
   "description": "A turn-based card combat game built with Phaser 3 and TypeScript, featuring a rich progression system, modern UI, and multi-language support.",

@@ -6,6 +6,7 @@
  *   1. Tạo file i18n/locales/xx.json (copy từ en.json rồi dịch)
  *   2. Import trong i18n/translations.ts và thêm vào TRANSLATIONS, LANGUAGE_NAMES
  */
+import type Phaser from 'phaser';
 import {
   TRANSLATIONS,
   LANGUAGE_NAMES,
@@ -64,14 +65,10 @@ export class LocalizationManager {
       console.log('[LocalizationManager] Language changed to:', code);
       console.log('[LocalizationManager] Saved to localStorage');
 
-      // Emit event để các scene (MenuScene, SettingsScene, ...) lắng nghe và cập nhật text
-      const win = window as { gameEvents?: { emit: (e: string) => void } };
-      if (win.gameEvents?.emit) {
-        console.log('[LocalizationManager] Emitting languageChanged event');
-        win.gameEvents.emit('languageChanged');
-        console.log('[LocalizationManager] Event emitted');
-      } else {
-        console.warn('[LocalizationManager] gameEvents not available!');
+      // Emit event qua Phaser game.events để các scene lắng nghe và cập nhật text
+      const game = (window as Window & { game?: Phaser.Game }).game;
+      if (game?.events) {
+        game.events.emit('languageChanged');
       }
     } else {
       console.warn('[LocalizationManager] Invalid language code:', code);

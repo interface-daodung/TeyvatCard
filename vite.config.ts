@@ -1,5 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite';
+import removeConsole from 'vite-plugin-remove-console';
 import { VitePWA } from 'vite-plugin-pwa';
 import { pwaOptions } from './src/pwa/config';
 
@@ -19,6 +20,7 @@ export default defineConfig({
   },
   plugins: [
     VitePWA(pwaOptions),
+    removeConsole(),
   ],
 });
 
