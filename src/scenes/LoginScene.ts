@@ -3,6 +3,7 @@ import { GradientText } from '../utils/GradientText.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { ApiConfig } from '../utils/ApiConfig.js';
+import { themeManager } from '../core/ThemeManager.js';
 
 export default class LoginScene extends Phaser.Scene {
   private backButton?: Phaser.GameObjects.Text;
@@ -23,7 +24,7 @@ export default class LoginScene extends Phaser.Scene {
 
     // Background
     this.add.image(width / 2, height / 2, 'background');
-    this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
+    this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
     // Title
     GradientText.createGameTitle(
@@ -37,21 +38,28 @@ export default class LoginScene extends Phaser.Scene {
     this.createLoginForm(width, height);
 
     // Nút Quay lại
-    this.backButton = this.add.text(width / 2, height * 0.88, localizationManager.t('back'), {
-      fontSize: '36px',
-      color: '#ffffff',
-      fontFamily: 'Arial',
-      stroke: '#000000',
-      strokeThickness: 2
+    this.backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('back_short'), {
+      fontSize: '24px',
+      color: themeManager.getText(),
+      fontFamily: 'Arial, sans-serif',
+      fontStyle: 'bold',
+      backgroundColor: themeManager.getPrimary(),
+      padding: { x: 25, y: 12 }
     }).setOrigin(0.5);
 
     this.backButton.setInteractive({ useHandCursor: true });
+    this.backButton.on('pointerover', () => {
+      this.backButton!.setScale(1.1);
+      this.backButton!.setTint(themeManager.getNeutralPhaser());
+    });
+    this.backButton.on('pointerout', () => {
+      this.backButton!.setScale(1);
+      this.backButton!.clearTint();
+    });
     this.backButton.on('pointerdown', () => {
       this.removeForm();
       this.scene.start(this.fromScene);
     });
-    this.backButton.on('pointerover', () => this.backButton!.setStyle({ color: '#ffd700' }));
-    this.backButton.on('pointerout', () => this.backButton!.setStyle({ color: '#ffffff' }));
 
     this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
     const win = window as { gameEvents?: { on: (e: string, fn: () => void) => void } };
@@ -80,6 +88,12 @@ export default class LoginScene extends Phaser.Scene {
       const w = container.clientWidth || width;
       form.style.width = Math.min(w * 0.47, 380) + 'px';
     };
+    const primary = themeManager.getPrimary();
+    const secondary = themeManager.getSecondary();
+    const surface = themeManager.getSurface();
+    const text = themeManager.getText();
+    const accent = themeManager.getAccent();
+
     form.style.cssText = `
       position: absolute;
       left: 50%;
@@ -88,8 +102,8 @@ export default class LoginScene extends Phaser.Scene {
       max-width: 92%;
       min-width: 200px;
       box-sizing: border-box;
-      background: rgba(26, 26, 46, 0.9);
-      border: 2px solid #95245b;
+      background: ${surface}ee;
+      border: 2px solid ${primary};
       border-radius: 6px;
       padding: clamp(6px, 1.4vw, 10px);
       z-index: 1000;
@@ -100,7 +114,7 @@ export default class LoginScene extends Phaser.Scene {
 
     const emailLabel = document.createElement('label');
     emailLabel.textContent = localizationManager.t('email');
-    emailLabel.style.cssText = 'color: #fff; font-size: clamp(10px, 1.8vw, 12px);';
+    emailLabel.style.cssText = `color: ${text}; font-size: clamp(10px, 1.8vw, 12px);`;
     form.appendChild(emailLabel);
 
     const emailInput = document.createElement('input');
@@ -109,17 +123,17 @@ export default class LoginScene extends Phaser.Scene {
     emailInput.style.cssText = `
       padding: clamp(4px, 1vw, 6px);
       font-size: clamp(10px, 1.8vw, 12px);
-      border: 1px solid #96576a;
+      border: 1px solid ${secondary};
       border-radius: 4px;
-      background: #1a1a2e;
-      color: #fff;
+      background: ${surface};
+      color: ${text};
       box-sizing: border-box;
     `;
     form.appendChild(emailInput);
 
     const passLabel = document.createElement('label');
     passLabel.textContent = localizationManager.t('password');
-    passLabel.style.cssText = 'color: #fff; font-size: clamp(10px, 1.8vw, 12px);';
+    passLabel.style.cssText = `color: ${text}; font-size: clamp(10px, 1.8vw, 12px);`;
     form.appendChild(passLabel);
 
     const passInput = document.createElement('input');
@@ -128,10 +142,10 @@ export default class LoginScene extends Phaser.Scene {
     passInput.style.cssText = `
       padding: clamp(4px, 1vw, 6px);
       font-size: clamp(10px, 1.8vw, 12px);
-      border: 1px solid #96576a;
+      border: 1px solid ${secondary};
       border-radius: 4px;
-      background: #1a1a2e;
-      color: #fff;
+      background: ${surface};
+      color: ${text};
       box-sizing: border-box;
     `;
     form.appendChild(passInput);
@@ -141,23 +155,23 @@ export default class LoginScene extends Phaser.Scene {
     loginBtn.style.cssText = `
       padding: clamp(6px, 1.2vw, 8px);
       font-size: clamp(12px, 2vw, 14px);
-      background: #95245b;
-      color: #fff;
-      border: 1px solid #96576a;
+      background: ${primary};
+      color: ${text};
+      border: 1px solid ${secondary};
       border-radius: 4px;
       cursor: pointer;
       margin-top: 2px;
       box-sizing: border-box;
       transition: background 0.2s, border-color 0.2s;
     `;
-    loginBtn.onmouseover = () => { loginBtn.style.background = '#b52d6b'; loginBtn.style.borderColor = '#fff'; };
-    loginBtn.onmouseout = () => { loginBtn.style.background = '#95245b'; loginBtn.style.borderColor = '#96576a'; };
+    loginBtn.onmouseover = () => { loginBtn.style.background = secondary; loginBtn.style.borderColor = text; };
+    loginBtn.onmouseout = () => { loginBtn.style.background = primary; loginBtn.style.borderColor = secondary; };
     loginBtn.onclick = () => this.handleLogin(emailInput.value, passInput.value);
     form.appendChild(loginBtn);
 
     const divider = document.createElement('div');
     divider.style.cssText = 'display: flex; align-items: center; gap: 8px; margin: 4px 0;';
-    divider.innerHTML = '<span style="flex:1;height:1px;background:#96576a;"></span><span style="color:#999;font-size:11px;">' + localizationManager.t('or') + '</span><span style="flex:1;height:1px;background:#96576a;"></span>';
+    divider.innerHTML = `<span style="flex:1;height:1px;background:${secondary};"></span><span style="color:${themeManager.getNeutral()};font-size:11px;">` + localizationManager.t('or') + `</span><span style="flex:1;height:1px;background:${secondary};"></span>`;
     form.appendChild(divider);
 
     const googleContainer = document.createElement('div');
@@ -169,9 +183,9 @@ export default class LoginScene extends Phaser.Scene {
     const registerLink = document.createElement('a');
     registerLink.textContent = localizationManager.t('register_link');
     registerLink.href = '#';
-    registerLink.style.cssText = 'color: #cbbd1b; font-size: clamp(9px, 1.6vw, 11px); text-align: center; cursor: pointer; transition: color 0.2s, text-decoration 0.2s;';
-    registerLink.onmouseover = () => { registerLink.style.color = '#ffd700'; registerLink.style.textDecoration = 'underline'; };
-    registerLink.onmouseout = () => { registerLink.style.color = '#cbbd1b'; registerLink.style.textDecoration = 'none'; };
+    registerLink.style.cssText = `color: ${accent}; font-size: clamp(9px, 1.6vw, 11px); text-align: center; cursor: pointer; transition: color 0.2s, text-decoration 0.2s;`;
+    registerLink.onmouseover = () => { registerLink.style.color = text; registerLink.style.textDecoration = 'underline'; };
+    registerLink.onmouseout = () => { registerLink.style.color = accent; registerLink.style.textDecoration = 'none'; };
     registerLink.onclick = (e) => {
       e.preventDefault();
       this.goToRegister();
@@ -189,7 +203,7 @@ export default class LoginScene extends Phaser.Scene {
   private loadAndInitGoogleSignIn(container: HTMLElement): void {
     const clientId = ApiConfig.googleClientId;
     if (!clientId) {
-      container.innerHTML = '<span style="color:#999;font-size:11px;">Google login chưa cấu hình (VITE_GOOGLE_CLIENT_ID)</span>';
+      container.innerHTML = `<span style="color:${themeManager.getNeutral()};font-size:11px;">Google login chưa cấu hình (VITE_GOOGLE_CLIENT_ID)</span>`;
       return;
     }
 
@@ -205,7 +219,7 @@ export default class LoginScene extends Phaser.Scene {
     script.defer = true;
     script.onload = () => this.initGoogleButton(container, clientId);
     script.onerror = () => {
-      container.innerHTML = '<span style="color:#e74c3c;font-size:11px;">Không tải được Google Sign-In</span>';
+      container.innerHTML = `<span style="color:${themeManager.getError()};font-size:11px;">Không tải được Google Sign-In</span>`;
     };
     document.head.appendChild(script);
   }
@@ -235,7 +249,7 @@ export default class LoginScene extends Phaser.Scene {
     const form = document.getElementById('login-form-overlay');
     const container = form?.querySelector('#google-signin-container');
     if (container) {
-      container.innerHTML = '<span style="color:#aaa;font-size:12px;">Đang xử lý...</span>';
+      container.innerHTML = `<span style="color:${themeManager.getNeutral()};font-size:12px;">Đang xử lý...</span>`;
     }
 
     try {

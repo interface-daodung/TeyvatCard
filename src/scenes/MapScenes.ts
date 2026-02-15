@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
+import { themeManager } from '../core/ThemeManager.js';
 import dungeonList from '../data/dungeonList.json';
 
 interface DungeonData {
@@ -39,7 +40,7 @@ export default class MapScenes extends Phaser.Scene {
         this.add.image(width / 2, height / 2, 'background');
 
         // Thêm overlay tối để làm nổi bật màn chơi
-        this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
+        this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
         // Tạo tiêu đề game với gradient text
         GradientText.createGameTitle(this, localizationManager.t('dungeon_map'), width / 2, height * 0.18);
@@ -71,26 +72,25 @@ export default class MapScenes extends Phaser.Scene {
             const buttonY = (i - 2) * (buttonHeight + buttonSpacing); // Vị trí cố định từ trên xuống
 
             // Tạo nút với text mặc định
-            const button = this.add.rectangle(0, buttonY, buttonWidth, buttonHeight, 0x622945) as ButtonWithDungeonData;
+            const button = this.add.rectangle(0, buttonY, buttonWidth, buttonHeight, themeManager.getPrimaryPhaser()) as ButtonWithDungeonData;
             button.setAlpha(0.5);
-            button.setStrokeStyle(3, 0x96576a);
+            button.setStrokeStyle(3, themeManager.getSecondaryPhaser());
             button.setInteractive(); // Thêm interactivity
             const text = this.add.text(0, buttonY, '', {
                 fontSize: '32px',
-                color: '#ffffff',
+                color: themeManager.getText(),
                 fontFamily: 'Arial',
-                stroke: '#000000',
+                stroke: themeManager.getBackground(),
                 strokeThickness: 2
             }).setOrigin(0.5);
-            // Thêm hover effects ngay từ đầu
             button.on('pointerover', () => {
-                button.setFillStyle(0x95245b);
-                button.setStrokeStyle(3, 0xffffff);
+                button.setFillStyle(themeManager.getPrimaryPhaser());
+                button.setStrokeStyle(3, themeManager.getTextPhaser());
             });
 
             button.on('pointerout', () => {
-                button.setFillStyle(0x622945);
-                button.setStrokeStyle(3, 0x96576a);
+                button.setFillStyle(themeManager.getPrimaryPhaser());
+                button.setStrokeStyle(3, themeManager.getSecondaryPhaser());
             });
             // Lưu trữ thông tin dungeon trong button data
             button.dungeonData = null; // Sẽ được cập nhật trong updateDungeonButton
@@ -154,9 +154,9 @@ export default class MapScenes extends Phaser.Scene {
         // Nút Previous (‹)
         this.prevButton = this.add.text(width * 0.3, buttonY, '‹', {
             fontSize: '40px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial',
-            stroke: '#000000',
+            stroke: themeManager.getBackground(),
             strokeThickness: 2
         }).setOrigin(0.5);
 
@@ -173,9 +173,9 @@ export default class MapScenes extends Phaser.Scene {
         // Nút Next (›)
         this.nextButton = this.add.text(width * 0.7, buttonY, '›', {
             fontSize: '40px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial',
-            stroke: '#000000',
+            stroke: themeManager.getBackground(),
             strokeThickness: 2
         }).setOrigin(0.5);
 
@@ -187,10 +187,10 @@ export default class MapScenes extends Phaser.Scene {
         // Hiệu ứng hover cho nút phân trang
         [this.prevButton, this.nextButton].forEach(button => {
             button.on('pointerover', () => {
-                button.setStyle({ color: '#ffd700' });
+                button.setStyle({ color: themeManager.getAccent() });
             });
             button.on('pointerout', () => {
-                button.setStyle({ color: '#ffffff' });
+                button.setStyle({ color: themeManager.getText() });
             });
         });
     }
@@ -259,7 +259,7 @@ export default class MapScenes extends Phaser.Scene {
         if (this.currentPage > 0) {
             // Có trang trước - hiển thị nút Previous
             this.prevButton.setText('‹');
-            this.prevButton.setStyle({ color: '#ffffff' });
+            this.prevButton.setStyle({ color: themeManager.getText() });
             this.prevButton.setInteractive();
         } else {
             // Ở trang đầu - thay đổi thành nút Back to Menu
@@ -270,10 +270,10 @@ export default class MapScenes extends Phaser.Scene {
         // Cập nhật nút Next
         const maxPage = Math.ceil((dungeonList as DungeonData[]).length / this.itemsPerPage) - 1;
         if (this.currentPage < maxPage) {
-            this.nextButton.setStyle({ color: '#ffffff' });
+            this.nextButton.setStyle({ color: themeManager.getText() });
             this.nextButton.setInteractive();
         } else {
-            this.nextButton.setStyle({ color: '#666666' });
+            this.nextButton.setStyle({ color: themeManager.getNeutral() });
             this.nextButton.disableInteractive();
         }
     }

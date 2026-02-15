@@ -4,6 +4,7 @@ import { HeaderUI } from '../utils/HeaderUI.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import { soundManager } from '../core/SoundManager.js';
+import { themeManager } from '../core/ThemeManager.js';
 import cardCharacterList from '../data/cardCharacterList.json';
 
 interface CardCharacter {
@@ -63,9 +64,9 @@ export default class MenuScene extends Phaser.Scene {
         // Nút Options - đặt ở 75% height
         this.testDevButton = this.add.text(width / 2, height * 0.95, localizationManager.t('test_dev'), {
             fontSize: '24px',
-            color: '#95a5a6',
+            color: themeManager.getNeutral(),
             fontFamily: 'Arial',
-            stroke: '#2c3e50',
+            stroke: themeManager.getSurface(),
             strokeThickness: 1
         }).setOrigin(0.5);
         this.testDevButton.on('pointerdown', () => {
@@ -75,10 +76,10 @@ export default class MenuScene extends Phaser.Scene {
         });
         this.testDevButton.setInteractive({ useHandCursor: true });
         this.testDevButton.on('pointerover', () => {
-            this.testDevButton!.setStyle({ color: '#7f8c8d' });
+            this.testDevButton!.setStyle({ color: themeManager.getText() });
         });
         this.testDevButton.on('pointerout', () => {
-            this.testDevButton!.setStyle({ color: '#95a5a6' });
+            this.testDevButton!.setStyle({ color: themeManager.getNeutral() });
         });
 
         // Listen for language changes
@@ -89,7 +90,7 @@ export default class MenuScene extends Phaser.Scene {
 
         // Lớp phủ vô hình chỉ khi chưa phát BGM trong session (không lưu local — reload mất quyền phát)
         if (soundManager.needsBGMOverlay()) {
-            const bgmOverlay = this.add.rectangle(width / 2, height / 2, width + 100, height + 100, 0x000000, 0);
+            const bgmOverlay = this.add.rectangle(width / 2, height / 2, width + 100, height + 100, themeManager.getBackgroundPhaser(), 0);
             bgmOverlay.setInteractive({ useHandCursor: false });
             bgmOverlay.setDepth(1000);
             bgmOverlay.once('pointerdown', () => {
@@ -146,9 +147,9 @@ export default class MenuScene extends Phaser.Scene {
         // Text - mặc định ẩn
         const text = this.add.text(0, -80, buttonText, {
             fontSize: '28px',
-            color: '#ffffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial',
-            stroke: '#000000ff',
+            stroke: themeManager.getBackground(),
             strokeThickness: 2
         }).setOrigin(0.5);
 
@@ -209,7 +210,7 @@ export default class MenuScene extends Phaser.Scene {
 
         // Tạo viền với màu khác nhau dựa trên loại card
         const cardBorder = this.add.graphics();
-        cardBorder.lineStyle(4, hasSpriteSuffix ? 0xdcc06f : 0xffffff, 1);
+        cardBorder.lineStyle(4, hasSpriteSuffix ? themeManager.getAccentPhaser() : themeManager.getTextPhaser(), 1);
         cardBorder.strokeRoundedRect(-(cardWidth + 2) / 2, -(cardHeight + 2) / 2, cardWidth + 2, cardHeight + 2, 20); // Bo tròn 12px
 
         // Tạo cardImage khác nhau dựa trên loại card

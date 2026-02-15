@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { assetManager } from '../core/AssetManager.js';
+import { themeManager } from '../core/ThemeManager.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 
 interface SceneData {
@@ -28,8 +29,11 @@ export default class LoadingScene extends Phaser.Scene {
     create(): void {
         const { width, height } = this.scale;
 
-        // Background đơn giản
-        this.add.rectangle(width / 2, height / 2, width, height, 0x96576a);
+        // Load theme từ JSON bằng Phaser loader (thêm vào queue trước preloadSceneAssets)
+        themeManager.loadTheme(this, '/theme.json');
+
+        // Background đơn giản – dùng màu theme
+        this.add.rectangle(width / 2, height / 2, width, height, themeManager.getSecondaryPhaser());
 
         // Icon loading ⏳ ở giữa màn hình
         const loadingIcon = this.add.text(width / 2 - 120, height * 0.5, '⏳', {
@@ -41,9 +45,9 @@ export default class LoadingScene extends Phaser.Scene {
         const loadingText = this.add.text(width / 2, height * 0.5 + 48, localizationManager.t('loading'), {
             fontSize: '48px',
             fontStyle: 'bold',
-            stroke: '#000000',
+            stroke: themeManager.getBackground(),
             strokeThickness: 2,
-            color: '#ecf0f1',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif'
         }).setOrigin(0.5, 0);
 
@@ -51,7 +55,7 @@ export default class LoadingScene extends Phaser.Scene {
         const progressText = this.add.text(width / 2, height * 0.6, '▱▱▱▱▱▱▱▱▱▱', {
             fontSize: '48px',
             fontFamily: 'Arial, sans-serif',
-            color: '#622945'
+            color: themeManager.getPrimary()
         }).setOrigin(0.5, 0.5);
 
         // Animation rotation cho icon ⏳

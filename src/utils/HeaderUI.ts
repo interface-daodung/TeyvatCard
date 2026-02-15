@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { localizationManager } from './LocalizationManager.js';
 import { AuthManager } from './AuthManager.js';
+import { themeManager } from '../core/ThemeManager.js';
 
 /**
  * Utility để tạo HeaderUI có thể tái sử dụng
@@ -18,10 +19,10 @@ export class HeaderUI {
         const totalCoin = localStorage.getItem('totalCoin') || '0';
         const coinDisplay = scene.add.text(width * 0.05, height * 0.05, localizationManager.t('coin_header', { amount: totalCoin }), {
             fontSize: '32px',
-            color: '#ffffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold', // Replaced fontWeight with fontStyle for better TS compatibility in Phaser
-            stroke: '#000000ff',
+            fontStyle: 'bold',
+            stroke: themeManager.getBackground(),
             strokeThickness: 2
         });
 
@@ -38,20 +39,20 @@ export class HeaderUI {
             plusBtnText.setPosition(x, y);
         };
 
-        const plusBtnRect = scene.add.rectangle(0, 0, plusBtnSize, plusBtnSize, 0x000000, 0.5);
-        plusBtnRect.setStrokeStyle(2, 0xc0c0c0); // trắng xám
+        const plusBtnRect = scene.add.rectangle(0, 0, plusBtnSize, plusBtnSize, themeManager.getBackgroundPhaser(), 0.5);
+        plusBtnRect.setStrokeStyle(2, themeManager.getNeutralPhaser());
         plusBtnRect.setInteractive({ useHandCursor: true });
         const plusBtnText = scene.add.text(0, 0, '+', {
             fontSize: '28px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
         plusBtnRect.on('pointerover', () => {
-            plusBtnRect.setFillStyle(0x000000, 0.7);
+            plusBtnRect.setFillStyle(themeManager.getBackgroundPhaser(), 0.7);
         });
         plusBtnRect.on('pointerout', () => {
-            plusBtnRect.setFillStyle(0x000000, 0.5);
+            plusBtnRect.setFillStyle(themeManager.getBackgroundPhaser(), 0.5);
         });
         plusBtnRect.on('pointerdown', () => {
             if (AuthManager.hasJWT()) {

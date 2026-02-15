@@ -3,6 +3,7 @@ import { GradientText } from '../utils/GradientText.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { ApiConfig } from '../utils/ApiConfig.js';
+import { themeManager } from '../core/ThemeManager.js';
 
 const STARTER_PACK_KEY = 'starterPackPurchased';
 
@@ -38,7 +39,7 @@ export default class PaymentScene extends Phaser.Scene {
 
     // Background
     this.add.image(width / 2, height / 2, 'background');
-    this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
+    this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
     // Title
     GradientText.createGameTitle(
@@ -95,9 +96,9 @@ export default class PaymentScene extends Phaser.Scene {
     // Nút Quay lại
     this.backButton = this.add.text(width / 2, height * 0.88, localizationManager.t('back'), {
       fontSize: '36px',
-      color: '#ffffff',
+      color: themeManager.getText(),
       fontFamily: 'Arial',
-      stroke: '#000000',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
@@ -105,8 +106,8 @@ export default class PaymentScene extends Phaser.Scene {
     this.backButton.on('pointerdown', () => {
       this.scene.start(this.fromScene);
     });
-    this.backButton.on('pointerover', () => this.backButton!.setStyle({ color: '#ffd700' }));
-    this.backButton.on('pointerout', () => this.backButton!.setStyle({ color: '#ffffff' }));
+    this.backButton.on('pointerover', () => this.backButton!.setStyle({ color: themeManager.getAccent() }));
+    this.backButton.on('pointerout', () => this.backButton!.setStyle({ color: themeManager.getText() }));
   }
 
   shutdown(): void {
@@ -139,8 +140,8 @@ export default class PaymentScene extends Phaser.Scene {
     const starterPurchased = localStorage.getItem(STARTER_PACK_KEY) === '1';
     const isDisabled = isStarter && starterPurchased;
 
-    const fillColor = isStarter ? 0x95245b : 0x622945;
-    const strokeColor = isDisabled ? 0x666666 : (isStarter ? 0xffffff : 0x96576a);
+    const fillColor = themeManager.getPrimaryPhaser(); // Tất cả nút dùng Primary
+    const strokeColor = isDisabled ? themeManager.getNeutralPhaser() : (isStarter ? themeManager.getTextPhaser() : themeManager.getSecondaryPhaser());
 
     const rect = this.add.rectangle(x, y, w, h, fillColor);
     rect.setStrokeStyle(3, strokeColor);
@@ -155,22 +156,22 @@ export default class PaymentScene extends Phaser.Scene {
 
     const title = this.add.text(x, y - 12, titleText, {
       fontSize: '26px',
-      color: isDisabled ? '#999999' : '#ffffff',
+      color: isDisabled ? themeManager.getNeutral() : themeManager.getText(),
       fontFamily: 'Arial',
-      stroke: '#000000',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
     const desc = this.add.text(x, y + 12, descText, {
       fontSize: '20px',
-      color: isDisabled ? '#777777' : '#e0e0e0',
+      color: isDisabled ? themeManager.getNeutral() : themeManager.getText(),
       fontFamily: 'Arial'
     }).setOrigin(0.5);
 
     if (isDisabled) {
       const soldOut = this.add.text(x, y + 12, localizationManager.t('package_sold_out'), {
         fontSize: '20px',
-        color: '#ffcc00',
+        color: themeManager.getAccent(),
         fontFamily: 'Arial',
         fontStyle: 'bold'
       }).setOrigin(0.5);
@@ -178,8 +179,8 @@ export default class PaymentScene extends Phaser.Scene {
     }
 
     rect.on('pointerover', () => {
-      rect.setFillStyle(isStarter ? 0xb52d6b : 0x95245b);
-      rect.setStrokeStyle(3, 0xffffff);
+      rect.setFillStyle(isStarter ? themeManager.getSecondaryPhaser() : themeManager.getPrimaryPhaser());
+      rect.setStrokeStyle(3, themeManager.getTextPhaser());
     });
     rect.on('pointerout', () => {
       rect.setFillStyle(fillColor);
@@ -275,8 +276,8 @@ export default class PaymentScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const t = this.add.text(width / 2, height * 0.5, msg, {
       fontSize: '22px',
-      color: '#ffffff',
-      backgroundColor: '#000000',
+      color: themeManager.getText(),
+      backgroundColor: themeManager.getBackground(),
     }).setOrigin(0.5).setScrollFactor(0).setPadding(16, 8);
 
     this.time.delayedCall(2500, () => t.destroy());

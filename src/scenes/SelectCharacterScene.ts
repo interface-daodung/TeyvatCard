@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
+import { themeManager } from '../core/ThemeManager.js';
 import cardCharacterList from '../data/cardCharacterList.json';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 
@@ -131,15 +132,15 @@ export default class SelectCharacterScene extends Phaser.Scene {
     createInfoPanel(width: number, height: number): void {
         // Panel nền
         const panelBg = this.add.graphics();
-        panelBg.fillStyle(0x96576a, 0.8);
+        panelBg.fillStyle(themeManager.getSecondaryPhaser(), 0.8);
         panelBg.fillRoundedRect(width * 0.1, height * 0.15, width * 0.8, height * 0.25, 20);
-        panelBg.lineStyle(3, 0x1f0614, 1);
+        panelBg.lineStyle(3, themeManager.getSurfacePhaser(), 1);
         panelBg.strokeRoundedRect(width * 0.1, height * 0.15, width * 0.8, height * 0.25, 20);
 
         // Thông tin thẻ
         this.cardNameText = this.add.text(width * 0.5, height * 0.18, '', {
             fontSize: '32px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -147,14 +148,14 @@ export default class SelectCharacterScene extends Phaser.Scene {
         // Thông tin thẻ
         this.cardHighScoreText = this.add.text(width * 0.5, height * 0.202, '', {
             fontSize: '16px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setAlpha(0.5).setOrigin(0.5);
 
         this.cardLevelText = this.add.text(width * 0.82, height * 0.18, 'level 1', {
             fontSize: '20px',
-            color: '#FFD700',
+            color: themeManager.getAccent(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -164,7 +165,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         this.cardDescriptionText = this.add.text(width * 0.5, height * 0.26, '', {
             fontSize: '20px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             wordWrap: { width: width * 0.75 },
             align: 'center'
@@ -172,7 +173,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         this.cardHPText = this.add.text(width * 0.5, height * 0.32, localizationManager.t('hp_label', { hp: 7 }), {
             fontSize: '32px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             wordWrap: { width: width * 0.75 },
             align: 'center'
@@ -183,10 +184,10 @@ export default class SelectCharacterScene extends Phaser.Scene {
         // Nút Upgrade
         this.upgradeButton = this.add.text(width * 0.5, height * 0.36, localizationManager.t('upgrade'), {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            backgroundColor: '#95245b',
+            backgroundColor: themeManager.getPrimary(),
             padding: { x: 20, y: 10 }
         }).setOrigin(0.5);
 
@@ -194,16 +195,16 @@ export default class SelectCharacterScene extends Phaser.Scene {
         this.upgradeButton.on('pointerover', () => {
             // Chỉ hover nếu chưa max level
             if (this.cards[this.currentCardIndex].level && this.cards[this.currentCardIndex].level! < 9) {
-                this.upgradeButton.setTint(0xd1d1d1); // Màu vàng gold
+                this.upgradeButton.setTint(themeManager.getNeutralPhaser());
                 this.upgradeButton.setScale(1.1);
-                this.upgradeButton.setStyle({ color: '#ffee8dff' });
+                this.upgradeButton.setStyle({ color: themeManager.getAccent() });
                 this.cardHPText.setText(localizationManager.t('coin_amount', { amount: this.upgradeCharacterPrice() }));
             }
         });
         this.upgradeButton.on('pointerout', () => {
             this.upgradeButton.clearTint();
             this.upgradeButton.setScale(1);
-            this.upgradeButton.setStyle({ color: '#ffffff' });
+            this.upgradeButton.setStyle({ color: themeManager.getText() });
             this.cardHPText.setText(localizationManager.t('hp_label', { hp: this.cardHPText.hp }));
         });
         this.upgradeButton.on('pointerdown', () => {
@@ -225,8 +226,8 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         // Viền thẻ - lưu reference để có thể thay đổi style sau này
         this.cardBorder = this.add.graphics();
-        this.cardBorder.lineStyle(4, 0xffffff, 1);
-        this.cardBorder.fillStyle(0xffffff, 1);
+        this.cardBorder.lineStyle(4, themeManager.getTextPhaser(), 1);
+        this.cardBorder.fillStyle(themeManager.getTextPhaser(), 1);
         this.cardBorder.fillRoundedRect(-152, -259, 304, 518, 28);
         this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
 
@@ -238,7 +239,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
         // Nút Previous (trái)
         this.prevButton = this.add.text(width * 0.2, height * 0.65, '◀', {
             fontSize: '28px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
             padding: { x: 20, y: 15 }
@@ -258,7 +259,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
         // Nút Next (phải)
         this.nextButton = this.add.text(width * 0.8, height * 0.65, '▶', {
             fontSize: '28px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
             padding: { x: 20, y: 15 }
@@ -279,17 +280,17 @@ export default class SelectCharacterScene extends Phaser.Scene {
     createBackButton(width: number, height: number): void {
         this.backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('select'), {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            backgroundColor: '#622945',
+            backgroundColor: themeManager.getPrimary(),
             padding: { x: 25, y: 12 }
         }).setOrigin(0.5);
 
         this.backButton.setInteractive({ useHandCursor: true });
         this.backButton.on('pointerover', () => {
             this.backButton.setScale(1.1);
-            this.backButton.setTint(0xd1d1d1);
+            this.backButton.setTint(themeManager.getNeutralPhaser());
         });
         this.backButton.on('pointerout', () => {
             this.backButton.setScale(1);
@@ -338,7 +339,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
         // Hiển thị level hoặc MAX
         if ((currentCard.level || 1) >= 9) {
             this.upgradeButton.setText(localizationManager.t('level_max'));
-            this.upgradeButton.setStyle({ color: '#FFFFFF' });
+            this.upgradeButton.setStyle({ color: themeManager.getText() });
             this.upgradeButton.setScale(1);
         } else {
             this.upgradeButton.setText(localizationManager.t('upgrade'));
@@ -354,10 +355,10 @@ export default class SelectCharacterScene extends Phaser.Scene {
                 currentCard.id + '-sprite', 300, 514);
             this.currentCardContainer.add(this.currentCardImage);
 
-            // Thay đổi style viền thành màu vàng
+            // Thay đổi style viền thành màu vàng (Accent)
             this.cardBorder.clear();
-            this.cardBorder.lineStyle(4, 0xdcc06f, 1);
-            this.cardBorder.fillStyle(0xdcc06f, 1);
+            this.cardBorder.lineStyle(4, themeManager.getAccentPhaser(), 1);
+            this.cardBorder.fillStyle(themeManager.getAccentPhaser(), 1);
             this.cardBorder.fillRoundedRect(-152, -259, 304, 518, 28);
             this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
         } else {
@@ -367,10 +368,10 @@ export default class SelectCharacterScene extends Phaser.Scene {
             this.currentCardImage.setDisplaySize(300, 514);
             this.currentCardContainer.add(this.currentCardImage);
 
-            // Thay đổi style viền thành màu trắng
+            // Thay đổi style viền thành màu trắng (Text)
             this.cardBorder.clear();
-            this.cardBorder.lineStyle(4, 0xffffff, 1);
-            this.cardBorder.fillStyle(0xffffff, 1);
+            this.cardBorder.lineStyle(4, themeManager.getTextPhaser(), 1);
+            this.cardBorder.fillStyle(themeManager.getTextPhaser(), 1);
             this.cardBorder.fillRoundedRect(-152, -259, 304, 518, 28);
             this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
         }

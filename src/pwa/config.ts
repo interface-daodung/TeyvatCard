@@ -1,8 +1,12 @@
 import type { VitePWAOptions } from 'vite-plugin-pwa';
+import { themeManager } from '../core/ThemeManager.js';
 
 // Centralized PWA configuration for TeyvatCard.
 // This file is imported from vite.config.ts so all PWA-related
 // options are in one place for easier debugging and tweaking.
+// theme_color/background_color lấy từ theme (mặc định khi build).
+const bgColor = themeManager.getBackground();
+
 export const pwaOptions: VitePWAOptions = {
   // how the service worker register script is injected
   injectRegister: 'auto',
@@ -13,8 +17,8 @@ export const pwaOptions: VitePWAOptions = {
     name: 'Teyvat Card',
     short_name: 'TeyvatCard',
     description: 'Turn-based card combat game in Teyvat',
-    theme_color: '#000000',
-    background_color: '#000000',
+    theme_color: bgColor,
+    background_color: bgColor,
     display: 'standalone',
     orientation: 'portrait',
     start_url: '/',

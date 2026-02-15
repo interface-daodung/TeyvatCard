@@ -4,6 +4,7 @@ import { localizationManager } from '../utils/LocalizationManager.js';
 import CardManager from './CardManager.js';
 import AnimationManager from './AnimationManager.js';
 import PriorityEmitter from '../utils/PriorityEmitter.js';
+import { themeManager } from './ThemeManager.js';
 
 interface MovementItem {
     from: number;
@@ -249,7 +250,7 @@ export default class GameManager {
         const { width, height } = this.scene.scale;
 
         // Tạo background mờ - đặt ở vị trí (0,0) để che toàn bộ màn hình
-        const background = this.scene.add.rectangle(0, 0, width, height, 0x000000, 0.8)
+        const background = this.scene.add.rectangle(0, 0, width, height, themeManager.getBackgroundPhaser(), 0.8)
             .setOrigin(0, 0)
             .setInteractive();
         dialog.add(background);
@@ -257,46 +258,46 @@ export default class GameManager {
         // Container chính cho dialog - đặt ở giữa màn hình
         const dialogContainer = this.scene.add.container(width / 2, height / 2);
 
-        // Background cho dialog với màu chủ đề mới
+        // Background cho dialog dùng theme
         const dialogBg = this.scene.add.graphics();
-        dialogBg.fillStyle(0x1f0614, 0.95);
-        dialogBg.lineStyle(3, 0x622945, 1);
+        dialogBg.fillStyle(themeManager.getSurfacePhaser(), 0.95);
+        dialogBg.lineStyle(3, themeManager.getPrimaryPhaser(), 1);
         dialogBg.fillRoundedRect(-200, -150, 400, 300, 20);
         dialogBg.strokeRoundedRect(-200, -150, 400, 300, 20);
         dialogContainer.add(dialogBg);
 
-        // Tiêu đề với màu chữ tương phản cao
+        // Tiêu đề – Error (đỏ)
         const title = this.scene.add.text(0, -100, 'GAME OVER', {
             fontSize: '32px',
-            color: '#e74c3c',
+            color: themeManager.getError(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         });
         title.setOrigin(0.5);
         dialogContainer.add(title);
 
-        // Thông tin điểm số với màu chữ tương phản
+        // Thông tin điểm số – Warning (vàng)
         const scoreText = this.scene.add.text(0, -50, localizationManager.t('coin_amount', { amount: this.coin }), {
             fontSize: '24px',
-            color: '#cbbd1b',
+            color: themeManager.getWarning(),
             fontFamily: 'Arial, sans-serif'
         });
         scoreText.setOrigin(0.5);
         dialogContainer.add(scoreText);
 
-        // High score với màu chữ tương phản
+        // High score – Neutral/Text
         const highScoreText = this.scene.add.text(0, -10, `High Score: ${this.highScore}`, {
             fontSize: '20px',
-            color: '#e0e0e0',
+            color: themeManager.getNeutral(),
             fontFamily: 'Arial, sans-serif'
         });
         highScoreText.setOrigin(0.5);
         dialogContainer.add(highScoreText);
 
-        // Nút Restart với màu chữ tương phản
+        // Nút Restart – Success (xanh)
         const restartButton = this.scene.add.text(0, 50, localizationManager.t('restart'), {
             fontSize: '24px',
-            color: '#2ecc71',
+            color: themeManager.getSuccess(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         });
@@ -307,17 +308,17 @@ export default class GameManager {
             dialog.destroy();
         });
         restartButton.on('pointerover', () => {
-            restartButton.setTint(0xd1d1d1);
+            restartButton.setTint(themeManager.getNeutralPhaser());
         });
         restartButton.on('pointerout', () => {
             restartButton.clearTint();
         });
         dialogContainer.add(restartButton);
 
-        // Nút Menu với màu chữ tương phản
+        // Nút Menu – Text
         const menuButton = this.scene.add.text(0, 100, localizationManager.t('menu_button'), {
             fontSize: '24px',
-            color: '#f0f0f0',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         });
@@ -328,7 +329,7 @@ export default class GameManager {
             dialog.destroy();
         });
         menuButton.on('pointerover', () => {
-            menuButton.setTint(0xd1d1d1);
+            menuButton.setTint(themeManager.getNeutralPhaser());
         });
         menuButton.on('pointerout', () => {
             menuButton.clearTint();

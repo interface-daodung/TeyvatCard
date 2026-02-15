@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import GameManager from '../core/GameManager.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
+import { themeManager } from '../core/ThemeManager.js';
 import itemFactory from '../modules/ItemFactory.js';
 import dungeonList from '../data/dungeonList.json';
 
@@ -65,7 +66,7 @@ export default class GameScene extends Phaser.Scene {
         this.add.image(width / 2, height / 2, 'background');
 
         // Thêm overlay tối để làm nổi bật màn chơi
-        this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
+        this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
         // UI
         this.createUI();
@@ -85,15 +86,15 @@ export default class GameScene extends Phaser.Scene {
         // Nút ☰ Menu - đặt ở top left
         const menuButton = this.add.text(width * 0.95, height * 0.05, '☰', {
             fontSize: '32px',
-            color: '#ffffff',
-            stroke: '#2d0d21',
+            color: themeManager.getText(),
+            stroke: themeManager.getSurface(),
             strokeThickness: 2
         });
         menuButton.setInteractive({ useHandCursor: true });
         menuButton.setOrigin(0.5);
         menuButton.on('pointerover', () => {
             menuButton.setScale(1.1);
-            menuButton.setTint(0xd1d1d1);
+            menuButton.setTint(themeManager.getNeutralPhaser());
         });
         menuButton.on('pointerout', () => {
             menuButton.setScale(1);
@@ -106,17 +107,17 @@ export default class GameScene extends Phaser.Scene {
         //stage  
         this.stageText = this.add.text(width * 0.5, height * 0.035, this.dungeonStageName, {
             fontSize: '30px',
-            color: '#FFD700',
+            color: themeManager.getAccent(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            stroke: '#E69500',
+            stroke: themeManager.getNeutral(),
             strokeThickness: 2
         }).setOrigin(0.5);
 
         //high score
         this.highScoreText = this.add.text(width * 0.5, height * 0.07, localizationManager.t('high_score_label', { score: this.gameManager.highScore }), {
             fontSize: '20px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             // stroke: '#E69500',
             // strokeThickness: 2
@@ -125,7 +126,7 @@ export default class GameScene extends Phaser.Scene {
         // coin với icon 🪙 - đặt ở dưới nút menu
         this.coinText = this.add.text(width * 0.75, height * 0.13, `🪙${this.gameManager.coin}`, {
             fontSize: '32px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
             strokeThickness: 2
@@ -157,7 +158,7 @@ export default class GameScene extends Phaser.Scene {
             countText.setText(countText.cooldown.toString());
             if (countText.cooldown > 0) {
                 countText.setVisible(true);
-                itemImage.setTint(0x8f8f8f);
+                itemImage.setTint(themeManager.getNeutralPhaser());
                 itemButton.disableInteractive();
             }
         } else {
@@ -175,12 +176,12 @@ export default class GameScene extends Phaser.Scene {
             
             this.textItemNotUse = this.add.text(width * 0.5, height * 0.5, localizationManager.t('item_not_ready'), {
                 fontSize: '24px',
-                color: '#ffffff',
+                color: themeManager.getText(),
                 fontFamily: 'Arial, sans-serif',
                 fontStyle: 'bold',
-                backgroundColor: '#000000',
+                backgroundColor: themeManager.getBackground(),
                 padding: { x: 25, y: 12 },
-                stroke: '#000000',
+                stroke: themeManager.getBackground(),
                 strokeThickness: 5
             }).setOrigin(0.5).setDepth(2000).setAlpha(0.7);
             
@@ -203,7 +204,7 @@ export default class GameScene extends Phaser.Scene {
 
         // 1. Tạo background bo tròn bằng Graphics
         const backgroundItem = this.add.graphics();
-        backgroundItem.fillStyle(0x6d6d6d, 1); // Màu nền tối
+        backgroundItem.fillStyle(themeManager.getSurfacePhaser(), 1);
         backgroundItem.fillRoundedRect(-buttonSize / 2, -buttonSize / 2, buttonSize, buttonSize, 20);
         backgroundItem.setAlpha(0.5);
 
@@ -214,10 +215,10 @@ export default class GameScene extends Phaser.Scene {
         // 3. Tạo text đếm ở góc trên phải
         const countText = this.add.text(buttonSize / 2, -buttonSize / 2, itemData.cooldown.toString(), {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            stroke: '#000000',
+            stroke: themeManager.getBackground(),
             strokeThickness: 5
         }) as Phaser.GameObjects.Text & { cooldown: number };
         countText.setOrigin(0.5);
@@ -246,7 +247,7 @@ export default class GameScene extends Phaser.Scene {
 
         if (itemData.cooldown > 0) {
             countText.setVisible(true);
-            itemImage.setTint(0x8f8f8f);
+            itemImage.setTint(themeManager.getNeutralPhaser());
             itemButton.disableInteractive();
         } else {
             countText.setVisible(false);
@@ -317,25 +318,25 @@ export default class GameScene extends Phaser.Scene {
 
         // Tạo background cho nút
         const buttonBackground = this.add.graphics();
-        buttonBackground.fillStyle(0x051926, 0.5);
+        buttonBackground.fillStyle(themeManager.getPrimaryPhaser(), 0.5);
         buttonBackground.fillRoundedRect(-90, -30, 180, 60, 5);
-        buttonBackground.lineStyle(2, 0xd1d1d1, 0.5);
+        buttonBackground.lineStyle(2, themeManager.getNeutralPhaser(), 0.5);
         buttonBackground.strokeRoundedRect(-90, -30, 180, 60, 5);
 
 
         // Tạo text "→🪙"
         const sellText = this.add.text(16, 0, '→🪙', {
             fontSize: '32px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontStyle: 'bold',
             fontFamily: 'Arial, sans-serif',
-            stroke: '#000000',
+            stroke: themeManager.getBackground(),
             strokeThickness: 2
         }).setOrigin(0.5);
 
         const PriceText = this.add.text(32, -15, '0', {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontStyle: 'bold',
             fontFamily: 'Arial, sans-serif'
         }).setOrigin(0.5);

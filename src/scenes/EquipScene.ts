@@ -3,6 +3,7 @@ import { localizationManager } from '../utils/LocalizationManager.js';
 import itemFactory from '../modules/ItemFactory.js';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
+import { themeManager } from '../core/ThemeManager.js';
 
 interface Item {
     name: string;
@@ -150,7 +151,7 @@ export default class EquipScene extends Phaser.Scene {
 
         // Background đen trong suốt 50% với bo tròn sử dụng graphics
         const gridBackground = this.add.graphics();
-        gridBackground.fillStyle(0x000000, 0.5); // Đen với alpha 0.5
+        gridBackground.fillStyle(themeManager.getBackgroundPhaser(), 0.5);
         gridBackground.fillRoundedRect(-gridBgWidth / 2, -gridBgHeight / 2, gridBgWidth, gridBgHeight, 20); // Bo tròn 20px
         gridBackground.strokeRoundedRect(-gridBgWidth / 2, -gridBgHeight / 2, gridBgWidth, gridBgHeight, 20);
         // Tạo container cho toàn bộ grid
@@ -174,7 +175,7 @@ export default class EquipScene extends Phaser.Scene {
 
                 // Background của item với bo tròn sử dụng graphics
                 const itemBg = this.add.graphics();
-                itemBg.fillStyle(0x808080, 0.3); // Xám với alpha 30%
+                itemBg.fillStyle(themeManager.getNeutralPhaser(), 0.3);
                 itemBg.fillRoundedRect(-itemSize / 2, -itemSize / 2, itemSize, itemSize, 15); // Bo tròn 15px
                 itemBg.strokeRoundedRect(-itemSize / 2, -itemSize / 2, itemSize, itemSize, 15);
 
@@ -244,8 +245,8 @@ export default class EquipScene extends Phaser.Scene {
 
             // Background của slot
             const slotBg = this.add.graphics();
-            slotBg.fillStyle(0x808080, 0.5); // Xám đậm với alpha 50%
-            slotBg.lineStyle(2, 0x000000, 0.5); // Viền đen
+            slotBg.fillStyle(themeManager.getNeutralPhaser(), 0.5);
+            slotBg.lineStyle(2, themeManager.getBackgroundPhaser(), 0.5);
             slotBg.fillRoundedRect(-slotSize / 2, -slotSize / 2, slotSize, slotSize, 10);
             slotBg.strokeRoundedRect(-slotSize / 2, -slotSize / 2, slotSize, slotSize, 10);
 
@@ -367,7 +368,7 @@ export default class EquipScene extends Phaser.Scene {
 
         // Tạo background overlay
         const overlay = this.add.graphics();
-        overlay.fillStyle(0x000000, 0.8); // #1f0614 với alpha 0.9
+        overlay.fillStyle(themeManager.getBackgroundPhaser(), 0.8);
         overlay.fillRect(0, 0, width, height);
 
         // Tạo dialog container - 90% width
@@ -380,8 +381,8 @@ export default class EquipScene extends Phaser.Scene {
 
         // Background dialog
         const dialogBg = this.add.graphics();
-        dialogBg.fillStyle(0x2d0d21, 0.98); // #2d0d21 với alpha 0.98
-        dialogBg.lineStyle(3, 0x96576a, 1); // #96576a làm viền
+        dialogBg.fillStyle(themeManager.getSurfacePhaser(), 0.98);
+        dialogBg.lineStyle(3, themeManager.getSecondaryPhaser(), 1);
         dialogBg.fillRoundedRect(-dialogWidth / 2, -dialogHeight / 2, dialogWidth, dialogHeight, 20);
         dialogBg.strokeRoundedRect(-dialogWidth / 2, -dialogHeight / 2, dialogWidth, dialogHeight, 20);
 
@@ -389,7 +390,7 @@ export default class EquipScene extends Phaser.Scene {
         const titleText = this.add.text(0, -dialogHeight / 2 + 30,
             `${item.name}`, {
             fontSize: '32px', // Tăng font size
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -398,7 +399,7 @@ export default class EquipScene extends Phaser.Scene {
         const levelText = this.add.text(0, -dialogHeight / 2 + 60,
             localizationManager.t('level_label', { level: item.level }), {
             fontSize: '16px', // Tăng font size
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -413,7 +414,7 @@ export default class EquipScene extends Phaser.Scene {
         // 1. Description - text bình thường
         const descriptionText = this.add.text(0, 0, item.description, {
             fontSize: '24px',
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             lineSpacing: 10
         }).setOrigin(0.5);
@@ -428,15 +429,15 @@ export default class EquipScene extends Phaser.Scene {
         const powerY = 80;
 
         // Vẽ background cho Power
-        powerBg.fillStyle(0x96576a, 0.9); // Màu nền #96576a
-        powerBg.lineStyle(2, 0x1f0614, 1); // Viền màu #1f0614
+        powerBg.fillStyle(themeManager.getSecondaryPhaser(), 0.9);
+        powerBg.lineStyle(2, themeManager.getSurfacePhaser(), 1);
         powerBg.fillRoundedRect(powerX - powerWidth / 2, powerY - powerHeight / 2, powerWidth, powerHeight, 10);
         powerBg.strokeRoundedRect(powerX - powerWidth / 2, powerY - powerHeight / 2, powerWidth, powerHeight, 10);
 
         // Text cho Power
         const powerText = this.add.text(powerX, powerY, localizationManager.t('power_label', { power: item.power }), {
             fontSize: '18px',
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -449,15 +450,15 @@ export default class EquipScene extends Phaser.Scene {
         const cooldownY = 80;
 
         // Vẽ background cho Cooldown
-        cooldownBg.fillStyle(0x96576a, 0.9); // Màu nền #96576a
-        cooldownBg.lineStyle(2, 0x1f0614, 1); // Viền màu #1f0614
+        cooldownBg.fillStyle(themeManager.getSecondaryPhaser(), 0.9);
+        cooldownBg.lineStyle(2, themeManager.getSurfacePhaser(), 1);
         cooldownBg.fillRoundedRect(cooldownX - cooldownWidth / 2, cooldownY - cooldownHeight / 2, cooldownWidth, cooldownHeight, 10);
         cooldownBg.strokeRoundedRect(cooldownX - cooldownWidth / 2, cooldownY - cooldownHeight / 2, cooldownWidth, cooldownHeight, 10);
 
         // Text cho Cooldown
         const cooldownText = this.add.text(cooldownX, cooldownY, localizationManager.t('cooldown_label', { cooldown: item.cooldown }), {
             fontSize: '18px',
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -468,7 +469,7 @@ export default class EquipScene extends Phaser.Scene {
         // Tạo priceText ở cùng tầng với upgradeButton
         const priceText = this.add.text(-200, -42, localizationManager.t('coin_amount', { amount: item.getPrice() }), {
             fontSize: '20px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontStyle: 'bold',
             fontFamily: 'Arial, sans-serif',
         }).setOrigin(0.5);
@@ -483,15 +484,15 @@ export default class EquipScene extends Phaser.Scene {
                 ? localizationManager.t('upgrade')
                 : localizationManager.t('level_max'), {
             fontSize: '20px', // Tăng font size thêm
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            backgroundColor: item.isUpgrade() ? '#622945' : '#45162c', // Màu khác nhau theo trạng thái
+            backgroundColor: item.isUpgrade() ? themeManager.getPrimary() : themeManager.getSecondary(),
             padding: { x: 25, y: 12 } // Tăng padding thêm
         }).setOrigin(0.5);
 
         // Thêm viền cho nút upgrade
-        upgradeButton.setStroke('#45162c', 2); // Viền màu #45162c
+        upgradeButton.setStroke(themeManager.getPrimary(), 2);
 
         // Chỉ cho phép tương tác nếu có thể upgrade
         if (item.isUpgrade()) {
@@ -524,7 +525,7 @@ export default class EquipScene extends Phaser.Scene {
                     if (!item.isUpgrade()) {
                         // Đã max level - đổi text và màu, không cho tương tác
                         upgradeButton.setText(localizationManager.t('level_max'));
-                        upgradeButton.setStyle({ backgroundColor: '#45162c' });
+                        upgradeButton.setStyle({ backgroundColor: themeManager.getPrimary() });
                         upgradeButton.disableInteractive();
                         upgradeButton.off('pointerover');
                         upgradeButton.off('pointerout');
@@ -547,15 +548,15 @@ export default class EquipScene extends Phaser.Scene {
         // Nút Select (ở giữa)
         const selectButton = this.add.text(0, 0, equipSlot ? localizationManager.t('deselect') : localizationManager.t('select'), {
             fontSize: '20px', // Tăng font size thêm
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            backgroundColor: '#622945', // Cùng màu nền #622945
+            backgroundColor: themeManager.getPrimary(),
             padding: { x: 25, y: 12 } // Tăng padding thêm
         }).setOrigin(0.5);
 
         // Thêm viền cho nút select
-        selectButton.setStroke('#45162c', 2); // Viền màu #45162c
+        selectButton.setStroke(themeManager.getPrimary(), 2);
 
         // Kiểm tra nếu equipment slots đã đầy và không phải equipSlot thì ẩn nút SELECT
         if (!equipSlot && this.isFullEquipmentSlot()) {
@@ -593,15 +594,15 @@ export default class EquipScene extends Phaser.Scene {
         // Nút Close
         const closeButton = this.add.text(200, 0, localizationManager.t('back_short'), {
             fontSize: '20px', // Tăng font size thêm
-            color: '#ffffff', // Chữ trắng
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            backgroundColor: '#622945', // Cùng màu nền #622945
+            backgroundColor: themeManager.getPrimary(),
             padding: { x: 25, y: 12 } // Tăng padding thêm
         }).setOrigin(0.5);
 
         // Thêm viền cho nút close
-        closeButton.setStroke('#45162c', 2); // Viền màu #45162c
+        closeButton.setStroke(themeManager.getPrimary(), 2);
 
         closeButton.setInteractive({ useHandCursor: true });
         closeButton.on('pointerover', () => closeButton.setScale(1.1));
@@ -644,10 +645,10 @@ export default class EquipScene extends Phaser.Scene {
         // Nút quay về Menu
         const backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('select'), {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            backgroundColor: '#622945',
+            backgroundColor: themeManager.getPrimary(),
             padding: { x: 25, y: 12 }
         }).setOrigin(0.5);
 
@@ -657,7 +658,7 @@ export default class EquipScene extends Phaser.Scene {
         // Hiệu ứng hover
         backButton.on('pointerover', () => {
             backButton.setScale(1.1);
-            backButton.setTint(0xd1d1d1);
+            backButton.setTint(themeManager.getNeutralPhaser());
         });
 
         backButton.on('pointerout', () => {

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
+import { themeManager } from '../core/ThemeManager.js';
 import libraryCardsData from '../data/libraryCards.json';
 
 interface CardData {
@@ -20,10 +21,6 @@ interface ContainerWithCardData extends Phaser.GameObjects.Container {
     cardIndex?: number;
     cardData?: CardData | null;
 }
-
-// === BẢNG MÀU CHỦ ĐẠO ===
-const COLOR_LIGHT = 0x96576a;      // Màu sáng (nâu nhạt) - dùng cho viền, thumb slider
-const COLOR_DARK = 0x1f0614;       // Màu tối (nâu rất đậm) - dùng cho nền thẻ, track slider
 
 export default class LibraryScene extends Phaser.Scene {
     public cardInfoDialog?: Phaser.GameObjects.Container;
@@ -48,7 +45,7 @@ export default class LibraryScene extends Phaser.Scene {
         this.add.image(width / 2, height / 2, 'background');
 
         // Thêm overlay tối để làm nổi bật màn chơi
-        this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
+        this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
         // Tiêu đề
         this.titleImage = GradientText.createGameTitle(this, localizationManager.t('library_title'), width / 2, height * 0.12);
@@ -72,8 +69,8 @@ export default class LibraryScene extends Phaser.Scene {
 
             // === NỀN PANEL ===
             background: (this as any).rexUI.add.roundRectangle({
-                strokeColor: COLOR_LIGHT,    // Màu viền nền
-                radius: 10                   // Độ bo góc nền
+                strokeColor: themeManager.getSecondaryPhaser(),
+                radius: 10
             }),
 
             // === PANEL NỘI DUNG ===
@@ -85,13 +82,13 @@ export default class LibraryScene extends Phaser.Scene {
             // === THANH CUỘN (SLIDER) ===
             slider: {
                 track: (this as any).rexUI.add.roundRectangle({
-                    width: 20,               // Chiều rộng thanh track
-                    radius: 10,              // Độ bo góc track
-                    color: COLOR_DARK        // Màu thanh track
+                    width: 20,
+                    radius: 10,
+                    color: themeManager.getSurfacePhaser()
                 }),
                 thumb: (this as any).rexUI.add.roundRectangle({
-                    radius: 13,              // Độ bo góc thumb (nút kéo)
-                    color: COLOR_LIGHT       // Màu thumb
+                    radius: 13,
+                    color: themeManager.getSecondaryPhaser()
                 })
             },
 
@@ -175,10 +172,10 @@ export default class LibraryScene extends Phaser.Scene {
         // Nút quay về Menu
         const backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('back_short'), {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold',
-            backgroundColor: '#622945',
+            backgroundColor: themeManager.getPrimary(),
             padding: { x: 25, y: 12 }
         }).setOrigin(0.5);
 
@@ -188,7 +185,7 @@ export default class LibraryScene extends Phaser.Scene {
         // Hiệu ứng hover
         backButton.on('pointerover', () => {
             backButton.setScale(1.1);
-            backButton.setTint(0xd1d1d1);
+            backButton.setTint(themeManager.getNeutralPhaser());
         });
 
         backButton.on('pointerout', () => {
@@ -322,7 +319,7 @@ export default class LibraryScene extends Phaser.Scene {
             x: 0, y: 0,                          // Vị trí (0,0) - sẽ được đặt bởi container
             width: width + 4,                        // Chiều rộng thẻ (từ tham số)
             height: height + 4,                      // Chiều cao thẻ (từ tham số)
-            strokeColor: 0xffffff,            // Màu viền thẻ
+            strokeColor: themeManager.getTextPhaser(),
             strokeThickness: 2,
             radius: Math.min(width, height) * 0.08, // Độ bo góc scale theo kích thước
         });
@@ -377,10 +374,10 @@ export default class LibraryScene extends Phaser.Scene {
         const cardName = cardData ? cardData.name : `Card ${cardIndex}`;
         const text = this.add.text(0, height * 0.35, cardName, {  // Vị trí text (dưới giữa thẻ)
             fontSize: Math.max(8, width * 0.12), // Kích thước chữ scale theo width
-            color: '#ffffff',                     // Màu chữ trắng
+            color: themeManager.getText(),
             wordWrap: { width: 175 },
             fontFamily: 'Arial',                 // Font chữ
-            stroke: '#000000',                   // Màu viền chữ (đen)
+            stroke: themeManager.getBackground(),
             strokeThickness: Math.max(1, width * 0.02) // Độ dày viền chữ scale theo width
         }).setOrigin(0.5);                       // Căn giữa text
 
@@ -411,14 +408,14 @@ export default class LibraryScene extends Phaser.Scene {
         this.cardInfoDialog.setDepth(120);
 
         // Tạo background mờ - đặt trong container với gốc tọa độ tương đối
-        const bg = this.add.rectangle(-width / 2, -height / 2, width, height, 0x000000, 0.7)
+        const bg = this.add.rectangle(-width / 2, -height / 2, width, height, themeManager.getBackgroundPhaser(), 0.7)
             .setOrigin(0, 0)
             .setInteractive();
 
-        // Tạo background cho dialog - sử dụng màu chủ đạo của game với góc bo tròn
+        // Tạo background cho dialog – dùng theme
         const dialogBg = this.add.graphics();
-        dialogBg.fillStyle(0x800080, 0.95);
-        dialogBg.lineStyle(3, 0xff3366);
+        dialogBg.fillStyle(themeManager.getSurfacePhaser(), 0.95);
+        dialogBg.lineStyle(3, themeManager.getPrimaryPhaser());
         dialogBg.fillRoundedRect(-200, -150, 400, 300, 20);
         dialogBg.strokeRoundedRect(-200, -150, 400, 300, 20);
 
@@ -446,7 +443,7 @@ export default class LibraryScene extends Phaser.Scene {
         // Tạo text cho tên thẻ
         const nameText = this.add.text(0, -120, cardData.name, {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial'
         });
         nameText.setOrigin(0.5);
@@ -454,7 +451,7 @@ export default class LibraryScene extends Phaser.Scene {
         // Tạo text cho loại thẻ
         const typeText = this.add.text(0, -100, localizationManager.t('type_label', { type: localizationManager.t(cardData.type) || cardData.type }), {
             fontSize: '16px',
-            color: '#ffb3d9',
+            color: themeManager.getAccent(),
             fontFamily: 'Arial'
         });
         typeText.setOrigin(0.5);
@@ -462,16 +459,16 @@ export default class LibraryScene extends Phaser.Scene {
         // Tạo text cho mô tả thẻ
         const descText = this.add.text(0, 100, cardData.description, {
             fontSize: '14px',
-            color: '#ecf0f1',
+            color: themeManager.getText(),
             fontFamily: 'Arial',
             wordWrap: { width: 300 },
             align: 'center'
         });
         descText.setOrigin(0.5);
 
-        // Tạo nút đóng với màu theme và góc bo tròn
+        // Tạo nút đóng với màu theme
         const closeBtn = this.add.graphics();
-        closeBtn.fillStyle(0xff3366);
+        closeBtn.fillStyle(themeManager.getPrimaryPhaser());
         closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
 
         // Đặt vị trí của nút
@@ -479,7 +476,7 @@ export default class LibraryScene extends Phaser.Scene {
 
         const closeText = this.add.text(0, 190, localizationManager.t('close'), {
             fontSize: '24px',
-            color: '#ffffff',
+            color: themeManager.getText(),
             fontFamily: 'Arial'
         });
         closeText.setOrigin(0.5);
@@ -491,14 +488,14 @@ export default class LibraryScene extends Phaser.Scene {
         closeBtn.on('pointerover', () => {
             closeBtn.clear();
             closeBtn.setScale(1.2);
-            closeBtn.fillStyle(0xff6b9d); // Màu sáng hơn khi hover
+            closeBtn.fillStyle(themeManager.getSecondaryPhaser());
             closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
         });
 
         closeBtn.on('pointerout', () => {
             closeBtn.clear();
             closeBtn.setScale(1);
-            closeBtn.fillStyle(0xff3366); // Màu gốc khi không hover
+            closeBtn.fillStyle(themeManager.getPrimaryPhaser());
             closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
         });
 

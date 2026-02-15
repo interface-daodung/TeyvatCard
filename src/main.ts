@@ -15,6 +15,7 @@ import TestGraphicsRenderTexture from './scenes/TestGraphicsRenderTexture.js';
 import './utils/GameEventsManager.js';
 import { setupPWA } from './pwa/register';
 import { soundManager } from './core/SoundManager.js';
+import { themeManager } from './core/ThemeManager.js';
 
 // Cấu hình game
 const config: Phaser.Types.Core.GameConfig = {
@@ -22,7 +23,7 @@ const config: Phaser.Types.Core.GameConfig = {
   width: 720,
   height: 1280,
   parent: 'game-container',
-  backgroundColor: '#000000', // Sẽ được override bởi themeManager
+  backgroundColor: themeManager.getBackground(),
   scale: {
     mode: Phaser.Scale.FIT,   // tự động scale cho khớp
     autoCenter: Phaser.Scale.CENTER_BOTH,

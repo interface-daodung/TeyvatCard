@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { GradientText } from '../utils/GradientText.js';
 import { localizationManager, type GameLanguageCode } from '../utils/LocalizationManager.js';
 import { soundManager } from '../core/SoundManager.js';
+import { themeManager } from '../core/ThemeManager.js';
 import aboutData from '../data/About.json';
 
 interface AboutBlock {
@@ -29,8 +30,7 @@ const SETTINGS_UI_Y = {
   GAME_SETTING: 0.5,     // nút Cài đặt game
   ABOUT: 0.6,            // nút Thông tin
   VOLUME_BGM: 0.7,      // thanh kéo BGM (dưới About)
-  VOLUME_SE: 0.75,       // thanh kéo SE (dưới BGM)
-  BACK: 0.84             // nút Quay lại
+  VOLUME_SE: 0.75       // thanh kéo SE (dưới BGM)
 } as const;
 
 export default class SettingsScene extends Phaser.Scene {
@@ -80,7 +80,7 @@ export default class SettingsScene extends Phaser.Scene {
 
     // Background
     this.add.image(width / 2, height / 2, 'background');
-    this.add.rectangle(width / 2, height / 2, width, height, 0x000000).setAlpha(0.5);
+    this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
     // Main UI container (title, language button, back button) - depth cao để luôn trên popup
     this.mainUIContainer = this.add.container(0, 0);
@@ -115,25 +115,25 @@ export default class SettingsScene extends Phaser.Scene {
     const buttonHeight = height * 0.08;
     const buttonY = height * SETTINGS_UI_Y.LANGUAGE;
 
-    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, 0x622945);
-    rect.setStrokeStyle(3, 0x96576a);
+    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, themeManager.getPrimaryPhaser());
+    rect.setStrokeStyle(3, themeManager.getSecondaryPhaser());
     rect.setInteractive({ useHandCursor: true });
 
     const text = this.add.text(width / 2, buttonY, localizationManager.t('language'), {
       fontSize: '32px',
-      color: '#ffffff',
+      color: themeManager.getText(),
       fontFamily: 'Arial',
-      stroke: '#000000',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
     rect.on('pointerover', () => {
-      rect.setFillStyle(0x95245b);
-      rect.setStrokeStyle(3, 0xffffff);
+      rect.setFillStyle(themeManager.getPrimaryPhaser());
+      rect.setStrokeStyle(3, themeManager.getTextPhaser());
     });
     rect.on('pointerout', () => {
-      rect.setFillStyle(0x622945);
-      rect.setStrokeStyle(3, 0x96576a);
+        rect.setFillStyle(themeManager.getPrimaryPhaser());
+        rect.setStrokeStyle(3, themeManager.getSecondaryPhaser());
     });
     rect.on('pointerdown', () => {
       this.showLanguagePopup();
@@ -149,25 +149,25 @@ export default class SettingsScene extends Phaser.Scene {
     const buttonHeight = height * 0.08;
     const buttonY = height * SETTINGS_UI_Y.GAME_SETTING;
 
-    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, 0x622945);
-    rect.setStrokeStyle(3, 0x96576a);
+    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, themeManager.getPrimaryPhaser());
+    rect.setStrokeStyle(3, themeManager.getSecondaryPhaser());
     rect.setInteractive({ useHandCursor: true });
 
     const text = this.add.text(width / 2, buttonY, localizationManager.t('gameSetting'), {
       fontSize: '32px',
-      color: '#ffffff',
+      color: themeManager.getText(),
       fontFamily: 'Arial',
-      stroke: '#000000',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
     rect.on('pointerover', () => {
-      rect.setFillStyle(0x95245b);
-      rect.setStrokeStyle(3, 0xffffff);
+      rect.setFillStyle(themeManager.getPrimaryPhaser());
+      rect.setStrokeStyle(3, themeManager.getTextPhaser());
     });
     rect.on('pointerout', () => {
-      rect.setFillStyle(0x622945);
-      rect.setStrokeStyle(3, 0x96576a);
+        rect.setFillStyle(themeManager.getPrimaryPhaser());
+        rect.setStrokeStyle(3, themeManager.getSecondaryPhaser());
     });
     rect.on('pointerdown', () => {
       this.showGameSettingPopup();
@@ -183,25 +183,25 @@ export default class SettingsScene extends Phaser.Scene {
     const buttonHeight = height * 0.08;
     const buttonY = height * SETTINGS_UI_Y.ABOUT;
 
-    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, 0x622945);
-    rect.setStrokeStyle(3, 0x96576a);
+    const rect = this.add.rectangle(width / 2, buttonY, buttonWidth, buttonHeight, themeManager.getPrimaryPhaser());
+    rect.setStrokeStyle(3, themeManager.getSecondaryPhaser());
     rect.setInteractive({ useHandCursor: true });
 
     const text = this.add.text(width / 2, buttonY, localizationManager.t('about'), {
       fontSize: '32px',
-      color: '#ffffff',
+      color: themeManager.getText(),
       fontFamily: 'Arial',
-      stroke: '#000000',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
     rect.on('pointerover', () => {
-      rect.setFillStyle(0x95245b);
-      rect.setStrokeStyle(3, 0xffffff);
+      rect.setFillStyle(themeManager.getPrimaryPhaser());
+      rect.setStrokeStyle(3, themeManager.getTextPhaser());
     });
     rect.on('pointerout', () => {
-      rect.setFillStyle(0x622945);
-      rect.setStrokeStyle(3, 0x96576a);
+        rect.setFillStyle(themeManager.getPrimaryPhaser());
+        rect.setStrokeStyle(3, themeManager.getSecondaryPhaser());
     });
     rect.on('pointerdown', () => {
       this.showAboutPopup();
@@ -232,7 +232,7 @@ export default class SettingsScene extends Phaser.Scene {
 
     const labelSE = this.add.text(leftEdge + iconZone / 2, sliderY - 14, 'SE', {
       fontSize: '14px',
-      color: '#888888',
+      color: themeManager.getNeutral(),
       fontFamily: 'Arial'
     }).setOrigin(0.5).setAlpha(0.85);
     container.add(labelSE);
@@ -246,8 +246,8 @@ export default class SettingsScene extends Phaser.Scene {
     container.add(iconLeft);
     this.volumeIconRight = iconLeft;
 
-    const track = this.add.rectangle(trackCenterX, sliderY, trackWidth, trackHeight, 0x333333);
-    track.setStrokeStyle(2, 0x96576a);
+    const track = this.add.rectangle(trackCenterX, sliderY, trackWidth, trackHeight, themeManager.getSurfacePhaser());
+    track.setStrokeStyle(2, themeManager.getSecondaryPhaser());
     track.setInteractive({ useHandCursor: true });
     track.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
       this.updateVolumeFromPointer(ptr.worldX);
@@ -256,7 +256,7 @@ export default class SettingsScene extends Phaser.Scene {
     container.add(track);
 
     const fillWidth = trackWidth * this.volumeValue;
-    const fill = this.add.rectangle(trackLeft, sliderY, fillWidth, trackHeight - 4, 0x95245b).setOrigin(0, 0.5);
+    const fill = this.add.rectangle(trackLeft, sliderY, fillWidth, trackHeight - 4, themeManager.getPrimaryPhaser()).setOrigin(0, 0.5);
     fill.setPosition(trackLeft, sliderY);
     fill.setSize(fillWidth, trackHeight - 4);
     fill.setOrigin(0, 0.5);
@@ -264,8 +264,8 @@ export default class SettingsScene extends Phaser.Scene {
 
     const thumbX = trackLeft + this.volumeValue * trackWidth;
     const thumbSize = thumbRadius * 2;
-    const thumb = this.add.rectangle(thumbX, sliderY, thumbSize, thumbSize, 0xffffff);
-    thumb.setStrokeStyle(2, 0x95245b);
+    const thumb = this.add.rectangle(thumbX, sliderY, thumbSize, thumbSize, themeManager.getTextPhaser());
+    thumb.setStrokeStyle(2, themeManager.getPrimaryPhaser());
     thumb.setInteractive({ useHandCursor: true });
     this.volumeThumb = thumb;
     this.input.setDraggable(thumb);
@@ -344,7 +344,7 @@ export default class SettingsScene extends Phaser.Scene {
 
     const labelBGM = this.add.text(leftEdge + iconZone / 2, sliderY - 14, 'BGM', {
       fontSize: '14px',
-      color: '#888888',
+      color: themeManager.getNeutral(),
       fontFamily: 'Arial'
     }).setOrigin(0.5).setAlpha(0.85);
     container.add(labelBGM);
@@ -358,8 +358,8 @@ export default class SettingsScene extends Phaser.Scene {
     container.add(iconLeft);
     this.bgmVolumeIconRight = iconLeft;
 
-    const track = this.add.rectangle(trackCenterX, sliderY, trackWidth, trackHeight, 0x333333);
-    track.setStrokeStyle(2, 0x96576a);
+    const track = this.add.rectangle(trackCenterX, sliderY, trackWidth, trackHeight, themeManager.getSurfacePhaser());
+    track.setStrokeStyle(2, themeManager.getSecondaryPhaser());
     track.setInteractive({ useHandCursor: true });
     track.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
       this.updateBGMVolumeFromPointer(ptr.worldX);
@@ -368,7 +368,7 @@ export default class SettingsScene extends Phaser.Scene {
     container.add(track);
 
     const fillWidth = trackWidth * this.bgmVolumeValue;
-    const fill = this.add.rectangle(trackLeft, sliderY, fillWidth, trackHeight - 4, 0x95245b).setOrigin(0, 0.5);
+    const fill = this.add.rectangle(trackLeft, sliderY, fillWidth, trackHeight - 4, themeManager.getPrimaryPhaser()).setOrigin(0, 0.5);
     fill.setPosition(trackLeft, sliderY);
     fill.setSize(fillWidth, trackHeight - 4);
     fill.setOrigin(0, 0.5);
@@ -376,8 +376,8 @@ export default class SettingsScene extends Phaser.Scene {
 
     const thumbX = trackLeft + this.bgmVolumeValue * trackWidth;
     const thumbSize = thumbRadius * 2;
-    const thumb = this.add.rectangle(thumbX, sliderY, thumbSize, thumbSize, 0xffffff);
-    thumb.setStrokeStyle(2, 0x95245b);
+    const thumb = this.add.rectangle(thumbX, sliderY, thumbSize, thumbSize, themeManager.getTextPhaser());
+    thumb.setStrokeStyle(2, themeManager.getPrimaryPhaser());
     thumb.setInteractive({ useHandCursor: true });
     this.bgmVolumeThumb = thumb;
     this.input.setDraggable(thumb);
@@ -441,7 +441,7 @@ export default class SettingsScene extends Phaser.Scene {
     this.langPopupContainer.setDepth(50);
 
     // Overlay trong suốt nhẹ - vẫn thấy background
-    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, 0x000000, 0.25);
+    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, themeManager.getBackgroundPhaser(), 0.25);
     overlay.setInteractive({ useHandCursor: false });
 
     // Panel chính - bo góc như LibraryScene, trong suốt để thấy background
@@ -449,31 +449,31 @@ export default class SettingsScene extends Phaser.Scene {
     const panelHeight = height * 0.75;
     const radius = Math.min(panelWidth, panelHeight) * 0.04; // Bo góc scale theo kích thước
     const panel = this.add.graphics();
-    panel.fillStyle(0x1a1a2e, 0.7);
-    panel.lineStyle(3, 0x95245b);
+    panel.fillStyle(themeManager.getSurfacePhaser(), 0.7);
+    panel.lineStyle(3, themeManager.getPrimaryPhaser());
     panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
     panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
 
     // Tiêu đề popup
     this.langPopupTitle = this.add.text(0, -panelHeight / 2 + 120, localizationManager.t('language'), {
       fontSize: '36px',
-      color: '#cbbd1b',
+      color: themeManager.getAccent(),
       fontFamily: 'Arial',
       fontStyle: 'bold',
-      stroke: '#1f0612',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
     // Nút đóng (X)
     const closeBtn = this.add.text(panelWidth / 2 - 35, -panelHeight / 2 + 30, '✕', {
       fontSize: '32px',
-      color: '#ffffff',
+      color: themeManager.getText(),
       fontFamily: 'Arial'
     }).setOrigin(0.5);
     closeBtn.setInteractive({ useHandCursor: true });
     closeBtn.on('pointerdown', () => this.hideLanguagePopup());
-    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: '#ff6b6b' }));
-    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: '#ffffff' }));
+    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: themeManager.getAccent() }));
+    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: themeManager.getText() }));
 
     // Container cho các nút ngôn ngữ
     const langButtonsContainer = this.add.container(0, 0);
@@ -491,40 +491,40 @@ export default class SettingsScene extends Phaser.Scene {
     this.gameSettingPopupContainer = this.add.container(width / 2, height / 2);
     this.gameSettingPopupContainer.setDepth(50);
 
-    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, 0x000000, 0.25);
+    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, themeManager.getBackgroundPhaser(), 0.25);
     overlay.setInteractive({ useHandCursor: false });
 
     const panelWidth = width * 0.75;
     const panelHeight = height * 0.5;
     const radius = Math.min(panelWidth, panelHeight) * 0.04;
     const panel = this.add.graphics();
-    panel.fillStyle(0x1a1a2e, 0.7);
-    panel.lineStyle(3, 0x95245b);
+    panel.fillStyle(themeManager.getSurfacePhaser(), 0.7);
+    panel.lineStyle(3, themeManager.getPrimaryPhaser());
     panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
     panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
 
     const title = this.add.text(0, -panelHeight / 2 + 80, localizationManager.t('gameSetting'), {
       fontSize: '36px',
-      color: '#cbbd1b',
+      color: themeManager.getAccent(),
       fontFamily: 'Arial',
       fontStyle: 'bold',
-      stroke: '#1f0612',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
     const closeBtn = this.add.text(panelWidth / 2 - 35, -panelHeight / 2 + 30, '✕', {
       fontSize: '32px',
-      color: '#ffffff',
+      color: themeManager.getText(),
       fontFamily: 'Arial'
     }).setOrigin(0.5);
     closeBtn.setInteractive({ useHandCursor: true });
     closeBtn.on('pointerdown', () => this.hideGameSettingPopup());
-    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: '#ff6b6b' }));
-    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: '#ffffff' }));
+    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: themeManager.getAccent() }));
+    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: themeManager.getText() }));
 
     const placeholder = this.add.text(0, 0, localizationManager.t('settings'), {
       fontSize: '20px',
-      color: '#aaaaaa',
+      color: themeManager.getNeutral(),
       fontFamily: 'Arial'
     }).setOrigin(0.5);
     placeholder.setAlpha(0.7);
@@ -554,36 +554,36 @@ export default class SettingsScene extends Phaser.Scene {
     this.aboutPopupContainer = this.add.container(width / 2, height / 2);
     this.aboutPopupContainer.setDepth(50);
 
-    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, 0x000000, 0.25);
+    const overlay = this.add.rectangle(0, 0, width + 100, height + 100, themeManager.getBackgroundPhaser(), 0.25);
     overlay.setInteractive({ useHandCursor: false });
 
     const panelWidth = width * 0.85;
     const panelHeight = height * 0.75;
     const radius = Math.min(panelWidth, panelHeight) * 0.04;
     const panel = this.add.graphics();
-    panel.fillStyle(0x1a1a2e, 0.7);
-    panel.lineStyle(3, 0x95245b);
+    panel.fillStyle(themeManager.getSurfacePhaser(), 0.7);
+    panel.lineStyle(3, themeManager.getPrimaryPhaser());
     panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
     panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
 
     const title = this.add.text(0, -panelHeight / 2 + 120, localizationManager.t('about'), {
       fontSize: '36px',
-      color: '#cbbd1b',
+      color: themeManager.getAccent(),
       fontFamily: 'Arial',
       fontStyle: 'bold',
-      stroke: '#1f0612',
+      stroke: themeManager.getBackground(),
       strokeThickness: 2
     }).setOrigin(0.5);
 
     const closeBtn = this.add.text(panelWidth / 2 - 35, -panelHeight / 2 + 30, '✕', {
       fontSize: '32px',
-      color: '#ffffff',
+      color: themeManager.getText(),
       fontFamily: 'Arial'
     }).setOrigin(0.5);
     closeBtn.setInteractive({ useHandCursor: true });
     closeBtn.on('pointerdown', () => this.hideAboutPopup());
-    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: '#ff6b6b' }));
-    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: '#ffffff' }));
+    closeBtn.on('pointerover', () => closeBtn.setStyle({ color: themeManager.getAccent() }));
+    closeBtn.on('pointerout', () => closeBtn.setStyle({ color: themeManager.getText() }));
 
     const contentContainer = this.add.container(0, -panelHeight / 2 + 180);
     const data = aboutData as AboutJson;
@@ -600,7 +600,7 @@ export default class SettingsScene extends Phaser.Scene {
 
       const textObj = this.add.text(0, currentY, displayText, {
         fontSize: `${fontSize}px`,
-        color: '#ffffff',
+        color: themeManager.getText(),
         fontFamily: 'Arial',
         wordWrap: { width: panelWidth - 80 },
         align: 'center'
@@ -683,19 +683,20 @@ export default class SettingsScene extends Phaser.Scene {
       const buttonY = (i - (n - 1) / 2) * (buttonHeight + buttonSpacing);
 
       const isActive = lang === localizationManager.currentLanguage;
-      const fillColor = isActive ? 0x95245b : 0x622945;
-      const strokeColor = isActive ? 0xffffff : 0x96576a;
+      // Active: Primary fill + Text stroke. Inactive: Surface fill + Secondary stroke (để viền nhìn rõ, không trùng màu nền)
+      const fillColor = isActive ? themeManager.getPrimaryPhaser() : themeManager.getSurfacePhaser();
+      const strokeColor = isActive ? themeManager.getTextPhaser() : themeManager.getSecondaryPhaser();
 
       const rect = this.add.rectangle(0, buttonY, buttonWidth, buttonHeight, fillColor);
       rect.setStrokeStyle(3, strokeColor);
-      rect.setInteractive();
+      rect.setInteractive({ useHandCursor: true });
 
       const label = localizationManager.getLanguageName(lang);
       const text = this.add.text(0, buttonY, label, {
         fontSize: '32px',
-        color: '#ffffff',
+        color: themeManager.getText(),
         fontFamily: 'Arial',
-        stroke: '#000000',
+        stroke: themeManager.getBackground(),
         strokeThickness: 2
       }).setOrigin(0.5);
 
@@ -704,14 +705,14 @@ export default class SettingsScene extends Phaser.Scene {
       rect.on('pointerover', () => {
         const isActiveNow = currentLang === localizationManager.currentLanguage;
         if (!isActiveNow) {
-          rect.setFillStyle(0x95245b);
-          rect.setStrokeStyle(3, 0xffffff);
+          rect.setFillStyle(themeManager.getPrimaryPhaser());
+          rect.setStrokeStyle(3, themeManager.getTextPhaser());
         }
       });
       rect.on('pointerout', () => {
         const isActiveNow = currentLang === localizationManager.currentLanguage;
-        rect.setFillStyle(isActiveNow ? 0x95245b : 0x622945);
-        rect.setStrokeStyle(3, isActiveNow ? 0xffffff : 0x96576a);
+        rect.setFillStyle(isActiveNow ? themeManager.getPrimaryPhaser() : themeManager.getSurfacePhaser());
+        rect.setStrokeStyle(3, isActiveNow ? themeManager.getTextPhaser() : themeManager.getSecondaryPhaser());
       });
       rect.on('pointerdown', () => {
         this.resetAllButtonHoverStates();
@@ -723,8 +724,8 @@ export default class SettingsScene extends Phaser.Scene {
       btnContainer.text = text;
       btnContainer.lang = lang;
       btnContainer.setActiveState = (active: boolean) => {
-        rect.setFillStyle(active ? 0x95245b : 0x622945);
-        rect.setStrokeStyle(3, active ? 0xffffff : 0x96576a);
+        rect.setFillStyle(active ? themeManager.getPrimaryPhaser() : themeManager.getSurfacePhaser());
+        rect.setStrokeStyle(3, active ? themeManager.getTextPhaser() : themeManager.getSecondaryPhaser());
       };
 
       this.langButtons.push(btnContainer);
@@ -733,21 +734,31 @@ export default class SettingsScene extends Phaser.Scene {
   }
 
   createBackButton(width: number, height: number): void {
-    const buttonY = height * SETTINGS_UI_Y.BACK;
-    this.backButton = this.add.text(width / 2, buttonY, localizationManager.t('back'), {
-      fontSize: '36px',
-      color: '#ffffff',
-      fontFamily: 'Arial',
-      stroke: '#000000',
-      strokeThickness: 2
+    this.backButton = this.add.text(width * 0.5, height * 0.9, localizationManager.t('back_short'), {
+      fontSize: '24px',
+      color: themeManager.getText(),
+      fontFamily: 'Arial, sans-serif',
+      fontStyle: 'bold',
+      backgroundColor: themeManager.getPrimary(),
+      padding: { x: 25, y: 12 }
     }).setOrigin(0.5);
 
     this.backButton.setInteractive({ useHandCursor: true });
+
+    this.backButton.on('pointerover', () => {
+      this.backButton!.setScale(1.1);
+      this.backButton!.setTint(themeManager.getNeutralPhaser());
+    });
+
+    this.backButton.on('pointerout', () => {
+      this.backButton!.setScale(1);
+      this.backButton!.clearTint();
+    });
+
     this.backButton.on('pointerdown', () => {
       this.scene.start('MenuScene');
     });
-    this.backButton.on('pointerover', () => this.backButton!.setStyle({ color: '#ffd700' }));
-    this.backButton.on('pointerout', () => this.backButton!.setStyle({ color: '#ffffff' }));
+
     this.mainUIContainer!.add(this.backButton);
   }
 
@@ -761,7 +772,7 @@ export default class SettingsScene extends Phaser.Scene {
       this.mainUIContainer?.add(this.titleImage);
     }
     if (this.backButton) {
-      this.backButton.setText(localizationManager.t('back'));
+      this.backButton.setText(localizationManager.t('back_short'));
     }
     // Update language button text
     const langBtnText = this.languageButton?.getAt(1) as Phaser.GameObjects.Text | undefined;
@@ -788,12 +799,11 @@ export default class SettingsScene extends Phaser.Scene {
    * Đơn giản chỉ set lại style dựa trên active state
    */
   resetAllButtonHoverStates(): void {
-    this.langButtons.forEach((btn, index) => {
+    this.langButtons.forEach((btn) => {
       if (btn && btn.rect && btn.lang) {
         const isActive = btn.lang === localizationManager.currentLanguage;
-        // Force reset về style đúng dựa trên active state
-        btn.rect.setFillStyle(isActive ? 0x95245b : 0x622945);
-        btn.rect.setStrokeStyle(3, isActive ? 0xffffff : 0x96576a);
+        btn.rect.setFillStyle(isActive ? themeManager.getPrimaryPhaser() : themeManager.getSurfacePhaser());
+        btn.rect.setStrokeStyle(3, isActive ? themeManager.getTextPhaser() : themeManager.getSecondaryPhaser());
       }
     });
   }
