@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Card from './Card.js';
+import { dataManager } from '../core/DataManager.js';
 import type { SceneWithGameManager } from './Card.js';
 import Coin from '../models/cards/Coin.js';
 import dungeonList from '../data/dungeonList.json';
@@ -338,7 +339,7 @@ class CardFactory {
     }
 
     createCharacter(scene: SceneWithGameManager, x: number, y: number, index: number): Card {
-        const nameId = localStorage.getItem('selectedCharacter');
+        const nameId = dataManager.get<string>('selectedCharacter');
 
         if (!nameId) {
             this.element = (Eula as any).DEFAULT.element;

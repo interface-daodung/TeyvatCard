@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import GameManager from '../core/GameManager.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import { themeManager } from '../core/ThemeManager.js';
+import { dataManager } from '../core/DataManager.js';
 import itemFactory from '../modules/ItemFactory.js';
 import dungeonList from '../data/dungeonList.json';
 
@@ -279,21 +280,15 @@ export default class GameScene extends Phaser.Scene {
      */
     createItemButtonsFromStorage(): ItemData[] {
         try {
-            const savedEquipment = localStorage.getItem('equipment');
-            if (savedEquipment && savedEquipment !== 'null') {
-                const equipmentData = JSON.parse(savedEquipment);
+            const equipmentData = dataManager.get<string[] | null>('equipment');
 
-                // Kiểm tra nếu equipmentData là array và có dữ liệu
-                if (Array.isArray(equipmentData) && equipmentData.length > 0) {
-                    // Tạo item buttons từ equipment data
-                    const itemButtons = equipmentData.map((nameId: string) => {
-                        // Tạo item mới từ itemFactory
-                        return itemFactory.createItem(nameId);
-
-                    });
-                    console.log('Item buttons created from equipment:', itemButtons);
-                    return itemButtons;
-                }
+            // Kiểm tra nếu equipmentData là array và có dữ liệu
+            if (Array.isArray(equipmentData) && equipmentData.length > 0) {
+                const itemButtons = equipmentData.map((nameId: string) => {
+                    return itemFactory.createItem(nameId);
+                });
+                console.log('Item buttons created from equipment:', itemButtons);
+                return itemButtons;
             }
             // Fallback: nếu không có equipment data, trả về array rỗng
             console.log('No equipment data found, returning empty item buttons');

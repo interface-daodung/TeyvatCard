@@ -11,6 +11,7 @@ import {
   LANGUAGE_NAMES,
   type GameLanguageCode
 } from '../i18n/translations.js';
+import { dataManager } from '../core/DataManager.js';
 
 export type { GameLanguageCode };
 
@@ -22,8 +23,8 @@ export class LocalizationManager {
   private translations = TRANSLATIONS;
 
   constructor() {
-    // Đọc ngôn ngữ đã lưu từ localStorage
-    const saved = localStorage.getItem('gameLanguage') as GameLanguageCode | null;
+    // Đọc ngôn ngữ đã lưu từ dataManager
+    const saved = dataManager.get<GameLanguageCode>('gameLanguage');
     // Nếu có lưu và hợp lệ thì dùng, không thì mặc định 'vi'
     this.currentLanguage =
       saved && this.translations[saved] ? saved : ('vi' as GameLanguageCode);
@@ -59,7 +60,7 @@ export class LocalizationManager {
     
     if (this.translations[code]) {
       this.currentLanguage = code;
-      localStorage.setItem('gameLanguage', code);
+      dataManager.set('gameLanguage', code);
       console.log('[LocalizationManager] Language changed to:', code);
       console.log('[LocalizationManager] Saved to localStorage');
 

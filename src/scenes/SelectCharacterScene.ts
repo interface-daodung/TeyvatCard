@@ -3,6 +3,7 @@ import { localizationManager } from '../utils/LocalizationManager.js';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
+import { dataManager } from '../core/DataManager.js';
 import cardCharacterList from '../data/cardCharacterList.json';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 
@@ -52,12 +53,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
     }
 
     init(): void {
-        const highScoresStr = localStorage.getItem('characterHighScores');
-        if (!highScoresStr) {
-            this.HighScores = {};
-        } else {
-            this.HighScores = JSON.parse(highScoresStr) as HighScores;
-        }
+        this.HighScores = dataManager.get<HighScores>('characterHighScores') ?? {};
         console.log(this.HighScores);
     }
 
@@ -297,7 +293,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
             this.backButton.clearTint();
         });
         this.backButton.on('pointerdown', () => {
-            localStorage.setItem('selectedCharacter', this.cards[this.currentCardIndex].id);
+            dataManager.set('selectedCharacter', this.cards[this.currentCardIndex].id);
             this.scene.start('MenuScene');
         });
     }
@@ -305,20 +301,10 @@ export default class SelectCharacterScene extends Phaser.Scene {
     updateCardDisplay(): void {
         const currentCard = this.cards[this.currentCardIndex];
 
-        // Load level từ localStorage
-        let CharacterLevel = localStorage.getItem('characterLevel');
-        if (CharacterLevel) {
-            try {
-                const levelData: Record<string, number> = JSON.parse(CharacterLevel);
-                if (levelData[currentCard.id]) {
-                    currentCard.level = levelData[currentCard.id];
-                } else {
-                    currentCard.level = 1;
-                }
-            } catch (error) {
-                console.warn('Error parsing CharacterLevel from localStorage:', error);
-                currentCard.level = 1;
-            }
+        // Load level từ dataManager
+        const levelData = dataManager.get<Record<string, number>>('characterLevel');
+        if (levelData && levelData[currentCard.id]) {
+            currentCard.level = levelData[currentCard.id];
         } else {
             currentCard.level = 1;
         }
@@ -414,29 +400,10 @@ export default class SelectCharacterScene extends Phaser.Scene {
             return;
         }
 
-        // Lấy CharacterLevel từ localStorage
-        let CharacterLevel = localStorage.getItem('characterLevel');
-
-        // Nếu chưa có, tạo object mới
-        if (!CharacterLevel) {
-            CharacterLevel = '{}';
-        }
-
-        // Parse JSON nếu có
-        let levelData: Record<string, number>;
-        try {
-            levelData = JSON.parse(CharacterLevel);
-        } catch (error) {
-            console.warn('Error parsing CharacterLevel from localStorage:', error);
-            levelData = {};
-        }
-
-        // Tăng level
+        const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
         currentCard.level = (currentCard.level || 1) + 1;
         levelData[currentCard.id] = currentCard.level;
-
-        // Lưu vào localStorage
-        localStorage.setItem('characterLevel', JSON.stringify(levelData));
+        dataManager.set('characterLevel', levelData);
 
         // Cập nhật hiển thị
         this.updateCardDisplay();
@@ -451,8 +418,8 @@ export default class SelectCharacterScene extends Phaser.Scene {
         // Giá trị mặc định là 0
         let defaultIndex = 0;
 
-        // Kiểm tra xem có selectedCharacter trong localStorage không
-        const selectedCharacter = localStorage.getItem('selectedCharacter');
+        // Kiểm tra xem có selectedCharacter không
+        const selectedCharacter = dataManager.get<string>('selectedCharacter');
 
         if (selectedCharacter !== null) {
             try {

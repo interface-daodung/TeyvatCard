@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { dataManager } from '../core/DataManager.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import itemFactory from '../modules/ItemFactory.js';
 import { GradientText } from '../utils/GradientText.js';
@@ -675,7 +676,7 @@ export default class EquipScene extends Phaser.Scene {
 
             // Nếu không có item nào có ý nghĩa thì lưu null, ngược lại lưu array các nameId
             const equipmentData = validItems.length > 0 ? validItems : null;
-            localStorage.setItem('equipment', JSON.stringify(equipmentData));
+            dataManager.set('equipment', equipmentData);
 
             // Chuyển về MenuScene
             this.scene.start('MenuScene');
@@ -688,9 +689,8 @@ export default class EquipScene extends Phaser.Scene {
      */
     initializeEquipmentSlots(): void {
         try {
-            const savedEquipment = localStorage.getItem('equipment');
-            if (savedEquipment && savedEquipment !== 'null') {
-                const equipmentData = JSON.parse(savedEquipment) as string[];
+            const equipmentData = dataManager.get<string[] | null>('equipment');
+            if (equipmentData) {
 
                 // Kiểm tra nếu equipmentData là array và có dữ liệu
                 if (Array.isArray(equipmentData) && equipmentData.length > 0) {
@@ -711,13 +711,13 @@ export default class EquipScene extends Phaser.Scene {
                             }
                         }
                     });
-                    console.log('Equipment slots initialized from localStorage:', equipmentData);
+                    console.log('Equipment slots initialized from dataManager:', equipmentData);
                 } else {
                     // Nếu không có dữ liệu, chỉ reset về trạng thái ban đầu
                     this.resetEquipmentSlots();
                 }
             } else {
-                // Nếu localStorage rỗng, reset về trạng thái ban đầu
+                // Nếu không có dữ liệu, reset về trạng thái ban đầu
                 this.resetEquipmentSlots();
             }
         } catch (error) {

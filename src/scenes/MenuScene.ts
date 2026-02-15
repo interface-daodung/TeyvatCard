@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { dataManager } from '../core/DataManager.js';
 import { GradientText } from '../utils/GradientText.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
@@ -261,9 +262,9 @@ export default class MenuScene extends Phaser.Scene {
         // TextureCard là mảng các texture cards
         let TextureCard: string[] = [this.cards[this.cards.length - 1].id, this.cards[0].id, this.cards[1].id];
 
-        // Lấy selectedCharacter từ localStorage
-        let selectedCharacter = localStorage.getItem('selectedCharacter');
-        if (selectedCharacter !== null) {
+        // Lấy selectedCharacter từ dataManager
+        let selectedCharacter = dataManager.get<string>('selectedCharacter');
+        if (selectedCharacter != null) {
             try {
                 // Parse selectedCharacter để lấy object card
                 const selectedCardName = selectedCharacter;
@@ -277,11 +278,9 @@ export default class MenuScene extends Phaser.Scene {
                     this.cards[selectedIndex].id,
                     this.cards[(selectedIndex + 1) % this.cards.length].id];
 
-                    // Lấy CharacterLevel từ localStorage
-                    let characterLevels = localStorage.getItem('characterLevel');
-                    if (characterLevels !== null) {
-                        try {
-                            const levelData: Record<string, number> = JSON.parse(characterLevels);
+                    // Lấy CharacterLevel từ dataManager
+                    const levelData = dataManager.get<Record<string, number>>('characterLevel');
+                    if (levelData != null) {
                             // Kiểm tra level của từng nhân vật và thêm đuôi '-sprite' nếu level > 2
                             TextureCard = TextureCard.map(texture => {
                                 const level = levelData[texture];
@@ -290,9 +289,6 @@ export default class MenuScene extends Phaser.Scene {
                                 }
                                 return texture;
                             });
-                        } catch (error) {
-                            console.warn('Không thể parse CharacterLevel:', error);
-                        }
                     }
                 } else {
                     // Fallback nếu không tìm thấy card

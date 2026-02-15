@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { localizationManager } from './LocalizationManager.js';
 import { AuthManager } from './AuthManager.js';
 import { themeManager } from '../core/ThemeManager.js';
+import { dataManager } from '../core/DataManager.js';
 
 /**
  * Utility để tạo HeaderUI có thể tái sử dụng
@@ -15,8 +16,8 @@ export class HeaderUI {
      * @returns Object chứa updateCoinDisplay method
      */
     static createHeaderUI(scene: Phaser.Scene, width: number, height: number): { updateCoinDisplay: (newCoin: string | number) => void } {
-        // Hiển thị số coin từ localStorage
-        const totalCoin = localStorage.getItem('totalCoin') || '0';
+        // Hiển thị số coin từ dataManager
+        const totalCoin = String(dataManager.get<number>('totalCoin') ?? 0);
         const coinDisplay = scene.add.text(width * 0.05, height * 0.05, localizationManager.t('coin_header', { amount: totalCoin }), {
             fontSize: '32px',
             color: themeManager.getText(),

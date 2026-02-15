@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Card from '../Card.js';
+import { dataManager } from '../../core/DataManager.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
@@ -113,12 +114,8 @@ export default class Character extends Card {
     }
 
     getLevel(): number {
-        const CharacterLevel = localStorage.getItem('characterLevel');
-        if (CharacterLevel) {
-            const parsed = JSON.parse(CharacterLevel) as Record<string, number>;
-            return parsed[this.nameId] ?? 1;
-        }
-        return 1;
+        const levelData = dataManager.get<Record<string, number>>('characterLevel');
+        return levelData?.[this.nameId] ?? 1;
     }
 
     setWeapon(weapon: { default: any; durability: number }): void {

@@ -5,6 +5,7 @@ import CardManager from './CardManager.js';
 import AnimationManager from './AnimationManager.js';
 import PriorityEmitter from '../utils/PriorityEmitter.js';
 import { themeManager } from './ThemeManager.js';
+import { dataManager } from './DataManager.js';
 
 interface MovementItem {
     from: number;
@@ -128,19 +129,13 @@ export default class GameManager {
     getHighScore(): number {
         const stageId = this.scene.stageId;
 
-        let saved = localStorage.getItem('highScores');
+        let highScores = dataManager.get<Record<string, number>>('highScores');
 
-        if (saved === null) {
-            // Tạo object mới với stageId từ dungeonList = 0
-            const newHighScores = {};
-
-            // Lưu vào localStorage
-            const json_highScores = JSON.stringify(newHighScores);
-            localStorage.setItem('highScores', json_highScores);
-            saved = json_highScores;
+        if (!highScores) {
+            highScores = {};
+            dataManager.set('highScores', highScores);
         }
 
-        const highScores: Record<string, number> = JSON.parse(saved) || {};
         return highScores[stageId || ''] || 0;
     }
 
@@ -150,23 +145,14 @@ export default class GameManager {
     setHighScore(score: number): void {
         const stageId = this.scene.stageId;
 
-        let saved = localStorage.getItem('highScores');
-        let highScores: Record<string, number> = {};
-
-        if (saved === null) {
-            // Tạo object mới với stageId từ dungeonList = 0
-            highScores = {};
-        } else {
-            highScores = JSON.parse(saved) || {};
-        }
+        const highScores = dataManager.get<Record<string, number>>('highScores') || {};
 
         // Cập nhật highScore cho stage hiện tại
         if (stageId) {
             highScores[stageId] = score;
         }
 
-        // Lưu vào localStorage
-        localStorage.setItem('highScores', JSON.stringify(highScores));
+        dataManager.set('highScores', highScores);
         console.log(`GameManager: High score set for ${stageId}: ${score}`);
     }
 
@@ -207,13 +193,12 @@ export default class GameManager {
         const characterName = (this.cardManager.CardCharacter as any)?.constructor?.DEFAULT?.id;
 
         if (characterName) {
-            // Lấy characterHighScore từ localStorage
-            let characterHighScores: Record<string, number> = JSON.parse(localStorage.getItem('characterHighScores') || '{}') || {};
+            const characterHighScores = dataManager.get<Record<string, number>>('characterHighScores') || {};
 
             // Kiểm tra và cập nhật highScore cho character
             if (!characterHighScores[characterName] || this.coin > characterHighScores[characterName]) {
                 characterHighScores[characterName] = this.coin;
-                localStorage.setItem('characterHighScores', JSON.stringify(characterHighScores));
+                dataManager.set('characterHighScores', characterHighScores);
                 console.log(`GameManager: New character high score for ${characterName}: ${this.coin}`);
             }
         }
@@ -225,10 +210,10 @@ export default class GameManager {
             console.log(`GameManager: New high score for ${this.scene.stageId}: ${this.coin}`);
         }
 
-        // Cộng dồn coin vào totalCoin trong localStorage
-        const currentTotalCoin = parseInt(localStorage.getItem('totalCoin') || '0') || 0;
+        // Cộng dồn coin vào totalCoin
+        const currentTotalCoin = dataManager.get<number>('totalCoin') ?? 0;
         const newTotalCoin = currentTotalCoin + this.coin;
-        localStorage.setItem('totalCoin', newTotalCoin.toString());
+        dataManager.set('totalCoin', newTotalCoin);
 
         // Destroy từng thẻ một cách tuần tự với delay 200ms
 

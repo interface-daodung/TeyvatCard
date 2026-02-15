@@ -4,6 +4,7 @@ import { localizationManager } from '../utils/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { ApiConfig } from '../utils/ApiConfig.js';
 import { themeManager } from '../core/ThemeManager.js';
+import { dataManager } from '../core/DataManager.js';
 
 const STARTER_PACK_KEY = 'starterPackPurchased';
 
@@ -137,7 +138,7 @@ export default class PaymentScene extends Phaser.Scene {
     pkg: PackageDef
   ): Phaser.GameObjects.Container {
     const isStarter = pkg.isStarter === true;
-    const starterPurchased = localStorage.getItem(STARTER_PACK_KEY) === '1';
+    const starterPurchased = dataManager.get<string>(STARTER_PACK_KEY) === '1';
     const isDisabled = isStarter && starterPurchased;
 
     const fillColor = themeManager.getPrimaryPhaser(); // Tất cả nút dùng Primary
@@ -234,11 +235,11 @@ export default class PaymentScene extends Phaser.Scene {
       this.stopPolling();
       this.removeMessageListener();
       if (pkg.isStarter) {
-        localStorage.setItem(STARTER_PACK_KEY, '1');
+        dataManager.set(STARTER_PACK_KEY, '1');
       }
-      const current = parseInt(localStorage.getItem('totalCoin') || '0', 10) || 0;
+      const current = dataManager.get<number>('totalCoin') ?? 0;
       const newTotal = current + coins;
-      localStorage.setItem('totalCoin', String(newTotal));
+      dataManager.set('totalCoin', newTotal);
       this.showToast(`${localizationManager.t('payment') || 'Thanh toán'} thành công! +${coins} xu`);
       this.scene.restart({ fromScene: this.fromScene });
     };

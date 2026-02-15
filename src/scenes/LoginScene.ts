@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { dataManager } from '../core/DataManager.js';
 import { GradientText } from '../utils/GradientText.js';
 import { localizationManager } from '../utils/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
@@ -272,7 +273,7 @@ export default class LoginScene extends Phaser.Scene {
       if (token) {
         AuthManager.setJWT(token);
         if (data.refreshToken) {
-          localStorage.setItem('refreshToken', data.refreshToken);
+          dataManager.set('refreshToken', data.refreshToken);
         }
       }
       this.removeForm();
@@ -311,7 +312,7 @@ export default class LoginScene extends Phaser.Scene {
       if (token) {
         AuthManager.setJWT(token);
         if (data.refreshToken) {
-          localStorage.setItem('refreshToken', data.refreshToken);
+          dataManager.set('refreshToken', data.refreshToken);
         }
       }
       this.removeForm();

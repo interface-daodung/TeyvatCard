@@ -4,6 +4,7 @@
  * - BGM: volume riêng gameBGMVolume, không bị SE volume ảnh hưởng (master = 1)
  */
 import Phaser from 'phaser';
+import { dataManager } from './DataManager.js';
 
 const STORAGE_KEY = 'gameVolume';
 const STORAGE_BGM_KEY = 'gameBGMVolume';
@@ -42,13 +43,13 @@ export default class SoundManager {
     }
 
     private loadVolume(): number {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        return saved !== null ? Math.max(0, Math.min(1, parseFloat(saved))) : 1;
+        const saved = dataManager.get<number>(STORAGE_KEY);
+        return saved !== null && saved !== undefined ? Math.max(0, Math.min(1, saved)) : 1;
     }
 
     private loadBGMVolume(): number {
-        const saved = localStorage.getItem(STORAGE_BGM_KEY);
-        return saved !== null ? Math.max(0, Math.min(1, parseFloat(saved))) : 1;
+        const saved = dataManager.get<number>(STORAGE_BGM_KEY);
+        return saved !== null && saved !== undefined ? Math.max(0, Math.min(1, saved)) : 1;
     }
 
     getVolume(): number {
@@ -61,7 +62,7 @@ export default class SoundManager {
 
     setVolume(v: number): void {
         this._volume = Math.max(0, Math.min(1, v));
-        localStorage.setItem(STORAGE_KEY, String(this._volume));
+        dataManager.set(STORAGE_KEY, this._volume);
     }
 
     getBGMVolume(): number {
@@ -70,7 +71,7 @@ export default class SoundManager {
 
     setBGMVolume(v: number): void {
         this._bgmVolume = Math.max(0, Math.min(1, v));
-        localStorage.setItem(STORAGE_BGM_KEY, String(this._bgmVolume));
+        dataManager.set(STORAGE_BGM_KEY, this._bgmVolume);
         if (this._bgm && typeof (this._bgm as any).setVolume === 'function') {
             (this._bgm as any).setVolume(this._bgmVolume);
         }

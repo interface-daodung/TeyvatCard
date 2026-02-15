@@ -1,23 +1,25 @@
 /**
  * AuthManager - Quản lý JWT và trạng thái đăng nhập
  */
+import { dataManager } from '../core/DataManager.js';
+
 const JWT_KEY = 'jwt';
 
 export const AuthManager = {
   hasJWT(): boolean {
-    const token = localStorage.getItem(JWT_KEY);
+    const token = dataManager.get<string>(JWT_KEY);
     return !!token && token.length > 0;
   },
 
   getJWT(): string | null {
-    return localStorage.getItem(JWT_KEY);
+    return dataManager.get<string>(JWT_KEY);
   },
 
   setJWT(token: string): void {
-    localStorage.setItem(JWT_KEY, token);
+    dataManager.set(JWT_KEY, token);
   },
 
   clearJWT(): void {
-    localStorage.removeItem(JWT_KEY);
+    dataManager.remove(JWT_KEY);
   }
 };
