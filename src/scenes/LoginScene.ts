@@ -29,7 +29,10 @@ export default class LoginScene extends Phaser.Scene {
 
     GameTitle.create(this, width / 2, height * 0.12, 'login');
 
-    const formApi = createLoginForm(this, width, height, {
+    const scale = this.scale as unknown as { displayWidth: number; displayHeight: number };
+    const displayWidth = scale.displayWidth;
+    const displayHeight = scale.displayHeight;
+    const formApi = createLoginForm(this, { displayWidth, displayHeight }, {
       onLogin: (email, password) => this.handleLogin(email, password),
       onGoogleCredential: (credential) => this.handleGoogleCredential(credential),
       onRegister: () => this.goToRegister()

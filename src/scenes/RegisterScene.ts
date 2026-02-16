@@ -24,7 +24,10 @@ export default class RegisterScene extends Phaser.Scene {
 
     GameTitle.create(this, width / 2, height * 0.1, 'register');
 
-    const formApi = createRegisterForm(this, width, height, {
+    const scale = this.scale as unknown as { displayWidth: number; displayHeight: number };
+    const displayWidth = scale.displayWidth;
+    const displayHeight = scale.displayHeight;
+    const formApi = createRegisterForm(this, { displayWidth, displayHeight }, {
       onRegister: (email, password, confirm) => this.handleRegister(email, password, confirm),
       onLogin: () => this.goToLogin()
     });
