@@ -3,7 +3,6 @@ import { localizationManager } from '../core/LocalizationManager.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { dataManager } from '../core/DataManager.js';
-import cardCharacterList from '../data/cardCharacterList.json';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import {
     createBackButton,
@@ -20,8 +19,8 @@ import {
 import { GameTitle, I18nText } from '../components/shared/index.js';
 
 export default class SelectCharacterScene extends Phaser.Scene {
-    private cards: CardCharacter[];
-    private currentCardIndex: number;
+    private cards: CardCharacter[] = [];
+    private currentCardIndex: number = 0;
     private HighScores!: HighScores;
     private boundOnLanguageChanged: () => void;
 
@@ -40,17 +39,12 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
     constructor() {
         super({ key: 'SelectCharacterScene' });
-        this.cards = cardCharacterList as CardCharacter[];
-        this.currentCardIndex = initializeCurrentCardIndex(
-            this.cards,
-            dataManager.get<string>('selectedCharacter')
-        );
         this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
     }
 
     init(): void {
+        this.cards = (dataManager.getFlag<CardCharacter[]>('cardCharacterList') ?? []) as CardCharacter[];
         this.HighScores = dataManager.get<HighScores>('characterHighScores') ?? {};
-        // Refresh currentCardIndex from localStorage when scene starts (constructor runs once at game boot).
         const selectedCharacter = dataManager.get<string>('selectedCharacter');
         this.currentCardIndex = initializeCurrentCardIndex(this.cards, selectedCharacter);
     }

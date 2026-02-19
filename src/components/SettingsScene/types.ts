@@ -3,7 +3,10 @@ import type Phaser from 'phaser';
 export interface AboutBlock {
     type: string;
     size?: number;
-    text: string;
+    /** i18n key (e.g. "developer.title") – used when present */
+    key?: string;
+    /** Raw text – fallback when key is not used */
+    text?: string;
 }
 
 export interface AboutJson {

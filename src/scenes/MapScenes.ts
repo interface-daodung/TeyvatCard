@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
+import { dataManager } from '../core/DataManager.js';
 import { themeManager } from '../core/ThemeManager.js';
-import dungeonList from '../data/dungeonList.json';
 import { createDungeonButtons, createPaginationButtons } from '../components/MapScene/index.js';
 import { GameTitle } from '../components/shared/index.js';
 import type { DungeonData } from '../components/MapScene/index.js';
@@ -14,11 +14,15 @@ export default class MapScenes extends Phaser.Scene {
     private nextButton!: Phaser.GameObjects.Text;
     private updateDungeonButton!: (buttonContainer: Phaser.GameObjects.Container, newName: string, newStageId: string) => void;
     private updatePaginationButtons!: (currentPage: number, maxPage: number) => void;
-    private readonly dungeonList = dungeonList as DungeonData[];
+    private dungeonList: DungeonData[] = [];
 
     constructor() {
         super({ key: 'MapScenes' });
         this.currentPage = 0;
+    }
+
+    init(): void {
+        this.dungeonList = dataManager.getFlag<DungeonData[]>('dungeonList') ?? [];
     }
 
     preload(): void {}

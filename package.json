@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:no-pwa": "vite build --config vite.config.no-pwa.ts",
     "preview": "vite preview"
   },
   "dependencies": {

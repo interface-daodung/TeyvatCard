@@ -3,7 +3,6 @@ import Card from './Card.js';
 import { dataManager } from '../core/DataManager.js';
 import type { SceneWithGameManager } from './Card.js';
 import Coin from '../models/cards/Coin.js';
-import dungeonList from '../data/dungeonList.json';
 
 import Eula from '../models/cards/character/Eula.js';
 import Furina from '../models/cards/character/Furina.js';
@@ -161,7 +160,8 @@ class CardFactory {
         };
 
         this.stageCardPools = {};
-        (dungeonList as DungeonItem[]).forEach((dungeon: DungeonItem) => {
+        const dungeonList = dataManager.getFlag<DungeonItem[]>('dungeonList') ?? [];
+        dungeonList.forEach((dungeon: DungeonItem) => {
             this.stageCardPools[dungeon.stageId] = {
                 name: dungeon.name,
                 typeRatios: dungeon.typeRatios,

@@ -1,13 +1,14 @@
-import libraryCardsData from '../../data/libraryCards.json';
+import { dataManager } from '../../core/DataManager.js';
 import type { LibraryCardData } from './types.js';
 
 /**
- * Lấy danh sách tất cả thẻ từ libraryCardsData.
+ * Lấy danh sách tất cả thẻ từ libraryCards (đọc từ public/data qua DataManager, set trong LoadingScene).
  * Coin được ưu tiên trước, xử lý đặc biệt cho 7 nguyên tố.
  */
 export function getAllCardsFromData(): LibraryCardData[] {
     const allCards: LibraryCardData[] = [];
-    const cardsData = libraryCardsData as unknown as Record<string, LibraryCardData[]>;
+    const raw = dataManager.getFlag<unknown>('libraryCards');
+    const cardsData = (raw ?? {}) as Record<string, LibraryCardData[]>;
 
     Object.keys(cardsData).forEach((cardType) => {
         const cardsOfType = cardsData[cardType];

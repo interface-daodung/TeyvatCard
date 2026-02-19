@@ -1,8 +1,24 @@
 import Phaser from 'phaser';
 import { assetManager } from '../core/AssetManager.js';
+import { dataManager } from '../core/DataManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { I18nText } from '../components/shared/index.js';
+
+/** JSON app load từ public/data, sau khi load xong ghi vào dataManager.setFlag */
+const APP_DATA_PATHS = [
+    'About.json',
+    'dungeonList.json',
+    'libraryCards.json',
+    'cardCharacterList.json',
+] as const;
+
+/** Locale i18n (public/data/locales) – load xong ghi vào dataManager.setTranslations() */
+const LOCALE_DATA_PATHS = [
+    'locales/vi.json',
+    'locales/en.json',
+    'locales/ja.json',
+] as const;
 
 interface SceneData {
     targetScene?: string;
@@ -28,10 +44,43 @@ export default class LoadingScene extends Phaser.Scene {
     }
 
     create(): void {
-        const { width, height } = this.scale;
+        // 1) Theme từ public/data/theme.json
+        themeManager.loadTheme(this, 'theme.json').then(() => {
+            this.queueAppDataAndThenOnThemeLoaded();
+        });
+    }
 
-        // Load theme từ JSON bằng Phaser loader (thêm vào queue trước preloadSceneAssets)
-        themeManager.loadTheme(this, '/theme.json');
+    /** Queue load app JSON + locales, xong thì ghi flag / setTranslations và gọi onThemeLoaded */
+    private queueAppDataAndThenOnThemeLoaded(): void {
+        for (const dataPath of APP_DATA_PATHS) {
+            dataManager.queueJsonFromData(this, dataPath);
+        }
+        for (const dataPath of LOCALE_DATA_PATHS) {
+            dataManager.queueJsonFromData(this, dataPath);
+        }
+        this.load.once('complete', () => {
+            for (const dataPath of APP_DATA_PATHS) {
+                const key = dataManager.getDataCacheKey(dataPath);
+                const data = dataManager.getJsonFromCache<unknown>(this, key);
+                if (data !== undefined) {
+                    dataManager.setFlag(key, data);
+                }
+            }
+            const vi = dataManager.getJsonFromCache<Record<string, string>>(this, 'locales_vi');
+            const en = dataManager.getJsonFromCache<Record<string, string>>(this, 'locales_en');
+            const ja = dataManager.getJsonFromCache<Record<string, string>>(this, 'locales_ja');
+            dataManager.setTranslations({
+                vi: vi ?? {},
+                en: en ?? {},
+                ja: ja ?? {},
+            });
+            this.onThemeLoaded();
+        });
+        this.load.start();
+    }
+
+    private onThemeLoaded(): void {
+        const { width, height } = this.scale;
 
         // Background đơn giản – dùng màu theme
         this.add.rectangle(width / 2, height / 2, width, height, themeManager.getSecondaryPhaser());
@@ -92,12 +141,9 @@ export default class LoadingScene extends Phaser.Scene {
         });
 
         // Load assets sau khi UI đã hiển thị
-        // Delay một chút để create() hoàn thành và UI hiển thị
         assetManager.setScene(this);
         assetManager.preloadSceneAssets(this.targetScene, () => {
-            // Callback khi load xong - chuyển scene
             this.scene.start(this.targetScene, this.dataTargetScene);
         });
-
     }
 }

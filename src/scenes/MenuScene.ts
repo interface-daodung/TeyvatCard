@@ -3,7 +3,6 @@ import { dataManager } from '../core/DataManager.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { soundManager } from '../core/SoundManager.js';
 import { themeManager } from '../core/ThemeManager.js';
-import cardCharacterList from '../data/cardCharacterList.json';
 import { GameTitle, I18nText } from '../components/shared/index.js';
 import {
     createCardSpreadContainer,
@@ -13,7 +12,7 @@ import {
 } from '../components/MenuScene/index.js';
 
 export default class MenuScene extends Phaser.Scene {
-    private cards: CardCharacter[];
+    private cards: CardCharacter[] = [];
     private libraryButton?: MenuButtonResult;
     private exploreButton?: MenuButtonResult;
     private equipButton?: MenuButtonResult;
@@ -21,7 +20,10 @@ export default class MenuScene extends Phaser.Scene {
 
     constructor() {
         super({ key: 'MenuScene' });
-        this.cards = cardCharacterList as CardCharacter[];
+    }
+
+    init(): void {
+        this.cards = (dataManager.getFlag<CardCharacter[]>('cardCharacterList') ?? []) as CardCharacter[];
     }
 
     preload(): void {

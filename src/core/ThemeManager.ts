@@ -10,8 +10,10 @@
  * - Surface:   #1a1a2e – Card, panel
  * - Text:      #ffffff – Chữ chính
  *
- * Load theme từ JSON được chỉ định, fallback về màu mặc định nếu lỗi.
+ * Load theme từ JSON qua DataManager.loadJsonFromData (public/data), fallback về màu mặc định và log lỗi nếu thất bại.
  */
+
+import { dataManager } from './DataManager.js';
 
 /** 7 màu chủ đảo + Success/Warning/Error/Info */
 export interface ThemePalette {
@@ -94,40 +96,32 @@ export default class ThemeManager {
     }
 
     /**
-     * Load theme từ JSON dùng Phaser scene.load.json().
-     * Thêm theme vào queue loader – gọi trước preloadSceneAssets để load cùng batch.
+     * Load theme từ JSON qua DataManager.loadJsonFromData (đọc từ public/data).
+     * Fallback về palette mặc định và log lỗi nếu load/parse thất bại.
      * @param scene - Phaser Scene (dùng scene.load và scene.cache)
-     * @param path - Đường dẫn JSON (vd: '/theme.json')
+     * @param dataPath - Đường dẫn trong data (vd: 'theme.json')
      * @param cacheKey - Key lưu trong cache (mặc định 'theme')
+     * @returns Promise resolve khi đã áp dụng theme (hoặc fallback)
      */
-    loadTheme(scene: Phaser.Scene, path = '/theme.json', cacheKey = 'theme'): void {
-        const applyFromCache = (): void => {
-            try {
-                if (scene.cache.json.exists(cacheKey)) {
-                    const data = scene.cache.json.get(cacheKey);
-                    const parsed = parsePalette(data);
-                    if (parsed) {
-                        this.palette = parsed;
-                        this._loaded = true;
-                    } else {
-                        this.palette = { ...DEFAULT_PALETTE };
-                        this._loaded = false;
-                    }
+    loadTheme(scene: Phaser.Scene, dataPath = 'theme.json', cacheKey = 'theme'): Promise<void> {
+        return dataManager
+            .loadJsonFromData<ThemeData>(scene, dataPath, cacheKey)
+            .then((data) => {
+                const parsed = parsePalette(data);
+                if (parsed) {
+                    this.palette = parsed;
+                    this._loaded = true;
+                } else {
+                    console.error('[ThemeManager] Fallback: dữ liệu theme không hợp lệ (thiếu colors hoặc định dạng sai)', dataPath);
+                    this.palette = { ...DEFAULT_PALETTE };
+                    this._loaded = false;
                 }
-            } catch (e) {
-                console.warn(`[ThemeManager] Không parse được theme từ cache:`, e);
+            })
+            .catch((err) => {
+                console.error('[ThemeManager] Fallback: không load được theme, dùng palette mặc định.', 'dataPath:', dataPath, err);
                 this.palette = { ...DEFAULT_PALETTE };
                 this._loaded = false;
-            }
-        };
-
-        if (scene.cache.json.exists(cacheKey)) {
-            applyFromCache();
-            return;
-        }
-
-        scene.load.json(cacheKey, path);
-        scene.load.once('complete', applyFromCache);
+            });
     }
 
     isLoaded(): boolean {

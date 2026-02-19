@@ -31,37 +31,62 @@ import {
     ANIMATIONS_ASSETS,
     BGM_ASSETS
 } from '../utils/AssetConstants.js';
+import { dataManager } from './DataManager.js';
 
-import item from '../data/atlas/item.json';
-import character from '../data/atlas/character.json';
-import element from '../data/atlas/element.json';
-import coin from '../data/atlas/coin.json';
-import weapon_sword from '../data/atlas/weapon-sword.json';
-import weapon_catalyst from '../data/atlas/weapon-catalyst.json';
-import weapon_polearm from '../data/atlas/weapon-polearm.json';
-import weapon_claymore from '../data/atlas/weapon-claymore.json';
-import weapon_bow from '../data/atlas/weapon-bow.json';
+/** Danh sách atlas JSON theo scene (đường dẫn trong public/data, đọc qua DataManager) */
+const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
+    MenuScene: [
+        'atlas/item.json',
+        'atlas/character.json',
+    ],
+    GameScene: [
+        'atlas/item.json',
+        'atlas/character.json',
+        'atlas/coin.json',
+        'atlas/weapon-sword.json',
+        'atlas/enemy-hilichurl.json',
+        'atlas/food.json',
+        'atlas/trap.json',
+        'atlas/treasure.json',
+        'atlas/bomb.json',
+        'atlas/weapon-sword-badge.json',
+    ],
+    LibraryScene: [
+        'atlas/weapon-sword.json',
+        'atlas/weapon-catalyst.json',
+        'atlas/weapon-polearm.json',
+        'atlas/weapon-claymore.json',
+        'atlas/weapon-bow.json',
+        'atlas/enemy-hilichurl.json',
+        'atlas/enemy-abyss.json',
+        'atlas/enemy-slime.json',
+        'atlas/enemy-shroom.json',
+        'atlas/enemy-automatons.json',
+        'atlas/enemy-kairagi.json',
+        'atlas/enemy-eremite.json',
+        'atlas/enemy-fatui.json',
+        'atlas/enemy-boss.json',
+        'atlas/food.json',
+        'atlas/trap.json',
+        'atlas/treasure.json',
+        'atlas/bomb.json',
+        'atlas/coin.json',
+    ],
+    SelectCharacterScene: [
+        'atlas/element.json',
+    ],
+    EquipScene: [
+        'atlas/item.json',
+    ],
+};
 
-import enemy_hilichurl from '../data/atlas/enemy-hilichurl.json';
-import enemy_abyss from '../data/atlas/enemy-abyss.json';
-import enemy_slime from '../data/atlas/enemy-slime.json';
-import enemy_shroom from '../data/atlas/enemy-shroom.json';
-import enemy_automatons from '../data/atlas/enemy-automatons.json';
-import enemy_kairagi from '../data/atlas/enemy-kairagi.json';
-import enemy_eremite from '../data/atlas/enemy-eremite.json';
-import enemy_fatui from '../data/atlas/enemy-fatui.json';
-import enemy_boss from '../data/atlas/enemy-boss.json';
-
-import food from '../data/atlas/food.json';
-import trap from '../data/atlas/trap.json';
-import treasure from '../data/atlas/treasure.json';
-import bomb from '../data/atlas/bomb.json';
-
-import weapon_sword_badge from '../data/atlas/weapon-sword-badge.json';
-import weapon_catalyst_badge from '../data/atlas/weapon-catalyst-badge.json';
-import weapon_polearm_badge from '../data/atlas/weapon-polearm-badge.json';
-import weapon_claymore_badge from '../data/atlas/weapon-claymore-badge.json';
-import weapon_bow_badge from '../data/atlas/weapon-bow-badge.json';
+/** Bật log debug (sửa thành true khi cần trace load atlas) */
+const DEBUG_ATLAS_LOAD = false;
+function debugLog(...args: unknown[]): void {
+    if (DEBUG_ATLAS_LOAD) {
+        console.log('[AssetManager]', ...args);
+    }
+}
 
 interface AtlasJsonData {
     meta: {
@@ -72,7 +97,20 @@ interface AtlasJsonData {
             h: number;
         };
     };
-    frames: Record<string, any>;
+    frames: Record<string, unknown>;
+}
+
+function isAtlasJsonData(obj: unknown): obj is AtlasJsonData {
+    if (!obj || typeof obj !== 'object') return false;
+    const o = obj as Record<string, unknown>;
+    if (!o.meta || typeof o.meta !== 'object') return false;
+    const meta = o.meta as Record<string, unknown>;
+    return (
+        typeof meta.image === 'string' &&
+        typeof meta.path === 'string' &&
+        o.frames != null &&
+        typeof o.frames === 'object'
+    );
 }
 
 interface AssetFile {
@@ -101,77 +139,96 @@ export default class AssetManager {
     }
 
     /**
-     * Preload assets cho scene cụ thể với callback
+     * Preload assets cho scene cụ thể với callback.
+     * Atlas JSON đọc từ public/data qua DataManager (batch: queue JSON → load xong lấy từ cache → loadAtlas).
      */
     preloadSceneAssets(sceneName: string, callback?: () => void): void {
         if (!this.scene) {
-            console.warn('AssetManager: Scene chưa được set');
+            console.warn('[AssetManager] Scene chưa được set');
             if (callback) callback();
             return;
         }
 
-        // Đăng ký event listener cho load complete
-        this.scene.load.on('complete', callback || (() => {}));
+        const atlasPaths = ATLAS_PATHS_BY_SCENE[sceneName] ?? [];
+        const onAllLoaded = callback ?? (() => {});
 
-        // Thêm assets vào queue
+        if (atlasPaths.length > 0) {
+            // Phase 1: queue tất cả atlas JSON (đọc từ public/data qua DataManager)
+            debugLog(`preloadSceneAssets(${sceneName}): queue ${atlasPaths.length} atlas JSON`);
+            for (const dataPath of atlasPaths) {
+                dataManager.queueJsonFromData(this.scene, dataPath);
+            }
+            this.scene.load.once('complete', () => {
+                this.onAtlasJsonBatchComplete(sceneName, atlasPaths, onAllLoaded);
+            });
+            this.scene.load.start();
+        } else {
+            // Scene không dùng atlas hoặc không trong map: chỉ load images/audios (nếu có)
+            this.queueNonAtlasAssets(sceneName);
+            this.scene.load.once('complete', onAllLoaded);
+            this.scene.load.start();
+        }
+    }
+
+    /**
+     * Sau khi load xong batch atlas JSON: lấy từ cache, loadAtlas từng cái, rồi queue images/audios và start lại.
+     */
+    private onAtlasJsonBatchComplete(sceneName: string, atlasPaths: string[], callback: () => void): void {
+        if (!this.scene) {
+            callback();
+            return;
+        }
+
+        for (const dataPath of atlasPaths) {
+            const cacheKey = dataManager.getDataCacheKey(dataPath);
+            const raw = dataManager.getJsonFromCache<unknown>(this.scene, cacheKey);
+            if (!raw) {
+                console.warn('[AssetManager] Atlas JSON chưa có trong cache:', dataPath, 'cacheKey:', cacheKey);
+                continue;
+            }
+            if (!isAtlasJsonData(raw)) {
+                console.warn('[AssetManager] Atlas JSON không đúng format (meta.image/path, frames):', dataPath);
+                continue;
+            }
+            this.loadAtlas(raw);
+            debugLog('loadAtlas from cache:', cacheKey);
+        }
+
+        // Queue thêm images/audios cho scene
+        this.queueNonAtlasAssets(sceneName);
+        this.scene.load.once('complete', callback);
+        this.scene.load.start();
+    }
+
+    /**
+     * Thêm vào queue loader: images, audios cho scene (không gồm atlas – atlas đã xử lý riêng).
+     */
+    private queueNonAtlasAssets(sceneName: string): void {
+        if (!this.scene) return;
+
         switch (sceneName) {
             case 'MenuScene':
-                this.loadAtlas(item);
-                this.loadAtlas(character);
                 this.loadImages([...BACKGROUND_ASSETS, ...CHARACTER_SPRITE_ASSETS]);
                 this.loadAudios([...BGM_ASSETS]);
                 break;
-
             case 'GameScene':
                 this.loadAudios([...SOUND_EFFECT_ASSETS]);
                 this.loadImages([...ANIMATIONS_ASSETS]);
-                this.getLoadImagesListGameScene();
                 break;
-
             case 'EquipScene':
-                // this.loadAtlas(item);
-                console.log('EquipScene load item assets');
+                debugLog('EquipScene: chỉ atlas (item) đã load ở phase 1');
                 break;
-
             case 'LibraryScene':
-                // Load các atlas cần thiết cho LibraryScene
-                this.loadAtlas(weapon_sword);
-                this.loadAtlas(weapon_catalyst);
-                this.loadAtlas(weapon_polearm);
-                this.loadAtlas(weapon_claymore);
-                this.loadAtlas(weapon_bow);
-                this.loadAtlas(enemy_hilichurl);
-                this.loadAtlas(enemy_abyss);
-                this.loadAtlas(enemy_slime);
-                this.loadAtlas(enemy_shroom);
-                this.loadAtlas(enemy_automatons);
-                this.loadAtlas(enemy_kairagi);
-                this.loadAtlas(enemy_eremite);
-                this.loadAtlas(enemy_fatui);
-                this.loadAtlas(enemy_boss);
-                this.loadAtlas(food);
-                this.loadAtlas(trap);
-                this.loadAtlas(treasure);
-                this.loadAtlas(bomb);
-                this.loadAtlas(coin);
                 this.loadImages([...EMPTY_CARD]);
-                console.log('LibraryScene load all card atlas assets');
                 break;
             case 'MapScenes':
                 break;
             case 'SelectCharacterScene':
-                this.loadAtlas(element);
-                // this.loadImages(ELEMENT_ASSETS);
                 break;
-
             default:
-                console.warn(`AssetManager: Không tìm thấy scene "${sceneName}"`);
-                if (callback) callback();
-                return;
+                console.warn('[AssetManager] Không có config assets cho scene:', sceneName);
+                break;
         }
-
-        // Bắt đầu load process THỦ CÔNG để tránh race condition
-        this.scene.load.start();
     }
 
     /**
@@ -217,32 +274,22 @@ export default class AssetManager {
     }
 
     /**
-     * Load images từ atlas JSON data
-     * @param jsonData - JSON data chứa thông tin atlas
-     * @param jsonData.meta.image - Tên file atlas image
-     * @param jsonData.meta.path - Đường dẫn tương đối đến file atlas image
-     * @param jsonData.meta.size - Kích thước atlas (w, h)
-     * @param jsonData.frames - Object chứa thông tin frames với key và frame data
+     * Load atlas từ JSON data (thường lấy từ cache sau khi load qua DataManager – public/data/atlas/*.json).
+     * @param jsonData - Có meta.image, meta.path, meta.size, frames
      */
     loadAtlas(jsonData: AtlasJsonData): void {
         if (!this.scene) {
-            console.warn('AssetManager: Scene chưa được set');
+            console.warn('[AssetManager] loadAtlas: Scene chưa được set');
             return;
         }
 
-        // Tạo key cho atlas (sử dụng tên từ JSON hoặc tạo key mặc định)
         const atlasKey = jsonData.meta.image.replace('.webp', '');
-
-        // Kiểm tra nếu atlas đã tồn tại thì không load lại
         if (this.scene.textures.exists(atlasKey)) {
-            // console.log(`AssetManager: Atlas ${atlasKey} đã tồn tại`);
+            debugLog('Atlas đã tồn tại:', atlasKey);
             return;
         }
 
-        // Sử dụng path từ metadata nếu có, nếu không thì fallback về cách cũ
         const imageURL = jsonData.meta.path.replace(/^\.\.\\public\\/, '').replace(/\\/g, '/');
-
-        // Sử dụng Phaser's built-in load.atlas method
         this.scene.load.atlas(atlasKey, imageURL, jsonData);
     }
 
@@ -268,76 +315,12 @@ export default class AssetManager {
     }
 
     /**
-     * Lấy danh sách tất cả assets cần load cho GameScene
+     * Danh sách assets (images) bổ sung cho GameScene – atlas do ATLAS_PATHS_BY_SCENE['GameScene'] quyết định.
+     * Giữ method để tương thích nếu có chỗ gọi; logic load atlas đã chuyển sang DataManager + preloadSceneAssets.
      */
     getLoadImagesListGameScene(): AssetFile[] {
-        let loadImagesList: AssetFile[] = [];
-
-        // loadImagesList.push(...CHARACTER_SPRITE_ASSETS);
-        this.loadAtlas(item);
-        this.loadAtlas(character);
-
-        this.loadAtlas(coin);
-
-        this.loadAtlas(weapon_sword);
-
-        // this.loadAtlas(weapon_catalyst);
-
-        // this.loadAtlas(weapon_polearm);
-
-        // this.loadAtlas(weapon_claymore);
-
-        this.loadAtlas(enemy_hilichurl);
-
-
-
-        // loadImagesList.push(...WEAPON_POLEARM_ASSETS);
-        // loadImagesList.push(...WEAPON_CLAYMORE_ASSETS);
-        // loadImagesList.push(...WEAPON_BOW_ASSETS);
-
-
-        // loadImagesList.push(...ENEMY_SLIME_ASSETS);
-
-        // loadImagesList.push(...ENEMY_ABYSS_ASSETS);
-        // loadImagesList.push(...ENEMY_SHROOM_ASSETS);
-        // loadImagesList.push(...ENEMY_AUTOMATONS_ASSETS);
-        // loadImagesList.push(...ENEMY_KAIRAGI_ASSETS);
-        // loadImagesList.push(...ENEMY_EREMITE_ASSETS);
-        // loadImagesList.push(...ENEMY_FATUI_ASSETS);
-        // loadImagesList.push(...ENEMY_BOSS_ASSETS);
-        this.loadAtlas(food);
-        this.loadAtlas(trap);
-        this.loadAtlas(treasure);
-        this.loadAtlas(bomb);
-
-        this.loadAtlas(weapon_sword_badge);
-        // this.loadAtlas(weapon_catalyst_badge);
-        // this.loadAtlas(weapon_polearm_badge);
-        // this.loadAtlas(weapon_claymore_badge);
-        // this.loadAtlas(weapon_bow_badge);
-        // this.loadAtlas(enemy_abyss);
-        // this.loadAtlas(enemy_slime);
-        // this.loadAtlas(enemy_shroom);
-        // this.loadAtlas(enemy_automatons);
-        // this.loadAtlas(enemy_kairagi);
-        // this.loadAtlas(enemy_eremite);
-        // this.loadAtlas(enemy_fatui);
-        // this.loadAtlas(enemy_boss);
-        // loadImagesList.push(...FOOD_ASSETS);
-        // loadImagesList.push(...TRAP_ASSETS);
-        // loadImagesList.push(...TREASURE_ASSETS);
-        // loadImagesList.push(...BOMB_ASSETS);
-        // loadImagesList.push(...EMPTY_CARD);
-
-        // loadImagesList.push(...WEAPON_SWORD_BADGE_ASSETS);
-        // loadImagesList.push(...WEAPON_CATALYST_BADGE_ASSETS);
-
-
-        // this.loadImages(loadImagesList);
-        return loadImagesList;
+        return [];
     }
-
-
 }
 
 // Export singleton instance

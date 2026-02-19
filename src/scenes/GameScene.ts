@@ -1,17 +1,19 @@
 import Phaser from 'phaser';
 import GameManager from '../core/GameManager.js';
+import { dataManager } from '../core/DataManager.js';
 import { themeManager } from '../core/ThemeManager.js';
-import dungeonList from '../data/dungeonList.json';
 import {
     createGameUI,
     createItemButton,
     createItemButtonsFromStorage,
     showItemNotReadyToast,
     createSellWeapon,
+    createTutorialLayer,
     type ItemData,
     type ItemButton,
     type SellButton
 } from '../components/GameScene/index.js';
+import { getShowGuideSetting, setShowGuideSetting } from '../components/SettingsScene/GameSettingPopup.js';
 
 interface SceneData {
     stageId?: string;
@@ -39,7 +41,9 @@ export default class GameScene extends Phaser.Scene {
     init(data?: SceneData): void {
         const { stageId } = data || {};
         this.stageId = stageId || 'dungeon_abyss_chamber';
-        const dungeon = (dungeonList as DungeonData[]).find(d => d.stageId === this.stageId);
+        const list = dataManager.getFlag<DungeonData[]>('dungeonList');
+        const arr = Array.isArray(list) ? list : [];
+        const dungeon = arr.find(d => d.stageId === this.stageId);
         this.dungeonStageName = dungeon?.name || '';
         this.gameManager = new GameManager(this);
     }
@@ -100,5 +104,10 @@ export default class GameScene extends Phaser.Scene {
                 }
             }
         );
+
+        if (getShowGuideSetting()) {
+            setShowGuideSetting(false);
+            createTutorialLayer(this, width, height, () => {});
+        }
     }
 }

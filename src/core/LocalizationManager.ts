@@ -1,34 +1,32 @@
 /**
- * LocalizationManager - Utility quản lý đa ngôn ngữ cho game
- * Ngôn ngữ lưu trong i18n/locales/*.json, dễ thêm/sửa
- *
- * Thêm ngôn ngữ:
- *   1. Tạo file i18n/locales/xx.json (copy từ en.json rồi dịch)
- *   2. Import trong i18n/translations.ts và thêm vào TRANSLATIONS, LANGUAGE_NAMES
+ * LocalizationManager - Quản lý đa ngôn ngữ. Bảng dịch lấy từ DataManager (load public/data/locales/*.json trong LoadingScene).
+ * Thêm ngôn ngữ: tạo xx.json trong public/data/locales/, thêm vào LOCALE_DATA_PATHS (LoadingScene) và LANGUAGE_NAMES bên dưới.
  */
 import type Phaser from 'phaser';
-import {
-  TRANSLATIONS,
-  LANGUAGE_NAMES,
-  type GameLanguageCode
-} from '../i18n/translations.js';
 import { dataManager } from './DataManager.js';
 
-export type { GameLanguageCode };
+export type GameLanguageCode = 'vi' | 'en' | 'ja';
+
+export const LANGUAGE_NAMES: Record<GameLanguageCode, string> = {
+  vi: 'Tiếng Việt',
+  en: 'English',
+  ja: '日本語',
+};
 
 export class LocalizationManager {
-  /** Ngôn ngữ hiện tại đang dùng (vi, en, ja, ...) */
+  /** Ngôn ngữ hiện tại (vi, en, ja) */
   currentLanguage: GameLanguageCode;
 
-  /** Bảng dịch từ translations, key = mã ngôn ngữ, value = { key: translatedText } */
-  private translations = TRANSLATIONS;
+  /** Bảng dịch từ DataManager (public/data/locales) */
+  private get translations(): Record<GameLanguageCode, Record<string, string>> {
+    return dataManager.getTranslations() as Record<GameLanguageCode, Record<string, string>>;
+  }
 
   constructor() {
-    // Đọc ngôn ngữ đã lưu từ dataManager
     const saved = dataManager.get<GameLanguageCode>('gameLanguage');
-    // Nếu có lưu và hợp lệ thì dùng, không thì mặc định 'vi'
+    const codes: GameLanguageCode[] = ['vi', 'en', 'ja'];
     this.currentLanguage =
-      saved && this.translations[saved] ? saved : ('vi' as GameLanguageCode);
+      saved && codes.includes(saved) ? saved : ('vi' as GameLanguageCode);
   }
 
   /**
@@ -38,10 +36,10 @@ export class LocalizationManager {
    * @returns Chuỗi đã dịch, fallback: locale hiện tại → vi → key gốc
    */
   t(key: string, params: Record<string, string | number> = {}): string {
-    // Fallback về tiếng Việt nếu thiếu key ở ngôn ngữ hiện tại
-    const fallback = this.translations.vi ?? {};
+    const tbl = this.translations;
+    const fallback = tbl.vi ?? {};
     let text =
-      this.translations[this.currentLanguage]?.[key] ?? fallback[key] ?? key;
+      tbl[this.currentLanguage]?.[key] ?? fallback[key] ?? key;
 
     // Thay thế placeholder {param} bằng giá trị thực
     Object.keys(params).forEach((param) => {
@@ -56,26 +54,19 @@ export class LocalizationManager {
    * @param code - Mã ngôn ngữ (vi, en, ja)
    */
   setLanguage(code: GameLanguageCode): void {
-    console.log('[LocalizationManager] setLanguage() called with:', code);
-    console.log('[LocalizationManager] Current language before change:', this.currentLanguage);
-    
-    if (this.translations[code]) {
+    const tbl = this.translations;
+    if (tbl[code]) {
       this.currentLanguage = code;
       dataManager.set('gameLanguage', code);
-      console.log('[LocalizationManager] Language changed to:', code);
-      console.log('[LocalizationManager] Saved to localStorage');
-
       // Emit event qua Phaser game.events để các scene lắng nghe và cập nhật text
       const game = (window as Window & { game?: Phaser.Game }).game;
       if (game?.events) {
         game.events.emit('languageChanged');
       }
-    } else {
-      console.warn('[LocalizationManager] Invalid language code:', code);
     }
   }
 
-  /** Danh sách mã ngôn ngữ có sẵn (vi, en, ja, ...) */
+  /** Danh sách mã ngôn ngữ có sẵn (từ DataManager) */
   getAvailableLanguages(): GameLanguageCode[] {
     return Object.keys(this.translations) as GameLanguageCode[];
   }

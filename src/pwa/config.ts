@@ -1,11 +1,10 @@
 import type { VitePWAOptions } from 'vite-plugin-pwa';
-import { themeManager } from '../core/ThemeManager.js';
 
 // Centralized PWA configuration for TeyvatCard.
 // This file is imported from vite.config.ts so all PWA-related
 // options are in one place for easier debugging and tweaking.
-// theme_color/background_color lấy từ theme (mặc định khi build).
-const bgColor = themeManager.getBackground();
+// theme_color/background_color: màu cố định để tránh import ThemeManager khi build (gây lỗi với vite-plugin-pwa).
+const bgColor = '#1a1a2e';
 
 export const pwaOptions: VitePWAOptions = {
   // how the service worker register script is injected
