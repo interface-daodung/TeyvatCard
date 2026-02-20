@@ -160,20 +160,26 @@ class CardFactory {
         };
 
         this.stageCardPools = {};
-        const dungeonList = dataManager.getFlag<DungeonItem[]>('dungeonList') ?? [];
-        dungeonList.forEach((dungeon: DungeonItem) => {
-            this.stageCardPools[dungeon.stageId] = {
-                name: dungeon.name,
-                typeRatios: dungeon.typeRatios,
-                availableCards: dungeon.availableCards
-            };
-        });
-
         this.currentStage = 'dungeon_abyss_chamber';
         this.element = 'cryo';
         this._cachedCardWeights = null;
 
         CardFactory.instance = this;
+    }
+
+    /** Load dungeonList từ dataManager (sau khi LoadingScene đã set flag). Gọi lazy để nhận JSON mới. */
+    private _ensureStagePoolsLoaded(): void {
+        if (Object.keys(this.stageCardPools).length > 0) return;
+        const dungeonList = dataManager.getFlag<DungeonItem[]>('dungeonList') ?? [];
+        dungeonList.forEach((dungeon: DungeonItem) => {
+            if (dungeon?.stageId && dungeon?.typeRatios && dungeon?.availableCards) {
+                this.stageCardPools[dungeon.stageId] = {
+                    name: dungeon.name,
+                    typeRatios: dungeon.typeRatios,
+                    availableCards: dungeon.availableCards
+                };
+            }
+        });
     }
 
     static getInstance(): CardFactory {
@@ -187,9 +193,13 @@ class CardFactory {
         if (this._cachedCardWeights) {
             return this._cachedCardWeights;
         }
+        this._ensureStagePoolsLoaded();
 
         const cardWeights: Record<string, number> = {};
         const currentStage = this.stageCardPools[this.currentStage];
+        if (!currentStage?.typeRatios || !currentStage?.availableCards) {
+            return cardWeights;
+        }
         const typeRatios = currentStage.typeRatios;
         const availableCards = currentStage.availableCards;
         const typeTotalWeights: Record<string, number> = {};
@@ -275,7 +285,11 @@ class CardFactory {
     }
 
     _calculateDynamicCardWeights(validCardKeys: string[]): Record<string, number> {
+        this._ensureStagePoolsLoaded();
         const currentStage = this.stageCardPools[this.currentStage];
+        if (!currentStage?.typeRatios || !currentStage?.availableCards) {
+            return {};
+        }
         const typeRatios = currentStage.typeRatios;
         const availableCards = currentStage.availableCards;
         const cardWeights: Record<string, number> = {};
@@ -363,6 +377,7 @@ class CardFactory {
     }
 
     addCardToStage(stageKey: string, typeName: string, cardName: string): void {
+        this._ensureStagePoolsLoaded();
         if (!this.stageCardPools[stageKey]) {
             throw new Error(`Màn chơi '${stageKey}' không tồn tại`);
         }
@@ -376,6 +391,7 @@ class CardFactory {
     }
 
     removeCardFromStage(stageKey: string, typeName: string, cardName: string): void {
+        this._ensureStagePoolsLoaded();
         if (!this.stageCardPools[stageKey]) {
             throw new Error(`Màn chơi '${stageKey}' không tồn tại`);
         }
@@ -391,6 +407,7 @@ class CardFactory {
     }
 
     updateStageTypeRatio(stageKey: string, typeName: string, newRatio: number): void {
+        this._ensureStagePoolsLoaded();
         if (!this.stageCardPools[stageKey]) {
             throw new Error(`Màn chơi '${stageKey}' không tồn tại`);
         }
@@ -402,11 +419,14 @@ class CardFactory {
     }
 
     getStageInfo(): Record<string, StageCardPool> {
+        this._ensureStagePoolsLoaded();
         return this.stageCardPools;
     }
 
     getCurrentStageTotalWeight(): number {
+        this._ensureStagePoolsLoaded();
         const currentStage = this.stageCardPools[this.currentStage];
+        if (!currentStage?.typeRatios) return 0;
         return Object.values(currentStage.typeRatios).reduce((total, ratio) => total + ratio, 0);
     }
 
@@ -416,8 +436,12 @@ class CardFactory {
         cardWeights: Record<string, number>;
         totalWeight: number;
     } {
+        this._ensureStagePoolsLoaded();
         const cardWeights = this._calculateCardWeights();
         const currentStage = this.stageCardPools[this.currentStage];
+        if (!currentStage) {
+            return { stage: '', typeRatios: {}, cardWeights, totalWeight: 0 };
+        }
         return {
             stage: currentStage.name,
             typeRatios: currentStage.typeRatios,
@@ -427,6 +451,7 @@ class CardFactory {
     }
 
     setCurrentStage(stageKey: string): void {
+        this._ensureStagePoolsLoaded();
         if (this.stageCardPools[stageKey]) {
             this.currentStage = stageKey;
             this._cachedCardWeights = null;

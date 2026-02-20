@@ -17,8 +17,20 @@ export const ApiConfig = {
   get loginUser() {
     return `${this.baseUrl}/api/auth/login-user`;
   },
+  get register() {
+    return `${this.baseUrl}/api/auth/register`;
+  },
   get googleLogin() {
     return `${this.baseUrl}/api/auth/google`;
+  },
+  get authMe() {
+    return `${this.baseUrl}/api/auth/me`;
+  },
+  get refresh() {
+    return `${this.baseUrl}/api/auth/refresh`;
+  },
+  get logout() {
+    return `${this.baseUrl}/api/auth/logout`;
   },
   get payosCreateLink() {
     return `${this.baseUrl}/api/payos/create-link-game`;

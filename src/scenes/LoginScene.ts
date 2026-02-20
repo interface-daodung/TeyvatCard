@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
-import { dataManager } from '../core/DataManager.js';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { AuthManager } from '../utils/AuthManager.js';
 import { ApiConfig } from '../utils/ApiConfig.js';
+import { formatApiError } from '../utils/formatApiError.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { createBackButton, GameTitle } from '../components/shared/index.js';
 import { createLoginForm } from '../components/LoginScene/index.js';
@@ -71,16 +71,12 @@ export default class LoginScene extends Phaser.Scene {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data?.error || 'Đăng nhập Google thất bại');
+        alert(formatApiError(data?.error, 'Đăng nhập Google thất bại'));
         this.refreshGoogleButton();
         return;
       }
 
-      const token = data?.accessToken;
-      if (token) {
-        AuthManager.setJWT(token);
-        if (data.refreshToken) dataManager.set('refreshToken', data.refreshToken);
-      }
+      if (data?.user) AuthManager.setCachedUser(data.user);
       this.removeForm();
       this.scene.start(this.returnTo, { fromScene: this.fromScene });
     } catch {
@@ -103,20 +99,17 @@ export default class LoginScene extends Phaser.Scene {
       const res = await fetch(ApiConfig.loginUser, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email: email.trim(), password })
       });
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data?.error || 'Đăng nhập thất bại');
+        alert(formatApiError(data?.error, 'Đăng nhập thất bại'));
         return;
       }
 
-      const token = data?.accessToken;
-      if (token) {
-        AuthManager.setJWT(token);
-        if (data.refreshToken) dataManager.set('refreshToken', data.refreshToken);
-      }
+      if (data?.user) AuthManager.setCachedUser(data.user);
       this.removeForm();
       this.scene.start(this.returnTo, { fromScene: this.fromScene });
     } catch {

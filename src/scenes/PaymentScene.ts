@@ -27,15 +27,21 @@ export default class PaymentScene extends Phaser.Scene {
     }
 
     create(): void {
-        if (!AuthManager.hasJWT()) {
-            this.scene.start('LoginScene', {
-                fromScene: (this.scene.settings.data as { fromScene?: string })?.fromScene || 'MenuScene',
-                returnTo: 'PaymentScene'
-            });
-            return;
-        }
-        const { width, height } = this.scale;
         this.fromScene = (this.scene.settings.data as { fromScene?: string })?.fromScene || 'MenuScene';
+        AuthManager.checkAuth().then((user) => {
+            if (!user) {
+                this.scene.start('LoginScene', {
+                    fromScene: this.fromScene,
+                    returnTo: 'PaymentScene'
+                });
+                return;
+            }
+            this.setupPaymentUI();
+        });
+    }
+
+    private setupPaymentUI(): void {
+        const { width, height } = this.scale;
 
         this.add.image(width / 2, height / 2, 'background');
         this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
@@ -93,18 +99,26 @@ export default class PaymentScene extends Phaser.Scene {
     }
 
     private async purchasePackage(pkg: PackageDef): Promise<void> {
-        const jwt = AuthManager.getJWT();
-        if (!jwt) {
+        if (!AuthManager.hasJWT()) {
             showToast(this, localizationManager.t('login') || 'Vui lòng đăng nhập');
             return;
         }
         try {
             const res = await fetch(ApiConfig.payosCreateLink, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` },
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ amount: pkg.priceVnd, coins: pkg.coins })
             });
             const data = await res.json();
+            if (res.status === 401) {
+                const user = await AuthManager.checkAuth();
+                if (!user) {
+                    showToast(this, localizationManager.t('login') || 'Phiên hết hạn, vui lòng đăng nhập lại');
+                    return;
+                }
+                return this.purchasePackage(pkg);
+            }
             if (data.error !== 0 || !data.data?.checkoutUrl) {
                 showToast(this, data.message || 'Tạo link thất bại');
                 return;
@@ -136,12 +150,9 @@ export default class PaymentScene extends Phaser.Scene {
         };
         window.addEventListener('message', this.messageHandler);
         const poll = async () => {
-            const jwt = AuthManager.getJWT();
-            if (!jwt) return;
+            if (!AuthManager.hasJWT()) return;
             try {
-                const r = await fetch(ApiConfig.getPayOrderUrl(orderCode), {
-                    headers: { 'Authorization': `Bearer ${jwt}` }
-                });
+                const r = await fetch(ApiConfig.getPayOrderUrl(orderCode), { credentials: 'include' });
                 const d = await r.json();
                 if (d.error === 0 && d.data?.status === 'PAID') {
                     onPaymentSuccess();

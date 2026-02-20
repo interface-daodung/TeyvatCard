@@ -75,6 +75,7 @@ export function createRegisterForm(
       top: 20%;
       transform-origin: center top;
       z-index: 1000;
+      pointer-events: auto;
     `;
 
     const form = document.createElement('div');
@@ -125,11 +126,16 @@ export function createRegisterForm(
     form.appendChild(confirmInput);
 
     const registerBtn = document.createElement('button');
+    registerBtn.type = 'button';
     registerBtn.textContent = localizationManager.t('register');
     registerBtn.style.cssText = `padding: 10px; font-size: 16px; background: ${primary}; color: ${text}; border: 1px solid ${secondary}; border-radius: 4px; cursor: pointer; margin-top: 2px; box-sizing: border-box; transition: background 0.2s, border-color 0.2s;`;
     registerBtn.onmouseover = () => { registerBtn.style.background = secondary; registerBtn.style.borderColor = text; };
     registerBtn.onmouseout = () => { registerBtn.style.background = primary; registerBtn.style.borderColor = secondary; };
-    registerBtn.onclick = () => callbacks.onRegister(emailInput.value, passInput.value, confirmInput.value);
+    registerBtn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      callbacks.onRegister(emailInput.value, passInput.value, confirmInput.value);
+    };
     form.appendChild(registerBtn);
 
     const loginLink = document.createElement('a');

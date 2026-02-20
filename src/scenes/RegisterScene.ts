@@ -1,5 +1,8 @@
 import Phaser from 'phaser';
 import { AuthManager } from '../utils/AuthManager.js';
+import { ApiConfig } from '../utils/ApiConfig.js';
+import { formatApiError } from '../utils/formatApiError.js';
+import { localizationManager } from '../core/LocalizationManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { createBackButton, GameTitle } from '../components/shared/index.js';
 import { createRegisterForm } from '../components/RegisterScene/index.js';
@@ -36,13 +39,54 @@ export default class RegisterScene extends Phaser.Scene {
     createBackButton(this, width, height, () => this.goToLogin(), 'back_short');
   }
 
-  private handleRegister(email: string, password: string, confirm: string): void {
-    if (!email.trim()) return;
-    if (password !== confirm) return;
-    const mockToken = 'mock_jwt_' + Date.now();
-    AuthManager.setJWT(mockToken);
-    this.removeForm();
-    this.scene.start(this.returnTo, { fromScene: this.fromScene });
+  private async handleRegister(email: string, password: string, confirm: string): Promise<void> {
+    if (!email.trim()) {
+      alert('Vui lòng nhập email.');
+      return;
+    }
+    if (password !== confirm) {
+      alert('Mật khẩu xác nhận không khớp.');
+      return;
+    }
+
+    const form = document.getElementById('register-form-overlay');
+    const registerBtn = form?.querySelector('button');
+    if (registerBtn) {
+      (registerBtn as HTMLButtonElement).disabled = true;
+      (registerBtn as HTMLButtonElement).textContent = '...';
+    }
+
+    try {
+      const res = await fetch(ApiConfig.register, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+          passwordConfirm: confirm,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(formatApiError(data?.error, 'Đăng ký thất bại'));
+        return;
+      }
+
+      if (data?.user) AuthManager.setCachedUser(data.user);
+      this.removeForm();
+      this.scene.start(this.returnTo, { fromScene: this.fromScene });
+    } catch {
+      alert('Lỗi kết nối. Kiểm tra server đang chạy.');
+    } finally {
+      const f = document.getElementById('register-form-overlay');
+      const btn = f?.querySelector('button');
+      if (btn) {
+        (btn as HTMLButtonElement).disabled = false;
+        (btn as HTMLButtonElement).textContent = localizationManager.t('register');
+      }
+    }
   }
 
   private goToLogin(): void {
