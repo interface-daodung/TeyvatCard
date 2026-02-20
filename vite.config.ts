@@ -10,7 +10,8 @@ export default defineConfig({
     port: 3000,
     host: '0.0.0.0',
     headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin; same-origin-allow-popups',
+      // same-origin-allow-popups: cho phép Google Sign-In popup dùng postMessage (không dùng "same-origin" sẽ chặn)
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
       'Referrer-Policy': 'no-referrer-when-downgrade',
     },
   },

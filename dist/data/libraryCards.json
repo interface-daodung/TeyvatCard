@@ -5,226 +5,226 @@
       "name": "Sword Steampunk",
       "type": "weapon",
       "description": "Sword Steampunk - Kiếm huy hoàng quý giá tăng sức mạnh và may mắn.",
+      "className": "SwordSteampunk",
       "category": "sword",
-      "rarity": 4,
-      "className": "SwordSteampunk"
+      "rarity": 1
     },
     {
       "id": "sword-forest",
       "name": "Sword Forest",
       "type": "weapon",
       "description": "Sword Forest - Kiếm rừng tự nhiên tăng sức mạnh và khả năng phòng thủ.",
+      "className": "SwordForest",
       "category": "sword",
-      "rarity": 3,
-      "className": "SwordForest"
+      "rarity": 3
     },
     {
       "id": "sword-skyward",
       "name": "Sword Skyward",
       "type": "weapon",
       "description": "Sword Skyward - Kiếm bầu trời thiêng liêng tăng sức mạnh và tốc độ.",
+      "className": "SwordSkyward",
       "category": "sword",
-      "rarity": 4,
-      "className": "SwordSkyward"
+      "rarity": 4
     },
     {
       "id": "sword-splendor",
       "name": "Sword Splendor",
       "type": "weapon",
       "description": "Sword Splendor - Kiếm huy hoàng quý giá tăng sức mạnh và may mắn.",
+      "className": "SwordSplendor",
       "category": "sword",
-      "rarity": 4,
-      "className": "SwordSplendor"
+      "rarity": 4
     },
     {
       "id": "sword-traveler",
       "name": "Sword Traveler",
       "type": "weapon",
       "description": "Sword Traveler - Kiếm lữ khách tăng sức mạnh và khả năng thích ứng.",
+      "className": "SwordTraveler",
       "category": "sword",
-      "rarity": 4,
-      "className": "SwordTraveler"
+      "rarity": 4
     },
     {
       "id": "sword-sacrificial",
       "name": "Sword Sacrificial",
       "type": "weapon",
       "description": "Sword Sacrificial - Kiếm hy sinh mạnh mẽ nhưng độ bền thấp.",
+      "className": "SwordSacrificial",
       "category": "sword",
-      "rarity": 3,
-      "className": "SwordSacrificial"
+      "rarity": 4
     }
   ],
   "enemy": [
     {
       "id": "anemo-samachurl",
       "name": "Anemo Samachurl",
-      "element": "anemo",
       "type": "enemy",
       "description": "Anemo Samachurl - Kẻ địch caster gió có thể tạo gió và làm chậm người chơi.",
+      "className": "AnemoSamachurl",
+      "element": "anemo",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "AnemoSamachurl"
+      "rarity": 3
     },
     {
       "id": "electro-samachurl",
       "name": "Electro Samachurl",
-      "element": "electro",
       "type": "enemy",
       "description": "Electro Samachurl - Kẻ địch caster điện có thể gây shock và làm chậm người chơi.",
+      "className": "ElectroSamachurl",
+      "element": "electro",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "ElectroSamachurl"
+      "rarity": 3
     },
     {
       "id": "dendro-samachurl",
       "name": "Dendro Samachurl",
-      "element": "dendro",
       "type": "enemy",
       "description": "Dendro Samachurl - Kẻ địch caster thảo có thể tạo cây và gây poison.",
+      "className": "DendroSamachurl",
+      "element": "dendro",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "DendroSamachurl"
+      "rarity": 3
     },
     {
       "id": "geo-samachurl",
       "name": "Geo Samachurl",
-      "element": "geo",
       "type": "enemy",
       "description": "Geo Samachurl - Kẻ địch caster địa có thể tạo tường và gây stun.",
+      "className": "GeoSamachurl",
+      "element": "geo",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "GeoSamachurl"
+      "rarity": 3
     },
     {
       "id": "hydro-samachurl",
       "name": "Hydro Samachurl",
-      "element": "hydro",
       "type": "enemy",
       "description": "Hydro Samachurl - Kẻ địch caster thủy có thể tạo nước và gây wet effect.",
+      "className": "HydroSamachurl",
+      "element": "hydro",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "HydroSamachurl"
+      "rarity": 3
     },
     {
       "id": "fighter",
       "name": "Hilichurl Fighter",
-      "element": "physical",
       "type": "enemy",
       "description": "Hilichurl Fighter - Kẻ địch cơ bản có thể tấn công người chơi.",
+      "className": "HilichurlFighter",
+      "element": "physical",
       "clan": "hilichurl",
-      "rarity": 4,
-      "className": "HilichurlFighter"
+      "rarity": 4
     },
     {
       "id": "hilistray-water",
       "name": "Hilistray Water",
-      "element": "hydro",
       "type": "enemy",
       "description": "Hilistray Water - Kẻ địch nước, có khả năng chữa lành và tạo hiệu ứng ẩm ướt.",
+      "className": "HilistrayWater",
+      "element": "hydro",
       "clan": "hilichurl",
-      "rarity": 2,
-      "className": "HilistrayWater"
+      "rarity": 2
     },
     {
       "id": "wooden-shieldwall",
       "name": "Wooden Shieldwall",
-      "element": "dendro",
       "type": "enemy",
       "description": "Wooden Shieldwall - Kẻ địch tường gỗ, có khả năng phòng thủ trung bình và dễ bị cháy.",
+      "className": "WoodenShieldwall",
+      "element": "dendro",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "WoodenShieldwall"
+      "rarity": 3
     },
     {
       "id": "lawachurl",
       "name": "Lawachurl",
-      "element": "geo",
       "type": "enemy",
       "description": "Lawachurl - Boss Hilichurl mạnh mẽ, có khả năng tấn công và phòng thủ cao.",
+      "className": "Lawachurl",
+      "element": "geo",
       "clan": "hilichurl",
-      "rarity": 5,
-      "className": "Lawachurl"
+      "rarity": 5
     },
     {
       "id": "rock-shieldwall",
       "name": "Rock Shieldwall",
-      "element": "geo",
       "type": "enemy",
       "description": "Rock Shieldwall - Kẻ địch tường đá, có khả năng phòng thủ rất cao và chống đỡ tốt.",
+      "className": "RockShieldwall",
+      "element": "geo",
       "clan": "hilichurl",
-      "rarity": 4,
-      "className": "RockShieldwall"
+      "rarity": 4
     },
     {
       "id": "berserker",
       "name": "Berserker",
-      "element": "pyro",
       "type": "enemy",
       "description": "Berserker - Kẻ địch điên cuồng, tấn công mạnh hơn khi máu thấp.",
+      "className": "Berserker",
+      "element": "pyro",
       "clan": "hilichurl",
-      "rarity": 4,
-      "className": "Berserker"
+      "rarity": 4
     },
     {
       "id": "blazing",
       "name": "Blazing",
-      "element": "pyro",
       "type": "enemy",
       "description": "Blazing - Kẻ địch cháy liên tục, gây damage theo thời gian cho người chơi gần đó.",
+      "className": "Blazing",
+      "element": "pyro",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "Blazing"
+      "rarity": 3
     },
     {
       "id": "ice-shieldwall",
       "name": "Ice Shieldwall",
-      "element": "cryo",
       "type": "enemy",
       "description": "Ice Shieldwall - Kẻ địch tường băng, có khả năng phòng thủ cao và làm chậm người chơi.",
+      "className": "IceShieldwall",
+      "element": "cryo",
       "clan": "hilichurl",
-      "rarity": 4,
-      "className": "IceShieldwall"
+      "rarity": 4
     },
     {
       "id": "shooter",
       "name": "Shooter",
-      "element": "physical",
       "type": "enemy",
       "description": "Shooter - Kẻ địch bắn cung từ xa, tấn công cơ bản.",
+      "className": "Shooter",
+      "element": "physical",
       "clan": "hilichurl",
-      "rarity": 2,
-      "className": "Shooter"
+      "rarity": 2
     },
     {
       "id": "crackling",
       "name": "Crackling",
-      "element": "electro",
       "type": "enemy",
       "description": "Crackling - Kẻ địch nổ khi chết, gây damage cho người chơi gần đó.",
+      "className": "Crackling",
+      "element": "electro",
       "clan": "hilichurl",
-      "rarity": 3,
-      "className": "Crackling"
+      "rarity": 3
     },
     {
       "id": "cryo-shooter",
       "name": "Cryo Shooter",
-      "element": "cryo",
       "type": "enemy",
       "description": "Cryo Shooter - Kẻ địch bắn băng từ xa, có thể làm chậm và đóng băng người chơi.",
+      "className": "CryoShooter",
+      "element": "cryo",
       "clan": "hilichurl",
-      "rarity": 2,
-      "className": "CryoShooter"
+      "rarity": 2
     },
     {
       "id": "electro-shooter",
       "name": "Electro Shooter",
-      "element": "electro",
       "type": "enemy",
       "description": "Electro Shooter - Kẻ địch bắn điện từ xa, có thể gây shock và làm chậm người chơi.",
+      "className": "ElectroShooter",
+      "element": "electro",
       "clan": "hilichurl",
-      "rarity": 2,
-      "className": "ElectroShooter"
+      "rarity": 2
     }
   ],
   "food": [
@@ -240,32 +240,32 @@
       "name": "Mystique Soup",
       "type": "food",
       "description": "Mystique Soup - Súp bí ẩn hồi phục sức khỏe và tăng sức mạnh tạm thời.",
-      "rarity": 3,
-      "className": "MystiqueSoup"
+      "className": "MystiqueSoup",
+      "rarity": 3
     },
     {
       "id": "pizza",
       "name": "Pizza",
       "type": "food",
       "description": "Pizza - Bánh pizza Ý hồi phục sức khỏe và tăng sức mạnh tấn công.",
-      "rarity": 2,
-      "className": "Pizza"
+      "className": "Pizza",
+      "rarity": 2
     },
     {
       "id": "roast-chicken",
       "name": "Roast Chicken",
       "type": "food",
       "description": "Roast Chicken - Gà nướng thơm ngon hồi phục sức khỏe và tăng khả năng phòng thủ.",
-      "rarity": 2,
-      "className": "RoastChicken"
+      "className": "RoastChicken",
+      "rarity": 2
     },
     {
       "id": "macarons",
       "name": "Macarons",
       "type": "food",
       "description": "Macarons - Bánh ngọt Pháp hồi phục sức khỏe và tăng tinh thần.",
-      "rarity": 3,
-      "className": "Macarons"
+      "className": "Macarons",
+      "rarity": 3
     }
   ],
   "trap": [
@@ -281,16 +281,16 @@
       "name": "Quicksand",
       "type": "trap",
       "description": "Quicksand - Bẫy cát lún gây damage và làm chậm người chơi khi kích hoạt.",
-      "rarity": 2,
-      "className": "Quicksand"
+      "className": "Quicksand",
+      "rarity": 2
     },
     {
       "id": "breathe-fire",
       "name": "Breathe Fire",
       "type": "trap",
       "description": "Breathe Fire - Bẫy thở lửa gây damage cho người chơi khi kích hoạt.",
-      "rarity": 2,
-      "className": "BreatheFire"
+      "className": "BreatheFire",
+      "rarity": 2
     }
   ],
   "treasure": [
@@ -299,24 +299,24 @@
       "name": "Chest",
       "type": "treasure",
       "description": "Chest - Kho báu chính chứa nhiều loại phần thưởng quý giá.",
-      "rarity": 4,
-      "className": "Chest"
+      "className": "Chest",
+      "rarity": 4
     },
     {
       "id": "bribery",
       "name": "Bribery",
       "type": "treasure",
       "description": "Bribery - Hối lộ để nhận phần thưởng lớn hơn chi phí.",
-      "rarity": 3,
-      "className": "Bribery"
+      "className": "Bribery",
+      "rarity": 3
     },
     {
       "id": "gold-mine",
       "name": "GoldMine",
       "type": "treasure",
       "description": "GoldMine - Mỏ khai thác để nhận tài nguyên.",
-      "rarity": 2,
-      "className": "GoldMine"
+      "className": "GoldMine",
+      "rarity": 2
     }
   ],
   "bomb": [
@@ -325,42 +325,73 @@
       "name": "Explosive",
       "type": "bomb",
       "description": "Explosive - Bom nổ gây damage cho tất cả trong bán kính.",
-      "rarity": 3,
-      "className": "Explosive"
+      "className": "Explosive",
+      "rarity": 3
     }
   ],
   "coin": [
     {
+      "id": "pyro-fragment",
+      "name": "Mảnh Vỡ Nguyên Tố Hỏa",
       "type": "coin",
-      "rarity": 1,
-      "name": {
-        "pyro": "Mảnh Vỡ Nguyên Tố Hỏa",
-        "hydro": "Mảnh Vỡ Nguyên Tố Thủy",
-        "geo": "Mảnh Vỡ Nguyên Tố Nham",
-        "anemo": "Mảnh Vỡ Nguyên Tố Phong",
-        "electro": "Mảnh Vỡ Nguyên Tố Lôi",
-        "cryo": "Mảnh Vỡ Nguyên Tố Băng",
-        "dendro": "Mảnh Vỡ Nguyên Tố Thảo"
-      },
-      "id": {
-        "pyro": "pyro-fragment",
-        "hydro": "hydro-fragment",
-        "geo": "geo-fragment",
-        "anemo": "anemo-fragment",
-        "electro": "electro-fragment",
-        "cryo": "cryo-fragment",
-        "dendro": "dendro-fragment"
-      },
-      "description": {
-        "pyro": "Mảnh Vỡ Nguyên Tố Hỏa nhặt có thể đổi Xu và hồi chút năng lượng.",
-        "hydro": "Mảnh Vỡ Nguyên Tố Thủy nhặt có thể đổi Xu và hồi chút năng lượng.",
-        "geo": "Mảnh Vỡ Nguyên Tố Nham nhặt có thể đổi Xu và hồi chút năng lượng.",
-        "anemo": "Mảnh Vỡ Nguyên Tố Phong nhặt có thể đổi Xu và hồi chút năng lượng.",
-        "electro": "Mảnh Vỡ Nguyên Tố Lôi nhặt có thể đổi Xu và hồi chút năng lượng.",
-        "cryo": "Mảnh Vỡ Nguyên Tố Băng nhặt có thể đổi Xu và hồi chút năng lượng.",
-        "dendro": "Mảnh Vỡ Nguyên Tố Thảo nhặt có thể đổi Xu và hồi chút năng lượng."
-      },
-      "className": "Coin"
+      "description": "Mảnh Vỡ Nguyên Tố Hỏa nhặt có thể đổi Xu và hồi chút năng lượng.",
+      "className": "Coin",
+      "element": "pyro",
+      "rarity": 1
+    },
+    {
+      "id": "hydro-fragment",
+      "name": "Mảnh Vỡ Nguyên Tố Thủy",
+      "type": "coin",
+      "description": "Mảnh Vỡ Nguyên Tố Thủy nhặt có thể đổi Xu và hồi chút năng lượng.",
+      "className": "Coin",
+      "element": "hydro",
+      "rarity": 1
+    },
+    {
+      "id": "geo-fragment",
+      "name": "Mảnh Vỡ Nguyên Tố Nham",
+      "type": "coin",
+      "description": "Mảnh Vỡ Nguyên Tố Nham nhặt có thể đổi Xu và hồi chút năng lượng.",
+      "className": "Coin",
+      "element": "geo",
+      "rarity": 1
+    },
+    {
+      "id": "anemo-fragment",
+      "name": "Mảnh Vỡ Nguyên Tố Phong",
+      "type": "coin",
+      "description": "Mảnh Vỡ Nguyên Tố Phong nhặt có thể đổi Xu và hồi chút năng lượng.",
+      "className": "Coin",
+      "element": "anemo",
+      "rarity": 1
+    },
+    {
+      "id": "electro-fragment",
+      "name": "Mảnh Vỡ Nguyên Tố Lôi",
+      "type": "coin",
+      "description": "Mảnh Vỡ Nguyên Tố Lôi nhặt có thể đổi Xu và hồi chút năng lượng.",
+      "className": "Coin",
+      "element": "electro",
+      "rarity": 1
+    },
+    {
+      "id": "cryo-fragment",
+      "name": "Mảnh Vỡ Nguyên Tố Băng",
+      "type": "coin",
+      "description": "Mảnh Vỡ Nguyên Tố Băng nhặt có thể đổi Xu và hồi chút năng lượng.",
+      "className": "Coin",
+      "element": "cryo",
+      "rarity": 1
+    },
+    {
+      "id": "dendro-fragment",
+      "name": "Mảnh Vỡ Nguyên Tố Thảo",
+      "type": "coin",
+      "description": "Mảnh Vỡ Nguyên Tố Thảo nhặt có thể đổi Xu và hồi chút năng lượng.",
+      "className": "Coin",
+      "element": "dendro",
+      "rarity": 1
     }
   ],
   "empty": [

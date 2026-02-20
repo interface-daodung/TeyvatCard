@@ -71,7 +71,12 @@ export default class LoginScene extends Phaser.Scene {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(formatApiError(data?.error, 'Đăng nhập Google thất bại'));
+        const d = data?.debug;
+        const debugMsg = d
+          ? ` [GOOGLE_CLIENT_ID=${d.googleClientId ?? '?'}${d.message ? ` - ${d.message}` : ''}${d.reason ? ` - ${d.reason}` : ''}]`
+          : '';
+        console.warn('Google login failed', res.status, data);
+        alert('Đăng nhập Google thất bại' + debugMsg);
         this.refreshGoogleButton();
         return;
       }
@@ -80,7 +85,7 @@ export default class LoginScene extends Phaser.Scene {
       this.removeForm();
       this.scene.start(this.returnTo, { fromScene: this.fromScene });
     } catch {
-      alert('Lỗi kết nối. Kiểm tra server đang chạy.');
+      alert('Đăng nhập Google thất bại');
       this.refreshGoogleButton();
     }
   }

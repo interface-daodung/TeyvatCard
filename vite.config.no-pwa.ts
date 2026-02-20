@@ -11,7 +11,7 @@ export default defineConfig({
     port: 3000,
     host: '0.0.0.0',
     headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin; same-origin-allow-popups',
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
       'Referrer-Policy': 'no-referrer-when-downgrade',
     },
   },
