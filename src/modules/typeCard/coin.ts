@@ -42,6 +42,27 @@ export default class Coin extends Card {
         this.processCreation();
     }
 
+    // takeDamage(damage: number, type: 'damage'): number {
+    //     // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+    //     this.score = Math.max(0, this.score - damage);
+    //     this.coinDisplay.updateText(this.score.toString());
+    //     // this.showPopup(damage, type); cầm sửa 
+    //     if (this.score <= 0) {
+    //         this.die();
+    //     }
+    //     return this.score;
+    // }
+
+    die(): void {
+        this.ProgressDestroy();
+        if (this.scene?.gameManager) {
+            const newCard = this.scene.gameManager.cardManager.cardFactory.createEmpty(this.scene, this.index);
+            if (newCard) {
+                this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
+            }
+        }
+    }
+
     CardEffect(): boolean {
         if (this.nameId.endsWith('resonance')) {
             this.scene.gameManager?.addCoin(this.score, 3);

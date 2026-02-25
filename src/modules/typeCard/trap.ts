@@ -17,6 +17,27 @@ export default class Trap extends Card {
         }
     }
 
+     takeDamage(damage: number, type: 'damage'): number {
+        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+        this.damage = Math.max(0, this.damage - damage);
+        this.damageDisplay.updateText(this.damage.toString());
+        // this.showPopup(damage, type); cầm sửa 
+        if (this.damage <= 0) {
+            this.die();
+        }
+        return this.damage;
+    }
+
+    die(): void {
+        this.ProgressDestroy();
+        if (this.scene?.gameManager) {
+            const newCard = this.scene.gameManager.cardManager.cardFactory.createEmpty(this.scene, this.index);
+            if (newCard) {
+                this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
+            }
+        }
+    }
+
     addDisplayHUD(): void {
         if (this.damage) {
             this.damageDisplay = this.createDisplay(

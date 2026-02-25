@@ -224,7 +224,6 @@ export default class AnimationManager {
                         (card as any).ProgressDestroy();
                         console.log(`GameManager: Destroying card ${(card as any).name || (card as any).type} at index ${currentIndex}`);
                     }
-
                     currentIndex++;
                 },
                 loop: true

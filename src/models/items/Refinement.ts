@@ -1,5 +1,6 @@
 import Item from '../../modules/Item.js';
 import type GameManager from '../../core/GameManager.js';
+import Weapon from '@/src/modules/typeCard/weapon.js';
 
 export default class Refinement extends Item {
     constructor() {
@@ -15,11 +16,16 @@ export default class Refinement extends Item {
         if (weaponCount === 0) return false;
         gameManager.animationManager.startItemAnimation(this.image, () => {
             gameManager.cardManager.getAllCards().forEach(card => {
-                if (card?.type === 'weapon' && (card as any).refinement) {
-                    (card as any).refinement(this.power);
+                if (card?.type === 'weapon') {
+               this.refinement(card as Weapon);
                 }
             });
         });
         return true;
+    }
+
+    refinement(card: Weapon): void {
+        card.durability += this.power;
+        card.durabilityDisplay.updateText(card.durability);
     }
 }

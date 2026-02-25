@@ -295,9 +295,11 @@ export default class Card extends Phaser.GameObjects.Container {
     die(): void {
         this.ProgressDestroy();
         if (this.scene?.gameManager) {
-            const newCard = this.scene.gameManager.cardManager?.cardFactory.createRandomCard(
+            const newCard = this.scene.gameManager.cardManager.cardFactory.createCoin(
                 this.scene,
-                this.index);
+                this.index,
+                this.GetRandom(1, 3)
+            );
             if (newCard) {
                 this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
             }

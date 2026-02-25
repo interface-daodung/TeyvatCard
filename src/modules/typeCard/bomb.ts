@@ -31,11 +31,22 @@ export default class Bomb extends Card {
         );
     }
 
+    takeDamage(damage: number, type: 'damage'): number {
+        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+        this.damage = Math.max(0, this.damage - damage);
+        this.bombDisplay.updateText(this.damage.toString());
+        // this.showPopup(damage, type); cầm sửa 
+        if (this.damage <= 0) {
+            this.die();
+        }
+        return this.damage;
+    }
+
     CardEffect(): boolean {
         this.scene.gameManager?.animationManager.startSwapCardsAnimation(
             this.index,
             this.scene.gameManager.cardManager.getCharacterIndex(),
-            () => {}
+            () => { }
         );
         return true;
     }

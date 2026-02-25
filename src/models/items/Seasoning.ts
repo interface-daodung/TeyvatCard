@@ -17,15 +17,15 @@ export default class Seasoning extends Item {
         gameManager.animationManager.startItemAnimation(this.image, () => {
             gameManager.cardManager.getAllCards().forEach(card => {
                 if (card?.type === 'food') {
-                    this.seasoning(card as Food, this.power);
+                    this.seasoning(card as Food);
                 }
             });
         });
         return true;
     }
 
-    seasoning(card: Food, power: number): void {
-        card.food += power;
+    seasoning(card: Food): void {
+        card.food += this.power;
         card.foodDisplay.updateText(card.food);
     }
 }

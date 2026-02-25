@@ -24,7 +24,18 @@ export default class Food extends Card {
             'rightBottom' as DisplayPosition
         );
     }
-    
+
+    takeDamage(damage: number, type: 'damage'): number {
+        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+        this.food = Math.max(0, this.food - damage);
+        this.foodDisplay.updateText(this.food.toString());
+        // this.showPopup(damage, type); cầm sửa 
+        if (this.food <= 0) {
+            this.die();
+        }
+        return this.food;
+    }
+
     CardEffect(): boolean {
         super.CardEffect();
         (this.scene.gameManager?.cardManager.CardCharacter as any)?.heal(this.food);

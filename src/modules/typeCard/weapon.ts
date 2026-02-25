@@ -25,16 +25,22 @@ export default class Weapon extends Card {
         );
     }
 
+    // takeDamage(damage: number, type: 'damage'): number {
+    //     // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+    //     this.durability = Math.max(0, this.durability - damage);
+    //     this.durabilityDisplay.updateText(this.durability.toString());
+    //     // this.showPopup(damage, type); cầm sửa 
+    //     if (this.durability <= 0) {
+    //         this.die();
+    //     }
+    //     return this.durability;
+    // }
+
     CardEffect(): boolean {
         (this.scene.gameManager?.cardManager.CardCharacter as any)?.setWeapon({
             default: (this as any).config ?? (this.constructor as typeof Card & { DEFAULT?: any }).DEFAULT,
             durability: this.durability
         });
         return false;
-    }
-
-    refinement(power: number): void {
-        this.durability += power;
-        this.durabilityDisplay.updateText(this.durability);
     }
 }
