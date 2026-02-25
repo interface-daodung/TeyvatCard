@@ -3,6 +3,8 @@
 
 import Phaser from 'phaser';
 import CalculatePositionCard from '../utils/CalculatePositionCard.js';
+import Card from '../modules/Card.js';
+import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 
 interface AnimationQueueItem {
     priority: number;
@@ -21,7 +23,8 @@ interface SceneWithGameManager extends Phaser.Scene {
             getGridPositionCoordinates: (index: number) => { x: number; y: number } | null;
             swapCard: (fromIndex: number, toIndex: number) => boolean;
             getAllCards: () => Phaser.GameObjects.GameObject[];
-        };
+        },
+        isGameOver: boolean;
     };
     tweens: Phaser.Tweens.TweenManager;
     time: Phaser.Time.Clock;
@@ -233,7 +236,7 @@ export default class AnimationManager {
         this.addToQueue(8, () => {
             const cardForm = this.scene.gameManager?.cardManager.getCard(form);
             const cardTo = this.scene.gameManager?.cardManager.getCard(to);
-            
+
             if (!cardForm || !cardTo || !this.scene.gameManager) {
                 if (onComplete && typeof onComplete === 'function') {
                     onComplete();
@@ -336,20 +339,20 @@ export default class AnimationManager {
      */
     startBreatheFireAnimation(damage: number, cardList: number[], onComplete?: () => void): void {
         this.addToQueue(12, () => {
-            if (!this.scene.gameManager) {
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
-                }
+            // Kiểm tra gameManager còn tồn tại không
+            if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
+                console.warn('AnimationManager: Game không còn tồn tại, bỏ qua animation');
                 this.completeAnimation();
+                // Không gọi onComplete vì game đã kết thúc, không cần callback
                 return;
             }
 
             // Logic animation thở lửa sẽ được thêm vào đây
             // Ví dụ: tạo hiệu ứng lửa, animation cho character, etc.
             cardList.forEach(cardIndex => {
-                const card = this.scene.gameManager.cardManager.getCard(cardIndex);
-                if (card && (card as any).takeDamage) {
-                    (card as any).takeDamage(damage, 'BreatheFire');
+                const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+                if (card?.takeDamage) {
+                    SpritesheetWrapper.animationBreatheFire(this.scene, card.x, card.y);
                 }
             });
             // Tạm thời sử dụng setTimeout để mô phỏng thời gian animation
@@ -369,34 +372,29 @@ export default class AnimationManager {
 
     startExplosiveAnimation(damage: number, cardList: number[], onComplete?: () => void): void {
         this.addToQueue(9, () => {
-            if (!this.scene.gameManager) {
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
-                }
+            // Kiểm tra gameManager còn tồn tại không
+            if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
+                console.warn('AnimationManager: Game không còn tồn tại, bỏ qua animation');
                 this.completeAnimation();
+                // Không gọi onComplete vì game đã kết thúc, không cần callback
                 return;
             }
 
-            // Logic animation thở lửa sẽ được thêm vào đây
-            // Ví dụ: tạo hiệu ứng lửa, animation cho character, etc.
+            // Logic animation bình thường...
             cardList.forEach(cardIndex => {
-                const card = this.scene.gameManager.cardManager.getCard(cardIndex);
-                if (card && (card as any).takeDamage) {
-                    (card as any).takeDamage(damage, 'Explosive');
+                const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+                if (card?.takeDamage) {
+                    SpritesheetWrapper.animationBomb(this.scene, card.x, card.y);
                 }
             });
-            // Tạm thời sử dụng setTimeout để mô phỏng thời gian animation
-            setTimeout(() => {
-                // Gọi callback của user trước
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
-                } else {
-                    console.error('AnimationManager: Không có callback được gọi');
-                }
 
-                // Sau đó gọi completeAnimation để reset trạng thái và xử lý queue tiếp
+            setTimeout(() => {
+                // Kiểm tra lại một lần nữa trước khi gọi callback
+                if (this.scene?.gameManager) {
+                    onComplete?.();
+                }
                 this.completeAnimation();
-            }, 510); // Giả sử animation thở lửa mất 1 giây
+            }, 510);
         });
     }
 
@@ -420,7 +418,7 @@ export default class AnimationManager {
             // const screenHeight = this.scene.cameras.main.height;
             const coordinates = this.scene.gameManager.cardManager
                 .getGridPositionCoordinates(4);
-            
+
             if (!coordinates) {
                 if (onComplete && typeof onComplete === 'function') {
                     onComplete();

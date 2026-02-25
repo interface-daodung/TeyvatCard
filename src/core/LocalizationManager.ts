@@ -66,6 +66,17 @@ export class LocalizationManager {
     }
   }
 
+  /**
+   * Cấu hình wordWrap cho Phaser Text: bật useAdvancedWrap khi là tiếng Nhật (ja) để tự xuống dòng,
+   * vi và en giữ mặc định (wrap theo khoảng trắng).
+   */
+  getWordWrapOptions(width: number): { width: number; useAdvancedWrap: boolean } {
+    return {
+      width,
+      useAdvancedWrap: this.currentLanguage === 'ja',
+    };
+  }
+
   /** Danh sách mã ngôn ngữ có sẵn (từ DataManager) */
   getAvailableLanguages(): GameLanguageCode[] {
     return Object.keys(this.translations) as GameLanguageCode[];

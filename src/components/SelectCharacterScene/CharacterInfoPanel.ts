@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
 import { I18nText } from '../shared/index.js';
 import type { CardCharacter } from './types.js';
@@ -12,11 +13,11 @@ export interface CharacterInfoInitialData {
 }
 
 export interface CharacterInfoPanelRefs {
-    cardNameText: Phaser.GameObjects.Text;
+    cardNameText: I18nText;
     cardHighScoreText: Phaser.GameObjects.Text;
     cardLevelText: Phaser.GameObjects.Text;
     cardElementImage: Phaser.GameObjects.Image;
-    cardDescriptionText: Phaser.GameObjects.Text;
+    cardDescriptionText: I18nText;
     cardHPText: I18nText & { hp: number };
     upgradeButton: Phaser.GameObjects.Text;
 }
@@ -40,14 +41,15 @@ export function createInfoPanel(
     panelBg.lineStyle(3, themeManager.getSurfacePhaser(), 1);
     panelBg.strokeRoundedRect(width * 0.1, height * 0.15, width * 0.8, height * 0.25, 20);
 
-    const name = initialData?.card?.name ?? '';
+    const card = initialData?.card;
+    const nameKey = card ? `character.${card.id}.name` : '';
     const level = initialData?.level ?? 1;
     const hp = initialData?.hp ?? 7;
     const elementKey = initialData?.card?.element?.toLowerCase() ?? 'cryo';
-    const description = initialData?.card?.description ?? '';
+    const descriptionKey = card?.description ?? '';
     const highScore = initialData?.highScore ?? '';
 
-    const cardNameText = scene.add.text(width * 0.5, height * 0.18, name, {
+    const cardNameText = I18nText.create(scene, width * 0.5, height * 0.18, nameKey, {
         fontSize: '32px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
@@ -71,11 +73,11 @@ export function createInfoPanel(
     const cardElementImage = scene.add.image(width * 0.1 + 32, height * 0.15 + 32, 'element', `element-${elementKey}`);
     cardElementImage.setDisplaySize(32, 32);
 
-    const cardDescriptionText = scene.add.text(width * 0.5, height * 0.26, description, {
+    const cardDescriptionText = I18nText.create(scene, width * 0.5, height * 0.26, descriptionKey, {
         fontSize: '20px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
-        wordWrap: { width: width * 0.75 },
+        wordWrap: localizationManager.getWordWrapOptions(width * 0.75),
         align: 'center'
     }).setOrigin(0.5);
 
@@ -83,13 +85,14 @@ export function createInfoPanel(
         fontSize: '32px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
-        wordWrap: { width: width * 0.75 },
+        wordWrap: localizationManager.getWordWrapOptions(width * 0.75),
         align: 'center'
     }, { hp }) as I18nText & { hp: number };
     cardHPText.setOrigin(0.5);
     cardHPText.hp = hp;
 
-    const upgradeButton = I18nText.create(scene, width * 0.5, height * 0.36, level >= 9 ? 'level_max' : 'upgrade', {
+    const maxLevel = card?.maxLevel ?? 10;
+    const upgradeButton = I18nText.create(scene, width * 0.5, height * 0.36, level >= maxLevel ? 'level_max' : 'upgrade', {
         fontSize: '24px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',

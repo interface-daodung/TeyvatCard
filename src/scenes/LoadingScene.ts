@@ -11,6 +11,7 @@ const APP_DATA_PATHS = [
     'dungeonList.json',
     'libraryCards.json',
     'cardCharacterList.json',
+    'items.json',
 ] as const;
 
 /** Locale i18n (public/data/locales) – load xong ghi vào dataManager.setTranslations() */

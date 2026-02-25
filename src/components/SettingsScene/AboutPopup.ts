@@ -110,7 +110,7 @@ export function createAboutPopup(
             fontSize: `${fontSize}px`,
             color: themeManager.getText(),
             fontFamily: 'Arial',
-            wordWrap: { width: panelWidth - 80 },
+            wordWrap: localizationManager.getWordWrapOptions(panelWidth - 80),
             align: 'center'
         };
         const textObj =

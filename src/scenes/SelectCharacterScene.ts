@@ -3,6 +3,7 @@ import { localizationManager } from '../core/LocalizationManager.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { dataManager } from '../core/DataManager.js';
+import { showToast } from '../components/PaymentScene/Toast.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import {
     createBackButton,
@@ -23,12 +24,13 @@ export default class SelectCharacterScene extends Phaser.Scene {
     private currentCardIndex: number = 0;
     private HighScores!: HighScores;
     private boundOnLanguageChanged: () => void;
+    private updateCoinDisplay!: (newCoin: string | number) => void;
 
-    public cardNameText!: Phaser.GameObjects.Text;
+    public cardNameText!: I18nText;
     public cardHighScoreText!: Phaser.GameObjects.Text;
     public cardLevelText!: Phaser.GameObjects.Text;
     public cardElementImage!: Phaser.GameObjects.Image;
-    public cardDescriptionText!: Phaser.GameObjects.Text;
+    public cardDescriptionText!: I18nText;
     public cardHPText!: I18nText & { hp: number };
     public upgradeButton!: Phaser.GameObjects.Text;
     public currentCardContainer!: Phaser.GameObjects.Container;
@@ -45,22 +47,37 @@ export default class SelectCharacterScene extends Phaser.Scene {
     init(): void {
         this.cards = (dataManager.getFlag<CardCharacter[]>('cardCharacterList') ?? []) as CardCharacter[];
         this.HighScores = dataManager.get<HighScores>('characterHighScores') ?? {};
+        const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
+        
+        // Đồng bộ unlockedCharacters từ levelData (level > 0 là đã mở khóa thực sự)
+        // Những character nào trong list levelData mà level = 0 thì coi như đã bị khóa lại
+        const unlocked = Object.keys(levelData).filter(id => levelData[id] > 0);
+        dataManager.set('unlockedCharacters', unlocked);
+
         const selectedCharacter = dataManager.get<string>('selectedCharacter');
-        this.currentCardIndex = initializeCurrentCardIndex(this.cards, selectedCharacter);
+        let idx = initializeCurrentCardIndex(this.cards, selectedCharacter);
+        if (!unlocked.includes(this.cards[idx]?.id ?? '')) {
+            const firstUnlocked = this.cards.findIndex(c => unlocked.includes(c.id));
+            idx = firstUnlocked >= 0 ? firstUnlocked : 0;
+        }
+        this.currentCardIndex = idx;
     }
 
     create(): void {
         const { width, height } = this.scale;
 
         this.add.image(width / 2, height / 2, 'background').setDisplaySize(width, height);
-        HeaderUI.createHeaderUI(this, width, height);
+        const headerRef = HeaderUI.createHeaderUI(this, width, height);
+        this.updateCoinDisplay = headerRef.updateCoinDisplay;
         GameTitle.create(this, width / 2, height * 0.12, 'character_title');
 
         // Load toàn bộ thông tin từ local một lần khi vào scene, tránh cache mặc định
         const currentCard = this.cards[this.currentCardIndex];
-        const levelData = dataManager.get<Record<string, number>>('characterLevel');
-        currentCard.level = levelData?.[currentCard.id] ?? 1;
-        const hp = currentCard.hp + (currentCard.level ?? 1) - 1;
+        const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
+        currentCard.level = levelData[currentCard.id] ?? 0;
+        const level = currentCard.level;
+        const isUnlocked = level > 0;
+        const hp = currentCard.hp + (isUnlocked ? level : 0);
         const highScoreStr = this.HighScores[currentCard.id]
             ? localizationManager.t('high_score_label', { score: this.HighScores[currentCard.id] })
             : '';
@@ -69,13 +86,18 @@ export default class SelectCharacterScene extends Phaser.Scene {
             card: currentCard,
             hp,
             highScore: highScoreStr,
-            level: currentCard.level ?? 1
+            level
         };
 
         const panelRefs = createInfoPanel(this, width, height, {
             onUpgradeClick: () => this.upgradeCharacter(),
             onUpgradeHover: () => {
-                if ((this.cards[this.currentCardIndex].level ?? 1) < 9) {
+                const card = this.cards[this.currentCardIndex];
+                const level = dataManager.get<Record<string, number>>('characterLevel')?.[card.id] ?? 0;
+                const maxLevel = card.maxLevel ?? 10;
+                const canUnlock = level === 0;
+                const canUpgrade = level > 0 && level < maxLevel;
+                if (canUnlock || canUpgrade) {
                     this.upgradeButton.setTint(themeManager.getNeutralPhaser());
                     this.upgradeButton.setScale(1.1);
                     this.upgradeButton.setStyle({ color: themeManager.getAccent() });
@@ -98,7 +120,9 @@ export default class SelectCharacterScene extends Phaser.Scene {
         Object.assign(this, navRefs as NavigationButtonsRefs);
 
         createBackButton(this, width, height, () => {
-            dataManager.set('selectedCharacter', this.cards[this.currentCardIndex].id);
+            const card = this.cards[this.currentCardIndex];
+            const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
+            if ((levelData[card.id] ?? 0) > 0) dataManager.set('selectedCharacter', card.id);
             this.scene.start('MenuScene');
         }, 'select');
 
@@ -124,23 +148,29 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
     updateCardDisplay(): void {
         const currentCard = this.cards[this.currentCardIndex];
-        const levelData = dataManager.get<Record<string, number>>('characterLevel');
-        currentCard.level = levelData?.[currentCard.id] ?? 1;
+        const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
+        currentCard.level = levelData[currentCard.id] ?? 0;
+        const level = currentCard.level;
+        const isUnlocked = level > 0;
+        const hp = currentCard.hp + (isUnlocked ? level : 0);
 
-        this.cardNameText.setText(currentCard.name);
+        this.cardNameText.setI18nKey(`character.${currentCard.id}.name`);
         this.cardElementImage.setTexture('element', `element-${currentCard.element.toLowerCase()}`);
-        this.cardDescriptionText.setText(currentCard.description);
-        const hp = currentCard.hp + (currentCard.level ?? 1) - 1;
+        this.cardDescriptionText.setI18nKey(currentCard.description);
         this.cardHPText.hp = hp;
         this.cardHPText.setI18nKey('hp_label').setI18nParams({ hp });
-        (this.cardLevelText as I18nText).setI18nParams({ level: currentCard.level ?? 1 });
+        (this.cardLevelText as I18nText).setI18nParams({ level });
+        this.cardLevelText.setVisible(isUnlocked);
         this.cardHighScoreText.setText(
             this.HighScores[currentCard.id]
                 ? localizationManager.t('high_score_label', { score: this.HighScores[currentCard.id] })
                 : ''
         );
 
-        if ((currentCard.level ?? 1) >= 9) {
+        const maxLevel = currentCard.maxLevel ?? 10;
+        if (!isUnlocked) {
+            (this.upgradeButton as I18nText).setI18nKey('unlock');
+        } else if (level >= maxLevel) {
             (this.upgradeButton as I18nText).setI18nKey('level_max');
             this.upgradeButton.setStyle({ color: themeManager.getText() });
             this.upgradeButton.setScale(1);
@@ -148,8 +178,18 @@ export default class SelectCharacterScene extends Phaser.Scene {
             (this.upgradeButton as I18nText).setI18nKey('upgrade');
         }
 
-        if ((currentCard.level ?? 1) > 2) {
-            this.currentCardContainer.remove(this.currentCardImage, true);
+        this.currentCardContainer.remove(this.currentCardImage, true);
+        if (!isUnlocked) {
+            this.currentCardImage = this.add.image(0, 0, 'coin', 'empty');
+            this.currentCardImage.setDisplaySize(300, 514);
+            this.currentCardImage.setOrigin(0.5, 0.5);
+            this.currentCardContainer.add(this.currentCardImage);
+            this.cardBorder.clear();
+            this.cardBorder.lineStyle(4, themeManager.getTextPhaser(), 1);
+            this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
+            this.currentCardContainer.remove(this.cardBorder, false);
+            this.currentCardContainer.add(this.cardBorder);
+        } else if (level > 2) {
             this.currentCardImage = SpritesheetWrapper.CharacterAnimation(this, 0, 0, currentCard.id + '-sprite', 300, 514);
             this.currentCardContainer.add(this.currentCardImage);
             this.cardBorder.clear();
@@ -158,7 +198,6 @@ export default class SelectCharacterScene extends Phaser.Scene {
             this.cardBorder.fillRoundedRect(-152, -259, 304, 518, 28);
             this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
         } else {
-            this.currentCardContainer.remove(this.currentCardImage, true);
             this.currentCardImage = this.add.image(0, 0, 'character', currentCard.id);
             this.currentCardImage.setDisplaySize(300, 514);
             this.currentCardContainer.add(this.currentCardImage);
@@ -188,16 +227,46 @@ export default class SelectCharacterScene extends Phaser.Scene {
     }
 
     upgradeCharacterPrice(): number {
-        return (this.cards[this.currentCardIndex].level ?? 1) * 100;
+        const card = this.cards[this.currentCardIndex];
+        const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
+        const level = levelData[card.id] ?? 0;
+        const maxLevel = card.maxLevel ?? 10;
+        if (level >= maxLevel) return 0;
+        const stats = card.levelStats?.find(s => s.level === level + 1);
+        if (stats) return stats.price;
+        return (level + 1) * 100;
     }
 
     upgradeCharacter(): void {
         const currentCard = this.cards[this.currentCardIndex];
-        if ((currentCard.level ?? 1) >= 9) return;
         const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
-        currentCard.level = (currentCard.level ?? 1) + 1;
-        levelData[currentCard.id] = currentCard.level;
+        const level = levelData[currentCard.id] ?? 0;
+        const unlocked = dataManager.get<string[]>('unlockedCharacters') ?? [];
+        const maxLevel = currentCard.maxLevel ?? 10;
+
+        if (level >= maxLevel) return;
+
+        const price = this.upgradeCharacterPrice();
+        const totalCoin = dataManager.get<number>('totalCoin') ?? 0;
+        if (totalCoin < price) {
+            showToast(this, localizationManager.t('not_enough_coin'));
+            return;
+        }
+
+        dataManager.set('totalCoin', totalCoin - price);
+        this.updateCoinDisplay(totalCoin - price);
+
+        const newLevel = level + 1;
+        levelData[currentCard.id] = newLevel;
+        currentCard.level = newLevel;
         dataManager.set('characterLevel', levelData);
+
+        // Nếu mới nâng từ 0 lên 1 thì coi như đã mở khóa
+        if (level === 0) {
+            const next = Array.from(new Set([...unlocked, currentCard.id]));
+            dataManager.set('unlockedCharacters', next);
+        }
+
         this.updateCardDisplay();
     }
 }

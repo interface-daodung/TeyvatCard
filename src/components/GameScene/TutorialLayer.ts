@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
 import { I18nText } from '../shared/index.js';
 
@@ -103,7 +104,7 @@ export function createTutorialLayer(
         fontSize: '22px',
         color: themeManager.getText(),
         fontFamily: 'Arial',
-        wordWrap: { width: panelWidth - padding * 2 },
+        wordWrap: localizationManager.getWordWrapOptions(panelWidth - padding * 2),
         align: 'center'
     }).setOrigin(0.5);
     container.add(guideText);

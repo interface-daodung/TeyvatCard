@@ -21,6 +21,12 @@ export function showCardInfoDialog(
     const container = scene.add.container(width / 2, height / 2);
     container.setDepth(120);
 
+    const dialogWidth = 600;
+    const dialogHeight = 520;
+    const halfW = dialogWidth / 2;
+    const halfH = dialogHeight / 2;
+    const pad = 28;
+
     const bg = scene.add.rectangle(-width / 2, -height / 2, width, height, themeManager.getBackgroundPhaser(), 0.7)
         .setOrigin(0, 0)
         .setInteractive();
@@ -28,40 +34,61 @@ export function showCardInfoDialog(
     const dialogBg = scene.add.graphics();
     dialogBg.fillStyle(themeManager.getSurfacePhaser(), 0.95);
     dialogBg.lineStyle(3, themeManager.getPrimaryPhaser());
-    dialogBg.fillRoundedRect(-200, -150, 400, 300, 20);
-    dialogBg.strokeRoundedRect(-200, -150, 400, 300, 20);
+    dialogBg.fillRoundedRect(-halfW, -halfH, dialogWidth, dialogHeight, 26);
+    dialogBg.strokeRoundedRect(-halfW, -halfH, dialogWidth, dialogHeight, 26);
 
-    const cardImg = createCardImage(scene, cardData, 80, 137.14);
+    const nameY = -halfH + pad;
+    const typeY = nameY + 38;
+    const cardW = 120;
+    const cardH = 205.7;
+    const cardTop = typeY + 22;
+    const cardY = cardTop + cardH / 2;
 
-    const nameText = scene.add.text(0, -120, cardData.name, {
-        fontSize: '24px',
+    const cardImg = createCardImage(scene, cardData, cardW, cardH);
+    cardImg.setPosition(0, cardY);
+
+    const nameKey = `adventureCard.${cardData.id}.name`;
+    const nameText = new I18nText(scene, 0, nameY, nameKey, {
+        fontSize: '30px',
         color: themeManager.getText(),
         fontFamily: 'Arial'
     });
     nameText.setOrigin(0.5);
 
-    const typeText = scene.add.text(0, -100, localizationManager.t('type_label', { type: localizationManager.t(cardData.type) || cardData.type }), {
-        fontSize: '16px',
+    const typeText = new I18nText(scene, 0, typeY, 'type_label', {
+        fontSize: '18px',
         color: themeManager.getAccent(),
         fontFamily: 'Arial'
-    });
+    }, { type: localizationManager.t(cardData.type) || cardData.type });
     typeText.setOrigin(0.5);
 
-    const descText = scene.add.text(0, 100, cardData.description, {
-        fontSize: '14px',
+    // Lắng nghe đổi ngôn ngữ để cập nhật lại param của typeText (vốn không tự dịch)
+    const onLangChange = () => {
+        typeText.setI18nParams({ type: localizationManager.t(cardData.type) || cardData.type });
+    };
+    scene.game.events.on('languageChanged', onLangChange);
+
+    const descY = cardY + cardH / 2 + pad + 24;
+    const descKey = `adventureCard.${cardData.id}.description`;
+    const descWrapWidth = dialogWidth - 100;
+    const descText = new I18nText(scene, 0, descY, descKey, {
+        fontSize: '17px',
         color: themeManager.getText(),
         fontFamily: 'Arial',
-        wordWrap: { width: 300 },
+        wordWrap: { width: descWrapWidth },
         align: 'center'
     });
-    descText.setOrigin(0.5);
+    descText.setOrigin(0.5, 0);
 
+    const closeBtnW = 88;
+    const closeBtnH = 58;
+    const closeBtnY = halfH - pad - closeBtnH / 2 - 8;
     const closeBtn = scene.add.graphics();
     closeBtn.fillStyle(themeManager.getPrimaryPhaser());
-    closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
-    closeBtn.setPosition(0, 190);
+    closeBtn.fillRoundedRect(-closeBtnW / 2, -closeBtnH / 2, closeBtnW, closeBtnH, 10);
+    closeBtn.setPosition(0, closeBtnY);
 
-    const closeText = new I18nText(scene, 0, 190, 'close', {
+    const closeText = new I18nText(scene, 0, closeBtnY, 'close', {
         fontSize: '24px',
         color: themeManager.getText(),
         fontFamily: 'Arial'
@@ -69,23 +96,24 @@ export function showCardInfoDialog(
     closeText.setOrigin(0.5);
 
     const hide = () => {
+        scene.game.events.off('languageChanged', onLangChange);
         container.destroy();
         if (escKey) escKey.destroy();
         onClose();
     };
 
-    closeBtn.setInteractive(new Phaser.Geom.Rectangle(-30, -25, 60, 50), Phaser.Geom.Rectangle.Contains);
+    closeBtn.setInteractive(new Phaser.Geom.Rectangle(-closeBtnW / 2, -closeBtnH / 2, closeBtnW, closeBtnH), Phaser.Geom.Rectangle.Contains);
     closeBtn.on('pointerover', () => {
         closeBtn.clear();
         closeBtn.setScale(1.2);
         closeBtn.fillStyle(themeManager.getSecondaryPhaser());
-        closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
+        closeBtn.fillRoundedRect(-closeBtnW / 2, -closeBtnH / 2, closeBtnW, closeBtnH, 10);
     });
     closeBtn.on('pointerout', () => {
         closeBtn.clear();
         closeBtn.setScale(1);
         closeBtn.fillStyle(themeManager.getPrimaryPhaser());
-        closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
+        closeBtn.fillRoundedRect(-closeBtnW / 2, -closeBtnH / 2, closeBtnW, closeBtnH, 10);
     });
     closeBtn.on('pointerdown', hide);
 

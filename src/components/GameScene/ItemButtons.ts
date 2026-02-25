@@ -8,8 +8,13 @@ import type { ItemData, ItemButton } from './types.js';
 export function createItemButtonsFromStorage(): ItemData[] {
     try {
         const equipmentData = dataManager.get<string[] | null>('equipment');
+        const itemLevels = dataManager.get<Record<string, number>>('itemLevel');
         if (Array.isArray(equipmentData) && equipmentData.length > 0) {
-            return equipmentData.map((nameId: string) => itemFactory.createItem(nameId));
+            return equipmentData.map((nameId: string) => {
+                const item = itemFactory.createItem(nameId);
+                if (item && itemLevels && itemLevels[nameId] != null) item.level = itemLevels[nameId];
+                return item;
+            }).filter(Boolean) as ItemData[];
         }
         return [];
     } catch {

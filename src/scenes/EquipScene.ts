@@ -17,6 +17,7 @@ import { GameTitle } from '../components/shared/index.js';
 export default class EquipScene extends Phaser.Scene {
     public equipmentSlots: EquipmentSlot[];
     public listItems!: Map<string, EquipItemData>;
+    private updateCoinDisplay!: (newCoin: string | number) => void;
 
     constructor() {
         super({ key: 'EquipScene' });
@@ -29,7 +30,8 @@ export default class EquipScene extends Phaser.Scene {
         const { width, height } = this.scale;
 
         this.add.image(width / 2, height / 2, 'background');
-        HeaderUI.createHeaderUI(this, width, height);
+        const headerRef = HeaderUI.createHeaderUI(this, width, height);
+        this.updateCoinDisplay = headerRef.updateCoinDisplay;
         GameTitle.create(this, width / 2, height * 0.18, 'equip_title');
 
         this.listItems = createItemGrid(this, width, height, (item: Item) => this.showItemDialog(item, false));
@@ -80,7 +82,8 @@ export default class EquipScene extends Phaser.Scene {
             isFullEquipmentSlot: () => this.isFullEquipmentSlot(),
             addEquipmentSlot: (i) => this.addEquipmentSlot(i),
             clearEquipmentSlot: (id) => this.clearEquipmentSlot(id),
-            listItems: this.listItems
+            listItems: this.listItems,
+            onCoinChanged: (newTotal) => this.updateCoinDisplay(newTotal)
         });
     }
 

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import { themeManager } from '../core/ThemeManager.js';
-import { I18nText } from '../components/shared/index.js';
+import { showCardInfoDialog } from '../components/LibraryScene/CardInfoDialog.js';
 import type GameManager from '../core/GameManager.js';
 
 export interface SceneWithGameManager extends Phaser.Scene {
@@ -18,6 +18,25 @@ export interface CardDefault {
     rarity?: number;
     element?: string;
     hp?: number;
+    type?: string;
+    /** Mô tả khi coin ở trạng thái cộng hưởng (dùng cho Coin) */
+    resonanceDescription?: string;
+    /** Các chỉ số cho Enemy */
+    healthMin?: number;
+    healthMax?: number;
+    scoreMin?: number;
+    scoreMax?: number;
+    /** Các chỉ số cho Bomb và Trap */
+    countdown?: number;
+    damageMin?: number;
+    damageMax?: number;
+    damage?: number;
+    /** Các chỉ số cho Treasure và Weapon */
+    durabilityMin?: number;
+    durabilityMax?: number;
+    /** Các chỉ số cho Food */
+    foodMin?: number;
+    foodMax?: number;
 }
 
 export interface CreateDisplayOptions {
@@ -42,13 +61,15 @@ export default class Card extends Phaser.GameObjects.Container {
     nameId: string;
     type: string;
     pressStartTime: number;
-    cardInfoDialog: Phaser.GameObjects.Container | null;
+    cardInfoDialog: Phaser.GameObjects.Container | { hide: () => void } | null;
     unsubscribeList: Array<() => void>;
     isLongPressed?: boolean;
     description?: string;
     border!: Phaser.GameObjects.Graphics;
     cardImage!: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
     escKey?: Phaser.Input.Keyboard.Key;
+    /** Config đã áp dụng (từ JSON), dùng cho createCard / atlas category-clan */
+    protected config?: CardDefault;
 
     static DEFAULT: CardDefault = {};
 
@@ -71,13 +92,25 @@ export default class Card extends Phaser.GameObjects.Container {
         this.unsubscribeList = [];
     }
 
+    /**
+     * Gán các chỉ số từ config (JSON hoặc DEFAULT) xuống instance.
+     * Gọi trong constructor của subclass sau super(). Subclass có thể override để set thêm field.
+     */
+    applyConfig(config: CardDefault): void {
+        this.config = { ...this.config, ...config };
+        if (config.name != null) this.name = config.name;
+        if (config.id != null) this.nameId = config.id;
+        if (config.description != null) this.description = config.description;
+        if (config.rarity != null) (this as any).rarity = config.rarity;
+    }
+
     createCard(): void {
         let atlasKey = this.type;
-        const Def = (this.constructor as typeof Card).DEFAULT;
-        if (this.type === 'weapon' && Def.category) {
-            atlasKey += '-' + Def.category;
-        } else if (this.type === 'enemy' && Def.clan) {
-            atlasKey += '-' + Def.clan;
+        const def = this.config ?? (this.constructor as typeof Card).DEFAULT;
+        if (this.type === 'weapon' && def.category) {
+            atlasKey += '-' + def.category;
+        } else if (this.type === 'enemy' && def.clan) {
+            atlasKey += '-' + def.clan;
         }
         this.cardImage = this.scene.add.image(0, 0, atlasKey, this.nameId);
         this.cardImage.setDisplaySize(160, 274.3);
@@ -139,101 +172,32 @@ export default class Card extends Phaser.GameObjects.Container {
 
     showCardInfoDialog(): void {
         if (this.cardInfoDialog) {
-            this.cardInfoDialog.destroy();
+            if ('hide' in this.cardInfoDialog) this.cardInfoDialog.hide();
+            else this.cardInfoDialog.destroy();
+            this.cardInfoDialog = null;
         }
-        const { width, height } = this.scene.scale;
-        this.cardInfoDialog = this.scene.add.container(width / 2, height / 2);
-        this.cardInfoDialog.setDepth(120);
-
-        const bg = this.scene.add.rectangle(-width / 2, -height / 2, width, height, 0x000000, 0.7)
-            .setOrigin(0, 0)
-            .setInteractive();
-
-        const dialogBg = this.scene.add.graphics();
-        dialogBg.fillStyle(themeManager.getSurfacePhaser(), 0.95);
-        dialogBg.lineStyle(3, themeManager.getPrimaryPhaser());
-        dialogBg.fillRoundedRect(-200, -150, 400, 300, 20);
-        dialogBg.strokeRoundedRect(-200, -150, 400, 300, 20);
-
-        let atlasKey = this.type;
-        const Def = (this.constructor as typeof Card).DEFAULT;
-        if (this.type === 'weapon' && Def.category) {
-            atlasKey += '-' + Def.category;
-        } else if (this.type === 'enemy' && Def.clan) {
-            atlasKey += '-' + Def.clan;
-        }
-
-        const cardImg = this.scene.add.image(0, 0, atlasKey, this.nameId);
-        cardImg.setDisplaySize(80, 137.14);
-
-        const nameText = this.scene.add.text(0, -120, this.name, {
-            fontSize: '24px',
-            color: themeManager.getText(),
-            fontFamily: 'Arial'
+        const def = this.config ?? (this.constructor as typeof Card).DEFAULT;
+        const cardData = {
+            type: this.type,
+            id: this.nameId,
+            name: this.name,
+            description: this.type === 'character' ? (this.getDescription()) : (this.description ?? 'adventureCard._no_key.description'),
+            category: def.category,
+            clan: def.clan
+        };
+        const handle = showCardInfoDialog(this.scene, cardData, () => {
+            this.cardInfoDialog = null;
+            this.escKey = undefined;
+            this.isLongPressed = false;
+            this.pressStartTime = 0;
         });
-        nameText.setOrigin(0.5);
-
-        const typeText = new I18nText(this.scene, 0, -100, 'type_label', {
-            fontSize: '16px',
-            color: themeManager.getSecondary(),
-            fontFamily: 'Arial'
-        }, { type: localizationManager.t(this.type) || this.type });
-        typeText.setOrigin(0.5);
-
-        const description = this.getDescription();
-        const descText = this.scene.add.text(0, 100, description, {
-            fontSize: '14px',
-            color: themeManager.getNeutral(),
-            fontFamily: 'Arial',
-            wordWrap: { width: 300 },
-            align: 'center'
-        });
-        descText.setOrigin(0.5);
-
-        const closeBtn = this.scene.add.graphics();
-        closeBtn.fillStyle(themeManager.getPrimaryPhaser());
-        closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
-        closeBtn.setPosition(0, 190);
-
-        const closeText = new I18nText(this.scene, 0, 190, 'close', {
-            fontSize: '24px',
-            color: themeManager.getText(),
-            fontFamily: 'Arial'
-        });
-        closeText.setOrigin(0.5);
-
-        closeBtn.setInteractive(new Phaser.Geom.Rectangle(-30, -25, 60, 50), Phaser.Geom.Rectangle.Contains);
-
-        closeBtn.on('pointerover', () => {
-            closeBtn.clear();
-            closeBtn.setScale(1.2);
-            closeBtn.fillStyle(themeManager.getAccentPhaser());
-            closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
-        });
-
-        closeBtn.on('pointerout', () => {
-            closeBtn.clear();
-            closeBtn.setScale(1);
-            closeBtn.fillStyle(themeManager.getPrimaryPhaser());
-            closeBtn.fillRoundedRect(-30, -25, 60, 50, 8);
-        });
-
-        closeBtn.on('pointerdown', () => {
-            this.hideCardInfoDialog();
-        });
-
-        this.cardInfoDialog.add([bg, dialogBg, cardImg, nameText, typeText, descText, closeBtn, closeText]);
-        this.scene.add.existing(this.cardInfoDialog);
-
-        this.escKey = this.scene.input.keyboard!.addKey('ESC');
-        this.escKey.on('down', () => {
-            this.hideCardInfoDialog();
-        });
+        this.cardInfoDialog = handle;
     }
 
     hideCardInfoDialog(): void {
         if (this.cardInfoDialog) {
-            this.cardInfoDialog.destroy();
+            if ('hide' in this.cardInfoDialog) this.cardInfoDialog.hide();
+            else this.cardInfoDialog.destroy();
             this.cardInfoDialog = null;
         }
         if (this.escKey) {
@@ -245,7 +209,11 @@ export default class Card extends Phaser.GameObjects.Container {
     }
 
     getDescription(): string {
-        return this.description ?? 'Không có mô tả cho thẻ này.';
+        if (this.type === 'character') {
+            return this.description ?? 'Không có mô tả cho thẻ này.';
+        }
+        const key = this.description ?? 'adventureCard._no_key.description';
+        return localizationManager.t(key) || key;
     }
 
     onCardClick(): void {
@@ -315,27 +283,21 @@ export default class Card extends Phaser.GameObjects.Container {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    CardEffect(): void {
+    CardEffect(): boolean {
         console.log(`Card ${this.name} (${this.nameId}) đang chạy hiệu ứng...`);
+        return false;
     }
 
     takeDamage(damage: number, type?: string): void {
         console.log(`Card ${this.name} (${this.nameId}) bị tấn công ${damage} damage`);
-        if (type === 'Explosive') {
-            SpritesheetWrapper.animationBomb(this.scene, this.x, this.y);
-        } else if (type === 'BreatheFire') {
-            SpritesheetWrapper.animationBreatheFire(this.scene, this.x, this.y);
-        }
     }
 
     die(): void {
         this.ProgressDestroy();
         if (this.scene?.gameManager) {
-            const newCard = this.scene.gameManager.cardManager.cardFactory.createCoin(
+            const newCard = this.scene.gameManager.cardManager?.cardFactory.createRandomCard(
                 this.scene,
-                this.index,
-                this.GetRandom(1, 3)
-            );
+                this.index);
             if (newCard) {
                 this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
             }
@@ -379,7 +341,7 @@ export default class Card extends Phaser.GameObjects.Container {
             scaleY: 1,
             duration: 400,
             ease: 'Back.easeOut',
-            onComplete: () => {}
+            onComplete: () => { }
         });
     }
 }

@@ -3,19 +3,8 @@ import type GameManager from '../../core/GameManager.js';
 
 export default class Refinement extends Item {
     constructor() {
-        super(
-            'Refinement',
-            'refinement',
-            'refinement',
-            10,
-            2,
-            'Tinh chế item để tăng sức mạnh',
-            6
-        );
-    }
-
-    override get power(): number {
-        return this._power + this.level * 10;
+        super('refinement');
+        this.applyConfig();
     }
 
     override effect(gameManager: GameManager): boolean {

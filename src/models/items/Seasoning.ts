@@ -1,21 +1,11 @@
 import Item from '../../modules/Item.js';
 import type GameManager from '../../core/GameManager.js';
+import Food from '@/src/modules/typeCard/food.js';
 
 export default class Seasoning extends Item {
     constructor() {
-        super(
-            'Seasoning',
-            'seasoning',
-            'seasoning',
-            10,
-            10,
-            'Gia vị để tăng hiệu quả item',
-            6
-        );
-    }
-
-    override get power(): number {
-        return this._power + this.level * 15;
+        super('seasoning');
+        this.applyConfig();
     }
 
     override effect(gameManager: GameManager): boolean {
@@ -26,11 +16,16 @@ export default class Seasoning extends Item {
         if (foodCount === 0) return false;
         gameManager.animationManager.startItemAnimation(this.image, () => {
             gameManager.cardManager.getAllCards().forEach(card => {
-                if (card?.type === 'food' && (card as any).seasoning) {
-                    (card as any).seasoning(this.power);
+                if (card?.type === 'food') {
+                    this.seasoning(card as Food, this.power);
                 }
             });
         });
         return true;
+    }
+
+    seasoning(card: Food, power: number): void {
+        card.food += power;
+        card.foodDisplay.updateText(card.food);
     }
 }

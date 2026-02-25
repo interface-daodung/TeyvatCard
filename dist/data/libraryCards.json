@@ -4,7 +4,7 @@
       "id": "sword-steampunk",
       "name": "Sword Steampunk",
       "type": "weapon",
-      "description": "Sword Steampunk - Kiếm huy hoàng quý giá tăng sức mạnh và may mắn.",
+      "description": "Sword Steampunk - A glorious and precious sword that increases power and luck.",
       "className": "SwordSteampunk",
       "category": "sword",
       "rarity": 1
@@ -13,16 +13,18 @@
       "id": "sword-forest",
       "name": "Sword Forest",
       "type": "weapon",
-      "description": "Sword Forest - Kiếm rừng tự nhiên tăng sức mạnh và khả năng phòng thủ.",
+      "description": "Sword Forest - Natural forest swords increase strength and defense.",
       "className": "SwordForest",
       "category": "sword",
-      "rarity": 3
+      "rarity": 3,
+      "durabilityMin": 25,
+      "durabilityMax": 40
     },
     {
       "id": "sword-skyward",
       "name": "Sword Skyward",
       "type": "weapon",
-      "description": "Sword Skyward - Kiếm bầu trời thiêng liêng tăng sức mạnh và tốc độ.",
+      "description": "Sword Skyward - The Sacred Sky Sword increases strength and speed.",
       "className": "SwordSkyward",
       "category": "sword",
       "rarity": 4
@@ -31,16 +33,18 @@
       "id": "sword-splendor",
       "name": "Sword Splendor",
       "type": "weapon",
-      "description": "Sword Splendor - Kiếm huy hoàng quý giá tăng sức mạnh và may mắn.",
+      "description": "Sword Splendor - A precious, glorious sword that increases power and luck.",
       "className": "SwordSplendor",
       "category": "sword",
-      "rarity": 4
+      "rarity": 4,
+      "durabilityMin": 6,
+      "durabilityMax": 16
     },
     {
       "id": "sword-traveler",
       "name": "Sword Traveler",
       "type": "weapon",
-      "description": "Sword Traveler - Kiếm lữ khách tăng sức mạnh và khả năng thích ứng.",
+      "description": "Sword Traveler - Sword Traveler enhances strength and adaptability.",
       "className": "SwordTraveler",
       "category": "sword",
       "rarity": 4
@@ -49,10 +53,12 @@
       "id": "sword-sacrificial",
       "name": "Sword Sacrificial",
       "type": "weapon",
-      "description": "Sword Sacrificial - Kiếm hy sinh mạnh mẽ nhưng độ bền thấp.",
+      "description": "Sword Sacrificial - A powerful sacrificial sword, but with low durability.",
       "className": "SwordSacrificial",
       "category": "sword",
-      "rarity": 4
+      "rarity": 4,
+      "durabilityMin": 3,
+      "durabilityMax": 11
     }
   ],
   "enemy": [
@@ -60,7 +66,7 @@
       "id": "anemo-samachurl",
       "name": "Anemo Samachurl",
       "type": "enemy",
-      "description": "Anemo Samachurl - Kẻ địch caster gió có thể tạo gió và làm chậm người chơi.",
+      "description": "Anemo Samachurl - A wind caster enemy who can create wind and slow down players.",
       "className": "AnemoSamachurl",
       "element": "anemo",
       "clan": "hilichurl",
@@ -80,7 +86,7 @@
       "id": "dendro-samachurl",
       "name": "Dendro Samachurl",
       "type": "enemy",
-      "description": "Dendro Samachurl - Kẻ địch caster thảo có thể tạo cây và gây poison.",
+      "description": "Dendro Samachurl - A grass-casting enemy that can create plants and inflict poison.",
       "className": "DendroSamachurl",
       "element": "dendro",
       "clan": "hilichurl",
@@ -90,17 +96,21 @@
       "id": "geo-samachurl",
       "name": "Geo Samachurl",
       "type": "enemy",
-      "description": "Geo Samachurl - Kẻ địch caster địa có thể tạo tường và gây stun.",
+      "description": "Geo Samachurl - Local caster enemies can create walls and stun enemies.",
       "className": "GeoSamachurl",
       "element": "geo",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 3,
+      "healthMin": 4,
+      "healthMax": 15,
+      "scoreMin": 1,
+      "scoreMax": 10
     },
     {
       "id": "hydro-samachurl",
       "name": "Hydro Samachurl",
       "type": "enemy",
-      "description": "Hydro Samachurl - Kẻ địch caster thủy có thể tạo nước và gây wet effect.",
+      "description": "Hydro Samachurl - A hydraulic caster enemy that can create water and cause wet effects.",
       "className": "HydroSamachurl",
       "element": "hydro",
       "clan": "hilichurl",
@@ -110,17 +120,19 @@
       "id": "fighter",
       "name": "Hilichurl Fighter",
       "type": "enemy",
-      "description": "Hilichurl Fighter - Kẻ địch cơ bản có thể tấn công người chơi.",
+      "description": "Hilichurl Fighter - A basic enemy that can attack the player.",
       "className": "HilichurlFighter",
       "element": "physical",
       "clan": "hilichurl",
-      "rarity": 4
+      "rarity": 4,
+      "scoreMin": 2,
+      "scoreMax": 15
     },
     {
       "id": "hilistray-water",
       "name": "Hilistray Water",
       "type": "enemy",
-      "description": "Hilistray Water - Kẻ địch nước, có khả năng chữa lành và tạo hiệu ứng ẩm ướt.",
+      "description": "Hilistray Water - A water-based enemy with healing and wetness-inducing abilities.",
       "className": "HilistrayWater",
       "element": "hydro",
       "clan": "hilichurl",
@@ -150,7 +162,7 @@
       "id": "rock-shieldwall",
       "name": "Rock Shieldwall",
       "type": "enemy",
-      "description": "Rock Shieldwall - Kẻ địch tường đá, có khả năng phòng thủ rất cao và chống đỡ tốt.",
+      "description": "Rock Shieldwall - A rock wall enemy with very high defensive capabilities and excellent resistance.",
       "className": "RockShieldwall",
       "element": "geo",
       "clan": "hilichurl",
@@ -160,7 +172,7 @@
       "id": "berserker",
       "name": "Berserker",
       "type": "enemy",
-      "description": "Berserker - Kẻ địch điên cuồng, tấn công mạnh hơn khi máu thấp.",
+      "description": "Berserker - A berserk enemy who attacks more fiercely when their health is low.",
       "className": "Berserker",
       "element": "pyro",
       "clan": "hilichurl",
@@ -170,7 +182,7 @@
       "id": "blazing",
       "name": "Blazing",
       "type": "enemy",
-      "description": "Blazing - Kẻ địch cháy liên tục, gây damage theo thời gian cho người chơi gần đó.",
+      "description": "Blazing - Enemies burn continuously, dealing damage over time to nearby players.",
       "className": "Blazing",
       "element": "pyro",
       "clan": "hilichurl",
@@ -180,7 +192,7 @@
       "id": "ice-shieldwall",
       "name": "Ice Shieldwall",
       "type": "enemy",
-      "description": "Ice Shieldwall - Kẻ địch tường băng, có khả năng phòng thủ cao và làm chậm người chơi.",
+      "description": "Ice Shieldwall - An enemy wall of ice, with high defense and the ability to slow down the player.",
       "className": "IceShieldwall",
       "element": "cryo",
       "clan": "hilichurl",
@@ -190,7 +202,7 @@
       "id": "shooter",
       "name": "Shooter",
       "type": "enemy",
-      "description": "Shooter - Kẻ địch bắn cung từ xa, tấn công cơ bản.",
+      "description": "Shooter - An enemy who shoots arrows from a distance, basic attack.",
       "className": "Shooter",
       "element": "physical",
       "clan": "hilichurl",
@@ -200,7 +212,7 @@
       "id": "crackling",
       "name": "Crackling",
       "type": "enemy",
-      "description": "Crackling - Kẻ địch nổ khi chết, gây damage cho người chơi gần đó.",
+      "description": "Crackling - Enemies explode upon death, dealing damage to nearby players.",
       "className": "Crackling",
       "element": "electro",
       "clan": "hilichurl",
@@ -210,7 +222,7 @@
       "id": "cryo-shooter",
       "name": "Cryo Shooter",
       "type": "enemy",
-      "description": "Cryo Shooter - Kẻ địch bắn băng từ xa, có thể làm chậm và đóng băng người chơi.",
+      "description": "Cryo Shooter - An enemy that shoots ice from a distance, capable of slowing down and freezing the player.",
       "className": "CryoShooter",
       "element": "cryo",
       "clan": "hilichurl",
@@ -220,7 +232,7 @@
       "id": "electro-shooter",
       "name": "Electro Shooter",
       "type": "enemy",
-      "description": "Electro Shooter - Kẻ địch bắn điện từ xa, có thể gây shock và làm chậm người chơi.",
+      "description": "Electro Shooter - An enemy that shoots electricity from a distance, capable of shocking and slowing the player.",
       "className": "ElectroShooter",
       "element": "electro",
       "clan": "hilichurl",
@@ -232,7 +244,7 @@
       "id": "life-essence",
       "name": "Life Essence",
       "type": "food",
-      "description": "Life Essence - Tinh hoa sự sống hồi phục sức khỏe tối đa và tăng tất cả chỉ số.",
+      "description": "Life Essence - The essence of life for maximum health recovery and enhancement of all indicators.",
       "className": "LifeEssence"
     },
     {
@@ -247,7 +259,7 @@
       "id": "pizza",
       "name": "Pizza",
       "type": "food",
-      "description": "Pizza - Bánh pizza Ý hồi phục sức khỏe và tăng sức mạnh tấn công.",
+      "description": "Pizza - Italian pizza restores health and boosts attacking power.",
       "className": "Pizza",
       "rarity": 2
     },
@@ -273,7 +285,7 @@
       "id": "abyss-call",
       "name": "AbyssCall",
       "type": "trap",
-      "description": "AbyssCall - Bẫy gọi thêm enemy vào trận đấu khi kích hoạt.",
+      "description": "AbyssCall - A trap that summons additional enemies into the battle when activated.",
       "className": "AbyssCall"
     },
     {
@@ -288,7 +300,7 @@
       "id": "breathe-fire",
       "name": "Breathe Fire",
       "type": "trap",
-      "description": "Breathe Fire - Bẫy thở lửa gây damage cho người chơi khi kích hoạt.",
+      "description": "Breathe Fire - A fire trap that deals damage to the player when activated.",
       "className": "BreatheFire",
       "rarity": 2
     }
@@ -298,7 +310,7 @@
       "id": "chest",
       "name": "Chest",
       "type": "treasure",
-      "description": "Chest - Kho báu chính chứa nhiều loại phần thưởng quý giá.",
+      "description": "Chest - The main treasure chest containing various valuable rewards.",
       "className": "Chest",
       "rarity": 4
     },
@@ -306,7 +318,7 @@
       "id": "bribery",
       "name": "Bribery",
       "type": "treasure",
-      "description": "Bribery - Hối lộ để nhận phần thưởng lớn hơn chi phí.",
+      "description": "Bribery - Bribery to receive rewards greater than the cost.",
       "className": "Bribery",
       "rarity": 3
     },
@@ -314,7 +326,7 @@
       "id": "gold-mine",
       "name": "GoldMine",
       "type": "treasure",
-      "description": "GoldMine - Mỏ khai thác để nhận tài nguyên.",
+      "description": "GoldMine - A mine to extract resources.",
       "className": "GoldMine",
       "rarity": 2
     }
@@ -324,7 +336,7 @@
       "id": "explosive",
       "name": "Explosive",
       "type": "bomb",
-      "description": "Explosive - Bom nổ gây damage cho tất cả trong bán kính.",
+      "description": "Explosive - A bomb that explodes and damages everything within a radius.",
       "className": "Explosive",
       "rarity": 3
     }
@@ -335,16 +347,16 @@
       "name": "Mảnh Vỡ Nguyên Tố Hỏa",
       "type": "coin",
       "description": "Mảnh Vỡ Nguyên Tố Hỏa nhặt có thể đổi Xu và hồi chút năng lượng.",
-      "className": "Coin",
+      "className": "PyroFragment",
       "element": "pyro",
       "rarity": 1
     },
     {
       "id": "hydro-fragment",
-      "name": "Mảnh Vỡ Nguyên Tố Thủy",
+      "name": "Water Element Fragment",
       "type": "coin",
-      "description": "Mảnh Vỡ Nguyên Tố Thủy nhặt có thể đổi Xu và hồi chút năng lượng.",
-      "className": "Coin",
+      "description": "Collected Water Elemental Fragments can be exchanged for Coins and restore a small amount of energy.",
+      "className": "HydroFragment",
       "element": "hydro",
       "rarity": 1
     },
@@ -353,43 +365,43 @@
       "name": "Mảnh Vỡ Nguyên Tố Nham",
       "type": "coin",
       "description": "Mảnh Vỡ Nguyên Tố Nham nhặt có thể đổi Xu và hồi chút năng lượng.",
-      "className": "Coin",
+      "className": "GeoFragment",
       "element": "geo",
       "rarity": 1
     },
     {
       "id": "anemo-fragment",
-      "name": "Mảnh Vỡ Nguyên Tố Phong",
+      "name": "Wind Element Fragment",
       "type": "coin",
-      "description": "Mảnh Vỡ Nguyên Tố Phong nhặt có thể đổi Xu và hồi chút năng lượng.",
-      "className": "Coin",
+      "description": "Wind Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
+      "className": "AnemoFragment",
       "element": "anemo",
       "rarity": 1
     },
     {
       "id": "electro-fragment",
-      "name": "Mảnh Vỡ Nguyên Tố Lôi",
+      "name": "Lightning Element Fragment",
       "type": "coin",
-      "description": "Mảnh Vỡ Nguyên Tố Lôi nhặt có thể đổi Xu và hồi chút năng lượng.",
-      "className": "Coin",
+      "description": "Lightning Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
+      "className": "ElectroFragment",
       "element": "electro",
       "rarity": 1
     },
     {
       "id": "cryo-fragment",
-      "name": "Mảnh Vỡ Nguyên Tố Băng",
+      "name": "Ice Element Fragment",
       "type": "coin",
-      "description": "Mảnh Vỡ Nguyên Tố Băng nhặt có thể đổi Xu và hồi chút năng lượng.",
-      "className": "Coin",
+      "description": "Ice Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
+      "className": "CryoFragment",
       "element": "cryo",
       "rarity": 1
     },
     {
       "id": "dendro-fragment",
-      "name": "Mảnh Vỡ Nguyên Tố Thảo",
+      "name": "Fragment of the Elemental Herb",
       "type": "coin",
-      "description": "Mảnh Vỡ Nguyên Tố Thảo nhặt có thể đổi Xu và hồi chút năng lượng.",
-      "className": "Coin",
+      "description": "The Elemental Herb Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
+      "className": "DendroFragment",
       "element": "dendro",
       "rarity": 1
     }
@@ -399,7 +411,7 @@
       "id": "empty",
       "name": "Empty",
       "type": "empty",
-      "description": "Empty - Thẻ trống không có tác dụng.",
+      "description": "Empty - An empty card has no effect.",
       "className": "Empty"
     }
   ]

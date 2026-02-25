@@ -1,4 +1,5 @@
 import Card from '../Card.js';
+import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
 
@@ -10,6 +11,13 @@ export default class Weapon extends Card {
         super(scene, x, y, index, name, nameId, 'weapon');
     }
 
+    override applyConfig(config: CardDefault): void {
+        super.applyConfig(config);
+        if (config.durabilityMin != null && config.durabilityMax != null) {
+            this.durability = this.GetRandom(config.durabilityMin, config.durabilityMax);
+        }
+    }
+
     addDisplayHUD(): void {
         this.durabilityDisplay = this.createDisplay(
             { fillColor: 0xff6600, text: String(this.durability) },
@@ -19,7 +27,7 @@ export default class Weapon extends Card {
 
     CardEffect(): boolean {
         (this.scene.gameManager?.cardManager.CardCharacter as any)?.setWeapon({
-            default: (this.constructor as typeof Card & { DEFAULT?: any }).DEFAULT,
+            default: (this as any).config ?? (this.constructor as typeof Card & { DEFAULT?: any }).DEFAULT,
             durability: this.durability
         });
         return false;

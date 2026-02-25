@@ -3,19 +3,8 @@ import type GameManager from '../../core/GameManager.js';
 
 export default class HealingPotion extends Item {
     constructor() {
-        super(
-            'Healing Potion',
-            'healing-potion',
-            'healing-potion',
-            2,
-            18,
-            'Hồi phục 2 HP',
-            10
-        );
-    }
-
-    override get power(): number {
-        return this._power * (1 + this.level * 0.15);
+        super('healing-potion');
+        this.applyConfig();
     }
 
     override effect(gameManager: GameManager): boolean {

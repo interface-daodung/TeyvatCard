@@ -1,24 +1,14 @@
 import Enemy from '../../../modules/typeCard/enemy.js';
+import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 
 export default class HydroSamachurl extends Enemy {
-    static DEFAULT = {
-        id: 'hydro-samachurl',
-        name: 'Hydro Samachurl',
-        element: 'hydro',
-        type: 'enemy',
-        description: 'Hydro Samachurl - Kẻ địch caster thủy.',
-        clan: 'hilichurl',
-        rarity: 3
-    };
-
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, HydroSamachurl.DEFAULT.name, HydroSamachurl.DEFAULT.id);
-        (this as any).element = HydroSamachurl.DEFAULT.element;
-        this.description = HydroSamachurl.DEFAULT.description;
-        (this as any).rarity = HydroSamachurl.DEFAULT.rarity;
-        this.health = this.GetRandom(3, 10);
-        this.score = this.GetRandom(1, 9);
+        const config = getCardConfig('HydroSamachurl') ?? { id: 'hydro-samachurl', name: 'Hydro Samachurl', description: '', element: 'hydro', clan: 'hilichurl', rarity: 3 };
+        super(scene, x, y, index, config.name!, config.id!);
+        this.applyConfig(config);
+        // this.health = this.GetRandom(3, 10);
+        // this.score = this.GetRandom(1, 9);
         this.createCard();
         scene.add.existing(this);
     }

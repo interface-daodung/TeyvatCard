@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
 import Card from '../Card.js';
 import { dataManager } from '../../core/DataManager.js';
+import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
+import { error } from 'console';
 
 export default class Character extends Card {
     level: number;
@@ -12,12 +14,21 @@ export default class Character extends Card {
     hpDisplay!: CreateDisplayResult;
     weaponDisplay!: CreateDisplayResult;
     weaponBadgeDisplay!: { updateTexture: (texture: string) => void; destroy: () => void };
+    /** HP base từ config (JSON/DEFAULT), dùng trong getMaxHP nếu có */
+    configHp?: number;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'character');
         this.level = this.getLevel();
         this.hp = this.getMaxHP();
         this.weapon = null;
+    }
+
+    override applyConfig(config: CardDefault): void {
+        super.applyConfig(config);
+        if (config.element != null) (this as any).element = config.element;
+        if (config.hp != null) this.configHp = config.hp;
+        this.hp = this.getMaxHP();
     }
 
     createCard(): void {
@@ -49,6 +60,119 @@ export default class Character extends Card {
             super.createCard();
         }
     }
+    // trạng thái bị đầu độc
+    poisoning: boolean = false;
+
+    private poisonUnsub?: () => void;
+    /**
+     * hàm để set trạng thái đầu độc cho nhân vật. Khi được gọi, nhân vật sẽ bị trừ 1 HP sau mỗi lượt đi (completeMove) trong 6 lượt hoặc đến khi HP <= 1 thì hết độc.
+     */
+    setPoisoning(): void {
+
+        if (this.poisoning) return;
+
+        this.poisoning = true;
+
+        const unsub = this.scene.gameManager?.emitter.on(
+            'completeMove',
+            this.PoisoningEffect.bind(this),
+            6
+        );
+
+        if (unsub && typeof unsub === 'function') {
+            this.poisonUnsub = unsub;
+            this.unsubscribeList.push(unsub);
+        }
+    }
+
+    PoisoningEffect(): void {
+
+        if (!this.poisoning) return;
+
+        if (this.hp > 1) {
+            this.takeDamage(1, 'poisoning');
+            return;
+        }
+
+        // hp <= 1 → hết độc
+        this.clearPoison();
+    }
+
+    clearPoison(): void {
+
+        if (!this.poisoning) return;
+
+        this.poisoning = false;
+
+        if (this.poisonUnsub) {
+
+            this.poisonUnsub();
+
+            const index = this.unsubscribeList.indexOf(this.poisonUnsub);
+            if (index !== -1) {
+                this.unsubscribeList.splice(index, 1);
+            }
+
+            this.poisonUnsub = undefined;
+        }
+    }
+
+    Recovery: number = 0; // số lượt còn được hồi hp
+    healAmount: number = 0; // số hp được hồi mỗi lượt
+    recoverUnsub?: () => void;
+    /*
+    * hàm để set trạng thái hồi phục cho nhân vật. Khi được gọi, nhân vật sẽ được hồi một lượng HP nhất định sau mỗi lượt đi (completeMove) trong một số lượt xác định.
+    * @param turns số lượt còn được hồi HP
+    * @param healAmount số HP được hồi mỗi lượt
+    */
+    setRecovery(turns: number, healAmount: number): void {
+
+        if (this.Recovery > 0) return;
+
+        this.Recovery = turns;
+        this.healAmount = healAmount;
+
+        const unsub = this.scene.gameManager?.emitter.on(
+            'completeMove',
+            this.RecoveryEffect.bind(this),
+            6 // ưu tiên 
+        );
+
+        if (unsub && typeof unsub === 'function') {
+            this.recoverUnsub = unsub;
+            this.unsubscribeList.push(unsub);
+        }
+    }
+
+    clearRecovery(): void {
+
+        if (!this.recoverUnsub) return;
+
+        this.Recovery = 0;
+
+        this.recoverUnsub();
+
+        const index = this.unsubscribeList.indexOf(this.recoverUnsub);
+        if (index !== -1) {
+            this.unsubscribeList.splice(index, 1);
+        }
+
+        this.recoverUnsub = undefined;
+    }
+
+    RecoveryEffect(): void {
+
+        if (this.Recovery <= 0) return;
+
+        this.heal(this.healAmount);
+
+        this.Recovery--;
+
+        if (this.Recovery <= 0) {
+            this.clearRecovery();
+        }
+    }
+
 
     addDisplayHUD(): void {
         this.hpDisplay = this.createDisplay(
@@ -62,12 +186,11 @@ export default class Character extends Card {
         this.weaponBadgeDisplay = this.createBadgeDisplay();
     }
 
-    takeDamage(damage: number, type?: string): number {
-        super.takeDamage(damage, type);
+    takeDamage(damage: number, type: 'poisoning' | 'damage'): number {
+        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
         this.hp = Math.max(0, this.hp - damage);
         this.hpDisplay.updateText(this.hp.toString());
-        this.showPopup(damage, 'damage');
-
+        this.showPopup(damage, type);
         if (this.hp <= 0) {
             this.scene.gameManager?.gameOver();
         }
@@ -80,12 +203,21 @@ export default class Character extends Card {
         this.showPopup(healAmount, 'heal');
     }
 
-    showPopup(amount: number, type: 'heal' | 'damage' = 'heal'): void {
-        const color = type === 'heal' ? '#00ff00' : type === 'damage' ? '#ff0000' : '#ffffff';
-        const prefix = type === 'heal' ? '+' : type === 'damage' ? '-' : '';
+
+
+    showPopup(amount: number, type: keyof typeof POPUP_CONFIG = 'error'): void {
+        const config = POPUP_CONFIG[type];
+        const color = config.color;
+        const prefix = config.prefix;
+
+        //(Math.random()*2-1)*max
+        const popupTextPosition = {
+            x: (Math.random() * 2 - 1) * 30,
+            y: (Math.random() * 2 - 1) * 30
+        };
 
         const popupText = this.scene.add
-            .text(0, 0, `${prefix}${amount}`, {
+            .text(popupTextPosition.x, popupTextPosition.y, `${prefix}${amount}`, {
                 fontSize: '32px',
                 color: color,
                 fontFamily: 'Arial',
@@ -109,8 +241,8 @@ export default class Character extends Card {
     }
 
     getMaxHP(): number {
-        const Def = (this.constructor as typeof Card & { DEFAULT?: { hp?: number } }).DEFAULT;
-        return (Def?.hp ?? 10) + this.getLevel() - 1;
+        const baseHp = this.configHp ?? (this.constructor as typeof Card & { DEFAULT?: { hp?: number } }).DEFAULT?.hp ?? 10;
+        return baseHp + this.getLevel() - 1;
     }
 
     getLevel(): number {
@@ -179,3 +311,12 @@ export default class Character extends Card {
         }
     }
 }
+
+
+// Đặt bên ngoài class
+const POPUP_CONFIG = {
+    heal: { color: '#00ff00', prefix: '+' },
+    damage: { color: '#ff0000', prefix: '-' },
+    poisoning: { color: '#800080', prefix: '-' },
+    error: { color: '#ffffff', prefix: '' }
+} as const;

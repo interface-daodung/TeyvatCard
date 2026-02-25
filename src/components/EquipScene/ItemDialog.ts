@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
+import { dataManager } from '../../core/DataManager.js';
+import { localizationManager } from '../../core/LocalizationManager.js';
 import { I18nText } from '../shared/index.js';
+import { showToast } from '../PaymentScene/Toast.js';
 import type { Item, EquipItemData } from './types.js';
 
 export interface ShowItemDialogOptions {
@@ -8,6 +11,7 @@ export interface ShowItemDialogOptions {
     addEquipmentSlot: (item: Item) => void;
     clearEquipmentSlot: (nameId: string) => void;
     listItems: Map<string, EquipItemData>;
+    onCoinChanged?: (newTotal: number) => void;
 }
 
 export function showItemDialog(
@@ -35,7 +39,7 @@ export function showItemDialog(
     dialogBg.fillRoundedRect(-dialogWidth / 2, -dialogHeight / 2, dialogWidth, dialogHeight, 20);
     dialogBg.strokeRoundedRect(-dialogWidth / 2, -dialogHeight / 2, dialogWidth, dialogHeight, 20);
 
-    const titleText = scene.add.text(0, -dialogHeight / 2 + 30, item.name, {
+    const titleText = new I18nText(scene, 0, -dialogHeight / 2 + 30, item.name, {
         fontSize: '32px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
@@ -53,7 +57,7 @@ export function showItemDialog(
     itemIcon.setDisplaySize(180, 180);
     itemIcon.setOrigin(0.5);
 
-    const descriptionText = scene.add.text(0, 0, item.description, {
+    const descriptionText = new I18nText(scene, 0, 0, item.description, {
         fontSize: '24px',
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
@@ -116,8 +120,19 @@ export function showItemDialog(
         upgradeButton.on('pointerover', () => { upgradeButton.setScale(1.1); priceText.setAlpha(1); });
         upgradeButton.on('pointerout', () => { upgradeButton.setScale(1); priceText.setAlpha(0); });
         upgradeButton.on('pointerdown', () => {
+            const price = item.getPrice();
+            const totalCoin = dataManager.get<number>('totalCoin') ?? 0;
+            if (totalCoin < price) {
+                showToast(scene, localizationManager.t('not_enough_coin'));
+                return;
+            }
+            dataManager.set('totalCoin', totalCoin - price);
+            options.onCoinChanged?.(totalCoin - price);
             if (item.upgrade()) {
-                descriptionText.setText(item.description);
+                const itemLevels = dataManager.get<Record<string, number>>('itemLevel') ?? {};
+                itemLevels[item.nameId] = item.level;
+                dataManager.set('itemLevel', itemLevels);
+                descriptionText.refreshText();
                 powerText.setI18nParams({ power: item.power });
                 cooldownText.setI18nParams({ cooldown: item.cooldown });
                 levelText.setI18nParams({ level: item.level });
@@ -132,6 +147,19 @@ export function showItemDialog(
                     priceText.setAlpha(0);
                 } else if (item.level > 0) {
                     upgradeButton.setI18nKey('upgrade');
+                }
+                // Vừa mở khóa (level 0 -> 1): hiện nút chọn nếu chưa đủ slot
+                if (item.level === 1 && !options.isFullEquipmentSlot()) {
+                    selectButton.setVisible(true);
+                    selectButton.setI18nKey('select');
+                    selectButton.setInteractive({ useHandCursor: true });
+                    selectButton.on('pointerover', () => selectButton.setScale(1.1));
+                    selectButton.on('pointerout', () => selectButton.setScale(1));
+                    selectButton.on('pointerdown', () => {
+                        options.addEquipmentSlot(item);
+                        options.listItems.get(item.nameId)?.container?.setVisible(false);
+                        closeDialog();
+                    });
                 }
             }
         });
@@ -149,7 +177,8 @@ export function showItemDialog(
     }).setOrigin(0.5);
     selectButton.setStroke(themeManager.getPrimary(), 2);
 
-    if (!equipSlot && options.isFullEquipmentSlot()) {
+    const isLocked = item.level === 0;
+    if (isLocked || (!equipSlot && options.isFullEquipmentSlot())) {
         selectButton.setVisible(false);
     } else {
         selectButton.setInteractive({ useHandCursor: true });

@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
+import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import { I18nText } from '../shared/index.js';
 import { createCardImage } from './libraryCardAtlas.js';
 import type { ContainerWithCardData, LibraryCardData } from './types.js';
 
@@ -36,15 +38,24 @@ export function createLibraryCard(
 
     const cardImage = createCardImage(scene, cardData, width, height);
 
-    const cardName = cardData ? cardData.name : `Card ${cardIndex}`;
-    const text = scene.add.text(0, height * 0.35, cardName, {
-        fontSize: Math.max(8, width * 0.12),
-        color: themeManager.getText(),
-        wordWrap: { width: 175 },
-        fontFamily: 'Arial',
-        stroke: themeManager.getBackground(),
-        strokeThickness: Math.max(1, width * 0.02)
-    }).setOrigin(0.5);
+    const nameKey = cardData ? `adventureCard.${cardData.id}.name` : null;
+    const text = nameKey
+        ? new I18nText(scene, 0, height * 0.35, nameKey, {
+            fontSize: Math.max(8, width * 0.12),
+            color: themeManager.getText(),
+            wordWrap: localizationManager.getWordWrapOptions(175),
+            fontFamily: 'Arial',
+            stroke: themeManager.getBackground(),
+            strokeThickness: Math.max(1, width * 0.02)
+        }).setOrigin(0.5)
+        : scene.add.text(0, height * 0.35, `Card ${cardIndex}`, {
+            fontSize: Math.max(8, width * 0.12),
+            color: themeManager.getText(),
+            wordWrap: localizationManager.getWordWrapOptions(175),
+            fontFamily: 'Arial',
+            stroke: themeManager.getBackground(),
+            strokeThickness: Math.max(1, width * 0.02)
+        }).setOrigin(0.5);
 
     const child = scene.add.container(0, 0, [cardImage, background, text]) as ContainerWithCardData;
     child.setSize(width, height);

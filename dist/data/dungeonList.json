@@ -3,10 +3,10 @@
     "stageId": "dungeon_abyss_chamber",
     "name": "Abyss Chamber",
     "typeRatios": {
-      "enemies": 30,
+      "enemies": 10,
       "food": 8,
-      "weapons": 18,
-      "coins": 22,
+      "weapons": 25,
+      "coins": 35,
       "traps": 12,
       "treasures": 5,
       "bombs": 5
@@ -26,13 +26,12 @@
         "Macarons"
       ],
       "weapons": [
-        "SwordSkyward",
-        "SwordSplendor",
-        "SwordTraveler",
         "SwordForest",
         "SwordSteampunk"
       ],
-      "coins": [],
+      "coins": [
+        "GeoFragment"
+      ],
       "traps": [
         "Quicksand",
         "BreatheFire"

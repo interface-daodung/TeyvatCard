@@ -3,19 +3,8 @@ import type GameManager from '../../core/GameManager.js';
 
 export default class Cooldown extends Item {
     constructor() {
-        super(
-            'Cooldown',
-            'cooldown',
-            'cooldown',
-            8,
-            3,
-            'Giảm cooldown của skill',
-            7
-        );
-    }
-
-    override get power(): number {
-        return this._power + this.level * 5;
+        super('cooldown');
+        this.applyConfig();
     }
 
     override effect(gameManager: GameManager): boolean {

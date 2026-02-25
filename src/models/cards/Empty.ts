@@ -1,17 +1,12 @@
 import Card from '../../modules/Card.js';
+import { getCardConfig } from '../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../modules/Card.js';
 
 export default class Empty extends Card {
-    static DEFAULT = {
-        id: 'empty',
-        name: 'Empty',
-        type: 'empty',
-        description: 'Empty - Thẻ trống không có tác dụng.'
-    };
-
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Empty.DEFAULT.name, Empty.DEFAULT.id, Empty.DEFAULT.type);
-        this.description = Empty.DEFAULT.description;
+        const config = getCardConfig('Empty') ?? { id: 'empty', name: 'Empty', description: '' };
+        super(scene, x, y, index, config.name!, config.id!, 'empty');
+        this.applyConfig(config);
         this.createCard();
         scene.add.existing(this);
     }

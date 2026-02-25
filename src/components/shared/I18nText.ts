@@ -27,11 +27,19 @@ export class I18nText extends Phaser.GameObjects.Text {
         this.boundRefresh = this.refreshText.bind(this);
 
         scene.game.events.on('languageChanged', this.boundRefresh);
+        this.refreshText();
     }
 
     /** Cập nhật lại text từ key + params hiện tại (gọi khi đổi ngôn ngữ hoặc khi params thay đổi). */
     refreshText(): void {
         if (!this.active || this.scene?.scene?.isActive?.() === false) return;
+
+        // Cập nhật wordWrap nếu có (quan trọng cho ja vs vi/en)
+        if (this.style.wordWrapWidth) {
+            const wrap = localizationManager.getWordWrapOptions(this.style.wordWrapWidth);
+            this.setWordWrapWidth(wrap.width, wrap.useAdvancedWrap);
+        }
+
         this.setText(localizationManager.t(this.i18nKey, this.i18nParams));
     }
 

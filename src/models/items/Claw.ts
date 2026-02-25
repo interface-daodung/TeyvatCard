@@ -3,23 +3,8 @@ import type GameManager from '../../core/GameManager.js';
 
 export default class Claw extends Item {
     constructor() {
-        super(
-            'Claw',
-            'claw',
-            'claw',
-            5,
-            2,
-            'Tấn công với 40 damage',
-            5
-        );
-    }
-
-    override get power(): number {
-        return this._power * (1 + this.level * 0.2);
-    }
-
-    override get cooldown(): number {
-        return Math.max(0, this._cooldown - this.level * 0.2);
+        super('claw');
+        this.applyConfig();
     }
 
     override effect(gameManager: GameManager): boolean {

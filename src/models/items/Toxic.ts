@@ -3,23 +3,8 @@ import type GameManager from '../../core/GameManager.js';
 
 export default class Toxic extends Item {
     constructor() {
-        super(
-            'Toxic',
-            'toxic',
-            'toxic',
-            1,
-            2,
-            'Gây độc 30 damage mỗi turn trong 2 turn',
-            5
-        );
-    }
-
-    override get power(): number {
-        return this._power * (1 + this.level * 0.2);
-    }
-
-    override get cooldown(): number {
-        return Math.max(1, this._cooldown - this.level * 0.2);
+        super('toxic');
+        this.applyConfig();
     }
 
     override effect(gameManager: GameManager): boolean {

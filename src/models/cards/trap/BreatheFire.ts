@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import Trap from '../../../modules/typeCard/trap.js';
+import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import { soundManager } from '../../../core/SoundManager.js';
+import Card from '../../../modules/Card.js';
 
 type ArrowDirection = 'top' | 'bottom' | 'left' | 'right';
 
@@ -15,29 +17,21 @@ interface ArrowText extends Phaser.GameObjects.Text {
 }
 
 export default class BreatheFire extends Trap {
-    static DEFAULT = {
-        id: 'breathe-fire',
-        name: 'Breathe Fire',
-        type: 'trap',
-        description: 'Breathe Fire - Bẫy thở lửa gây damage cho người chơi khi kích hoạt.',
-        rarity: 2
-    };
-
     arrowDisplay!: ArrowText[];
     isTransforming!: boolean;
     trapId!: string;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, BreatheFire.DEFAULT.name, BreatheFire.DEFAULT.id);
-        (this as any).rarity = BreatheFire.DEFAULT.rarity;
-        this.description = BreatheFire.DEFAULT.description;
-        this.damage = this.GetRandom(1, 7);
+        const config = getCardConfig('BreatheFire') ?? { id: 'breathe-fire', name: 'Breathe Fire', description: '', rarity: 2 };
+        super(scene, x, y, index, config.name!, config.id!);
+        this.applyConfig(config);
+        // this.damage = this.GetRandom(1, 7);
         this.trapId = `breathe-fire-${Date.now()}-${Math.random()}`;
 
         const unsub = this.scene.gameManager?.emitter.on(
             'completeMove',
             this.transformationAgency.bind(this),
-            4
+            10
         );
         if (unsub) this.unsubscribeList.push(unsub);
 
@@ -48,10 +42,16 @@ export default class BreatheFire extends Trap {
 
     CardEffect(): boolean {
         soundManager.play('breathe-fire-sound');
+        this.findAdjacentTargets().forEach(cardIndex => {
+            const card = this.scene.gameManager?.cardManager.getCard(cardIndex) as Card;
+            if (card?.takeDamage) {
+                card.takeDamage(this.damage, 'damage');
+            }
+        });
         this.scene.gameManager?.animationManager.startBreatheFireAnimation(
             this.damage,
             this.findAdjacentTargets(),
-            () => {}
+            () => { }
         );
         return false;
     }

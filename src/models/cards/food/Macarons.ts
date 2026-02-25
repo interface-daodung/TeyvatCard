@@ -1,27 +1,27 @@
 import Food from '../../../modules/typeCard/food.js';
+import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
+import Character from '@/src/modules/typeCard/character.js';
 
 export default class Macarons extends Food {
-    static DEFAULT = {
-        id: 'macarons',
-        name: 'Macarons',
-        type: 'food',
-        description: 'Macarons - Bánh ngọt Pháp hồi phục sức khỏe và tăng tinh thần.',
-        rarity: 3
-    };
-
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Macarons.DEFAULT.name, Macarons.DEFAULT.id);
-        (this as any).rarity = Macarons.DEFAULT.rarity;
-        this.description = Macarons.DEFAULT.description;
-        this.food = this.GetRandom(6, 9);
+        const config = getCardConfig('Macarons') ?? { id: 'macarons', name: 'Macarons', description: '', rarity: 3 };
+        super(scene, x, y, index, config.name!, config.id!);
+        this.applyConfig(config);
+        // if (this.food == null) this.food = 4;
         this.createCard();
         scene.add.existing(this);
     }
 
     CardEffect(): boolean {
         super.CardEffect();
-        (this.scene.gameManager?.cardManager.CardCharacter as any)?.heal(this.food);
+        // console.log(`Mystique Soup effect: healing ${this.food} HP to the character.`);
+        if (this.scene.gameManager.cardManager.CardCharacter instanceof Character) {
+            this.scene.gameManager.cardManager.CardCharacter.clearPoison();
+        } else {
+            if (import.meta.env.VITE_IS_DEV === 'true')
+                console.error('No character found to apply Mystique Soup effect.');
+        }
         return false;
     }
 }

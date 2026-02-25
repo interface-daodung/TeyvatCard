@@ -1,33 +1,21 @@
 import Item from '../../modules/Item.js';
+import { getCardConfig } from '../../modules/getCardConfig.js';
 import type GameManager from '../../core/GameManager.js';
 
 export default class Sword extends Item {
     constructor() {
-        super(
-            'Sword',
-            'sword',
-            'sword',
-            10,
-            1,
-            'Vũ khí mạnh với 60 damage',
-            5
-        );
-    }
-
-    override get power(): number {
-        return this._power * (1 + this.level * 0.25);
-    }
-
-    override get cooldown(): number {
-        return Math.max(0, this._cooldown - this.level * 0.3);
+        super('sword');
+        this.applyConfig();
     }
 
     override effect(gameManager: GameManager): boolean {
         const factory = gameManager.cardManager.cardFactory as any;
         const weaponClasses = factory.weaponClasses;
         const randomClass = weaponClasses[Math.floor(Math.random() * weaponClasses.length)];
+        const key = (randomClass as any)?.CARD_KEY;
+        const defaultConfig = key ? getCardConfig(key) : null;
         (gameManager.cardManager.CardCharacter as any)?.setWeapon({
-            default: randomClass?.DEFAULT,
+            default: defaultConfig,
             durability: this.power
         });
         return true;

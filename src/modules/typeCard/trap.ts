@@ -1,4 +1,4 @@
-import Card from '../Card.js';
+import Card, { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
 
@@ -10,10 +10,19 @@ export default class Trap extends Card {
         super(scene, x, y, index, name, nameId, 'trap');
     }
 
+    override applyConfig(config: CardDefault): void {
+        super.applyConfig(config);
+        if (config.damageMin != null && config.damageMax != null) {
+            this.damage = this.GetRandom(config.damageMin, config.damageMax);
+        }
+    }
+
     addDisplayHUD(): void {
-        this.damageDisplay = this.createDisplay(
-            { fillColor: 0xff6600, text: this.damage.toString() },
-            'rightBottom' as DisplayPosition
-        );
+        if (this.damage) {
+            this.damageDisplay = this.createDisplay(
+                { fillColor: 0xff6600, text: this.damage.toString() },
+                'rightBottom' as DisplayPosition
+            );
+        }
     }
 }

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import cardFactory from '../modules/CardFactory.js';
+// import CardFactory from '../modules/CardFactory.js';
 
 /** Card: Container + field/method dùng trong game. Không Omit type/name/setInteractive/disableInteractive để tương thích GameObject. */
 interface Card extends Phaser.GameObjects.Container {
@@ -27,7 +28,7 @@ export default class CardManager {
     private spacing: number;
     private gridStartX: number;
     private gridStartY: number;
-    public cardFactory: any; // CardFactory type sẽ được định nghĩa sau
+    public cardFactory:  any //typeof CardFactory;; // CardFactory type sẽ được định nghĩa sau
     public CardCharacter: Card | null;
 
     constructor(scene: SceneWithGameManager) {

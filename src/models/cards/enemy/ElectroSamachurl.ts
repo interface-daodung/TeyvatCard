@@ -1,24 +1,14 @@
 import Enemy from '../../../modules/typeCard/enemy.js';
+import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 
 export default class ElectroSamachurl extends Enemy {
-    static DEFAULT = {
-        id: 'electro-samachurl',
-        name: 'Electro Samachurl',
-        element: 'electro',
-        type: 'enemy',
-        description: 'Electro Samachurl - Kẻ địch caster lôi.',
-        clan: 'hilichurl',
-        rarity: 3
-    };
-
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, ElectroSamachurl.DEFAULT.name, ElectroSamachurl.DEFAULT.id );
-        (this as any).element = ElectroSamachurl.DEFAULT.element;
-        this.description = ElectroSamachurl.DEFAULT.description;
-        (this as any).rarity = ElectroSamachurl.DEFAULT.rarity;
-        this.health = this.GetRandom(3, 10);
-        this.score = this.GetRandom(1, 9);
+        const config = getCardConfig('ElectroSamachurl') ?? { id: 'electro-samachurl', name: 'Electro Samachurl', description: '', element: 'electro', clan: 'hilichurl', rarity: 3 };
+        super(scene, x, y, index, config.name!, config.id!);
+        this.applyConfig(config);
+        // this.health = this.GetRandom(3, 10);
+        // this.score = this.GetRandom(1, 9);
         this.createCard();
         scene.add.existing(this);
     }

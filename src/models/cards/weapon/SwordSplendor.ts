@@ -1,21 +1,14 @@
 import Weapon from '../../../modules/typeCard/weapon.js';
+import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 
 export default class SwordSplendor extends Weapon {
-    static DEFAULT = {
-        id: 'sword-splendor',
-        name: 'Sword Splendor',
-        type: 'weapon',
-        description: 'Sword Splendor - Kiếm huy hoàng.',
-        category: 'sword',
-        rarity: 4
-    };
-
+    static CARD_KEY = 'SwordSplendor';
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordSplendor.DEFAULT.name, SwordSplendor.DEFAULT.id);
-        (this as any).rarity = SwordSplendor.DEFAULT.rarity;
-        this.description = SwordSplendor.DEFAULT.description;
-        this.durability = this.GetRandom(5, 12);
+        const config = getCardConfig('SwordSplendor') ?? { id: 'sword-splendor', name: 'Sword Splendor', description: '', category: 'sword', rarity: 4 };
+        super(scene, x, y, index, config.name!, config.id!);
+        this.applyConfig(config);
+        // this.durability = this.GetRandom(3, 12);
         this.createCard();
         scene.add.existing(this);
     }

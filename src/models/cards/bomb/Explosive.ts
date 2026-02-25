@@ -1,30 +1,34 @@
 import Bomb from '../../../modules/typeCard/bomb.js';
+import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import CalculatePositionCard from '../../../utils/CalculatePositionCard.js';
 import { soundManager } from '../../../core/SoundManager.js';
+import Card from '../../../modules/Card.js';
 
 export default class Explosive extends Bomb {
     declare rarity: number;
 
-    static DEFAULT = {
-        id: 'explosive',
-        name: 'Explosive',
-        type: 'bomb',
-        description: 'Explosive - Bom nổ gây damage cho tất cả trong bán kính.',
-        rarity: 3
-    };
-
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, Explosive.DEFAULT.name, Explosive.DEFAULT.id);
-        this.rarity = Explosive.DEFAULT.rarity;
-        this.description = Explosive.DEFAULT.description;
-        this.damage = this.GetRandom(1, 3);
-        this.countdown = 5;
+        const config = getCardConfig('Explosive') ?? (() => {
+            console.error('Missing card config: Explosive, using fallback');
+
+            return {
+                id: 'explosive',
+                name: 'fallback Explosive',
+                description: 'fallback description',
+                rarity: 5
+            };
+        })();
+        // this.damage 
+        // this.countdown  
+        super(scene, x, y, index, config.name!, config.id!);
+
+        this.applyConfig(config);
 
         const unsub = this.scene.gameManager?.emitter.on(
             'completeMove',
             this.BombCountdownEffect.bind(this),
-            5
+            9
         );
         if (unsub) this.unsubscribeList.push(unsub);
 
@@ -34,6 +38,7 @@ export default class Explosive extends Bomb {
 
     BombCountdownEffect(): void {
         this.countdown--;
+        console.log(`Bomb at index ${this.index} countdown: ${this.countdown}`);
         this.countdownDisplay.updateText(this.countdown.toString());
         if (this.countdown <= 0) {
             this.Detonation();
@@ -43,10 +48,17 @@ export default class Explosive extends Bomb {
     Detonation(): void {
         soundManager.play('bomb-sound');
         const adjacentPositions = CalculatePositionCard.getAdjacentPositions(this.index);
+        adjacentPositions.forEach(cardIndex => {
+            const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+            if (card?.takeDamage) {
+                card.takeDamage(this.damage, 'damage');
+            }
+        });
         this.scene.gameManager?.animationManager.startExplosiveAnimation(
             this.damage,
             adjacentPositions,
-            () => this.die()
+            () => {}
         );
+        this.die()
     }
 }

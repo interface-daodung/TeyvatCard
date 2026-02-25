@@ -38,6 +38,7 @@ const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
     MenuScene: [
         'atlas/item.json',
         'atlas/character.json',
+        'atlas/coin.json',
     ],
     GameScene: [
         'atlas/item.json',
@@ -74,6 +75,7 @@ const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
     ],
     SelectCharacterScene: [
         'atlas/element.json',
+        'atlas/coin.json',
     ],
     EquipScene: [
         'atlas/item.json',

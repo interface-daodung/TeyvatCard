@@ -18,7 +18,7 @@ function setShowCardName(value: boolean): void {
 
 /** Hiển thị hướng dẫn: mặc định true, lưu session (setFlag) */
 function getShowGuide(): boolean {
-    return dataManager.getFlagOr<boolean>(SHOW_GUIDE_FLAG_KEY, true);
+    return dataManager.getFlagOr<boolean>(SHOW_GUIDE_FLAG_KEY, false );
 }
 
 function setShowGuide(value: boolean): void {

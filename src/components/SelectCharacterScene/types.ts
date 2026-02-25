@@ -1,3 +1,8 @@
+export interface LevelStat {
+    level: number;
+    price: number;
+}
+
 export interface CardCharacter {
     id: string;
     name: string;
@@ -5,6 +10,8 @@ export interface CardCharacter {
     description: string;
     hp: number;
     level?: number;
+    maxLevel?: number;
+    levelStats?: LevelStat[];
     [key: string]: unknown;
 }
 

@@ -30,7 +30,8 @@ export const SOUND_EFFECT_ASSETS = [
     { key: 'sword-sound', path: 'assets/sounds/SE/sword.mp3' },
     { key: 'bomb-sound', path: 'assets/sounds/SE/explosive.mp3' },
     { key: 'breathe-fire-sound', path: 'assets/sounds/SE/breathe-fire.mp3' },
-    { key: 'move-sound', path: 'assets/sounds/SE/move.mp3' }
+    { key: 'move-sound', path: 'assets/sounds/SE/move.mp3' },
+    { key: 'Coin-sound', path: 'assets/sounds/SE/Coin.ogg' }
 ];
 
 export const BGM_ASSETS = [

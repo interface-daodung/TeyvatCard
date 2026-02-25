@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import CalculatePositionCard from '../utils/CalculatePositionCard.js';
-import { localizationManager } from './LocalizationManager.js';
 import { I18nText } from '../components/shared/index.js';
 import CardManager from './CardManager.js';
 import AnimationManager from './AnimationManager.js';
 import PriorityEmitter from '../utils/PriorityEmitter.js';
 import { themeManager } from './ThemeManager.js';
 import { dataManager } from './DataManager.js';
+import Card from '../modules/Card.js';
 
 interface MovementItem {
     from: number;
@@ -24,16 +24,6 @@ interface SceneWithGameManager extends Phaser.Scene {
     scale: Phaser.Scale.ScaleManager;
     tweens: Phaser.Tweens.TweenManager;
     add: Phaser.GameObjects.GameObjectFactory;
-}
-
-/** Card dùng trong GameManager: tương thích Container, thêm method/field của game. */
-interface Card extends Phaser.GameObjects.Container {
-    CardEffect?: () => boolean;
-    ProgressDestroy?: () => void;
-    processCreation?: () => void;
-    index?: number;
-    name: string;
-    type: string;
 }
 
 // Khởi tạo instance
@@ -86,8 +76,7 @@ export default class GameManager {
 
         if (CalculatePositionCard.isValidMove(characterIndex, index)) {
             const card = this.cardManager.getCard(index);
-            if (card && (card as Card).CardEffect && (card as Card).CardEffect()) {
-
+            if ((card as Card)?.CardEffect()) {
                 // Emit event completeMove để tất cả card có thể xử lý
                 this.emitter.emit('completeMove');
                 return;
@@ -99,9 +88,8 @@ export default class GameManager {
 
             // hủy card cũ ở vị trí index
             const cardToDestroy = this.cardManager.getCard(index);
-            if (cardToDestroy && (cardToDestroy as Card).ProgressDestroy) {
-                (cardToDestroy as Card).ProgressDestroy();
-            }
+            // check null và gọi ProgressDestroy nếu có
+            (cardToDestroy as Card)?.ProgressDestroy?.();
 
             this.animationManager.startMoveAnimation(movement, () => {
 
@@ -190,8 +178,9 @@ export default class GameManager {
             this.scene.sellButton.hideButton();
         }
 
-        // Lấy tên character hiện tại
-        const characterName = (this.cardManager.CardCharacter as any)?.constructor?.DEFAULT?.id;
+        // Lấy tên character hiện tại (từ nameId hoặc config)
+        const card = this.cardManager.CardCharacter as any;
+        const characterName = card?.nameId ?? card?.constructor?.DEFAULT?.id;
 
         if (characterName) {
             const characterHighScores = dataManager.get<Record<string, number>>('characterHighScores') || {};

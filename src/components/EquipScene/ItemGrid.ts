@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
+import { dataManager } from '../../core/DataManager.js';
 import itemFactory from '../../modules/ItemFactory.js';
 import type { Item, EquipItemData } from './types.js';
 
@@ -21,9 +22,13 @@ export function createItemGrid(
     const itemKeys = itemFactory.getItemKeys();
     const listItems = new Map<string, EquipItemData>();
 
+    const itemLevels = dataManager.get<Record<string, number>>('itemLevel');
     itemKeys.forEach(itemKey => {
         const item = itemFactory.createItem(itemKey) as Item;
-        if (item) listItems.set(itemKey, { item, container: null });
+        if (item) {
+            if (itemLevels && itemLevels[itemKey] != null) item.level = itemLevels[itemKey];
+            listItems.set(itemKey, { item, container: null });
+        }
     });
 
     const gridBgWidth = gridWidth * itemSize + (gridWidth - 1) * spacing + 40;

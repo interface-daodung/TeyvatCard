@@ -18,7 +18,7 @@ const PREFIX = 'T0vt';
 /** Keys app dùng – dùng cho clear() khi dev (không có prefix) */
 const KNOWN_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
-  'selectedCharacter', 'characterLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
+  'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
   'jwt', 'refreshToken', 'showCardName'
 ]);
 

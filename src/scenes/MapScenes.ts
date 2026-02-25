@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { dataManager } from '../core/DataManager.js';
 import { themeManager } from '../core/ThemeManager.js';
+import { localizationManager } from '../core/LocalizationManager.js';
 import { createDungeonButtons, createPaginationButtons } from '../components/MapScene/index.js';
 import { GameTitle } from '../components/shared/index.js';
 import type { DungeonData } from '../components/MapScene/index.js';
@@ -15,6 +16,7 @@ export default class MapScenes extends Phaser.Scene {
     private updateDungeonButton!: (buttonContainer: Phaser.GameObjects.Container, newName: string, newStageId: string) => void;
     private updatePaginationButtons!: (currentPage: number, maxPage: number) => void;
     private dungeonList: DungeonData[] = [];
+    private boundOnLanguageChanged = (): void => this.showCurrentPage();
 
     constructor() {
         super({ key: 'MapScenes' });
@@ -56,7 +58,14 @@ export default class MapScenes extends Phaser.Scene {
         });
         this.nextButton.on('pointerdown', () => this.nextPage());
 
+        this.game.events.on('languageChanged', this.boundOnLanguageChanged);
         this.showCurrentPage();
+    }
+
+    private getDungeonDisplayName(dungeon: DungeonData): string {
+        const i18nKey = `map.${dungeon.stageId}.name`;
+        const translated = localizationManager.t(i18nKey);
+        return translated === i18nKey ? dungeon.name : translated;
     }
 
     showCurrentPage(): void {
@@ -67,7 +76,7 @@ export default class MapScenes extends Phaser.Scene {
         for (let i = 0; i < this.itemsPerPage; i++) {
             if (i < currentPageData.length) {
                 const dungeon = currentPageData[i];
-                this.updateDungeonButton(this.dungeonButtons[i], dungeon.name, dungeon.stageId);
+                this.updateDungeonButton(this.dungeonButtons[i], this.getDungeonDisplayName(dungeon), dungeon.stageId);
                 this.dungeonButtons[i].setVisible(true);
             } else {
                 this.dungeonButtons[i].setVisible(false);
@@ -91,5 +100,9 @@ export default class MapScenes extends Phaser.Scene {
             this.currentPage++;
             this.showCurrentPage();
         }
+    }
+
+    shutdown(): void {
+        this.game.events.off('languageChanged', this.boundOnLanguageChanged);
     }
 }

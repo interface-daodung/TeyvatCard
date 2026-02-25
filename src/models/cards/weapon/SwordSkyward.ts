@@ -1,21 +1,14 @@
 import Weapon from '../../../modules/typeCard/weapon.js';
+import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 
 export default class SwordSkyward extends Weapon {
-    static DEFAULT = {
-        id: 'sword-skyward',
-        name: 'Sword Skyward',
-        type: 'weapon',
-        description: 'Sword Skyward - Kiếm thiên không.',
-        category: 'sword',
-        rarity: 5
-    };
-
+    static CARD_KEY = 'SwordSkyward';
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        super(scene, x, y, index, SwordSkyward.DEFAULT.name, SwordSkyward.DEFAULT.id);
-        (this as any).rarity = SwordSkyward.DEFAULT.rarity;
-        this.description = SwordSkyward.DEFAULT.description;
-        this.durability = this.GetRandom(8, 15);
+        const config = getCardConfig('SwordSkyward') ?? { id: 'sword-skyward', name: 'Sword Skyward', description: '', category: 'sword', rarity: 4 };
+        super(scene, x, y, index, config.name!, config.id!);
+        this.applyConfig(config);
+        // this.durability = this.GetRandom(3, 12);
         this.createCard();
         scene.add.existing(this);
     }

@@ -5,20 +5,9 @@ export default class TaxWaiver extends Item {
     active: boolean;
 
     constructor() {
-        super(
-            'Tax Waiver',
-            'tax-waiver',
-            'tax-waiver',
-            10,
-            0,
-            'Miễn thuế cho item',
-            5
-        );
+        super('tax-waiver');
+        this.applyConfig();
         this.active = false;
-    }
-
-    override get power(): number {
-        return this._power + this.level * 25;
     }
 
     override effect(gameManager: GameManager): boolean {

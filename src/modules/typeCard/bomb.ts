@@ -1,4 +1,4 @@
-import Card from '../Card.js';
+import Card, { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
 
@@ -10,6 +10,14 @@ export default class Bomb extends Card {
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'bomb');
+    }
+
+    override applyConfig(config: CardDefault): void {
+        super.applyConfig(config);
+        if (config.countdown != null) this.countdown = Number(config.countdown);
+        if (config.damageMin != null && config.damageMax != null) {
+            this.damage = this.GetRandom(config.damageMin, config.damageMax);
+        }
     }
 
     addDisplayHUD(): void {

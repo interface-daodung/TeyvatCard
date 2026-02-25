@@ -1,8 +1,10 @@
 import Card from '../Card.js';
+import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
 import { soundManager } from '../../core/SoundManager.js';
+import Character from './character.js';
 
 export default class Enemy extends Card {
     poisoning: boolean;
@@ -13,6 +15,19 @@ export default class Enemy extends Card {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'enemy');
         this.poisoning = false;
+    }
+
+    override applyConfig(config: CardDefault): void {
+        super.applyConfig(config);
+        if (config.element != null) (this as any).element = config.element;
+        // if (config.rarity != null) (this as any).rarity = config.rarity;
+
+        if (config.healthMin != null && config.healthMax != null) {
+            this.health = this.GetRandom(config.healthMin, config.healthMax);
+        }
+        if (config.scoreMin != null && config.scoreMax != null) {
+            this.score = this.GetRandom(config.scoreMin, config.scoreMax);
+        }
     }
 
     setPoisoning(): void {
@@ -42,13 +57,14 @@ export default class Enemy extends Card {
 
     takeDamage(damage: number, type?: string): number {
         if (this.health <= 0) return 0;
-        super.takeDamage(damage, type);
+        // super.takeDamage(damage, type);
         this.health -= damage;
         this.hpDisplay.updateText(this.health.toString());
         if (type === 'slash') {
             SpritesheetWrapper.animationSlash(this.scene, this.x, this.y);
             soundManager.play('sword-sound');
         }
+
         this.showPopup(damage, 'damage');
         this.cardImage.setTint(0xe05656);
         setTimeout(() => this.cardImage.clearTint(), 200);
@@ -86,8 +102,22 @@ export default class Enemy extends Card {
         });
     }
 
+    die(): void {
+        this.ProgressDestroy();
+        if (this.scene?.gameManager) {
+            const newCard = this.scene.gameManager.cardManager.cardFactory.createCoin(
+                this.scene,
+                this.index,
+                this.score
+            );
+            if (newCard) {
+                this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
+            }
+        }
+    }
+
     CardEffect(): boolean {
-        const cardCharacter = this.scene.gameManager?.cardManager.CardCharacter as any;
+        const cardCharacter = this.scene.gameManager?.cardManager.CardCharacter as Character;
         const weapon = cardCharacter?.weapon;
         if (weapon?.durability > 0) {
             const actualDamage = Math.min(weapon.durability, this.health);
@@ -96,7 +126,7 @@ export default class Enemy extends Card {
             return true;
         }
         this.scene.gameManager?.addCoin(this.score);
-        if (cardCharacter?.takeDamage(this.health) === 0) {
+        if (cardCharacter?.takeDamage(this.health, 'damage') === 0) {
             return true;
         }
         return false;

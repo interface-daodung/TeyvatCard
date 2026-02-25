@@ -1,58 +1,9 @@
 import Phaser from 'phaser';
 import Card from './Card.js';
 import { dataManager } from '../core/DataManager.js';
+import { getCardConfig } from './getCardConfig.js';
 import type { SceneWithGameManager } from './Card.js';
-import Coin from '../models/cards/Coin.js';
-
-import Eula from '../models/cards/character/Eula.js';
-import Furina from '../models/cards/character/Furina.js';
-import Mavuika from '../models/cards/character/Mavuika.js';
-import Nahida from '../models/cards/character/Nahida.js';
-import Raiden from '../models/cards/character/Raiden.js';
-import Venti from '../models/cards/character/Venti.js';
-import Zhongli from '../models/cards/character/Zhongli.js';
-
-import SwordSteampunk from '../models/cards/weapon/SwordSteampunk.js';
-import SwordForest from '../models/cards/weapon/SwordForest.js';
-import SwordSkyward from '../models/cards/weapon/SwordSkyward.js';
-import SwordSplendor from '../models/cards/weapon/SwordSplendor.js';
-import SwordTraveler from '../models/cards/weapon/SwordTraveler.js';
-import SwordSacrificial from '../models/cards/weapon/SwordSacrificial.js';
-
-import AnemoSamachurl from '../models/cards/enemy/AnemoSamachurl.js';
-import ElectroSamachurl from '../models/cards/enemy/ElectroSamachurl.js';
-import DendroSamachurl from '../models/cards/enemy/DendroSamachurl.js';
-import GeoSamachurl from '../models/cards/enemy/GeoSamachurl.js';
-import HydroSamachurl from '../models/cards/enemy/HydroSamachurl.js';
-import HilichurlFighter from '../models/cards/enemy/HilichurlFighter.js';
-import HilistrayWater from '../models/cards/enemy/HilistrayWater.js';
-import WoodenShieldwall from '../models/cards/enemy/WoodenShieldwall.js';
-import Lawachurl from '../models/cards/enemy/Lawachurl.js';
-import RockShieldwall from '../models/cards/enemy/RockShieldwall.js';
-import Berserker from '../models/cards/enemy/Berserker.js';
-import Blazing from '../models/cards/enemy/Blazing.js';
-import IceShieldwall from '../models/cards/enemy/IceShieldwall.js';
-import Shooter from '../models/cards/enemy/Shooter.js';
-import Crackling from '../models/cards/enemy/Crackling.js';
-import CryoShooter from '../models/cards/enemy/CryoShooter.js';
-import ElectroShooter from '../models/cards/enemy/ElectroShooter.js';
-
-import LifeEssence from '../models/cards/food/LifeEssence.js';
-import MystiqueSoup from '../models/cards/food/MystiqueSoup.js';
-import Pizza from '../models/cards/food/Pizza.js';
-import RoastChicken from '../models/cards/food/RoastChicken.js';
-import Macarons from '../models/cards/food/Macarons.js';
-
-import AbyssCall from '../models/cards/trap/AbyssCall.js';
-import Quicksand from '../models/cards/trap/Quicksand.js';
-import BreatheFire from '../models/cards/trap/BreatheFire.js';
-
-import Chest from '../models/cards/treasure/Chest.js';
-import Bribery from '../models/cards/treasure/Bribery.js';
-import GoldMine from '../models/cards/treasure/GoldMine.js';
-
-import Explosive from '../models/cards/bomb/Explosive.js';
-import Empty from '../models/cards/Empty.js';
+import * as CardClasses from './cardImports.js';
 
 type CardConstructor = new (scene: SceneWithGameManager, x: number, y: number, index: number, ...args: any[]) => Card;
 
@@ -78,6 +29,7 @@ class CardFactory {
     static instance: CardFactory | null = null;
 
     characterClasses: Record<string, new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card>;
+    coinClasses: Record<string, new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card>;
     cardClasses: CardClassesMap;
     weaponClasses: (typeof Card)[];
     enemyClasses: (typeof Card)[];
@@ -95,13 +47,13 @@ class CardFactory {
         }
 
         this.characterClasses = {
-            eula: Eula as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            furina: Furina as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            mavuika: Mavuika as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            nahida: Nahida as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            raiden: Raiden as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            venti: Venti as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            zhongli: Zhongli as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card
+            eula: CardClasses.Eula as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            furina: CardClasses.Furina as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            mavuika: CardClasses.Mavuika as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            nahida: CardClasses.Nahida as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            raiden: CardClasses.Raiden as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            venti: CardClasses.Venti as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            zhongli: CardClasses.Zhongli as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card
         };
 
         this.cardClasses = {} as CardClassesMap;
@@ -110,47 +62,61 @@ class CardFactory {
             (this.cardClasses as any)[key] = cls;
         };
 
-        register('Coin', Coin as any);
+        this.coinClasses = {
+            pyro: CardClasses.PyroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            hydro: CardClasses.HydroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            geo: CardClasses.GeoFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            anemo: CardClasses.AnemoFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            electro: CardClasses.ElectroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            cryo: CardClasses.CryoFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
+            dendro: CardClasses.DendroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card
+        };
+        [
+            ['PyroFragment', CardClasses.PyroFragment], ['HydroFragment', CardClasses.HydroFragment], ['GeoFragment', CardClasses.GeoFragment],
+            ['AnemoFragment', CardClasses.AnemoFragment], ['ElectroFragment', CardClasses.ElectroFragment], ['CryoFragment', CardClasses.CryoFragment],
+            ['DendroFragment', CardClasses.DendroFragment]
+        ].forEach(([key, cls]) => register(key as string, cls as any));
+
         this.weaponClasses = [
-            SwordSteampunk, SwordForest, SwordSkyward, SwordSplendor, SwordTraveler, SwordSacrificial
+            CardClasses.SwordSteampunk, CardClasses.SwordForest, CardClasses.SwordSkyward, CardClasses.SwordSplendor, CardClasses.SwordTraveler, CardClasses.SwordSacrificial
         ];
-        register('SwordSteampunk', SwordSteampunk as any);
-        register('SwordForest', SwordForest as any);
-        register('SwordSkyward', SwordSkyward as any);
-        register('SwordSplendor', SwordSplendor as any);
-        register('SwordTraveler', SwordTraveler as any);
-        register('SwordSacrificial', SwordSacrificial as any);
+        register('SwordSteampunk', CardClasses.SwordSteampunk as any);
+        register('SwordForest', CardClasses.SwordForest as any);
+        register('SwordSkyward', CardClasses.SwordSkyward as any);
+        register('SwordSplendor', CardClasses.SwordSplendor as any);
+        register('SwordTraveler', CardClasses.SwordTraveler as any);
+        register('SwordSacrificial', CardClasses.SwordSacrificial as any);
 
         this.enemyClasses = [
-            AnemoSamachurl, ElectroSamachurl, DendroSamachurl, GeoSamachurl, HydroSamachurl,
-            HilichurlFighter, HilistrayWater, WoodenShieldwall, Lawachurl, RockShieldwall,
-            Berserker, Blazing, IceShieldwall, Shooter, Crackling, CryoShooter, ElectroShooter
+            CardClasses.AnemoSamachurl, CardClasses.ElectroSamachurl, CardClasses.DendroSamachurl, CardClasses.GeoSamachurl, CardClasses.HydroSamachurl,
+            CardClasses.HilichurlFighter, CardClasses.HilistrayWater, CardClasses.WoodenShieldwall, CardClasses.Lawachurl, CardClasses.RockShieldwall,
+            CardClasses.Berserker, CardClasses.Blazing, CardClasses.IceShieldwall, CardClasses.Shooter, CardClasses.Crackling, CardClasses.CryoShooter, CardClasses.ElectroShooter
         ];
         [
-            ['AnemoSamachurl', AnemoSamachurl], ['ElectroSamachurl', ElectroSamachurl],
-            ['DendroSamachurl', DendroSamachurl], ['GeoSamachurl', GeoSamachurl],
-            ['HydroSamachurl', HydroSamachurl], ['HilichurlFighter', HilichurlFighter],
-            ['HilistrayWater', HilistrayWater], ['WoodenShieldwall', WoodenShieldwall],
-            ['Lawachurl', Lawachurl], ['RockShieldwall', RockShieldwall], ['Berserker', Berserker],
-            ['Blazing', Blazing], ['IceShieldwall', IceShieldwall], ['Shooter', Shooter],
-            ['Crackling', Crackling], ['CryoShooter', CryoShooter], ['ElectroShooter', ElectroShooter]
+            ['AnemoSamachurl', CardClasses.AnemoSamachurl], ['ElectroSamachurl', CardClasses.ElectroSamachurl],
+            ['DendroSamachurl', CardClasses.DendroSamachurl], ['GeoSamachurl', CardClasses.GeoSamachurl],
+            ['HydroSamachurl', CardClasses.HydroSamachurl], ['HilichurlFighter', CardClasses.HilichurlFighter],
+            ['HilistrayWater', CardClasses.HilistrayWater], ['WoodenShieldwall', CardClasses.WoodenShieldwall],
+            ['Lawachurl', CardClasses.Lawachurl], ['RockShieldwall', CardClasses.RockShieldwall], ['Berserker', CardClasses.Berserker],
+            ['Blazing', CardClasses.Blazing], ['IceShieldwall', CardClasses.IceShieldwall], ['Shooter', CardClasses.Shooter],
+            ['Crackling', CardClasses.Crackling], ['CryoShooter', CardClasses.CryoShooter], ['ElectroShooter', CardClasses.ElectroShooter]
         ].forEach(([key, cls]) => register(key as string, cls as any));
 
-        this.foodClasses = [LifeEssence, MystiqueSoup, Pizza, RoastChicken, Macarons];
-        [['LifeEssence', LifeEssence], ['MystiqueSoup', MystiqueSoup], ['Pizza', Pizza],
-            ['RoastChicken', RoastChicken], ['Macarons', Macarons]
+        this.foodClasses = [CardClasses.LifeEssence, CardClasses.MystiqueSoup, CardClasses.Pizza, CardClasses.RoastChicken, CardClasses.Macarons];
+        [['LifeEssence', CardClasses.LifeEssence], ['MystiqueSoup', CardClasses.MystiqueSoup], ['Pizza', CardClasses.Pizza],
+            ['RoastChicken', CardClasses.RoastChicken], ['Macarons', CardClasses.Macarons]
         ].forEach(([key, cls]) => register(key as string, cls as any));
 
-        this.trapClasses = [AbyssCall, BreatheFire, Quicksand];
-        [['AbyssCall', AbyssCall], ['BreatheFire', BreatheFire], ['Quicksand', Quicksand]
+        this.trapClasses = [CardClasses.AbyssCall, CardClasses.BreatheFire, CardClasses.Quicksand];
+        [['AbyssCall', CardClasses.AbyssCall], ['BreatheFire', CardClasses.BreatheFire], ['Quicksand', CardClasses.Quicksand]
         ].forEach(([key, cls]) => register(key as string, cls as any));
 
-        this.treasureClasses = [Chest, Bribery, GoldMine];
-        [['Chest', Chest], ['Bribery', Bribery], ['GoldMine', GoldMine]
+        this.treasureClasses = [CardClasses.Chest, CardClasses.Bribery, CardClasses.GoldMine];
+        [['Chest', CardClasses.Chest], ['Bribery', CardClasses.Bribery], ['GoldMine', CardClasses.GoldMine]
         ].forEach(([key, cls]) => register(key as string, cls as any));
 
-        register('Explosive', Explosive as any);
-        register('Empty', Empty as any);
+        register('Explosive', CardClasses.Explosive as any);
+        register('Empty', CardClasses.Empty as any);
 
         this.cardClasses.add = function (this: CardClassesMap, classes: (typeof Card)[]) {
             classes.forEach((cls: typeof Card & { name?: string }) => {
@@ -208,14 +174,9 @@ class CardFactory {
             if (availableCards[typeName]) {
                 let typeTotalWeight = 0;
                 for (const cardName of availableCards[typeName]) {
-                    const CardClass = this.cardClasses[cardName] as typeof Card & { DEFAULT?: { rarity?: number } };
-                    if (CardClass) {
-                        if (!CardClass.DEFAULT?.rarity) {
-                            continue;
-                        }
-                        const rarity = CardClass.DEFAULT.rarity;
-                        typeTotalWeight += rarity * 10;
-                    }
+                    const config = getCardConfig(cardName);
+                    const rarity = config?.rarity;
+                    if (rarity != null) typeTotalWeight += rarity * 10;
                 }
                 typeTotalWeights[typeName] = typeTotalWeight;
             }
@@ -224,10 +185,9 @@ class CardFactory {
         for (const [typeName, typeRatio] of Object.entries(typeRatios)) {
             if (availableCards[typeName] && typeTotalWeights[typeName]) {
                 for (const cardName of availableCards[typeName]) {
-                    const CardClass = this.cardClasses[cardName] as typeof Card & { DEFAULT?: { rarity?: number } };
-                    if (CardClass?.DEFAULT?.rarity) {
-                        const rarity = CardClass.DEFAULT.rarity;
-                        const baseWeight = rarity * 10;
+                    const config = getCardConfig(cardName);
+                    if (config?.rarity != null) {
+                        const baseWeight = config.rarity * 10;
                         const actualWeight = (baseWeight / typeTotalWeights[typeName]) * typeRatio;
                         cardWeights[cardName] = actualWeight;
                     }
@@ -238,7 +198,7 @@ class CardFactory {
         this._cachedCardWeights = cardWeights;
         return cardWeights;
     }
-
+    
     createRandomCard(scene: SceneWithGameManager, index: number): Card | null {
         const { x, y } = scene.gameManager!.cardManager.getGridPositionCoordinates(index);
         const cardWeights = this._calculateCardWeights();
@@ -254,34 +214,30 @@ class CardFactory {
         for (const [cardType, weight] of Object.entries(cardWeights)) {
             cumulativeWeight += weight;
             if (random <= cumulativeWeight) {
-                if (cardType === 'Coin') {
-                    return this.createCoin(scene, index);
-                }
                 const CardClass = this.cardClasses[cardType] as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card | undefined;
                 if (CardClass) return new CardClass(scene, x, y, index);
             }
         }
 
         const lastCardType = Object.keys(cardWeights).pop();
-        if (lastCardType === 'Coin') {
-            return this.createCoin(scene, index);
-        }
         const LastClass = lastCardType ? (this.cardClasses[lastCardType] as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card) : undefined;
         return LastClass ? new LastClass(scene, x, y, index) : null;
     }
 
+    /** Tạo coin khi enemy chết: dùng element hiện tại để chọn class (pyro, hydro, ...). */
     createCoin(scene: SceneWithGameManager, index: number, score?: number | null): Card {
-        const { x, y } = scene.gameManager!.cardManager.getGridPositionCoordinates(index);
-        const coin = new (Coin as any)(scene, x, y, index, this.element);
-        if (score != null) {
-            (coin as any).setScore(score);
-        }
-        return coin as Card;
+        const coords = scene.gameManager!.cardManager.getGridPositionCoordinates(index);
+        const x = coords?.x ?? 0;
+        const y = coords?.y ?? 0;
+        const CoinClass = this.coinClasses[this.element] ?? this.coinClasses['cryo'];
+        const coin = new CoinClass(scene, x, y, index) as Card & { setScore?: (s: number) => void };
+        if (score != null && coin.setScore) coin.setScore(score);
+        return coin;
     }
 
     createEmpty(scene: SceneWithGameManager, index: number): Card {
         const { x, y } = scene.gameManager!.cardManager.getGridPositionCoordinates(index);
-        return new (Empty as any)(scene, x, y, index);
+        return new (CardClasses.Empty as any)(scene, x, y, index);
     }
 
     _calculateDynamicCardWeights(validCardKeys: string[]): Record<string, number> {
@@ -300,10 +256,8 @@ class CardFactory {
                 let typeTotalWeight = 0;
                 for (const cardName of availableCards[typeName]) {
                     if (validCardKeys.includes(cardName)) {
-                        const CardClass = this.cardClasses[cardName] as typeof Card & { DEFAULT?: { rarity?: number } };
-                        if (CardClass?.DEFAULT?.rarity) {
-                            typeTotalWeight += CardClass.DEFAULT.rarity * 10;
-                        }
+                        const config = getCardConfig(cardName);
+                        if (config?.rarity != null) typeTotalWeight += config.rarity * 10;
                     }
                 }
                 if (typeTotalWeight > 0) typeTotalWeights[typeName] = typeTotalWeight;
@@ -314,9 +268,9 @@ class CardFactory {
             if (availableCards[typeName] && typeTotalWeights[typeName]) {
                 for (const cardName of availableCards[typeName]) {
                     if (validCardKeys.includes(cardName)) {
-                        const CardClass = this.cardClasses[cardName] as typeof Card & { DEFAULT?: { rarity?: number } };
-                        if (CardClass?.DEFAULT?.rarity) {
-                            const baseWeight = CardClass.DEFAULT.rarity * 10;
+                        const config = getCardConfig(cardName);
+                        if (config?.rarity != null) {
+                            const baseWeight = config.rarity * 10;
                             cardWeights[cardName] = (baseWeight / typeTotalWeights[typeName]) * typeRatio;
                         }
                     }
@@ -340,14 +294,12 @@ class CardFactory {
         for (const [cardKey, weight] of Object.entries(cardWeights)) {
             cumulativeWeight += weight;
             if (random <= cumulativeWeight) {
-                if (cardKey === 'Coin') return this.createCoin(scene, index);
                 const CardClass = this.cardClasses[cardKey] as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card;
                 if (CardClass) return new CardClass(scene, x, y, index);
             }
         }
 
         const lastCardKey = Object.keys(cardWeights).pop()!;
-        if (lastCardKey === 'Coin') return this.createCoin(scene, index);
         const LastClass = this.cardClasses[lastCardKey] as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card;
         return LastClass ? new LastClass(scene, x, y, index) : null;
     }
@@ -356,24 +308,31 @@ class CardFactory {
         const nameId = dataManager.get<string>('selectedCharacter');
 
         if (!nameId) {
-            this.element = (Eula as any).DEFAULT.element;
-            return new Eula(scene, x, y, index) as Card;
+            const cfg = getCardConfig('eula');
+            this.element = cfg?.element ?? 'cryo';
+            return new CardClasses.Eula(scene, x, y, index) as Card;
         }
 
         const characterClass = this.characterClasses[nameId];
         if (characterClass) {
-            this.element = (characterClass as any).DEFAULT?.element ?? 'cryo';
+            const cfg = getCardConfig(nameId);
+            this.element = cfg?.element ?? 'cryo';
             return new characterClass(scene, x, y, index);
         }
 
-        this.element = (Eula as any).DEFAULT.element;
-        return new Eula(scene, x, y, index) as Card;
+        const cfg = getCardConfig('eula');
+        this.element = cfg?.element ?? 'cryo';
+        return new CardClasses.Eula(scene, x, y, index) as Card;
     }
 
     getAllCardDefault(): any[] {
-        return Object.values(this.cardClasses)
-            .filter((v): v is typeof Card => typeof v === 'function' && 'DEFAULT' in v)
-            .map((cls: any) => cls.DEFAULT);
+        const keys = Object.keys(this.cardClasses).filter(k => typeof this.cardClasses[k] === 'function' && k !== 'add');
+        const out: any[] = [];
+        for (const key of keys) {
+            const config = getCardConfig(key);
+            if (config) out.push(config);
+        }
+        return out;
     }
 
     addCardToStage(stageKey: string, typeName: string, cardName: string): void {
