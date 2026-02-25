@@ -5,6 +5,7 @@ import type { SellButton } from './types.js';
 export interface WeaponInfo {
     durability: number;
     default: { category: string; id: string };
+    price: number;
 }
 
 /**
@@ -62,7 +63,7 @@ export function createSellWeapon(
             const weapon = getWeapon();
             if (weapon?.durability > 0) {
                 sellButtonContainer.setVisible(true);
-                priceText.setText(weapon.durability.toString());
+                priceText.setText(weapon.price.toString());
                 weaponImage.setTexture(
                     'weapon-' + weapon.default.category + '-badge',
                     weapon.default.id + '-badge'

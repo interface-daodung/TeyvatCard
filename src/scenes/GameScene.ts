@@ -14,6 +14,7 @@ import {
     type SellButton
 } from '../components/GameScene/index.js';
 import { getShowGuideSetting, setShowGuideSetting } from '../components/SettingsScene/GameSettingPopup.js';
+import Character from '../modules/typeCard/character.js';
 
 interface SceneData {
     stageId?: string;
@@ -87,7 +88,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.gameManager.cardManager.initializeCreateDeck();
 
-        const cardCharacter = this.gameManager.cardManager.CardCharacter as any;
+        const cardCharacter = this.gameManager.cardManager.CardCharacter as Character;
         this.sellButton = createSellWeapon(
             this,
             width * 0.75,
@@ -96,7 +97,7 @@ export default class GameScene extends Phaser.Scene {
             () => {
                 const weapon = cardCharacter?.weapon;
                 if (weapon?.durability > 0) {
-                    this.gameManager.addCoin(weapon.durability);
+                    this.gameManager.addCoin(weapon.price);
                     cardCharacter.weapon = null;
                     cardCharacter.weaponDisplay?.updateText(0);
                     cardCharacter.weaponBadgeDisplay?.updateTexture('');

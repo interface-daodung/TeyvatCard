@@ -42,16 +42,16 @@ export default class Coin extends Card {
         this.processCreation();
     }
 
-    // takeDamage(damage: number, type: 'damage'): number {
-    //     // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
-    //     this.score = Math.max(0, this.score - damage);
-    //     this.coinDisplay.updateText(this.score.toString());
-    //     // this.showPopup(damage, type); cầm sửa 
-    //     if (this.score <= 0) {
-    //         this.die();
-    //     }
-    //     return this.score;
-    // }
+    takeDamage(damage: number, type: 'damage'): number {
+        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+        this.score = Math.max(0, this.score - damage);
+        this.coinDisplay.updateText(this.score.toString());
+        // this.showPopup(damage, type); cầm sửa 
+        if (this.score <= 0) {
+            this.die();
+        }
+        return this.score;
+    }
 
     die(): void {
         this.ProgressDestroy();

@@ -5,12 +5,13 @@ import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
-import { error } from 'console';
+import Equipment from './equipment.js';
+
 
 export default class Character extends Card {
     level: number;
     hp: number;
-    weapon: { default: any; durability: number } | null;
+    weapon: Equipment | null;
     hpDisplay!: CreateDisplayResult;
     weaponDisplay!: CreateDisplayResult;
     weaponBadgeDisplay!: { updateTexture: (texture: string) => void; destroy: () => void };
@@ -76,7 +77,7 @@ export default class Character extends Card {
         const unsub = this.scene.gameManager?.emitter.on(
             'completeMove',
             this.PoisoningEffect.bind(this),
-            6
+            5
         );
 
         if (unsub && typeof unsub === 'function') {
@@ -250,15 +251,18 @@ export default class Character extends Card {
         return levelData?.[this.nameId] ?? 1;
     }
 
-    setWeapon(weapon: { default: any; durability: number }): void {
+    setWeapon(weapon: Equipment): void {
         const currentDurability = this.weapon?.durability ?? 0;
         if (weapon.durability > currentDurability) {
+            if(currentDurability>0){
+                this.scene.gameManager?.addCoin(currentDurability);
+            }
             this.weapon = weapon;
             this.weaponDisplay.updateText(this.weapon.durability);
             this.weaponBadgeDisplay.updateTexture(((this.weapon as any).default?.id ?? '') + '-badge');
             (this.scene as any).sellButton?.updateButton();
         } else {
-            this.scene.gameManager?.addCoin(weapon.durability);
+            this.scene.gameManager?.addCoin(weapon.price);
         }
     }
 

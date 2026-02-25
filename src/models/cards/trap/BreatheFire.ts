@@ -31,7 +31,7 @@ export default class BreatheFire extends Trap {
         const unsub = this.scene.gameManager?.emitter.on(
             'completeMove',
             this.transformationAgency.bind(this),
-            10
+            7
         );
         if (unsub) this.unsubscribeList.push(unsub);
 
@@ -41,7 +41,6 @@ export default class BreatheFire extends Trap {
     }
 
     CardEffect(): boolean {
-        soundManager.play('breathe-fire-sound');
         this.findAdjacentTargets().forEach(cardIndex => {
             const card = this.scene.gameManager?.cardManager.getCard(cardIndex) as Card;
             if (card?.takeDamage) {
@@ -51,7 +50,9 @@ export default class BreatheFire extends Trap {
         this.scene.gameManager?.animationManager.startBreatheFireAnimation(
             this.damage,
             this.findAdjacentTargets(),
-            () => { }
+            () => {
+                soundManager.play('breathe-fire-sound');
+            }
         );
         return false;
     }

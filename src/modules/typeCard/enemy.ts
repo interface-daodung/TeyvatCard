@@ -35,7 +35,7 @@ export default class Enemy extends Card {
         const unsub = this.scene.gameManager?.emitter.on(
             'completeMove',
             this.PoisoningEffect.bind(this),
-            6
+            5
         );
         if (unsub && typeof unsub === 'function') {
             this.unsubscribeList.push(unsub);

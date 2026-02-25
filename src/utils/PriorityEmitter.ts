@@ -34,8 +34,7 @@ export default class PriorityEmitter {
 
         // Thêm hàm lắng nghe và sắp xếp theo thứ tự ưu tiên (tăng dần)
         eventListeners.push(listenerObj);
-        eventListeners.sort((a, b) => a.priority - b.priority);
-
+        eventListeners.sort((a, b) => b.priority - a.priority);
         // Trả về hàm hủy đăng ký
         return () => this.off(eventName, listenerObj.id);
     }

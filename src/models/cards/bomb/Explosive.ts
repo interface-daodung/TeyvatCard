@@ -28,7 +28,7 @@ export default class Explosive extends Bomb {
         const unsub = this.scene.gameManager?.emitter.on(
             'completeMove',
             this.BombCountdownEffect.bind(this),
-            9
+            4
         );
         if (unsub) this.unsubscribeList.push(unsub);
 
@@ -46,19 +46,27 @@ export default class Explosive extends Bomb {
     }
 
     Detonation(): void {
-        soundManager.play('bomb-sound');
+
         const adjacentPositions = CalculatePositionCard.getAdjacentPositions(this.index);
-        adjacentPositions.forEach(cardIndex => {
-            const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
-            if (card?.takeDamage) {
-                card.takeDamage(this.damage, 'damage');
-            }
-        });
+
         this.scene.gameManager?.animationManager.startExplosiveAnimation(
-            this.damage,
+            this,
             adjacentPositions,
-            () => {}
+            () => {
+                if (this.destroyed) return;
+
+                soundManager.play('bomb-sound');
+
+                adjacentPositions.forEach(cardIndex => {
+                    const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+                    if (card?.takeDamage) {
+                        card.takeDamage(this.damage, 'damage');
+                    }
+                });
+
+                this.die();
+            }
         );
-        this.die()
+        
     }
 }

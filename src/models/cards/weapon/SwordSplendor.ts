@@ -1,6 +1,8 @@
 import Weapon from '../../../modules/typeCard/weapon.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
+import Character from '@/src/modules/typeCard/character.js';
+import Equipment from '@/src/modules/typeCard/equipment.js';
 
 export default class SwordSplendor extends Weapon {
     static CARD_KEY = 'SwordSplendor';
@@ -11,5 +13,26 @@ export default class SwordSplendor extends Weapon {
         // this.durability = this.GetRandom(3, 12);
         this.createCard();
         scene.add.existing(this);
+    }
+
+    CardEffect(): boolean {
+
+        const weapon = this as Weapon;
+
+        (this.scene.gameManager?.cardManager.CardCharacter as Character)?.setWeapon(
+            new SwordSplendor_equipment(this.config, weapon.durability)
+        );
+
+        return false;
+    }
+}
+
+class SwordSplendor_equipment extends Equipment {
+    constructor(config: any, durability: number) {
+        super(config, durability);
+    }
+
+    get price(): number {
+        return this.durability * 2;
     }
 }

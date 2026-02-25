@@ -306,7 +306,12 @@ export default class Card extends Phaser.GameObjects.Container {
         }
     }
 
+    destroyed: boolean = false;
+
     ProgressDestroy(): void {
+
+        this.destroyed = true;
+
         if (!this.scene?.tweens) {
             this.destroy();
             return;
@@ -334,6 +339,12 @@ export default class Card extends Phaser.GameObjects.Container {
     }
 
     processCreation(): void {
+
+        if (this.scene?.gameManager?.isGameOver) {
+            this.setVisible(false);
+            return;
+        }
+
         this.setAlpha(0);
         this.setScale(0.5);
         this.scene.tweens.add({

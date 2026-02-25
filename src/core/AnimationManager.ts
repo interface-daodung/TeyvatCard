@@ -369,13 +369,18 @@ export default class AnimationManager {
         });
     }
 
-    startExplosiveAnimation(damage: number, cardList: number[], onComplete?: () => void): void {
+    startExplosiveAnimation(owner: Card, cardList: number[], onComplete?: () => void): void {
         this.addToQueue(9, () => {
             // Kiểm tra gameManager còn tồn tại không
             if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
                 console.warn('AnimationManager: Game không còn tồn tại, bỏ qua animation');
                 this.completeAnimation();
                 // Không gọi onComplete vì game đã kết thúc, không cần callback
+                return;
+            }
+
+            if (!owner || owner.destroyed) {
+                this.completeAnimation();
                 return;
             }
 
@@ -389,7 +394,7 @@ export default class AnimationManager {
 
             setTimeout(() => {
                 // Kiểm tra lại một lần nữa trước khi gọi callback
-                if (this.scene?.gameManager) {
+                if (this.scene?.gameManager && !owner.destroyed) {
                     onComplete?.();
                 }
                 this.completeAnimation();

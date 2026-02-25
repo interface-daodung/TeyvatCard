@@ -2,6 +2,8 @@ import Card from '../Card.js';
 import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
+import Character from './character.js';
+import Equipment from './equipment.js';
 
 export default class Weapon extends Card {
     durability!: number;
@@ -25,22 +27,26 @@ export default class Weapon extends Card {
         );
     }
 
-    // takeDamage(damage: number, type: 'damage'): number {
-    //     // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
-    //     this.durability = Math.max(0, this.durability - damage);
-    //     this.durabilityDisplay.updateText(this.durability.toString());
-    //     // this.showPopup(damage, type); cầm sửa 
-    //     if (this.durability <= 0) {
-    //         this.die();
-    //     }
-    //     return this.durability;
-    // }
+    takeDamage(damage: number, type: 'damage'): number {
+        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+        this.durability = Math.max(0, this.durability - damage);
+        this.durabilityDisplay.updateText(this.durability.toString());
+        // this.showPopup(damage, type); cầm sửa 
+        if (this.durability <= 0) {
+            this.die();
+        }
+        return this.durability;
+    }
 
     CardEffect(): boolean {
-        (this.scene.gameManager?.cardManager.CardCharacter as any)?.setWeapon({
-            default: (this as any).config ?? (this.constructor as typeof Card & { DEFAULT?: any }).DEFAULT,
-            durability: this.durability
-        });
+
+        const weapon = this as Weapon;
+
+        (this.scene.gameManager?.cardManager.CardCharacter as Character)?.setWeapon(
+            new Equipment(this.config, weapon.durability)
+        );
+
         return false;
     }
 }
+
