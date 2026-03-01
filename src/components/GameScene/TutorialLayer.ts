@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
 import { I18nText } from '../shared/index.js';
+import { Log } from '../../utils/Log.js';
 
 const DIM_COLOR = 0x000000;
 const DIM_ALPHA = 0.6;
@@ -142,7 +143,7 @@ export function createTutorialLayer(
     overlay.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
         const x = Math.round(pointer.x);
         const y = Math.round(pointer.y);
-        console.log(
+        Log.info(
             '[TutorialLayer] Tap — vị trí (x, y) dùng cho setHighlightRegion(x1, y1, x2, y2):',
             x,
             y,

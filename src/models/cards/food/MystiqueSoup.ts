@@ -2,6 +2,7 @@ import Food from '../../../modules/typeCard/food.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import Character from '@/src/modules/typeCard/character.js';
+import { Log } from '../../../utils/Log.js';
 
 export default class MystiqueSoup extends Food {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -19,8 +20,7 @@ export default class MystiqueSoup extends Food {
             this.scene.gameManager.cardManager.CardCharacter.takeDamage(this.food, 'poisoning');
             this.scene.gameManager.cardManager.CardCharacter.setPoisoning();
         } else {
-            if (import.meta.env.VITE_IS_DEV === 'true')
-                console.error('No character found to apply Mystique Soup effect.');
+            Log.error('No character found to apply Mystique Soup effect.');
         }
         return false;
     }

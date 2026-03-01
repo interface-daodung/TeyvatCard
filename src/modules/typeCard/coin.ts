@@ -69,7 +69,7 @@ export default class Coin extends Card {
         } else {
             this.scene.gameManager?.addCoin(this.score, 1);
         }
-        soundManager.play('Coin-sound');
+        // soundManager.play('Coin-sound');
         return false;
     }
 }

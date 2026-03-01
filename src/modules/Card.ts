@@ -4,6 +4,7 @@ import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { showCardInfoDialog } from '../components/LibraryScene/CardInfoDialog.js';
 import type GameManager from '../core/GameManager.js';
+import { Log } from '../utils/Log.js';
 
 export interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: GameManager;
@@ -285,12 +286,12 @@ export default class Card extends Phaser.GameObjects.Container {
     }
 
     CardEffect(): boolean {
-        console.log(`Card ${this.name} (${this.nameId}) đang chạy hiệu ứng...`);
+        Log.info(`Card ${this.name} (${this.nameId}) đang chạy hiệu ứng...`);
         return false;
     }
 
     takeDamage(damage: number, type?: string): void {
-        console.log(`Card ${this.name} (${this.nameId}) bị tấn công ${damage} damage`);
+        Log.info(`Card ${this.name} (${this.nameId}) bị tấn công ${damage} damage`);
     }
 
     die(): void {
@@ -330,7 +331,7 @@ export default class Card extends Phaser.GameObjects.Container {
                         try {
                             unsubscribe();
                         } catch (error) {
-                            console.warn(`Card ${this.name || this.nameId}: Lỗi khi unsubscribe:`, error);
+                            Log.warn(`Card ${this.name || this.nameId}: Lỗi khi unsubscribe:`, error);
                         }
                     }
                 });

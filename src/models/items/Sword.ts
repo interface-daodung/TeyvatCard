@@ -1,6 +1,8 @@
 import Item from '../../modules/Item.js';
 import { getCardConfig } from '../../modules/getCardConfig.js';
 import type GameManager from '../../core/GameManager.js';
+import Equipment from '../../modules/typeCard/equipment.js';
+import { Log } from '../../utils/Log.js';
 
 export default class Sword extends Item {
     constructor() {
@@ -10,14 +12,27 @@ export default class Sword extends Item {
 
     override effect(gameManager: GameManager): boolean {
         const factory = gameManager.cardManager.cardFactory as any;
-        const weaponClasses = factory.weaponClasses;
-        const randomClass = weaponClasses[Math.floor(Math.random() * weaponClasses.length)];
-        const key = (randomClass as any)?.CARD_KEY;
-        const defaultConfig = key ? getCardConfig(key) : null;
-        (gameManager.cardManager.CardCharacter as any)?.setWeapon({
-            default: defaultConfig,
-            durability: this.power
-        });
+        const swordWeapons = factory.getWeaponClassesByCategory('sword');
+        if (!swordWeapons.length) {
+            Log.error('[Sword.effect] Không có weapon nào có category "sword". Kiểm tra weaponClasses và libraryCards (category).');
+            return false;
+        }
+        const picked = swordWeapons[Math.floor(Math.random() * swordWeapons.length)];
+        const { cls, key } = picked;
+        const defaultConfig = getCardConfig(key);
+        if (!defaultConfig) {
+            Log.warn('[Sword.effect] getCardConfig không trả về config cho key:', key);
+        }
+        const equipment =
+            typeof (cls as any).createEquipment === 'function'
+                ? (cls as any).createEquipment(defaultConfig ?? {}, this.power)
+                : new Equipment(defaultConfig ?? {}, this.power);
+        const cardCharacter = gameManager.cardManager.CardCharacter;
+        if (!cardCharacter) {
+            Log.error('[Sword.effect] CardCharacter không tồn tại, không thể setWeapon.');
+            return false;
+        }
+        (cardCharacter as any).setWeapon(equipment);
         return true;
     }
 }

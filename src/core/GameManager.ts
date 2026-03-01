@@ -7,6 +7,8 @@ import PriorityEmitter from '../utils/PriorityEmitter.js';
 import { themeManager } from './ThemeManager.js';
 import { dataManager } from './DataManager.js';
 import Card from '../modules/Card.js';
+import { Log } from '../utils/Log.js';
+import { soundManager } from './SoundManager.js';
 
 interface MovementItem {
     from: number;
@@ -77,6 +79,7 @@ export default class GameManager {
         if (CalculatePositionCard.isValidMove(characterIndex, index)) {
             const card = this.cardManager.getCard(index);
             if ((card as Card)?.CardEffect()) {
+                dataManager.setFlag('cardAtOldCharacterPos', undefined);
                 // Emit event completeMove để tất cả card có thể xử lý
                 this.emitter.emit('completeMove');
                 return;
@@ -92,6 +95,9 @@ export default class GameManager {
             (cardToDestroy as Card)?.ProgressDestroy?.();
 
             this.animationManager.startMoveAnimation(movement, () => {
+                // Mục tiêu Corruption: thẻ ở vị trí cũ của nhân vật (B). Nhân vật B→A thì sau move
+                // thẻ tại movement[1].from sẽ dồn vào B → lưu thẻ đó trước khi moveCard.
+                dataManager.setFlag('cardAtOldCharacterPos', this.cardManager.getCard(movement[1].from));
 
                 movement.forEach(move => {
                     // Sử dụng hàm moveCard an toàn từ CardManager
@@ -142,16 +148,16 @@ export default class GameManager {
         }
 
         dataManager.set('highScores', highScores);
-        console.log(`GameManager: High score set for ${stageId}: ${score}`);
+        Log.info(`GameManager: High score set for ${stageId}: ${score}`);
     }
 
 
     /**
-     * Thêm coin vào coin
+     * Cộng tiền vào tổng coin hiện tại (đã chạy xong: cộng points, play sound, cập nhật UI).
      */
     addCoin(points: number, energy: number | null = null): void {
         this.coin += points;
-
+        soundManager.play('Coin-sound');
         if (energy && this.itemEquipment) {
             this.itemEquipment.forEach(item => {
                 if (item.cooldowninning) {
@@ -162,16 +168,16 @@ export default class GameManager {
         // Cập nhật hiển thị coin trong GameScene
         if (this.scene && this.scene.coinText) {
             (this.scene.coinText as I18nText).setI18nParams({ amount: this.coin });
-            console.log(`GameManager: UI coin updated to ${this.coin}`);
+            Log.info(`GameManager: UI coin updated to ${this.coin}`);
         } else {
-            console.warn(`GameManager: Cannot update coin UI - scene: ${!!this.scene}, coinText: ${!!this.scene?.coinText}`);
+            Log.warn(`GameManager: Cannot update coin UI - scene: ${!!this.scene}, coinText: ${!!this.scene?.coinText}`);
         }
 
-        console.log(`GameManager: Added ${points} coins, total: ${this.coin}`);
+        Log.info(`GameManager: Added ${points} coins, total: ${this.coin}`);
     }
 
     gameOver(): void {
-        console.log('gameOver!');
+        Log.info('gameOver!');
         this.emitter.emit('gameOver');
         this.isGameOver = true;
         if (this.scene.sellButton) {
@@ -189,7 +195,7 @@ export default class GameManager {
             if (!characterHighScores[characterName] || this.coin > characterHighScores[characterName]) {
                 characterHighScores[characterName] = this.coin;
                 dataManager.set('characterHighScores', characterHighScores);
-                console.log(`GameManager: New character high score for ${characterName}: ${this.coin}`);
+                Log.info(`GameManager: New character high score for ${characterName}: ${this.coin}`);
             }
         }
 
@@ -197,7 +203,7 @@ export default class GameManager {
         if (this.coin > this.highScore) {
             this.setHighScore(this.coin);
             this.highScore = this.coin; // Cập nhật highScore local
-            console.log(`GameManager: New high score for ${this.scene.stageId}: ${this.coin}`);
+            Log.info(`GameManager: New high score for ${this.scene.stageId}: ${this.coin}`);
         }
 
         // Cộng dồn coin vào totalCoin

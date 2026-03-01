@@ -18,6 +18,7 @@ import {
     type NavigationButtonsRefs
 } from '../components/SelectCharacterScene/index.js';
 import { GameTitle, I18nText } from '../components/shared/index.js';
+import { Log } from '../utils/Log.js';
 
 export default class SelectCharacterScene extends Phaser.Scene {
     private cards: CardCharacter[] = [];
@@ -136,7 +137,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
         try {
             this.updateCardDisplay();
         } catch (error) {
-            console.error('[SelectCharacterScene] Error in onLanguageChanged:', error);
+            Log.error('[SelectCharacterScene] Error in onLanguageChanged:', error);
         }
     }
 

@@ -14,6 +14,7 @@
  */
 
 import { dataManager } from './DataManager.js';
+import { Log } from '../utils/Log.js';
 
 /** 7 màu chủ đảo + Success/Warning/Error/Info */
 export interface ThemePalette {
@@ -112,13 +113,13 @@ export default class ThemeManager {
                     this.palette = parsed;
                     this._loaded = true;
                 } else {
-                    console.error('[ThemeManager] Fallback: dữ liệu theme không hợp lệ (thiếu colors hoặc định dạng sai)', dataPath);
+                    Log.error('[ThemeManager] Fallback: dữ liệu theme không hợp lệ (thiếu colors hoặc định dạng sai)', dataPath);
                     this.palette = { ...DEFAULT_PALETTE };
                     this._loaded = false;
                 }
             })
             .catch((err) => {
-                console.error('[ThemeManager] Fallback: không load được theme, dùng palette mặc định.', 'dataPath:', dataPath, err);
+                Log.error('[ThemeManager] Fallback: không load được theme, dùng palette mặc định.', 'dataPath:', dataPath, err);
                 this.palette = { ...DEFAULT_PALETTE };
                 this._loaded = false;
             });

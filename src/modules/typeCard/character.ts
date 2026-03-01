@@ -6,6 +6,7 @@ import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
 import Equipment from './equipment.js';
+import { soundManager } from '../../core/SoundManager.js';
 
 
 export default class Character extends Card {
@@ -261,6 +262,7 @@ export default class Character extends Card {
             this.weaponDisplay.updateText(this.weapon.durability);
             this.weaponBadgeDisplay.updateTexture(((this.weapon as any).default?.id ?? '') + '-badge');
             (this.scene as any).sellButton?.updateButton();
+            soundManager.play('equip-sound');
         } else {
             this.scene.gameManager?.addCoin(weapon.price);
         }

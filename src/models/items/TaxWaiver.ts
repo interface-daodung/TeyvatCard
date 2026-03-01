@@ -1,5 +1,6 @@
 import Item from '../../modules/Item.js';
 import type GameManager from '../../core/GameManager.js';
+import { Log } from '@/src/utils/Log.js';
 
 export default class TaxWaiver extends Item {
     active: boolean;
@@ -21,7 +22,8 @@ export default class TaxWaiver extends Item {
     }
 
     TaxWaiverEffect(): void {
-        const coinBonus = Math.ceil((this.gameManager?.coin ?? 0) * (this.power / 100));
+        const coinBonus = Math.ceil((this.gameManager?.coin ?? 0) * (this.power));
+        Log.info(`TaxWaiverEffect: coinBonus = ${coinBonus}`);
         this.gameManager?.addCoin(coinBonus);
     }
 }

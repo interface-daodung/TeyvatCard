@@ -155,6 +155,25 @@ class CardFactory {
         return CardFactory.instance;
     }
 
+    /**
+     * Lọc weaponClasses theo category (vd: 'sword') dùng getCardConfig.
+     * Trả về mảng { cls, key } để random và gọi getCardConfig(key).
+     */
+    getWeaponClassesByCategory(category: string): { cls: typeof Card; key: string }[] {
+        const result: { cls: typeof Card; key: string }[] = [];
+        const map = this.cardClasses as Record<string, new (...args: any[]) => Card>;
+        for (const cls of this.weaponClasses) {
+            const key = Object.keys(map).find((k) => k !== 'add' && map[k] === cls);
+            if (!key) continue;
+            const config = getCardConfig(key);
+            if (!config) continue;
+            if (config.category === category) {
+                result.push({ cls, key });
+            }
+        }
+        return result;
+    }
+
     _calculateCardWeights(): Record<string, number> {
         if (this._cachedCardWeights) {
             return this._cachedCardWeights;

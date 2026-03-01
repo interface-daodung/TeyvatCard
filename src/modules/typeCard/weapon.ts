@@ -38,6 +38,13 @@ export default class Weapon extends Card {
         return this.durability;
     }
 
+    /**
+     * Tạo Equipment từ config + durability. Weapon con override để trả về custom equipment (vd SwordSplendor_equipment).
+     */
+    static createEquipment(config: any, durability: number): Equipment {
+        return new Equipment(config, durability);
+    }
+
     CardEffect(): boolean {
 
         const weapon = this as Weapon;

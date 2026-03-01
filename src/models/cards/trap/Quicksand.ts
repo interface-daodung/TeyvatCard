@@ -1,6 +1,7 @@
 import Trap from '../../../modules/typeCard/trap.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
+import { soundManager } from '../../../core/SoundManager.js';
 
 export default class Quicksand extends Trap {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -12,6 +13,7 @@ export default class Quicksand extends Trap {
     }
 
     CardEffect(): boolean {
+        soundManager.play('Quicksand-sound');
         this.ProgressDestroy();
         const newCard = this.scene.gameManager?.cardManager.cardFactory.createRandomCard(this.scene, this.index);
         if (newCard) {

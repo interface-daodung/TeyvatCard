@@ -32,6 +32,7 @@ import {
     BGM_ASSETS
 } from '../utils/AssetConstants.js';
 import { dataManager } from './DataManager.js';
+import { Log } from '../utils/Log.js';
 
 /** Danh sách atlas JSON theo scene (đường dẫn trong public/data, đọc qua DataManager) */
 const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
@@ -86,7 +87,7 @@ const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
 const DEBUG_ATLAS_LOAD = false;
 function debugLog(...args: unknown[]): void {
     if (DEBUG_ATLAS_LOAD) {
-        console.log('[AssetManager]', ...args);
+        Log.info('[AssetManager]', ...args);
     }
 }
 
@@ -146,7 +147,7 @@ export default class AssetManager {
      */
     preloadSceneAssets(sceneName: string, callback?: () => void): void {
         if (!this.scene) {
-            console.warn('[AssetManager] Scene chưa được set');
+            Log.warn('[AssetManager] Scene chưa được set');
             if (callback) callback();
             return;
         }
@@ -185,11 +186,11 @@ export default class AssetManager {
             const cacheKey = dataManager.getDataCacheKey(dataPath);
             const raw = dataManager.getJsonFromCache<unknown>(this.scene, cacheKey);
             if (!raw) {
-                console.warn('[AssetManager] Atlas JSON chưa có trong cache:', dataPath, 'cacheKey:', cacheKey);
+                Log.warn('[AssetManager] Atlas JSON chưa có trong cache:', dataPath, 'cacheKey:', cacheKey);
                 continue;
             }
             if (!isAtlasJsonData(raw)) {
-                console.warn('[AssetManager] Atlas JSON không đúng format (meta.image/path, frames):', dataPath);
+                Log.warn('[AssetManager] Atlas JSON không đúng format (meta.image/path, frames):', dataPath);
                 continue;
             }
             this.loadAtlas(raw);
@@ -228,7 +229,7 @@ export default class AssetManager {
             case 'SelectCharacterScene':
                 break;
             default:
-                console.warn('[AssetManager] Không có config assets cho scene:', sceneName);
+                Log.warn('[AssetManager] Không có config assets cho scene:', sceneName);
                 break;
         }
     }
@@ -239,7 +240,7 @@ export default class AssetManager {
      */
     loadImage(key: string, path: string): void {
         if (!this.scene) {
-            console.warn('AssetManager: Scene chưa được set');
+            Log.warn('AssetManager: Scene chưa được set');
             return;
         }
 
@@ -281,7 +282,7 @@ export default class AssetManager {
      */
     loadAtlas(jsonData: AtlasJsonData): void {
         if (!this.scene) {
-            console.warn('[AssetManager] loadAtlas: Scene chưa được set');
+            Log.warn('[AssetManager] loadAtlas: Scene chưa được set');
             return;
         }
 
@@ -300,7 +301,7 @@ export default class AssetManager {
      */
     loadAudio(key: string, path: string): void {
         if (!this.scene) {
-            console.warn('AssetManager: Scene chưa được set');
+            Log.warn('AssetManager: Scene chưa được set');
             return;
         }
 

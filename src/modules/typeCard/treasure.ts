@@ -1,6 +1,7 @@
 import Card, { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
+import { Log } from '../../utils/Log.js';
 
 export default class Treasure extends Card {
     durability!: number;
@@ -38,7 +39,7 @@ export default class Treasure extends Card {
             if (Array.isArray(contents) && contents.length > 0) {
                 newCard = factory?.createCardByKey(this.scene, this.index, contents[Math.floor(Math.random() * contents.length)]) ?? null;
             } else {
-                console.warn(`[Treasure.die] Rương "${this.nameId}" không có contents hoặc rỗng, fallback createRandomCard.`);
+                Log.warn(`[Treasure.die] Rương "${this.nameId}" không có contents hoặc rỗng, fallback createRandomCard.`);
                 newCard = factory?.createRandomCard(this.scene, this.index) ?? null;
             }
             if (newCard) {
@@ -62,7 +63,7 @@ export default class Treasure extends Card {
         if (Array.isArray(contents) && contents.length > 0) {
             newCard = factory?.createCardByKey(this.scene, this.index, contents[Math.floor(Math.random() * contents.length)]) ?? null;
         } else {
-            console.warn(`[Treasure.CardEffect] Rương "${this.nameId}" không có contents hoặc rỗng, fallback createRandomCard.`);
+            Log.warn(`[Treasure.CardEffect] Rương "${this.nameId}" không có contents hoặc rỗng, fallback createRandomCard.`);
             newCard = factory?.createRandomCard(this.scene, this.index) ?? null;
         }
         if (newCard) {

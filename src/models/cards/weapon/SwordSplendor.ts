@@ -6,6 +6,11 @@ import Equipment from '@/src/modules/typeCard/equipment.js';
 
 export default class SwordSplendor extends Weapon {
     static CARD_KEY = 'SwordSplendor';
+
+    static createEquipment(config: any, durability: number): Equipment {
+        return new SwordSplendor_equipment(config, durability);
+    }
+
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('SwordSplendor') ?? { id: 'sword-splendor', name: 'Sword Splendor', description: '', category: 'sword', rarity: 4 };
         super(scene, x, y, index, config.name!, config.id!);
