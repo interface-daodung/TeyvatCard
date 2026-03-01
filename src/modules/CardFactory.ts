@@ -174,6 +174,25 @@ class CardFactory {
         return result;
     }
 
+    /**
+     * Lọc enemyClasses theo clan dùng getCardConfig (vd: 'hilichurl').
+     * Trả về mảng key để random và gọi createCardByKey(scene, index, key).
+     */
+    getEnemyKeysByClan(clan: string): string[] {
+        const result: string[] = [];
+        const map = this.cardClasses as Record<string, new (...args: any[]) => Card>;
+        for (const cls of this.enemyClasses) {
+            const key = Object.keys(map).find((k) => k !== 'add' && map[k] === cls);
+            if (!key) continue;
+            const config = getCardConfig(key);
+            if (!config) continue;
+            if (config.clan === clan) {
+                result.push(key);
+            }
+        }
+        return result;
+    }
+
     _calculateCardWeights(): Record<string, number> {
         if (this._cachedCardWeights) {
             return this._cachedCardWeights;

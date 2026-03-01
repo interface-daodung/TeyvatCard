@@ -1,8 +1,10 @@
 import Phaser from 'phaser';
 import { localizationManager } from '../core/LocalizationManager.js';
+import { dataManager } from '../core/DataManager.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { showCardInfoDialog } from '../components/LibraryScene/CardInfoDialog.js';
+import { I18nText } from '../components/shared/I18nText.js';
 import type GameManager from '../core/GameManager.js';
 import { Log } from '../utils/Log.js';
 
@@ -125,6 +127,7 @@ export default class Card extends Phaser.GameObjects.Container {
 
         this.add([this.border, this.cardImage]);
         this.addDisplayHUD();
+        this.addCardNameIfEnabled();
 
         this.setInteractive(new Phaser.Geom.Rectangle(-80, -137, 160, 274.3), Phaser.Geom.Rectangle.Contains);
 
@@ -136,6 +139,22 @@ export default class Card extends Phaser.GameObjects.Container {
 
     addDisplayHUD(): void {
         // Override in subclasses
+    }
+
+    /** Hiển thị tên thẻ khi showCardName = true. Gọi sau addDisplayHUD() trong createCard(). */
+    protected addCardNameIfEnabled(): void {
+        if (dataManager.get<boolean>('showCardName') !== true) return;
+        const nameText = I18nText.create(this.scene, 0, 115, this.name, {
+            fontSize: '18px',
+            color: themeManager.getText(),
+            fontFamily: 'Arial, sans-serif',
+            align: 'center',
+            wordWrap: { width: 140 },
+            stroke: '#000000',
+            strokeThickness: 2
+        });
+        nameText.setOrigin(0.5, 0.5);
+        this.add(nameText);
     }
 
     onCardPointerDown(): void {

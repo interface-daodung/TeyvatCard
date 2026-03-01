@@ -51,6 +51,7 @@ export default class Character extends Card {
 
             this.add([this.border, this.cardImage]);
             this.addDisplayHUD();
+            this.addCardNameIfEnabled();
 
             this.setInteractive(new Phaser.Geom.Rectangle(-80, -137, 160, 274.3), Phaser.Geom.Rectangle.Contains);
 

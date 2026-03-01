@@ -4,12 +4,12 @@
     "name": "Abyss Chamber",
     "typeRatios": {
       "enemies": 10,
-      "food": 20,
+      "food": 13,
       "weapons": 20,
       "coins": 5,
-      "traps": 12,
-      "treasures": 15,
-      "bombs": 18
+      "traps": 17,
+      "treasures": 30,
+      "bombs": 5
     },
     "availableCards": {
       "enemies": [
@@ -18,9 +18,9 @@
         "Crackling"
       ],
       "food": [
-        "Macarons",
         "MystiqueSoup",
-        "Pizza"
+        "Pizza",
+        "Macarons"
       ],
       "weapons": [
         "SwordForest",

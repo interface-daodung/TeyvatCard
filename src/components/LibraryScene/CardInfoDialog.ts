@@ -47,7 +47,8 @@ export function showCardInfoDialog(
     const cardImg = createCardImage(scene, cardData, cardW, cardH);
     cardImg.setPosition(0, cardY);
 
-    const nameKey = `adventureCard.${cardData.id}.name`;
+    const isCharacter = cardData.type === 'character';
+    const nameKey = isCharacter ? `character.${cardData.id}.name` : `adventureCard.${cardData.id}.name`;
     const nameText = new I18nText(scene, 0, nameY, nameKey, {
         fontSize: '30px',
         color: themeManager.getText(),
@@ -69,7 +70,7 @@ export function showCardInfoDialog(
     scene.game.events.on('languageChanged', onLangChange);
 
     const descY = cardY + cardH / 2 + pad + 24;
-    const descKey = `adventureCard.${cardData.id}.description`;
+    const descKey = isCharacter ? `character.${cardData.id}.description` : `adventureCard.${cardData.id}.description`;
     const descWrapWidth = dialogWidth - 100;
     const descText = new I18nText(scene, 0, descY, descKey, {
         fontSize: '17px',

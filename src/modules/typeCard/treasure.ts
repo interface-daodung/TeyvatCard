@@ -2,6 +2,7 @@ import Card, { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
 import { Log } from '../../utils/Log.js';
+import { soundManager } from '../../core/SoundManager.js';
 
 export default class Treasure extends Card {
     durability!: number;
@@ -56,6 +57,7 @@ export default class Treasure extends Card {
     }
 
     CardEffect(): boolean {
+        soundManager.play('Chest-sound');
         this.ProgressDestroy();
         const factory = this.scene.gameManager?.cardManager?.cardFactory;
         const contents = this.config?.contents;

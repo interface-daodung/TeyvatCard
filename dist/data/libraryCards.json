@@ -9,9 +9,7 @@
       "category": "sword",
       "rarity": 3,
       "durabilityMin": 4,
-      "durabilityMax": 18,
-      "maxLevel": 10,
-      "levelStats": []
+      "durabilityMax": 18
     },
     {
       "id": "sword-forest",
@@ -22,9 +20,8 @@
       "category": "sword",
       "rarity": 3,
       "durabilityMin": 2,
-      "durabilityMax": 18,
-      "maxLevel": 10,
-      "levelStats": []
+      "durabilityMax": 8,
+      "contents": []
     },
     {
       "id": "sword-skyward",
@@ -34,10 +31,9 @@
       "className": "SwordSkyward",
       "category": "sword",
       "rarity": 4,
-      "durabilityMin": 9,
+      "durabilityMin": 7,
       "durabilityMax": 16,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     },
     {
       "id": "sword-splendor",
@@ -48,9 +44,7 @@
       "category": "sword",
       "rarity": 4,
       "durabilityMin": 6,
-      "durabilityMax": 17,
-      "maxLevel": 10,
-      "levelStats": []
+      "durabilityMax": 17
     },
     {
       "id": "sword-traveler",
@@ -61,9 +55,7 @@
       "category": "sword",
       "rarity": 4,
       "durabilityMin": 4,
-      "durabilityMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "durabilityMax": 10
     },
     {
       "id": "sword-sacrificial",
@@ -74,9 +66,7 @@
       "category": "sword",
       "rarity": 4,
       "durabilityMin": 1,
-      "durabilityMax": 14,
-      "maxLevel": 10,
-      "levelStats": []
+      "durabilityMax": 14
     }
   ],
   "enemy": [
@@ -92,9 +82,7 @@
       "healthMin": 1,
       "healthMax": 15,
       "scoreMin": 4,
-      "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 10
     },
     {
       "id": "electro-samachurl",
@@ -108,9 +96,7 @@
       "healthMin": 1,
       "healthMax": 11,
       "scoreMin": 1,
-      "scoreMax": 13,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 13
     },
     {
       "id": "dendro-samachurl",
@@ -124,9 +110,7 @@
       "healthMin": 4,
       "healthMax": 13,
       "scoreMin": 1,
-      "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 10
     },
     {
       "id": "geo-samachurl",
@@ -140,9 +124,7 @@
       "healthMin": 5,
       "healthMax": 15,
       "scoreMin": 5,
-      "scoreMax": 14,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 14
     },
     {
       "id": "hydro-samachurl",
@@ -156,9 +138,7 @@
       "healthMin": 2,
       "healthMax": 10,
       "scoreMin": 1,
-      "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 10
     },
     {
       "id": "fighter",
@@ -172,9 +152,7 @@
       "healthMin": 1,
       "healthMax": 10,
       "scoreMin": 5,
-      "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 10
     },
     {
       "id": "hilistray-water",
@@ -186,9 +164,7 @@
       "clan": "hilichurl",
       "rarity": 5,
       "scoreMin": 1,
-      "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 10
     },
     {
       "id": "wooden-shieldwall",
@@ -203,8 +179,7 @@
       "healthMax": 22,
       "scoreMin": 5,
       "scoreMax": 14,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     },
     {
       "id": "lawachurl",
@@ -218,9 +193,7 @@
       "healthMin": 10,
       "healthMax": 30,
       "scoreMin": 5,
-      "scoreMax": 15,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 15
     },
     {
       "id": "rock-shieldwall",
@@ -235,8 +208,7 @@
       "healthMax": 18,
       "scoreMin": 4,
       "scoreMax": 14,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     },
     {
       "id": "berserker",
@@ -250,9 +222,7 @@
       "healthMin": 5,
       "healthMax": 15,
       "scoreMin": 5,
-      "scoreMax": 12,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 12
     },
     {
       "id": "blazing",
@@ -266,9 +236,7 @@
       "healthMin": 7,
       "healthMax": 17,
       "scoreMin": 3,
-      "scoreMax": 13,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 13
     },
     {
       "id": "ice-shieldwall",
@@ -283,8 +251,7 @@
       "healthMax": 20,
       "scoreMin": 1,
       "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     },
     {
       "id": "shooter",
@@ -298,9 +265,7 @@
       "healthMin": 2,
       "healthMax": 12,
       "scoreMin": 1,
-      "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 10
     },
     {
       "id": "crackling",
@@ -314,9 +279,7 @@
       "healthMin": 7,
       "healthMax": 17,
       "scoreMin": 3,
-      "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "scoreMax": 10
     },
     {
       "id": "cryo-shooter",
@@ -331,8 +294,7 @@
       "healthMax": 12,
       "scoreMin": 1,
       "scoreMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     },
     {
       "id": "electro-shooter",
@@ -347,8 +309,7 @@
       "healthMax": 13,
       "scoreMin": 3,
       "scoreMax": 16,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     }
   ],
   "food": [
@@ -360,9 +321,7 @@
       "className": "LifeEssence",
       "rarity": 5,
       "foodMin": 6,
-      "foodMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "foodMax": 10
     },
     {
       "id": "mystique-soup",
@@ -372,9 +331,7 @@
       "className": "MystiqueSoup",
       "rarity": 1,
       "foodMin": 1,
-      "foodMax": 3,
-      "maxLevel": 10,
-      "levelStats": []
+      "foodMax": 3
     },
     {
       "id": "pizza",
@@ -384,9 +341,7 @@
       "className": "Pizza",
       "rarity": 2,
       "foodMin": 3,
-      "foodMax": 6,
-      "maxLevel": 10,
-      "levelStats": []
+      "foodMax": 6
     },
     {
       "id": "roast-chicken",
@@ -396,9 +351,7 @@
       "className": "RoastChicken",
       "rarity": 3,
       "foodMin": 1,
-      "foodMax": 16,
-      "maxLevel": 10,
-      "levelStats": []
+      "foodMax": 16
     },
     {
       "id": "macarons",
@@ -408,9 +361,7 @@
       "className": "Macarons",
       "rarity": 3,
       "foodMin": 6,
-      "foodMax": 9,
-      "maxLevel": 10,
-      "levelStats": []
+      "foodMax": 9
     }
   ],
   "trap": [
@@ -423,8 +374,7 @@
       "rarity": 2,
       "damageMin": 1,
       "damageMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     },
     {
       "id": "quicksand",
@@ -434,9 +384,7 @@
       "className": "Quicksand",
       "rarity": 2,
       "damageMin": 1,
-      "damageMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "damageMax": 10
     },
     {
       "id": "breathe-fire",
@@ -446,9 +394,7 @@
       "className": "BreatheFire",
       "rarity": 2,
       "damageMin": 1,
-      "damageMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "damageMax": 10
     }
   ],
   "treasure": [
@@ -461,8 +407,23 @@
       "rarity": 4,
       "durabilityMin": 1,
       "durabilityMax": 6,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": [
+        "GeoFragment",
+        "HydroFragment",
+        "AnemoFragment",
+        "ElectroFragment",
+        "CryoFragment",
+        "DendroFragment",
+        "SwordSplendor",
+        "SwordSkyward",
+        "SwordTraveler",
+        "SwordForest",
+        "SwordSteampunk",
+        "RoastChicken",
+        "Pizza",
+        "Macarons",
+        "SwordSacrificial"
+      ]
     },
     {
       "id": "bribery",
@@ -471,10 +432,15 @@
       "description": "Bribery - Bribery to receive rewards greater than the cost.",
       "className": "Bribery",
       "rarity": 3,
-      "durabilityMin": 1,
-      "durabilityMax": 6,
-      "maxLevel": 10,
-      "levelStats": []
+      "durabilityMin": 3,
+      "durabilityMax": 11,
+      "contents": [
+        "MystiqueSoup",
+        "Macarons",
+        "RoastChicken",
+        "Explosive",
+        "Pizza"
+      ]
     },
     {
       "id": "gold-mine",
@@ -485,8 +451,14 @@
       "rarity": 3,
       "durabilityMin": 1,
       "durabilityMax": 10,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": [
+        "GeoFragment",
+        "HydroFragment",
+        "AnemoFragment",
+        "ElectroFragment",
+        "CryoFragment",
+        "DendroFragment"
+      ]
     }
   ],
   "bomb": [
@@ -498,10 +470,9 @@
       "className": "Explosive",
       "rarity": 3,
       "damageMin": 3,
-      "damageMax": 15,
+      "damageMax": 8,
       "countdown": 3,
-      "maxLevel": 10,
-      "levelStats": []
+      "contents": []
     }
   ],
   "coin": [
@@ -512,9 +483,7 @@
       "description": "Mảnh Vỡ Nguyên Tố Hỏa nhặt có thể đổi Xu và hồi chút năng lượng.",
       "className": "PyroFragment",
       "element": "pyro",
-      "rarity": 1,
-      "maxLevel": 10,
-      "levelStats": []
+      "rarity": 1
     },
     {
       "id": "hydro-fragment",
@@ -523,9 +492,7 @@
       "description": "Collected Water Elemental Fragments can be exchanged for Coins and restore a small amount of energy.",
       "className": "HydroFragment",
       "element": "hydro",
-      "rarity": 1,
-      "maxLevel": 10,
-      "levelStats": []
+      "rarity": 1
     },
     {
       "id": "geo-fragment",
@@ -534,9 +501,7 @@
       "description": "Mảnh Vỡ Nguyên Tố Nham nhặt có thể đổi Xu và hồi chút năng lượng.",
       "className": "GeoFragment",
       "element": "geo",
-      "rarity": 1,
-      "maxLevel": 10,
-      "levelStats": []
+      "rarity": 1
     },
     {
       "id": "anemo-fragment",
@@ -545,9 +510,7 @@
       "description": "Wind Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "AnemoFragment",
       "element": "anemo",
-      "rarity": 1,
-      "maxLevel": 10,
-      "levelStats": []
+      "rarity": 1
     },
     {
       "id": "electro-fragment",
@@ -556,9 +519,7 @@
       "description": "Lightning Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "ElectroFragment",
       "element": "electro",
-      "rarity": 1,
-      "maxLevel": 10,
-      "levelStats": []
+      "rarity": 1
     },
     {
       "id": "cryo-fragment",
@@ -567,9 +528,7 @@
       "description": "Ice Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "CryoFragment",
       "element": "cryo",
-      "rarity": 1,
-      "maxLevel": 10,
-      "levelStats": []
+      "rarity": 1
     },
     {
       "id": "dendro-fragment",
@@ -578,9 +537,7 @@
       "description": "The Elemental Herb Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "DendroFragment",
       "element": "dendro",
-      "rarity": 1,
-      "maxLevel": 10,
-      "levelStats": []
+      "rarity": 1
     }
   ],
   "empty": [
@@ -589,9 +546,7 @@
       "name": "Empty",
       "type": "empty",
       "description": "Empty - An empty card has no effect.",
-      "className": "Empty",
-      "maxLevel": 10,
-      "levelStats": []
+      "className": "Empty"
     }
   ]
 }

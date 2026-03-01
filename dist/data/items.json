@@ -60,57 +60,57 @@
   {
     "nameId": "catalyst",
     "basePower": 2,
-    "baseCooldown": 5,
+    "baseCooldown": 20,
     "maxLevel": 10,
     "levelStats": [
       {
         "power": 2,
-        "cooldown": 4.5,
-        "price": 50
+        "cooldown": 20,
+        "price": 500
       },
       {
         "power": 3,
-        "cooldown": 4,
+        "cooldown": 20,
         "price": 100
       },
       {
-        "power": 3,
-        "cooldown": 3.5,
+        "power": 4,
+        "cooldown": 20,
         "price": 150
       },
       {
-        "power": 3,
-        "cooldown": 3,
+        "power": 5,
+        "cooldown": 20,
         "price": 200
       },
       {
-        "power": 4,
-        "cooldown": 2.5,
+        "power": 6,
+        "cooldown": 20,
         "price": 250
       },
       {
-        "power": 4,
-        "cooldown": 2,
+        "power": 7,
+        "cooldown": 20,
         "price": 300
       },
       {
-        "power": 4,
-        "cooldown": 1.5,
+        "power": 8,
+        "cooldown": 20,
         "price": 350
       },
       {
-        "power": 4,
-        "cooldown": 1,
+        "power": 9,
+        "cooldown": 20,
         "price": 400
       },
       {
-        "power": 5,
-        "cooldown": 0.5,
+        "power": 10,
+        "cooldown": 20,
         "price": 450
       },
       {
-        "power": 5,
-        "cooldown": 0,
+        "power": 12,
+        "cooldown": 20,
         "price": 500
       }
     ]
@@ -118,289 +118,254 @@
   {
     "nameId": "claw",
     "basePower": 3,
-    "baseCooldown": 6,
+    "baseCooldown": 20,
     "maxLevel": 10,
     "levelStats": [
       {
         "power": 3,
-        "cooldown": 5.5,
+        "cooldown": 20,
         "price": 50
       },
       {
         "power": 4,
-        "cooldown": 5,
+        "cooldown": 20,
         "price": 100
       },
       {
         "power": 4,
-        "cooldown": 4.5,
+        "cooldown": 19,
         "price": 150
       },
       {
         "power": 5,
-        "cooldown": 4,
+        "cooldown": 19,
         "price": 200
       },
       {
         "power": 5,
-        "cooldown": 3.5,
+        "cooldown": 18,
         "price": 250
       },
       {
         "power": 6,
-        "cooldown": 3,
+        "cooldown": 18,
         "price": 300
       },
       {
         "power": 6,
-        "cooldown": 2.5,
+        "cooldown": 17,
         "price": 350
       },
       {
         "power": 7,
-        "cooldown": 2,
+        "cooldown": 17,
         "price": 400
       },
       {
         "power": 7,
-        "cooldown": 1.5,
+        "cooldown": 16,
         "price": 450
       },
       {
-        "power": 8,
-        "cooldown": 1,
+        "power": 9,
+        "cooldown": 16,
         "price": 500
       }
     ]
   },
   {
     "nameId": "cooldown",
-    "basePower": 4,
-    "baseCooldown": 7,
-    "maxLevel": 10,
+    "basePower": 5,
+    "baseCooldown": 30,
+    "maxLevel": 11,
     "levelStats": [
       {
         "power": 5,
-        "cooldown": 6.5,
+        "cooldown": 30,
         "price": 50
       },
       {
         "power": 5,
-        "cooldown": 6,
+        "cooldown": 29,
         "price": 100
       },
       {
         "power": 6,
-        "cooldown": 5.5,
+        "cooldown": 28,
         "price": 150
       },
       {
         "power": 6,
-        "cooldown": 5,
+        "cooldown": 27,
         "price": 200
       },
       {
         "power": 7,
-        "cooldown": 4.5,
+        "cooldown": 26,
         "price": 250
       },
       {
-        "power": 8,
-        "cooldown": 4,
+        "power": 7,
+        "cooldown": 25,
         "price": 300
       },
       {
         "power": 8,
-        "cooldown": 3.5,
+        "cooldown": 24,
         "price": 350
       },
       {
-        "power": 9,
-        "cooldown": 3,
+        "power": 8,
+        "cooldown": 23,
         "price": 400
       },
       {
         "power": 9,
-        "cooldown": 2.5,
+        "cooldown": 22,
         "price": 450
       },
       {
-        "power": 10,
-        "cooldown": 2,
+        "power": 9,
+        "cooldown": 21,
         "price": 500
+      },
+      {
+        "power": 10,
+        "cooldown": 20,
+        "price": 1000
       }
     ]
   },
   {
     "nameId": "corruption",
-    "basePower": 5,
-    "baseCooldown": 8,
-    "maxLevel": 10,
+    "basePower": 1,
+    "baseCooldown": 0,
+    "maxLevel": 3,
     "levelStats": [
       {
-        "power": 6,
-        "cooldown": 7.5,
-        "price": 50
+        "power": 1,
+        "cooldown": 0,
+        "price": 5000
       },
       {
-        "power": 7,
-        "cooldown": 7,
-        "price": 100
+        "power": 2,
+        "cooldown": 0,
+        "price": 1000
       },
       {
-        "power": 7,
-        "cooldown": 6.5,
-        "price": 150
-      },
-      {
-        "power": 8,
-        "cooldown": 6,
-        "price": 200
-      },
-      {
-        "power": 9,
-        "cooldown": 5.5,
-        "price": 250
-      },
-      {
-        "power": 10,
-        "cooldown": 5,
-        "price": 300
-      },
-      {
-        "power": 10,
-        "cooldown": 4.5,
-        "price": 350
-      },
-      {
-        "power": 11,
-        "cooldown": 4,
-        "price": 400
-      },
-      {
-        "power": 12,
-        "cooldown": 3.5,
-        "price": 450
-      },
-      {
-        "power": 13,
-        "cooldown": 3,
-        "price": 500
+        "power": 3,
+        "cooldown": 0,
+        "price": 2000
       }
     ]
   },
   {
     "nameId": "healing-potion",
-    "basePower": 6,
-    "baseCooldown": 9,
-    "maxLevel": 10,
+    "basePower": 5,
+    "baseCooldown": 20,
+    "maxLevel": 9,
     "levelStats": [
       {
-        "power": 7,
-        "cooldown": 8.5,
-        "price": 50
+        "power": 5,
+        "cooldown": 20,
+        "price": 500
       },
       {
-        "power": 8,
-        "cooldown": 8,
-        "price": 100
-      },
-      {
-        "power": 9,
-        "cooldown": 7.5,
-        "price": 150
-      },
-      {
-        "power": 10,
-        "cooldown": 7,
+        "power": 6,
+        "cooldown": 19,
         "price": 200
       },
       {
-        "power": 11,
-        "cooldown": 6.5,
-        "price": 250
-      },
-      {
-        "power": 11,
-        "cooldown": 6,
+        "power": 7,
+        "cooldown": 18,
         "price": 300
       },
       {
-        "power": 12,
-        "cooldown": 5.5,
-        "price": 350
-      },
-      {
-        "power": 13,
-        "cooldown": 5,
+        "power": 8,
+        "cooldown": 17,
         "price": 400
       },
       {
-        "power": 14,
-        "cooldown": 4.5,
-        "price": 450
+        "power": 9,
+        "cooldown": 16,
+        "price": 500
       },
       {
-        "power": 15,
-        "cooldown": 4,
-        "price": 500
+        "power": 10,
+        "cooldown": 15,
+        "price": 600
+      },
+      {
+        "power": 10,
+        "cooldown": 14,
+        "price": 700
+      },
+      {
+        "power": 11,
+        "cooldown": 13,
+        "price": 800
+      },
+      {
+        "power": 12,
+        "cooldown": 12,
+        "price": 900
       }
     ]
   },
   {
     "nameId": "refinement",
-    "basePower": 7,
-    "baseCooldown": 10,
+    "basePower": 5,
+    "baseCooldown": 20,
     "maxLevel": 10,
     "levelStats": [
       {
-        "power": 8,
-        "cooldown": 9.5,
+        "power": 5,
+        "cooldown": 20,
         "price": 50
       },
       {
-        "power": 9,
-        "cooldown": 9,
+        "power": 6,
+        "cooldown": 20,
         "price": 100
       },
       {
-        "power": 10,
-        "cooldown": 8.5,
+        "power": 6,
+        "cooldown": 19,
         "price": 150
       },
       {
-        "power": 11,
-        "cooldown": 8,
+        "power": 7,
+        "cooldown": 19,
         "price": 200
       },
       {
-        "power": 12,
-        "cooldown": 7.5,
+        "power": 7,
+        "cooldown": 18,
         "price": 250
       },
       {
-        "power": 13,
-        "cooldown": 7,
+        "power": 8,
+        "cooldown": 18,
         "price": 300
       },
       {
-        "power": 14,
-        "cooldown": 6.5,
+        "power": 8,
+        "cooldown": 16,
         "price": 350
       },
       {
-        "power": 15,
-        "cooldown": 6,
+        "power": 9,
+        "cooldown": 16,
         "price": 400
       },
       {
-        "power": 16,
-        "cooldown": 5.5,
+        "power": 9,
+        "cooldown": 15,
         "price": 450
       },
       {
-        "power": 18,
-        "cooldown": 5,
+        "power": 10,
+        "cooldown": 15,
         "price": 500
       }
     ]
@@ -408,290 +373,245 @@
   {
     "nameId": "repair",
     "basePower": 8,
-    "baseCooldown": 11,
-    "maxLevel": 10,
+    "baseCooldown": 20,
+    "maxLevel": 9,
     "levelStats": [
       {
-        "power": 9,
-        "cooldown": 10.5,
+        "power": 8,
+        "cooldown": 20,
         "price": 50
       },
       {
-        "power": 10,
-        "cooldown": 10,
+        "power": 9,
+        "cooldown": 20,
         "price": 100
       },
       {
-        "power": 12,
-        "cooldown": 9.5,
+        "power": 9,
+        "cooldown": 19,
         "price": 150
       },
       {
-        "power": 13,
-        "cooldown": 9,
+        "power": 10,
+        "cooldown": 19,
         "price": 200
       },
       {
-        "power": 14,
-        "cooldown": 8.5,
+        "power": 10,
+        "cooldown": 18,
         "price": 250
       },
       {
-        "power": 15,
-        "cooldown": 8,
+        "power": 11,
+        "cooldown": 18,
         "price": 300
       },
       {
-        "power": 16,
-        "cooldown": 7.5,
+        "power": 11,
+        "cooldown": 17,
         "price": 350
       },
       {
-        "power": 18,
-        "cooldown": 7,
+        "power": 12,
+        "cooldown": 17,
         "price": 400
       },
       {
-        "power": 19,
-        "cooldown": 6.5,
+        "power": 12,
+        "cooldown": 16,
         "price": 450
-      },
-      {
-        "power": 20,
-        "cooldown": 6,
-        "price": 500
       }
     ]
   },
   {
     "nameId": "seasoning",
-    "basePower": 9,
-    "baseCooldown": 12,
+    "basePower": 5,
+    "baseCooldown": 20,
     "maxLevel": 10,
     "levelStats": [
       {
-        "power": 10,
-        "cooldown": 11.5,
+        "power": 5,
+        "cooldown": 20,
         "price": 50
       },
       {
-        "power": 12,
-        "cooldown": 11,
+        "power": 6,
+        "cooldown": 20,
         "price": 100
       },
       {
-        "power": 13,
-        "cooldown": 10.5,
+        "power": 6,
+        "cooldown": 19,
         "price": 150
       },
       {
-        "power": 14,
-        "cooldown": 10,
+        "power": 7,
+        "cooldown": 19,
         "price": 200
       },
       {
-        "power": 16,
-        "cooldown": 9.5,
+        "power": 7,
+        "cooldown": 18,
         "price": 250
       },
       {
-        "power": 17,
-        "cooldown": 9,
+        "power": 8,
+        "cooldown": 18,
         "price": 300
       },
       {
-        "power": 18,
-        "cooldown": 8.5,
+        "power": 8,
+        "cooldown": 17,
         "price": 350
       },
       {
-        "power": 20,
-        "cooldown": 8,
+        "power": 9,
+        "cooldown": 17,
         "price": 400
       },
       {
-        "power": 21,
-        "cooldown": 7.5,
+        "power": 9,
+        "cooldown": 16,
         "price": 450
       },
       {
-        "power": 23,
-        "cooldown": 7,
+        "power": 10,
+        "cooldown": 16,
         "price": 500
       }
     ]
   },
   {
     "nameId": "sword",
-    "basePower": 10,
-    "baseCooldown": 13,
+    "basePower": 2,
+    "baseCooldown": 20,
     "maxLevel": 10,
     "levelStats": [
       {
-        "power": 12,
-        "cooldown": 12.5,
+        "power": 2,
+        "cooldown": 1,
         "price": 50
       },
       {
-        "power": 13,
-        "cooldown": 12,
+        "power": 3,
+        "cooldown": 20,
         "price": 100
       },
       {
-        "power": 15,
-        "cooldown": 11.5,
+        "power": 4,
+        "cooldown": 20,
         "price": 150
       },
       {
-        "power": 16,
-        "cooldown": 11,
+        "power": 5,
+        "cooldown": 20,
         "price": 200
       },
       {
-        "power": 18,
-        "cooldown": 10.5,
+        "power": 6,
+        "cooldown": 20,
         "price": 250
       },
       {
-        "power": 19,
-        "cooldown": 10,
+        "power": 7,
+        "cooldown": 20,
         "price": 300
       },
       {
-        "power": 21,
-        "cooldown": 9.5,
+        "power": 8,
+        "cooldown": 20,
         "price": 350
       },
       {
-        "power": 22,
-        "cooldown": 9,
+        "power": 9,
+        "cooldown": 20,
         "price": 400
       },
       {
-        "power": 23,
-        "cooldown": 8.5,
+        "power": 10,
+        "cooldown": 20,
         "price": 450
       },
       {
-        "power": 25,
-        "cooldown": 8,
+        "power": 12,
+        "cooldown": 20,
         "price": 500
       }
     ]
   },
   {
     "nameId": "tax-waiver",
-    "basePower": 11,
-    "baseCooldown": 14,
-    "maxLevel": 10,
+    "basePower": 1,
+    "baseCooldown": 50,
+    "maxLevel": 3,
     "levelStats": [
       {
-        "power": 13,
-        "cooldown": 13.5,
-        "price": 50
+        "power": 1,
+        "cooldown": 50,
+        "price": 20000
       },
       {
-        "power": 14,
-        "cooldown": 13,
-        "price": 100
+        "power": 2,
+        "cooldown": 50,
+        "price": 30000
       },
       {
-        "power": 16,
-        "cooldown": 12.5,
-        "price": 150
-      },
-      {
-        "power": 18,
-        "cooldown": 12,
-        "price": 200
-      },
-      {
-        "power": 19,
-        "cooldown": 11.5,
-        "price": 250
-      },
-      {
-        "power": 21,
-        "cooldown": 11,
-        "price": 300
-      },
-      {
-        "power": 23,
-        "cooldown": 10.5,
-        "price": 350
-      },
-      {
-        "power": 24,
-        "cooldown": 10,
-        "price": 400
-      },
-      {
-        "power": 26,
-        "cooldown": 9.5,
-        "price": 450
-      },
-      {
-        "power": 28,
-        "cooldown": 9,
-        "price": 500
+        "power": 3,
+        "cooldown": 50,
+        "price": 50000
       }
     ]
   },
   {
     "nameId": "toxic",
-    "basePower": 12,
-    "baseCooldown": 15,
-    "maxLevel": 10,
+    "basePower": 1,
+    "baseCooldown": 20,
+    "maxLevel": 9,
     "levelStats": [
       {
-        "power": 14,
-        "cooldown": 14.5,
+        "power": 1,
+        "cooldown": 20,
         "price": 50
       },
       {
-        "power": 16,
-        "cooldown": 14,
+        "power": 1,
+        "cooldown": 19,
         "price": 100
       },
       {
-        "power": 17,
-        "cooldown": 13.5,
+        "power": 1,
+        "cooldown": 18,
         "price": 150
       },
       {
-        "power": 19,
-        "cooldown": 13,
+        "power": 1,
+        "cooldown": 17,
         "price": 200
       },
       {
-        "power": 21,
-        "cooldown": 12.5,
+        "power": 1,
+        "cooldown": 16,
         "price": 250
       },
       {
-        "power": 23,
-        "cooldown": 12,
+        "power": 1,
+        "cooldown": 15,
         "price": 300
       },
       {
-        "power": 25,
-        "cooldown": 11.5,
+        "power": 1,
+        "cooldown": 14,
         "price": 350
       },
       {
-        "power": 26,
-        "cooldown": 11,
+        "power": 1,
+        "cooldown": 13,
         "price": 400
       },
       {
-        "power": 28,
-        "cooldown": 10.5,
+        "power": 1,
+        "cooldown": 12,
         "price": 450
-      },
-      {
-        "power": 30,
-        "cooldown": 10,
-        "price": 500
       }
     ]
   }
