@@ -30,13 +30,14 @@ export interface CardDefault {
     countdown?: number;
     damageMin?: number;
     damageMax?: number;
-    damage?: number;
     /** Các chỉ số cho Treasure và Weapon */
     durabilityMin?: number;
     durabilityMax?: number;
     /** Các chỉ số cho Food */
     foodMin?: number;
     foodMax?: number;
+    /** Treasure: danh sách className của thẻ có thể rơi ra khi mở rương */
+    contents?: string[];
 }
 
 export interface CreateDisplayOptions {

@@ -1,58 +1,58 @@
 [
   {
     "nameId": "black-hole",
-    "basePower": 1,
-    "baseCooldown": 4,
+    "basePower": 0,
+    "baseCooldown": 20,
     "maxLevel": 10,
     "levelStats": [
       {
-        "power": 1,
-        "cooldown": 3.5,
-        "price": 50
+        "power": 0,
+        "cooldown": 20,
+        "price": 500
       },
       {
-        "power": 1,
-        "cooldown": 3,
+        "power": 0,
+        "cooldown": 19,
         "price": 100
       },
       {
-        "power": 1,
-        "cooldown": 2.5,
+        "power": 0,
+        "cooldown": 18,
         "price": 150
       },
       {
-        "power": 2,
-        "cooldown": 2,
+        "power": 0,
+        "cooldown": 17,
         "price": 200
       },
       {
-        "power": 2,
-        "cooldown": 1.5,
+        "power": 0,
+        "cooldown": 16,
         "price": 250
       },
       {
-        "power": 2,
-        "cooldown": 1,
+        "power": 0,
+        "cooldown": 15,
         "price": 300
       },
       {
-        "power": 2,
-        "cooldown": 0.5,
+        "power": 0,
+        "cooldown": 14,
         "price": 350
       },
       {
-        "power": 2,
-        "cooldown": 0,
+        "power": 0,
+        "cooldown": 13,
         "price": 400
       },
       {
-        "power": 2,
-        "cooldown": 0,
+        "power": 0,
+        "cooldown": 12,
         "price": 450
       },
       {
-        "power": 3,
-        "cooldown": 0,
+        "power": 0,
+        "cooldown": 11,
         "price": 500
       }
     ]

@@ -28,15 +28,15 @@ export default class Trap extends Card {
         return this.damage;
     }
 
-    die(): void {
-        this.ProgressDestroy();
-        if (this.scene?.gameManager) {
-            const newCard = this.scene.gameManager.cardManager.cardFactory.createEmpty(this.scene, this.index);
-            if (newCard) {
-                this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
-            }
-        }
-    }
+    // die(): void {
+    //     this.ProgressDestroy();
+    //     if (this.scene?.gameManager) {
+    //         const newCard = this.scene.gameManager.cardManager.cardFactory.createEmpty(this.scene, this.index);
+    //         if (newCard) {
+    //             this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
+    //         }
+    //     }
+    // }
 
     addDisplayHUD(): void {
         if (this.damage) {

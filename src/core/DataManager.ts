@@ -15,11 +15,18 @@ const IS_DEV = import.meta.env.VITE_IS_DEV === 'true';
 const SECRET_KEY = import.meta.env.VITE_STORAGE_SECRET_KEY || 'teyvat-default-obfuscation-key';
 const PREFIX = 'T0vt';
 
-/** Keys app dùng – dùng cho clear() khi dev (không có prefix) */
+/** Keys app dùng – dùng cho clear() khi dev (không có prefix). Không đẩy jwt/refreshToken lên cloud. */
 const KNOWN_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
   'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
   'jwt', 'refreshToken', 'showCardName'
+]);
+
+/** Keys dùng cho cloud save (loại jwt, refreshToken). */
+const CLOUD_SAVE_KEYS = new Set([
+  'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
+  'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
+  'showCardName'
 ]);
 
 function serialize<T>(value: T): string {
@@ -220,6 +227,38 @@ class DataManager {
   /** Ghi bảng dịch (gọi từ LoadingScene sau khi load xong locales). */
   setTranslations(translations: Record<string, Record<string, string>>): void {
     this.setFlag('translations', translations);
+  }
+
+  /** Danh sách key dùng cho cloud save (không gồm jwt, refreshToken). */
+  getKnownSaveKeys(): string[] {
+    return Array.from(CLOUD_SAVE_KEYS);
+  }
+
+  /**
+   * Đọc toàn bộ dữ liệu lưu (cloud keys) thành một object JSON plain (đã decrypt).
+   * Dùng để gửi lên server.
+   */
+  getAllSaveData(): Record<string, unknown> {
+    const out: Record<string, unknown> = {};
+    for (const key of CLOUD_SAVE_KEYS) {
+      const value = this.get<unknown>(key);
+      if (value !== null && value !== undefined) {
+        out[key] = value;
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Áp dụng dữ liệu save từ server xuống local. Chỉ ghi các key nằm trong KNOWN_KEYS.
+   */
+  applySaveData(data: Record<string, unknown>): void {
+    if (!data || typeof data !== 'object') return;
+    for (const key of Object.keys(data)) {
+      if (KNOWN_KEYS.has(key)) {
+        this.set(key, data[key]);
+      }
+    }
   }
 }
 

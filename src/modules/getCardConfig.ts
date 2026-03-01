@@ -33,11 +33,11 @@ interface LibraryEntry {
     countdown?: number;
     damageMin?: number;
     damageMax?: number;
-    damage?: number;
     durabilityMin?: number;
     durabilityMax?: number;
     foodMin?: number;
     foodMax?: number;
+    contents?: string[];
 }
 
 type LibraryCards = Record<string, LibraryEntry[]>;
@@ -86,6 +86,8 @@ function mapLibraryEntryToCardDefault(entry: LibraryEntry): CardDefault {
         // Food fields
         foodMin: type === 'food' ? entry.foodMin : undefined,
         foodMax: type === 'food' ? entry.foodMax : undefined,
+        // Treasure: list of card keys (classNames) that can drop when opened
+        contents: type === 'treasure' && Array.isArray(entry.contents) ? entry.contents : undefined,
     };
 }
 

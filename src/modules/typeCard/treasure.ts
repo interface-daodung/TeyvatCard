@@ -32,9 +32,15 @@ export default class Treasure extends Card {
     die(): void {
         this.ProgressDestroy();
         if (this.scene?.gameManager) {
-            const newCard = this.scene.gameManager.cardManager?.cardFactory.createRandomCard(
-                this.scene,
-                this.index);
+            const factory = this.scene.gameManager.cardManager?.cardFactory;
+            const contents = this.config?.contents;
+            let newCard: Card | null;
+            if (Array.isArray(contents) && contents.length > 0) {
+                newCard = factory?.createCardByKey(this.scene, this.index, contents[Math.floor(Math.random() * contents.length)]) ?? null;
+            } else {
+                console.warn(`[Treasure.die] Rương "${this.nameId}" không có contents hoặc rỗng, fallback createRandomCard.`);
+                newCard = factory?.createRandomCard(this.scene, this.index) ?? null;
+            }
             if (newCard) {
                 this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
             }
@@ -50,9 +56,17 @@ export default class Treasure extends Card {
 
     CardEffect(): boolean {
         this.ProgressDestroy();
-        const newCard = this.scene.gameManager?.cardManager.cardFactory.createRandomCard(this.scene, this.index);
+        const factory = this.scene.gameManager?.cardManager?.cardFactory;
+        const contents = this.config?.contents;
+        let newCard: Card | null;
+        if (Array.isArray(contents) && contents.length > 0) {
+            newCard = factory?.createCardByKey(this.scene, this.index, contents[Math.floor(Math.random() * contents.length)]) ?? null;
+        } else {
+            console.warn(`[Treasure.CardEffect] Rương "${this.nameId}" không có contents hoặc rỗng, fallback createRandomCard.`);
+            newCard = factory?.createRandomCard(this.scene, this.index) ?? null;
+        }
         if (newCard) {
-            this.scene.gameManager?.cardManager.addCard(newCard, this.index).processCreation?.();
+            this.scene.gameManager?.cardManager?.addCard(newCard, this.index).processCreation?.();
         }
         return true;
     }

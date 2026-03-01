@@ -4,40 +4,36 @@
     "name": "Abyss Chamber",
     "typeRatios": {
       "enemies": 10,
-      "food": 8,
-      "weapons": 25,
-      "coins": 35,
+      "food": 20,
+      "weapons": 20,
+      "coins": 5,
       "traps": 12,
-      "treasures": 5,
-      "bombs": 5
+      "treasures": 15,
+      "bombs": 18
     },
     "availableCards": {
       "enemies": [
         "AnemoSamachurl",
         "CryoShooter",
-        "ElectroShooter",
-        "Shooter",
-        "Crackling",
-        "GeoSamachurl",
-        "ElectroSamachurl"
+        "Crackling"
       ],
       "food": [
-        "RoastChicken",
-        "Macarons"
+        "Macarons",
+        "MystiqueSoup",
+        "Pizza"
       ],
       "weapons": [
         "SwordForest",
-        "SwordSteampunk"
+        "SwordSplendor"
       ],
       "coins": [
-        "GeoFragment"
+        "HydroFragment"
       ],
       "traps": [
         "Quicksand",
         "BreatheFire"
       ],
       "treasures": [
-        "Bribery",
         "GoldMine",
         "Chest"
       ],

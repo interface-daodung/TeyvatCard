@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
 import { dataManager } from '../../core/DataManager.js';
 import { I18nText } from '../shared/index.js';
+import { AuthManager } from '../../utils/AuthManager.js';
+import { getSaveGameFromServer, sendSaveGameToServer } from '../../utils/saveGameService.js';
+
+const LOGIN_SCENE_KEY = 'LoginScene';
 
 const SHOW_CARD_NAME_KEY = 'showCardName';
 const SHOW_GUIDE_FLAG_KEY = 'showGuide';
@@ -139,7 +143,6 @@ export function createGameSettingPopup(
     }).setOrigin(0.5);
     loadBtn.on('pointerover', () => loadBtn.setStrokeStyle(2, themeManager.getTextPhaser()));
     loadBtn.on('pointerout', () => loadBtn.setStrokeStyle(2, themeManager.getSecondaryPhaser()));
-    loadBtn.on('pointerdown', () => { /* TODO: load save */ });
 
     const saveBtn = scene.add.rectangle(btnWidth / 2 + gap / 2, contentY, btnWidth, btnHeight, themeManager.getPrimaryPhaser());
     saveBtn.setStrokeStyle(2, themeManager.getSecondaryPhaser());
@@ -151,7 +154,63 @@ export function createGameSettingPopup(
     }).setOrigin(0.5);
     saveBtn.on('pointerover', () => saveBtn.setStrokeStyle(2, themeManager.getTextPhaser()));
     saveBtn.on('pointerout', () => saveBtn.setStrokeStyle(2, themeManager.getSecondaryPhaser()));
-    saveBtn.on('pointerdown', () => { /* TODO: save game */ });
+
+    function setSaveLoadButtonsEnabled(loggedIn: boolean): void {
+        const alpha = loggedIn ? 1 : 0.5;
+        loadBtn.setAlpha(alpha);
+        saveBtn.setAlpha(alpha);
+        loadText.setAlpha(alpha);
+        saveText.setAlpha(alpha);
+    }
+
+    async function refreshSaveLoadState(): Promise<void> {
+        await AuthManager.checkAuth();
+        setSaveLoadButtonsEnabled(AuthManager.hasJWT());
+    }
+
+    function goToLogin(): void {
+        onClose();
+        scene.scene.start(LOGIN_SCENE_KEY, { fromScene: scene.scene.key, returnTo: scene.scene.key });
+    }
+
+    loadBtn.on('pointerdown', async () => {
+        if (!AuthManager.hasJWT()) {
+            goToLogin();
+            return;
+        }
+        try {
+            const saveGame = await getSaveGameFromServer();
+            dataManager.applySaveData(saveGame ?? {});
+            const lang = dataManager.get<string>('gameLanguage') || 'vi';
+            const t = dataManager.getTranslations()[lang];
+            alert(t?.load_success ?? 'Đã tải dữ liệu.');
+        } catch {
+            alert('Không thể tải dữ liệu.');
+        }
+    });
+
+    saveBtn.on('pointerdown', async () => {
+        if (!AuthManager.hasJWT()) {
+            goToLogin();
+            return;
+        }
+        try {
+            const payload = dataManager.getAllSaveData();
+            const ok = await sendSaveGameToServer(payload);
+            if (ok) {
+                const lang = dataManager.get<string>('gameLanguage') || 'vi';
+                const t = dataManager.getTranslations()[lang];
+                alert(t?.save_success ?? 'Đã lưu.');
+            } else {
+                alert('Không thể lưu.');
+            }
+        } catch {
+            alert('Không thể lưu.');
+        }
+    });
+
+    (popupContainer as Phaser.GameObjects.Container & { refreshSaveLoadState?: () => Promise<void> }).refreshSaveLoadState = refreshSaveLoadState;
+    refreshSaveLoadState();
 
     const toggleY1 = contentY + btnHeight / 2 + rowGap + toggleRowHeight / 2;
     const toggleY2 = toggleY1 + toggleRowHeight / 2 + rowGap + toggleRowHeight / 2;

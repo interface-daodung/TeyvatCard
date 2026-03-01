@@ -3,6 +3,9 @@ import { localizationManager } from '../../core/LocalizationManager.js';
 
 export type I18nParams = Record<string, string | number>;
 
+/** Một cặp key-value để thay thế placeholder trong text (vd: '{basePower}' -> "5"). value có thể là số. */
+export type InterpolationEntry = { key: string; value: string | number };
+
 /**
  * Text kế thừa Phaser.GameObjects.Text, tự cập nhật nội dung khi đổi ngôn ngữ (languageChanged).
  * Lưu i18n key và params trong instance; khi event emit thì refresh mà không cần scene gọi update.
@@ -10,6 +13,7 @@ export type I18nParams = Record<string, string | number>;
 export class I18nText extends Phaser.GameObjects.Text {
     private i18nKey: string;
     private i18nParams: I18nParams;
+    private interpolation: InterpolationEntry[];
     private boundRefresh: () => void;
 
     constructor(
@@ -18,16 +22,32 @@ export class I18nText extends Phaser.GameObjects.Text {
         y: number,
         i18nKey: string,
         style?: Phaser.Types.GameObjects.Text.TextStyle,
-        i18nParams: I18nParams = {}
+        i18nParams: I18nParams = {},
+        interpolation?: InterpolationEntry[]
     ) {
-        const initialText = localizationManager.t(i18nKey, i18nParams);
+        const initialText = I18nText.applyInterpolation(
+            localizationManager.t(i18nKey, i18nParams),
+            interpolation ?? []
+        );
         super(scene, x, y, initialText, style ?? {});
         this.i18nKey = i18nKey;
         this.i18nParams = { ...i18nParams };
+        this.interpolation = interpolation ? [...interpolation] : [];
         this.boundRefresh = this.refreshText.bind(this);
 
         scene.game.events.on('languageChanged', this.boundRefresh);
         this.refreshText();
+    }
+
+    /** Thay thế các placeholder {key} trong text bằng value từ mảng interpolation. */
+    private static applyInterpolation(text: string, interpolation: InterpolationEntry[]): string {
+        if (!interpolation.length) return text;
+        let result = text;
+        for (const { key, value } of interpolation) {
+            const placeholder = `{${key}}`;
+            result = result.split(placeholder).join(String(value));
+        }
+        return result;
     }
 
     /** Cập nhật lại text từ key + params hiện tại (gọi khi đổi ngôn ngữ hoặc khi params thay đổi). */
@@ -40,7 +60,12 @@ export class I18nText extends Phaser.GameObjects.Text {
             this.setWordWrapWidth(wrap.width, wrap.useAdvancedWrap);
         }
 
-        this.setText(localizationManager.t(this.i18nKey, this.i18nParams));
+        this.setText(
+            I18nText.applyInterpolation(
+                localizationManager.t(this.i18nKey, this.i18nParams),
+                this.interpolation
+            )
+        );
     }
 
     setI18nKey(key: string): this {
@@ -51,6 +76,12 @@ export class I18nText extends Phaser.GameObjects.Text {
 
     setI18nParams(params: I18nParams): this {
         this.i18nParams = { ...this.i18nParams, ...params };
+        this.refreshText();
+        return this;
+    }
+
+    setInterpolation(interpolation: InterpolationEntry[]): this {
+        this.interpolation = [...interpolation];
         this.refreshText();
         return this;
     }
@@ -69,9 +100,10 @@ export class I18nText extends Phaser.GameObjects.Text {
         y: number,
         i18nKey: string,
         style?: Phaser.Types.GameObjects.Text.TextStyle,
-        i18nParams?: I18nParams
+        i18nParams?: I18nParams,
+        interpolation?: InterpolationEntry[]
     ): I18nText {
-        const text = new I18nText(scene, x, y, i18nKey, style, i18nParams);
+        const text = new I18nText(scene, x, y, i18nKey, style, i18nParams ?? {}, interpolation);
         scene.add.existing(text);
         return text;
     }

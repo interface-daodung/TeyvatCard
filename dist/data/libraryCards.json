@@ -7,7 +7,11 @@
       "description": "Sword Steampunk - A glorious and precious sword that increases power and luck.",
       "className": "SwordSteampunk",
       "category": "sword",
-      "rarity": 1
+      "rarity": 3,
+      "durabilityMin": 4,
+      "durabilityMax": 18,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "sword-forest",
@@ -17,8 +21,10 @@
       "className": "SwordForest",
       "category": "sword",
       "rarity": 3,
-      "durabilityMin": 25,
-      "durabilityMax": 40
+      "durabilityMin": 2,
+      "durabilityMax": 18,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "sword-skyward",
@@ -27,7 +33,11 @@
       "description": "Sword Skyward - The Sacred Sky Sword increases strength and speed.",
       "className": "SwordSkyward",
       "category": "sword",
-      "rarity": 4
+      "rarity": 4,
+      "durabilityMin": 9,
+      "durabilityMax": 16,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "sword-splendor",
@@ -38,7 +48,9 @@
       "category": "sword",
       "rarity": 4,
       "durabilityMin": 6,
-      "durabilityMax": 16
+      "durabilityMax": 17,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "sword-traveler",
@@ -47,7 +59,11 @@
       "description": "Sword Traveler - Sword Traveler enhances strength and adaptability.",
       "className": "SwordTraveler",
       "category": "sword",
-      "rarity": 4
+      "rarity": 4,
+      "durabilityMin": 4,
+      "durabilityMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "sword-sacrificial",
@@ -57,8 +73,10 @@
       "className": "SwordSacrificial",
       "category": "sword",
       "rarity": 4,
-      "durabilityMin": 3,
-      "durabilityMax": 11
+      "durabilityMin": 1,
+      "durabilityMax": 14,
+      "maxLevel": 10,
+      "levelStats": []
     }
   ],
   "enemy": [
@@ -70,7 +88,13 @@
       "className": "AnemoSamachurl",
       "element": "anemo",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 3,
+      "healthMin": 1,
+      "healthMax": 15,
+      "scoreMin": 4,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "electro-samachurl",
@@ -80,7 +104,13 @@
       "className": "ElectroSamachurl",
       "element": "electro",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 2,
+      "healthMin": 1,
+      "healthMax": 11,
+      "scoreMin": 1,
+      "scoreMax": 13,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "dendro-samachurl",
@@ -90,7 +120,13 @@
       "className": "DendroSamachurl",
       "element": "dendro",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 2,
+      "healthMin": 4,
+      "healthMax": 13,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "geo-samachurl",
@@ -100,11 +136,13 @@
       "className": "GeoSamachurl",
       "element": "geo",
       "clan": "hilichurl",
-      "rarity": 3,
-      "healthMin": 4,
+      "rarity": 4,
+      "healthMin": 5,
       "healthMax": 15,
-      "scoreMin": 1,
-      "scoreMax": 10
+      "scoreMin": 5,
+      "scoreMax": 14,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "hydro-samachurl",
@@ -114,7 +152,13 @@
       "className": "HydroSamachurl",
       "element": "hydro",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 2,
+      "healthMin": 2,
+      "healthMax": 10,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "fighter",
@@ -124,9 +168,13 @@
       "className": "HilichurlFighter",
       "element": "physical",
       "clan": "hilichurl",
-      "rarity": 4,
-      "scoreMin": 2,
-      "scoreMax": 15
+      "rarity": 1,
+      "healthMin": 1,
+      "healthMax": 10,
+      "scoreMin": 5,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "hilistray-water",
@@ -136,7 +184,11 @@
       "className": "HilistrayWater",
       "element": "hydro",
       "clan": "hilichurl",
-      "rarity": 2
+      "rarity": 5,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "wooden-shieldwall",
@@ -146,7 +198,13 @@
       "className": "WoodenShieldwall",
       "element": "dendro",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 4,
+      "healthMin": 8,
+      "healthMax": 22,
+      "scoreMin": 5,
+      "scoreMax": 14,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "lawachurl",
@@ -156,7 +214,13 @@
       "className": "Lawachurl",
       "element": "geo",
       "clan": "hilichurl",
-      "rarity": 5
+      "rarity": 1,
+      "healthMin": 10,
+      "healthMax": 30,
+      "scoreMin": 5,
+      "scoreMax": 15,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "rock-shieldwall",
@@ -166,7 +230,13 @@
       "className": "RockShieldwall",
       "element": "geo",
       "clan": "hilichurl",
-      "rarity": 4
+      "rarity": 4,
+      "healthMin": 5,
+      "healthMax": 18,
+      "scoreMin": 4,
+      "scoreMax": 14,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "berserker",
@@ -176,7 +246,13 @@
       "className": "Berserker",
       "element": "pyro",
       "clan": "hilichurl",
-      "rarity": 4
+      "rarity": 5,
+      "healthMin": 5,
+      "healthMax": 15,
+      "scoreMin": 5,
+      "scoreMax": 12,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "blazing",
@@ -186,7 +262,13 @@
       "className": "Blazing",
       "element": "pyro",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 3,
+      "healthMin": 7,
+      "healthMax": 17,
+      "scoreMin": 3,
+      "scoreMax": 13,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "ice-shieldwall",
@@ -196,7 +278,13 @@
       "className": "IceShieldwall",
       "element": "cryo",
       "clan": "hilichurl",
-      "rarity": 4
+      "rarity": 4,
+      "healthMin": 7,
+      "healthMax": 20,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "shooter",
@@ -206,7 +294,13 @@
       "className": "Shooter",
       "element": "physical",
       "clan": "hilichurl",
-      "rarity": 2
+      "rarity": 5,
+      "healthMin": 2,
+      "healthMax": 12,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "crackling",
@@ -216,7 +310,13 @@
       "className": "Crackling",
       "element": "electro",
       "clan": "hilichurl",
-      "rarity": 3
+      "rarity": 3,
+      "healthMin": 7,
+      "healthMax": 17,
+      "scoreMin": 3,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "cryo-shooter",
@@ -226,7 +326,13 @@
       "className": "CryoShooter",
       "element": "cryo",
       "clan": "hilichurl",
-      "rarity": 2
+      "rarity": 5,
+      "healthMin": 1,
+      "healthMax": 12,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "electro-shooter",
@@ -236,7 +342,13 @@
       "className": "ElectroShooter",
       "element": "electro",
       "clan": "hilichurl",
-      "rarity": 2
+      "rarity": 4,
+      "healthMin": 1,
+      "healthMax": 13,
+      "scoreMin": 3,
+      "scoreMax": 16,
+      "maxLevel": 10,
+      "levelStats": []
     }
   ],
   "food": [
@@ -245,7 +357,12 @@
       "name": "Life Essence",
       "type": "food",
       "description": "Life Essence - The essence of life for maximum health recovery and enhancement of all indicators.",
-      "className": "LifeEssence"
+      "className": "LifeEssence",
+      "rarity": 5,
+      "foodMin": 6,
+      "foodMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "mystique-soup",
@@ -253,7 +370,11 @@
       "type": "food",
       "description": "Mystique Soup - Súp bí ẩn hồi phục sức khỏe và tăng sức mạnh tạm thời.",
       "className": "MystiqueSoup",
-      "rarity": 3
+      "rarity": 1,
+      "foodMin": 1,
+      "foodMax": 3,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "pizza",
@@ -261,7 +382,11 @@
       "type": "food",
       "description": "Pizza - Italian pizza restores health and boosts attacking power.",
       "className": "Pizza",
-      "rarity": 2
+      "rarity": 2,
+      "foodMin": 3,
+      "foodMax": 6,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "roast-chicken",
@@ -269,7 +394,11 @@
       "type": "food",
       "description": "Roast Chicken - Gà nướng thơm ngon hồi phục sức khỏe và tăng khả năng phòng thủ.",
       "className": "RoastChicken",
-      "rarity": 2
+      "rarity": 3,
+      "foodMin": 1,
+      "foodMax": 16,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "macarons",
@@ -277,7 +406,11 @@
       "type": "food",
       "description": "Macarons - Bánh ngọt Pháp hồi phục sức khỏe và tăng tinh thần.",
       "className": "Macarons",
-      "rarity": 3
+      "rarity": 3,
+      "foodMin": 6,
+      "foodMax": 9,
+      "maxLevel": 10,
+      "levelStats": []
     }
   ],
   "trap": [
@@ -286,7 +419,12 @@
       "name": "AbyssCall",
       "type": "trap",
       "description": "AbyssCall - A trap that summons additional enemies into the battle when activated.",
-      "className": "AbyssCall"
+      "className": "AbyssCall",
+      "rarity": 2,
+      "damageMin": 1,
+      "damageMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "quicksand",
@@ -294,7 +432,11 @@
       "type": "trap",
       "description": "Quicksand - Bẫy cát lún gây damage và làm chậm người chơi khi kích hoạt.",
       "className": "Quicksand",
-      "rarity": 2
+      "rarity": 2,
+      "damageMin": 1,
+      "damageMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "breathe-fire",
@@ -302,7 +444,11 @@
       "type": "trap",
       "description": "Breathe Fire - A fire trap that deals damage to the player when activated.",
       "className": "BreatheFire",
-      "rarity": 2
+      "rarity": 2,
+      "damageMin": 1,
+      "damageMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     }
   ],
   "treasure": [
@@ -312,7 +458,11 @@
       "type": "treasure",
       "description": "Chest - The main treasure chest containing various valuable rewards.",
       "className": "Chest",
-      "rarity": 4
+      "rarity": 4,
+      "durabilityMin": 1,
+      "durabilityMax": 6,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "bribery",
@@ -320,7 +470,11 @@
       "type": "treasure",
       "description": "Bribery - Bribery to receive rewards greater than the cost.",
       "className": "Bribery",
-      "rarity": 3
+      "rarity": 3,
+      "durabilityMin": 1,
+      "durabilityMax": 6,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "gold-mine",
@@ -328,7 +482,11 @@
       "type": "treasure",
       "description": "GoldMine - A mine to extract resources.",
       "className": "GoldMine",
-      "rarity": 2
+      "rarity": 3,
+      "durabilityMin": 1,
+      "durabilityMax": 10,
+      "maxLevel": 10,
+      "levelStats": []
     }
   ],
   "bomb": [
@@ -338,7 +496,12 @@
       "type": "bomb",
       "description": "Explosive - A bomb that explodes and damages everything within a radius.",
       "className": "Explosive",
-      "rarity": 3
+      "rarity": 3,
+      "damageMin": 3,
+      "damageMax": 15,
+      "countdown": 3,
+      "maxLevel": 10,
+      "levelStats": []
     }
   ],
   "coin": [
@@ -349,7 +512,9 @@
       "description": "Mảnh Vỡ Nguyên Tố Hỏa nhặt có thể đổi Xu và hồi chút năng lượng.",
       "className": "PyroFragment",
       "element": "pyro",
-      "rarity": 1
+      "rarity": 1,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "hydro-fragment",
@@ -358,7 +523,9 @@
       "description": "Collected Water Elemental Fragments can be exchanged for Coins and restore a small amount of energy.",
       "className": "HydroFragment",
       "element": "hydro",
-      "rarity": 1
+      "rarity": 1,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "geo-fragment",
@@ -367,7 +534,9 @@
       "description": "Mảnh Vỡ Nguyên Tố Nham nhặt có thể đổi Xu và hồi chút năng lượng.",
       "className": "GeoFragment",
       "element": "geo",
-      "rarity": 1
+      "rarity": 1,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "anemo-fragment",
@@ -376,7 +545,9 @@
       "description": "Wind Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "AnemoFragment",
       "element": "anemo",
-      "rarity": 1
+      "rarity": 1,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "electro-fragment",
@@ -385,7 +556,9 @@
       "description": "Lightning Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "ElectroFragment",
       "element": "electro",
-      "rarity": 1
+      "rarity": 1,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "cryo-fragment",
@@ -394,7 +567,9 @@
       "description": "Ice Elemental Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "CryoFragment",
       "element": "cryo",
-      "rarity": 1
+      "rarity": 1,
+      "maxLevel": 10,
+      "levelStats": []
     },
     {
       "id": "dendro-fragment",
@@ -403,7 +578,9 @@
       "description": "The Elemental Herb Fragments that are collected can be exchanged for Coins and restore a small amount of energy.",
       "className": "DendroFragment",
       "element": "dendro",
-      "rarity": 1
+      "rarity": 1,
+      "maxLevel": 10,
+      "levelStats": []
     }
   ],
   "empty": [
@@ -412,7 +589,9 @@
       "name": "Empty",
       "type": "empty",
       "description": "Empty - An empty card has no effect.",
-      "className": "Empty"
+      "className": "Empty",
+      "maxLevel": 10,
+      "levelStats": []
     }
   ]
 }

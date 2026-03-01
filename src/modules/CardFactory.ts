@@ -240,6 +240,21 @@ class CardFactory {
         return new (CardClasses.Empty as any)(scene, x, y, index);
     }
 
+    /**
+     * Tạo thẻ cụ thể theo key đã đăng ký trong CardFactory (key trùng với key trong DB / cardClasses).
+     * @param scene - Scene có gameManager và cardManager để lấy tọa độ ô lưới.
+     * @param index - Chỉ số ô trên lưới (dùng để tính x, y).
+     * @param cardKey - Chuỗi key cố định (ví dụ 'AnemoSamachurl', 'SwordSteampunk') trỏ tới class thẻ tương ứng trong cardClasses.
+     * @returns Thẻ đã tạo, hoặc null nếu key không tồn tại hoặc là 'add'.
+     */
+    createCardByKey(scene: SceneWithGameManager, index: number, cardKey: string): Card | null {
+        if (cardKey === 'add') return null;
+        const { x, y } = scene.gameManager!.cardManager.getGridPositionCoordinates(index);
+        const CardClass = this.cardClasses[cardKey] as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card | undefined;
+        if (typeof CardClass !== 'function') return null;
+        return new CardClass(scene, x, y, index);
+    }
+
     _calculateDynamicCardWeights(validCardKeys: string[]): Record<string, number> {
         this._ensureStagePoolsLoaded();
         const currentStage = this.stageCardPools[this.currentStage];

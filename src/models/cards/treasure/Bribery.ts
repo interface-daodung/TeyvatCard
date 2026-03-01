@@ -12,12 +12,12 @@ export default class Bribery extends Treasure {
         scene.add.existing(this);
     }
 
-    CardEffect(): boolean {
-        this.ProgressDestroy();
-        const newCard = this.scene.gameManager?.cardManager.cardFactory.createRandomCard(this.scene, this.index);
-        if (newCard) {
-            this.scene.gameManager?.cardManager.addCard(newCard, this.index).processCreation?.();
-        }
-        return true;
-    }
+    // CardEffect(): boolean {
+    //     this.ProgressDestroy();
+    //     const newCard = this.scene.gameManager?.cardManager.cardFactory.createRandomCard(this.scene, this.index);
+    //     if (newCard) {
+    //         this.scene.gameManager?.cardManager.addCard(newCard, this.index).processCreation?.();
+    //     }
+    //     return true;
+    // }
 }

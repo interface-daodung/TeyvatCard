@@ -32,6 +32,9 @@ export const ApiConfig = {
   get logout() {
     return `${this.baseUrl}/api/auth/logout`;
   },
+  get saveGame() {
+    return `${this.baseUrl}/api/auth/save-game`;
+  },
   get payosCreateLink() {
     return `${this.baseUrl}/api/payos/create-link-game`;
   },

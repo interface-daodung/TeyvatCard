@@ -62,7 +62,7 @@ export function showItemDialog(
         color: themeManager.getText(),
         fontFamily: 'Arial, sans-serif',
         lineSpacing: 10
-    }).setOrigin(0.5);
+    }, {}, [{ key: 'basePower', value: item.power }]).setOrigin(0.5);
 
     const powerBg = scene.add.graphics();
     powerBg.fillStyle(themeManager.getSecondaryPhaser(), 0.9);
@@ -132,7 +132,7 @@ export function showItemDialog(
                 const itemLevels = dataManager.get<Record<string, number>>('itemLevel') ?? {};
                 itemLevels[item.nameId] = item.level;
                 dataManager.set('itemLevel', itemLevels);
-                descriptionText.refreshText();
+                descriptionText.setInterpolation([{ key: 'basePower', value: item.power }]);
                 powerText.setI18nParams({ power: item.power });
                 cooldownText.setI18nParams({ cooldown: item.cooldown });
                 levelText.setI18nParams({ level: item.level });
