@@ -2,7 +2,6 @@ import Card from '../Card.js';
 import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
-import { soundManager } from '../../core/SoundManager.js';
 
 export default class Coin extends Card {
     score!: number;
