@@ -6,7 +6,7 @@ import AnimationManager from './AnimationManager.js';
 import PriorityEmitter from '../utils/PriorityEmitter.js';
 import { themeManager } from './ThemeManager.js';
 import { dataManager } from './DataManager.js';
-import Card from '../modules/Card.js';
+import Card from '../modules/card/Card.js';
 import { Log } from '../utils/Log.js';
 import { soundManager } from './SoundManager.js';
 
@@ -64,58 +64,47 @@ export default class GameManager {
 
 
     /**
-     * Di chuyển card từ vị trí cũ sang vị trí mới
-     * @param index - Vị trí card cũ
+     * Di chuyển card: logic xong → apply state → enqueue animation (Promise) → emit completeMove khi xong.
      */
     moveCharacter(index: number): void {
-
-        // Nếu đang xử lý animation thì không di chuyển
         if (this.animationManager.isProcessing || this.OnCompleteMoveCount !== 0) {
             return;
         }
 
         const characterIndex = this.cardManager.getCharacterIndex();
+        if (!CalculatePositionCard.isValidMove(characterIndex, index)) return;
 
-        if (CalculatePositionCard.isValidMove(characterIndex, index)) {
-            const card = this.cardManager.getCard(index);
-            if ((card as Card)?.CardEffect()) {
-                dataManager.setFlag('cardAtOldCharacterPos', undefined);
-                // Emit event completeMove để tất cả card có thể xử lý
-                this.emitter.emit('completeMove');
-                return;
-            }
-            if (this.isGameOver) {
-                return;
-            }
-            const movement = CalculatePositionCard.calculateMovement(characterIndex, index);
-
-            // hủy card cũ ở vị trí index
-            const cardToDestroy = this.cardManager.getCard(index);
-            // check null và gọi ProgressDestroy nếu có
-            (cardToDestroy as Card)?.ProgressDestroy?.();
-
-            this.animationManager.startMoveAnimation(movement, () => {
-                // Mục tiêu Corruption: thẻ ở vị trí cũ của nhân vật (B). Nhân vật B→A thì sau move
-                // thẻ tại movement[1].from sẽ dồn vào B → lưu thẻ đó trước khi moveCard.
-                dataManager.setFlag('cardAtOldCharacterPos', this.cardManager.getCard(movement[1].from));
-
-                movement.forEach(move => {
-                    // Sử dụng hàm moveCard an toàn từ CardManager
-                    this.cardManager.moveCard(move.from, move.to);
-                });
-
-                // Tạo card mới ở vị trí cuối của movement
-                const newCardIndex = movement[movement.length - 1].from;
-                const newCard = this.cardManager.cardFactory.createRandomCard(this.scene, newCardIndex) as Card;
-                const addedCard = this.cardManager.addCard(newCard, newCardIndex);
-                if (newCard && (addedCard as Card).processCreation) {
-                    (addedCard as Card).processCreation!();
-                }
-                // Emit event completeMove để tất cả card có thể xử lý
-                this.emitter.emit('completeMove');
-            });
-
+        const card = this.cardManager.getCard(index) as Card | null;
+        if (card?.CardEffect()) {
+            dataManager.setFlag('cardAtOldCharacterPos', undefined);
+            this.emitter.emit('completeMove');
+            return;
         }
+        if (this.isGameOver) return;
+
+        const movement = CalculatePositionCard.calculateMovement(characterIndex, index);
+        const cardToDestroy = this.cardManager.getCard(index) as Card | null;
+
+        // 1) Apply state trước (không đợi animation)
+        dataManager.setFlag('cardAtOldCharacterPos', this.cardManager.getCard(movement[1].from));
+        this.cardManager.removeCard(index);
+        movement.forEach((move) => this.cardManager.moveCard(move.from, move.to));
+        const newCardIndex = movement[movement.length - 1].from;
+        const newCard = this.cardManager.cardFactory.createRandomCard(this.scene, newCardIndex) as Card;
+        this.cardManager.addCard(newCard, newCardIndex);
+
+        // 2) Enqueue animation: destroy view → move tweens → creation; không dùng callback
+        const destroyPromise = cardToDestroy?.view
+            ? cardToDestroy.view.playDestroy()
+            : Promise.resolve();
+        this.animationManager.addToQueue(8, () =>
+            destroyPromise
+                .then(() => this.animationManager.runMoveTweens(movement))
+                .then(() => newCard.view?.playCreation(this.isGameOver) ?? Promise.resolve())
+                .then(() => {
+                    this.emitter.emit('completeMove');
+                })
+        );
     }
 
     /**
@@ -211,13 +200,23 @@ export default class GameManager {
         const newTotalCoin = currentTotalCoin + this.coin;
         dataManager.set('totalCoin', newTotalCoin);
 
-        // Destroy từng thẻ một cách tuần tự với delay 200ms
+        this.animationManager
+            .startGameOverAnimation(CalculatePositionCard.shuffleArray(this.cardManager.getAllCards()) as Card[])
+            .then(() => this.showGameOverDialog());
+    }
 
-        this.animationManager.startGameOverAnimation(CalculatePositionCard.
-            shuffleArray(this.cardManager.getAllCards()) as Card[], () => {
-                this.showGameOverDialog();
-            });
-
+    /**
+     * Thay thế card tại index (vd khi coin/enemy chết). Apply state + enqueue destroy/creation animation.
+     */
+    requestReplaceCard(index: number, newCard: Card | null): void {
+        if (!newCard) return;
+        const oldCard = this.cardManager.getCard(index) as Card | null;
+        this.cardManager.removeCard(index);
+        this.cardManager.addCard(newCard, index);
+        const destroyPromise = oldCard?.view ? oldCard.view.playDestroy() : Promise.resolve();
+        this.animationManager.addToQueue(8, () =>
+            destroyPromise.then(() => newCard.view?.playCreation(this.isGameOver) ?? Promise.resolve())
+        );
     }
 
     /**

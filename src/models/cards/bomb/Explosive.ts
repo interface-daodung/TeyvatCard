@@ -1,9 +1,9 @@
 import Bomb from '../../../modules/typeCard/bomb.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 import CalculatePositionCard from '../../../utils/CalculatePositionCard.js';
 import { soundManager } from '../../../core/SoundManager.js';
-import Card from '../../../modules/Card.js';
+import Card from '../../../modules/card/Card.js';
 
 export default class Explosive extends Bomb {
     declare rarity: number;
@@ -32,8 +32,8 @@ export default class Explosive extends Bomb {
         );
         if (unsub) this.unsubscribeList.push(unsub);
 
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 
     BombCountdownEffect(): void {
@@ -52,20 +52,20 @@ export default class Explosive extends Bomb {
         this.scene.gameManager?.animationManager.startExplosiveAnimation(
             this,
             adjacentPositions,
-            () => {
-                if (this.destroyed) return;
+            // () => {
+            //     if (this.destroyed) return;
 
-                soundManager.play('bomb-sound');
+            //     soundManager.play('bomb-sound');
 
-                adjacentPositions.forEach(cardIndex => {
-                    const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
-                    if (card?.takeDamage) {
-                        card.takeDamage(this.damage, 'damage');
-                    }
-                });
+            //     adjacentPositions.forEach(cardIndex => {
+            //         const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+            //         if (card?.takeDamage) {
+            //             card.takeDamage(this.damage, 'damage');
+            //         }
+            //     });
 
-                this.die();
-            }
+            //     this.die();
+            // }
         );
         
     }

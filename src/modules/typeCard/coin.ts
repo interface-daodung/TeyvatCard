@@ -1,12 +1,11 @@
-import Card from '../Card.js';
-import type { CardDefault } from '../Card.js';
-import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
-import type { SceneWithGameManager } from '../Card.js';
+import Card from '../card/Card.js';
+import type { CardDefault } from '../card/Card.js';
+import type { SceneWithGameManager } from '../card/Card.js';
+import type { HudDisplaySpec } from '../../components/card/CardView.js';
 
 export default class Coin extends Card {
     score!: number;
     rarity!: number;
-    coinDisplay!: CreateDisplayResult;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'coin');
@@ -15,19 +14,19 @@ export default class Coin extends Card {
 
     override applyConfig(config: CardDefault): void {
         super.applyConfig(config);
-        // if (config.rarity != null) this.rarity = config.rarity;
     }
 
-    addDisplayHUD(): void {
-        this.coinDisplay = this.createDisplay(
-            { fillColor: 0xff6600, text: this.score.toString() },
-            'rightBottom' as DisplayPosition
-        );
+    override buildViewOptions(): { hudDisplays: HudDisplaySpec[] } {
+        return {
+            hudDisplays: [
+                { key: 'score', fillColor: 0xff6600, text: String(this.score), position: 'rightBottom' }
+            ]
+        };
     }
 
     setScore(score: number): void {
         this.score = score;
-        this.coinDisplay.updateText(this.score);
+        this.view?.updateText('score', this.score);
     }
 
     resonance(): void {
@@ -36,39 +35,30 @@ export default class Coin extends Card {
         this.nameId = this.nameId.replace('fragment', 'resonance');
         const resonanceDesc = this.config?.resonanceDescription ?? (this.constructor as typeof Card & { DEFAULT?: { resonanceDescription?: string } }).DEFAULT?.resonanceDescription;
         if (resonanceDesc) this.description = resonanceDesc;
-        this.cardImage.setTexture(this.type, this.nameId);
-        this.coinDisplay.updateText(this.score);
-        this.processCreation();
+        this.view?.updateTexture(this.type, this.nameId);
+        this.view?.updateText('score', this.score);
     }
 
-    takeDamage(damage: number, type: 'damage'): number {
-        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+    override takeDamage(damage: number, _type: 'damage'): number {
         this.score = Math.max(0, this.score - damage);
-        this.coinDisplay.updateText(this.score.toString());
-        // this.showPopup(damage, type); cầm sửa 
-        if (this.score <= 0) {
-            this.die();
-        }
+        this.view?.updateText('score', this.score);
+        if (this.score <= 0) this.die();
         return this.score;
     }
 
-    die(): void {
-        this.ProgressDestroy();
+    override die(): void {
         if (this.scene?.gameManager) {
             const newCard = this.scene.gameManager.cardManager.cardFactory.createEmpty(this.scene, this.index);
-            if (newCard) {
-                this.scene.gameManager.cardManager.addCard(newCard, this.index).processCreation?.();
-            }
+            this.scene.gameManager.requestReplaceCard(this.index, newCard);
         }
     }
 
-    CardEffect(): boolean {
+    override CardEffect(): boolean {
         if (this.nameId.endsWith('resonance')) {
             this.scene.gameManager?.addCoin(this.score, 3);
         } else {
             this.scene.gameManager?.addCoin(this.score, 1);
         }
-        // soundManager.play('Coin-sound');
         return false;
     }
 }

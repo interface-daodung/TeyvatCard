@@ -253,5 +253,9 @@
   "character.nahida.name": "Nahida",
   "character.raiden.name": "Raiden Shōgun",
   "character.venti.name": "Venti",
-  "map.dungeon_abyss_chamber.name": "Abyss Chamber"
+  "map.dungeon_abyss_chamber.name": "Abyss Chamber",
+  "load_success": "Data loaded.",
+  "save_success": "Saved.",
+  "load_error": "Unable to load data.",
+  "save_error": "Unable to save."
 }

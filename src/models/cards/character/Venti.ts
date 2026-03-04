@@ -1,6 +1,6 @@
 import Character from '../../../modules/typeCard/character.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 
 export default class Venti extends Character {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {

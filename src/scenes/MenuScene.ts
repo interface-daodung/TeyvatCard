@@ -10,7 +10,7 @@ import {
     type CardCharacter,
     type MenuButtonResult
 } from '../components/MenuScene/index.js';
-import { createTestDevButton } from '../components/TestDevButton.js';
+import { createTestDevButton, createTestGraphicsRenderTextureButton } from '../components/TestDevButton.js';
 
 export default class MenuScene extends Phaser.Scene {
     private cards: CardCharacter[] = [];
@@ -47,10 +47,19 @@ export default class MenuScene extends Phaser.Scene {
         this.exploreButton = createMenuButton(this, width / 2, height * 0.8, 'compass', 'explore', 'MapScenes');
         this.equipButton = createMenuButton(this, width / 2 + width * 0.3, height * 0.8, 'equip', 'equip', 'EquipScene');
 
-        createTestDevButton(this, width / 2, height * 0.95, {
+        const devButtonX = width / 2 - 120;
+        const devButtonY = height * 0.95;
+
+        createTestDevButton(this, devButtonX, devButtonY, {
             onClick: () => {
                 this.scene.stop('GameScene');
                 this.scene.start('LoadingScene', { targetScene: 'GameScene' });
+            }
+        });
+
+        createTestGraphicsRenderTextureButton(this, devButtonX + 240, devButtonY, {
+            onClick: () => {
+                this.scene.start('TestGraphicsRenderTexture');
             }
         });
 

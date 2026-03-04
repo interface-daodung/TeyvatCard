@@ -1,6 +1,6 @@
 import Treasure from '../../../modules/typeCard/treasure.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 
 export default class Bribery extends Treasure {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -8,16 +8,7 @@ export default class Bribery extends Treasure {
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
         this.durability = this.GetRandom(5, 10);
-        this.createCard();
-        scene.add.existing(this);
     }
 
-    // CardEffect(): boolean {
-    //     this.ProgressDestroy();
-    //     const newCard = this.scene.gameManager?.cardManager.cardFactory.createRandomCard(this.scene, this.index);
-    //     if (newCard) {
-    //         this.scene.gameManager?.cardManager.addCard(newCard, this.index).processCreation?.();
-    //     }
-    //     return true;
-    // }
+    // Logic hiệu ứng của Bribery (nếu có) sẽ dùng Treasure.CardEffect/die + GameManager.requestReplaceCard.
 }

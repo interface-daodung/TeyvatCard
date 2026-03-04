@@ -1,6 +1,6 @@
 import Coin from '../../../modules/typeCard/coin.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 
 export default class GeoFragment extends Coin {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -8,7 +8,7 @@ export default class GeoFragment extends Coin {
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
         // this.score = this.GetRandom(1, 9);
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 }

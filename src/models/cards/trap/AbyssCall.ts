@@ -1,6 +1,6 @@
 import Trap from '../../../modules/typeCard/trap.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 import { Log } from '../../../utils/Log.js';
 
 const HILICHURL_CLAN = 'hilichurl';
@@ -10,12 +10,12 @@ export default class AbyssCall extends Trap {
         const config = getCardConfig('AbyssCall') ?? { id: 'abyss-call', name: 'AbyssCall', description: '' };
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 
     CardEffect(): boolean {
-        this.ProgressDestroy();
+        // this.ProgressDestroy();
         const factory = this.scene.gameManager?.cardManager?.cardFactory;
         const keys = factory?.getEnemyKeysByClan(HILICHURL_CLAN) ?? [];
         if (keys.length === 0) {
@@ -25,7 +25,7 @@ export default class AbyssCall extends Trap {
         const key = keys[Math.floor(Math.random() * keys.length)];
         const newCard = factory?.createCardByKey(this.scene, this.index, key) ?? null;
         if (newCard) {
-            this.scene.gameManager?.cardManager?.addCard(newCard, this.index).processCreation?.();
+            // this.scene.gameManager?.cardManager?.addCard(newCard, this.index).processCreation?.();
         }
         return true;
     }

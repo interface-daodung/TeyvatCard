@@ -1,6 +1,6 @@
 import Food from '../../../modules/typeCard/food.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 
 export default class RoastChicken extends Food {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -8,7 +8,7 @@ export default class RoastChicken extends Food {
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
         // if (this.food == null) this.food = 5;
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 }

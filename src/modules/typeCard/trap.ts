@@ -1,6 +1,6 @@
-import Card, { CardDefault } from '../Card.js';
-import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
-import type { SceneWithGameManager } from '../Card.js';
+import Card, { CardDefault } from '../card/Card.js';
+import type { CreateDisplayResult, DisplayPosition } from '../card/Card.js';
+import type { SceneWithGameManager } from '../card/Card.js';
 
 export default class Trap extends Card {
     damage!: number;

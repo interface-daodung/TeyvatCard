@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import Trap from '../../../modules/typeCard/trap.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 import { soundManager } from '../../../core/SoundManager.js';
-import Card from '../../../modules/Card.js';
+import Card from '../../../modules/card/Card.js';
 
 type ArrowDirection = 'top' | 'bottom' | 'left' | 'right';
 
@@ -35,9 +35,9 @@ export default class BreatheFire extends Trap {
         );
         if (unsub) this.unsubscribeList.push(unsub);
 
-        this.createCard();
+        // this.createCard();
         this.initializeArrows();
-        scene.add.existing(this);
+        // scene.add.existing(this);
     }
 
     CardEffect(): boolean {
@@ -50,9 +50,9 @@ export default class BreatheFire extends Trap {
         this.scene.gameManager?.animationManager.startBreatheFireAnimation(
             this.damage,
             this.findAdjacentTargets(),
-            () => {
-                soundManager.play('breathe-fire-sound');
-            }
+            // () => {
+            //     soundManager.play('breathe-fire-sound');
+            // }
         );
         return false;
     }
@@ -243,16 +243,16 @@ export default class BreatheFire extends Trap {
             });
         };
         arrowText.moveTween = moveTween;
-        this.add(arrowText);
+        // this.add(arrowText);
         return arrowText;
     }
 
-    override destroy(fromScene?: boolean): void {
-        if (this.arrowDisplay) {
-            this.arrowDisplay.forEach(arrow => {
-                if (arrow.moveTween) arrow.moveTween.stop();
-            });
-        }
-        super.destroy(fromScene);
-    }
+    // override destroy(fromScene?: boolean): void {
+    //     if (this.arrowDisplay) {
+    //         this.arrowDisplay.forEach(arrow => {
+    //             if (arrow.moveTween) arrow.moveTween.stop();
+    //         });
+    //     }
+    //     super.destroy(fromScene);
+    // }
 }

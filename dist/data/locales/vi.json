@@ -253,5 +253,9 @@
   "character.nahida.name": "Nahida",
   "character.raiden.name": "Raiden Ei",
   "character.venti.name": "Venti",
-  "map.dungeon_abyss_chamber.name": "Hang ổ sâu thẳm"
+  "map.dungeon_abyss_chamber.name": "Hang ổ sâu thẳm",
+  "load_success": "Đã tải dữ liệu.",
+  "save_success": "Đã lưu.",
+  "load_error": "Không thể tải dữ liệu.",
+  "save_error": "Không thể lưu."
 }

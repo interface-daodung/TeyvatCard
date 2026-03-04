@@ -1,6 +1,6 @@
-import Card from '../../modules/Card.js';
+import Card from '../../modules/card/Card.js';
 import { getCardConfig } from '../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../modules/Card.js';
+import type { SceneWithGameManager } from '../../modules/card/Card.js';
 
 export default class Empty extends Card {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -8,8 +8,6 @@ export default class Empty extends Card {
         super(scene, x, y, index, config.name!, config.id!, 'empty');
         this.applyConfig(config);
         this.type = 'coin';
-        this.createCard();
-        scene.add.existing(this);
     }
 
     CardEffect(): boolean {

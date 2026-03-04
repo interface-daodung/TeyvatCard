@@ -5,7 +5,7 @@
 
 import { dataManager } from '../core/DataManager.js';
 import { localizationManager } from '../core/LocalizationManager.js';
-import type { CardDefault } from './Card.js';
+import type { CardDefault } from './card/Card.js';
 
 interface CharacterEntry {
     id: string;

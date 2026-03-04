@@ -1,20 +1,12 @@
 import Phaser from 'phaser';
-import cardFactory from '../modules/CardFactory.js';
-// import CardFactory from '../modules/CardFactory.js';
-
-/** Card: Container + field/method dùng trong game. Không Omit type/name/setInteractive/disableInteractive để tương thích GameObject. */
-interface Card extends Phaser.GameObjects.Container {
-    index?: number;
-    nameId?: string;
-    resonance?: () => void;
-    processCreation?: () => void;
-}
+import cardFactory from '../modules/card/CardFactory.js';
+import type Card from '../modules/card/Card.js';
 
 interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: {
-        emitter: {
-            on: (event: string, callback: () => void, priority?: number) => void;
-        };
+        moveCharacter: (index: number) => void;
+        animationManager: { isProcessing: boolean };
+        emitter: { on: (event: string, callback: () => void, priority?: number) => void };
     };
     stageId?: string;
 }
@@ -22,7 +14,7 @@ interface SceneWithGameManager extends Phaser.Scene {
 export default class CardManager {
     private scene: SceneWithGameManager;
     private gridSize: number;
-    private cards: (Card | null)[];
+    public cards: (Card | null)[];
     private cardWidth: number;
     private cardHeight: number;
     private spacing: number;
@@ -67,27 +59,51 @@ export default class CardManager {
     }
 
     /**
-     * Thêm card vào vị trí cụ thể trong grid
-     * // hàm này chưa dc dùng ở bất cứ đâu
+     * Thêm card (model) vào grid: tạo view nếu chưa có, add view lên scene, lưu card.
      */
     addCard(card: Card, gridIndex: number): Card {
-        if (gridIndex >= 0 && gridIndex < 9) {
-            this.cards[gridIndex] = card;
-        } else {
+        if (gridIndex < 0 || gridIndex >= 9) {
             console.warn(`CardManager: Invalid grid index ${gridIndex}`);
+            return card;
         }
+        const coords = this.getGridPositionCoordinates(gridIndex);
+        if (!coords) {
+            this.cards[gridIndex] = card;
+            return card;
+        }
+        const gm = this.scene.gameManager;
+        if (!card.view) {
+            card.createView(this.scene, coords.x, coords.y, {
+                onCardClick: (i) => gm?.moveCharacter(i),
+                isInputLocked: () => gm?.animationManager?.isProcessing ?? false,
+                getCardDataForDialog: () => card.getCardDataForDialog()
+            });
+        } else {
+            card.view.setPosition(coords.x, coords.y);
+        }
+        card.index = gridIndex;
+        this.scene.add.existing(card.view!);
+        this.cards[gridIndex] = card;
         return card;
     }
 
     /**
      * Lấy card từ vị trí grid
-     * // hàm này chưa dc dùng ở bất cứ đâu
      */
     getCard(gridIndex: number): Card | null {
         if (gridIndex >= 0 && gridIndex < 9) {
             return this.cards[gridIndex];
         }
         return null;
+    }
+
+    /**
+     * Xóa card khỏi grid (không destroy view - caller chịu trách nhiệm animation).
+     */
+    removeCard(gridIndex: number): void {
+        if (gridIndex >= 0 && gridIndex < 9) {
+            this.cards[gridIndex] = null;
+        }
     }
 
     /**
@@ -131,6 +147,8 @@ export default class CardManager {
 
         this.CardCharacter = this.cardFactory.createCharacter(this.scene, coord_start.x, coord_start.y, 4) as Card;
         this.addCard(this.CardCharacter, 4);
+        // Play creation animation for character card when first initialized
+        this.CardCharacter?.view?.playCreation?.(false);
 
         // Tạo 9 cards mới
         for (let i = 0; i < 9; i++) {
@@ -142,6 +160,8 @@ export default class CardManager {
                 const card = this.cardFactory.createRandomCard(this.scene, i) as Card;
                 // Thêm card vào vị trí grid
                 this.addCard(card, i);
+                // Play creation animation for grid card when first initialized
+                card?.view?.playCreation?.(false);
             }
         }
         this.checkElementResonance();
@@ -170,16 +190,12 @@ export default class CardManager {
             return false;
         }
 
-        // Cập nhật index của card
+        // Cập nhật index của card và vị trí trong grid (model).
+        // View sẽ được tween bởi AnimationManager.runMoveTweens sau khi state đã apply.
         card.index = toIndex;
-
-        // Xóa card khỏi vị trí cũ
         this.cards[fromIndex] = null;
+        this.cards[toIndex] = card;
 
-        // Thêm card vào vị trí mới
-        this.addCard(card, toIndex);
-
-        //console.log(`CardManager: Moved card ${card.type} from ${fromIndex} to ${toIndex}`);
         return true;
     }
 
@@ -214,45 +230,31 @@ export default class CardManager {
         this.cards[fromIndex] = cardTo;
         this.cards[toIndex] = cardFrom;
 
-        // Cập nhật vị trí hiển thị của hai card
+        // Cập nhật vị trí hiển thị của hai card (view)
         const coordsFrom = this.getGridPositionCoordinates(toIndex);
         const coordsTo = this.getGridPositionCoordinates(fromIndex);
 
         if (coordsFrom && coordsTo) {
-            cardFrom.setPosition(coordsFrom.x, coordsFrom.y);
-            cardTo.setPosition(coordsTo.x, coordsTo.y);
+            if (cardFrom.view) cardFrom.view.setPosition(coordsFrom.x, coordsFrom.y);
+            if (cardTo.view) cardTo.view.setPosition(coordsTo.x, coordsTo.y);
         }
 
-        //console.log(`CardManager: Swapped cards ${cardFrom.type} and ${cardTo.type} between positions ${fromIndex} and ${toIndex}`);
         return true;
     }
 
-    /**
-     * Disable tất cả card để tránh nhận sự kiện khi đang di chuyển
-     */
     disableAllCards(): void {
-        const allCards = this.getAllCards();
-        allCards.forEach(card => {
-            if (card && card.disableInteractive) {
-                card.disableInteractive();
-                //console.log(`CardManager: Disabled card ${card.name} at position ${card.index}`);
-            }
+        this.getAllCards().forEach((card) => {
+            if (card?.view?.disableInteractive) card.view.disableInteractive();
         });
-        //console.log('CardManager: Disabled all cards');
     }
 
     /**
      * Enable lại tất cả card sau khi di chuyển hoàn thành
      */
     enableAllCards(): void {
-        const allCards = this.getAllCards();
-        allCards.forEach(card => {
-            if (card && card.setInteractive) {
-                card.setInteractive();
-                //console.log(`CardManager: Enabled card ${card.name} at position ${card.index}`);
-            }
+        this.getAllCards().forEach((card) => {
+            if (card?.view?.setInteractive) card.view.setInteractive();
         });
-        //console.log('CardManager: Enabled all cards');
     }
 
     /**

@@ -1,6 +1,6 @@
 import Food from '../../../modules/typeCard/food.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 import Character from '@/src/modules/typeCard/character.js';
 import { Log } from '../../../utils/Log.js';
 
@@ -10,8 +10,8 @@ export default class Pizza extends Food {
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
         // if (this.food == null) this.food = 5;
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 
     CardEffect(): boolean {

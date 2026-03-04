@@ -19,8 +19,8 @@
       "className": "SwordForest",
       "category": "sword",
       "rarity": 3,
-      "durabilityMin": 2,
-      "durabilityMax": 8,
+      "durabilityMin": 1,
+      "durabilityMax": 6,
       "contents": []
     },
     {
@@ -124,7 +124,8 @@
       "healthMin": 5,
       "healthMax": 15,
       "scoreMin": 5,
-      "scoreMax": 14
+      "scoreMax": 11,
+      "contents": []
     },
     {
       "id": "hydro-samachurl",
@@ -163,8 +164,11 @@
       "element": "hydro",
       "clan": "hilichurl",
       "rarity": 5,
+      "healthMin": 2,
+      "healthMax": 11,
       "scoreMin": 1,
-      "scoreMax": 10
+      "scoreMax": 12,
+      "contents": []
     },
     {
       "id": "wooden-shieldwall",
@@ -436,10 +440,8 @@
       "durabilityMax": 11,
       "contents": [
         "MystiqueSoup",
-        "Macarons",
-        "RoastChicken",
         "Explosive",
-        "Pizza"
+        "Quicksand"
       ]
     },
     {

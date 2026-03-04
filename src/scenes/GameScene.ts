@@ -99,8 +99,8 @@ export default class GameScene extends Phaser.Scene {
                 if (weapon?.durability > 0) {
                     this.gameManager.addCoin(weapon.price);
                     cardCharacter.weapon = null;
-                    cardCharacter.weaponDisplay?.updateText(0);
-                    cardCharacter.weaponBadgeDisplay?.updateTexture('');
+                    cardCharacter.view?.updateText('weapon', 0);
+                    cardCharacter.view?.updateWeaponBadge(false);
                     this.sellButton.hideButton();
                 }
             }

@@ -1,6 +1,6 @@
 import Treasure from '../../../modules/typeCard/treasure.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 
 export default class GoldMine extends Treasure {
     Reserves: number;
@@ -10,18 +10,17 @@ export default class GoldMine extends Treasure {
         this.applyConfig(config);
         this.durability = this.GetRandom(5, 10);
         this.Reserves = 5;// sau này lấy từ config    
-        this.createCard();
-        scene.add.existing(this);
     }
 
-    CardEffect(): boolean {
+    override CardEffect(): boolean {
         this.Reserves--;
         if (this.Reserves <= 0) {
             this.scene.gameManager?.addCoin(this.durability);
-            this.ProgressDestroy();
-            return false;
+            // Khi mỏ cạn: phá mỏ và thay thẻ mới theo Treasure.die (contents hoặc random).
+            this.die();
+            return true;
         }
-        // thêm hiệu ứng fade out  
+        // Mỗi lần đào còn trữ lượng: cộng coin ngẫu nhiên.
         this.scene.gameManager?.addCoin(this.GetRandom(1, 10));
         return true;
     }

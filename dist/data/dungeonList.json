@@ -3,13 +3,13 @@
     "stageId": "dungeon_abyss_chamber",
     "name": "Abyss Chamber",
     "typeRatios": {
-      "enemies": 10,
-      "food": 13,
-      "weapons": 20,
-      "coins": 5,
-      "traps": 17,
-      "treasures": 30,
-      "bombs": 5
+      "enemies": 9,
+      "food": 19,
+      "weapons": 22,
+      "coins": 8,
+      "traps": 18,
+      "treasures": 20,
+      "bombs": 4
     },
     "availableCards": {
       "enemies": [
@@ -31,11 +31,12 @@
       ],
       "traps": [
         "Quicksand",
-        "BreatheFire"
+        "AbyssCall"
       ],
       "treasures": [
         "GoldMine",
-        "Chest"
+        "Chest",
+        "Bribery"
       ],
       "bombs": [
         "Explosive"

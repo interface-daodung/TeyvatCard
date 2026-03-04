@@ -253,5 +253,9 @@
   "character.nahida.name": "ナヒーダ",
   "character.raiden.name": "雷電影",
   "character.venti.name": "ウェンティ",
-  "map.dungeon_abyss_chamber.name": "深淵の部屋"
+  "map.dungeon_abyss_chamber.name": "深淵の部屋",
+  "load_success": "データを読み込みました。",
+  "save_success": "保存しました。",
+  "load_error": "データを読み込めませんでした。",
+  "save_error": "保存できませんでした。"
 }

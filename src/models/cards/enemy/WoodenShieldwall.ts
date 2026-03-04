@@ -1,6 +1,6 @@
 import Enemy from '../../../modules/typeCard/enemy.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type { SceneWithGameManager } from '../../../modules/card/Card.js';
 
 export default class WoodenShieldwall extends Enemy {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {

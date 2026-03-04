@@ -1,7 +1,7 @@
-import Card from '../Card.js';
-import type { CardDefault } from '../Card.js';
-import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
-import type { SceneWithGameManager } from '../Card.js';
+import Card from '../card/Card.js';
+import type { CardDefault } from '../card/Card.js';
+import type { CreateDisplayResult, DisplayPosition } from '../card/Card.js';
+import type { SceneWithGameManager } from '../card/Card.js';
 
 export default class Food extends Card {
     food!: number;

@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import Card from './Card.js';
-import { dataManager } from '../core/DataManager.js';
-import { getCardConfig } from './getCardConfig.js';
+import { dataManager } from '../../core/DataManager.js';
+import { getCardConfig } from '../getCardConfig.js';
 import type { SceneWithGameManager } from './Card.js';
-import * as CardClasses from './cardImports.js';
+import * as CardClasses from '../cardImports.js';
 
 type CardConstructor = new (scene: SceneWithGameManager, x: number, y: number, index: number, ...args: any[]) => Card;
 

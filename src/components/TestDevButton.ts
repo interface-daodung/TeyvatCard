@@ -36,3 +36,31 @@ export function createTestDevButton(
 
     return btn;
 }
+
+export interface CreateTestGraphicsRenderTextureButtonOptions {
+    onClick: () => void;
+}
+
+export function createTestGraphicsRenderTextureButton(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    options: CreateTestGraphicsRenderTextureButtonOptions
+): Phaser.GameObjects.Text | null {
+    if (!isDev) return null;
+
+    const btn = scene.add.text(x, y, 'TestGraphicsRenderTexture', {
+        fontSize: '24px',
+        color: themeManager.getNeutral(),
+        fontFamily: 'Arial',
+        stroke: themeManager.getSurface(),
+        strokeThickness: 1
+    }).setOrigin(0.5);
+
+    btn.on('pointerdown', options.onClick);
+    btn.setInteractive({ useHandCursor: true });
+    btn.on('pointerover', () => btn.setStyle({ color: themeManager.getText() }));
+    btn.on('pointerout', () => btn.setStyle({ color: themeManager.getNeutral() }));
+
+    return btn;
+}

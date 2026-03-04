@@ -1,6 +1,6 @@
 {
   "frames": {
-    "bomb/explosive": {
+    "explosive": {
       "frame": {
         "x": 0,
         "y": 0,
@@ -8,7 +8,7 @@
         "h": 720
       }
     },
-    "character/eula-sprite": {
+    "eula-sprite": {
       "frame": {
         "x": 420,
         "y": 0,
@@ -16,7 +16,7 @@
         "h": 720
       }
     },
-    "character/eula": {
+    "eula": {
       "frame": {
         "x": 840,
         "y": 0,
@@ -24,7 +24,7 @@
         "h": 720
       }
     },
-    "character/furina-sprite": {
+    "furina-sprite": {
       "frame": {
         "x": 1260,
         "y": 0,
@@ -32,7 +32,7 @@
         "h": 720
       }
     },
-    "character/furina": {
+    "furina": {
       "frame": {
         "x": 1680,
         "y": 0,
@@ -40,7 +40,7 @@
         "h": 720
       }
     },
-    "character/mavuika-sprite": {
+    "mavuika-sprite": {
       "frame": {
         "x": 2100,
         "y": 0,
@@ -48,7 +48,7 @@
         "h": 720
       }
     },
-    "character/mavuika": {
+    "mavuika": {
       "frame": {
         "x": 2520,
         "y": 0,
@@ -56,7 +56,7 @@
         "h": 720
       }
     },
-    "character/nahida-sprite": {
+    "nahida-sprite": {
       "frame": {
         "x": 2940,
         "y": 0,
@@ -64,7 +64,7 @@
         "h": 720
       }
     },
-    "character/nahida": {
+    "nahida": {
       "frame": {
         "x": 3360,
         "y": 0,
@@ -72,7 +72,7 @@
         "h": 720
       }
     },
-    "character/raiden-sprite": {
+    "raiden-sprite": {
       "frame": {
         "x": 3780,
         "y": 0,
@@ -80,7 +80,7 @@
         "h": 720
       }
     },
-    "character/raiden": {
+    "raiden": {
       "frame": {
         "x": 4200,
         "y": 0,
@@ -88,7 +88,7 @@
         "h": 720
       }
     },
-    "character/unlockFurina": {
+    "unlockFurina": {
       "frame": {
         "x": 4620,
         "y": 0,
@@ -96,7 +96,7 @@
         "h": 720
       }
     },
-    "character/unlockMavuika": {
+    "unlockMavuika": {
       "frame": {
         "x": 5040,
         "y": 0,
@@ -104,7 +104,7 @@
         "h": 720
       }
     },
-    "character/unlockNahida": {
+    "unlockNahida": {
       "frame": {
         "x": 5460,
         "y": 0,
@@ -112,7 +112,7 @@
         "h": 720
       }
     },
-    "character/unlockRaiden": {
+    "unlockRaiden": {
       "frame": {
         "x": 5880,
         "y": 0,
@@ -120,7 +120,7 @@
         "h": 720
       }
     },
-    "character/unlockVenti": {
+    "unlockVenti": {
       "frame": {
         "x": 6300,
         "y": 0,
@@ -128,7 +128,7 @@
         "h": 720
       }
     },
-    "character/unlockZhongli": {
+    "unlockZhongli": {
       "frame": {
         "x": 6720,
         "y": 0,
@@ -136,7 +136,7 @@
         "h": 720
       }
     },
-    "character/venti-sprite": {
+    "venti-sprite": {
       "frame": {
         "x": 7140,
         "y": 0,
@@ -144,7 +144,7 @@
         "h": 720
       }
     },
-    "character/venti": {
+    "venti": {
       "frame": {
         "x": 0,
         "y": 720,
@@ -152,7 +152,7 @@
         "h": 720
       }
     },
-    "character/zhongli-sprite": {
+    "zhongli-sprite": {
       "frame": {
         "x": 420,
         "y": 720,
@@ -160,7 +160,7 @@
         "h": 720
       }
     },
-    "character/zhongli": {
+    "zhongli": {
       "frame": {
         "x": 840,
         "y": 720,
@@ -168,7 +168,7 @@
         "h": 720
       }
     },
-    "coin/anemo-fragment": {
+    "anemo-fragment": {
       "frame": {
         "x": 1260,
         "y": 720,
@@ -176,7 +176,7 @@
         "h": 720
       }
     },
-    "coin/anemo-resonance": {
+    "anemo-resonance": {
       "frame": {
         "x": 1680,
         "y": 720,
@@ -184,7 +184,7 @@
         "h": 720
       }
     },
-    "coin/cryo-fragment": {
+    "cryo-fragment": {
       "frame": {
         "x": 2100,
         "y": 720,
@@ -192,7 +192,7 @@
         "h": 720
       }
     },
-    "coin/cryo-resonance": {
+    "cryo-resonance": {
       "frame": {
         "x": 2520,
         "y": 720,
@@ -200,7 +200,7 @@
         "h": 720
       }
     },
-    "coin/dendro-fragment": {
+    "dendro-fragment": {
       "frame": {
         "x": 2940,
         "y": 720,
@@ -208,7 +208,7 @@
         "h": 720
       }
     },
-    "coin/dendro-resonance": {
+    "dendro-resonance": {
       "frame": {
         "x": 3360,
         "y": 720,
@@ -216,7 +216,7 @@
         "h": 720
       }
     },
-    "coin/electro-fragment": {
+    "electro-fragment": {
       "frame": {
         "x": 3780,
         "y": 720,
@@ -224,7 +224,7 @@
         "h": 720
       }
     },
-    "coin/electro-resonance": {
+    "electro-resonance": {
       "frame": {
         "x": 4200,
         "y": 720,
@@ -232,7 +232,7 @@
         "h": 720
       }
     },
-    "coin/geo-fragment": {
+    "geo-fragment": {
       "frame": {
         "x": 4620,
         "y": 720,
@@ -240,7 +240,7 @@
         "h": 720
       }
     },
-    "coin/geo-resonance": {
+    "geo-resonance": {
       "frame": {
         "x": 5040,
         "y": 720,
@@ -248,7 +248,7 @@
         "h": 720
       }
     },
-    "coin/hydro-fragment": {
+    "hydro-fragment": {
       "frame": {
         "x": 5460,
         "y": 720,
@@ -256,7 +256,7 @@
         "h": 720
       }
     },
-    "coin/hydro-resonance": {
+    "hydro-resonance": {
       "frame": {
         "x": 5880,
         "y": 720,
@@ -264,7 +264,7 @@
         "h": 720
       }
     },
-    "coin/pyro-fragment": {
+    "pyro-fragment": {
       "frame": {
         "x": 6300,
         "y": 720,
@@ -272,7 +272,7 @@
         "h": 720
       }
     },
-    "coin/pyro-resonance": {
+    "pyro-resonance": {
       "frame": {
         "x": 6720,
         "y": 720,
@@ -280,7 +280,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/cryo-mage": {
+    "cryo-mage": {
       "frame": {
         "x": 7140,
         "y": 720,
@@ -288,7 +288,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/deacon-fire": {
+    "deacon-fire": {
       "frame": {
         "x": 0,
         "y": 1440,
@@ -296,7 +296,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/electro-mage": {
+    "electro-mage": {
       "frame": {
         "x": 420,
         "y": 1440,
@@ -304,7 +304,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/herald-water": {
+    "herald-water": {
       "frame": {
         "x": 840,
         "y": 1440,
@@ -312,7 +312,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/hydro_abyss_mage": {
+    "hydro_abyss_mage": {
       "frame": {
         "x": 1260,
         "y": 1440,
@@ -320,7 +320,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/invoker-electric": {
+    "invoker-electric": {
       "frame": {
         "x": 1680,
         "y": 1440,
@@ -328,7 +328,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/pyro-mage": {
+    "pyro-mage": {
       "frame": {
         "x": 2100,
         "y": 1440,
@@ -336,7 +336,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/rockfond": {
+    "rockfond": {
       "frame": {
         "x": 2520,
         "y": 1440,
@@ -344,7 +344,7 @@
         "h": 720
       }
     },
-    "enemy/abyss/thundercraven": {
+    "thundercraven": {
       "frame": {
         "x": 2940,
         "y": 1440,
@@ -352,7 +352,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/annihilation-ousia": {
+    "annihilation-ousia": {
       "frame": {
         "x": 3360,
         "y": 1440,
@@ -360,7 +360,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/annihilation-pneuma": {
+    "annihilation-pneuma": {
       "frame": {
         "x": 3780,
         "y": 1440,
@@ -368,7 +368,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/arithmetic-ousia": {
+    "arithmetic-ousia": {
       "frame": {
         "x": 4200,
         "y": 1440,
@@ -376,7 +376,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/arithmetic-pneuma": {
+    "arithmetic-pneuma": {
       "frame": {
         "x": 4620,
         "y": 1440,
@@ -384,7 +384,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/assault-ousia": {
+    "assault-ousia": {
       "frame": {
         "x": 5040,
         "y": 1440,
@@ -392,7 +392,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/assault-pneuma": {
+    "assault-pneuma": {
       "frame": {
         "x": 5460,
         "y": 1440,
@@ -400,7 +400,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/earthdrake": {
+    "earthdrake": {
       "frame": {
         "x": 5880,
         "y": 1440,
@@ -408,7 +408,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/guard": {
+    "guard": {
       "frame": {
         "x": 6300,
         "y": 1440,
@@ -416,7 +416,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/suppression-ousia": {
+    "suppression-ousia": {
       "frame": {
         "x": 6720,
         "y": 1440,
@@ -424,7 +424,7 @@
         "h": 720
       }
     },
-    "enemy/Automatons/suppression-pneuma": {
+    "suppression-pneuma": {
       "frame": {
         "x": 7140,
         "y": 1440,
@@ -432,7 +432,7 @@
         "h": 720
       }
     },
-    "enemy/boss/apep": {
+    "apep": {
       "frame": {
         "x": 0,
         "y": 2160,
@@ -440,7 +440,7 @@
         "h": 720
       }
     },
-    "enemy/boss/azhdaha": {
+    "azhdaha": {
       "frame": {
         "x": 420,
         "y": 2160,
@@ -448,7 +448,7 @@
         "h": 720
       }
     },
-    "enemy/boss/chrysopelea-sacred": {
+    "chrysopelea-sacred": {
       "frame": {
         "x": 840,
         "y": 2160,
@@ -456,7 +456,7 @@
         "h": 720
       }
     },
-    "enemy/boss/dvalin": {
+    "dvalin": {
       "frame": {
         "x": 1260,
         "y": 2160,
@@ -464,7 +464,7 @@
         "h": 720
       }
     },
-    "enemy/boss/effigy-electric": {
+    "effigy-electric": {
       "frame": {
         "x": 1680,
         "y": 2160,
@@ -472,7 +472,7 @@
         "h": 720
       }
     },
-    "enemy/boss/effigy-ice": {
+    "effigy-ice": {
       "frame": {
         "x": 2100,
         "y": 2160,
@@ -480,7 +480,7 @@
         "h": 720
       }
     },
-    "enemy/boss/golden-wolflord": {
+    "golden-wolflord": {
       "frame": {
         "x": 2520,
         "y": 2160,
@@ -488,7 +488,7 @@
         "h": 720
       }
     },
-    "enemy/boss/hermit-crab-promo": {
+    "hermit-crab-promo": {
       "frame": {
         "x": 2940,
         "y": 2160,
@@ -496,7 +496,7 @@
         "h": 720
       }
     },
-    "enemy/boss/la-signora": {
+    "la-signora": {
       "frame": {
         "x": 3360,
         "y": 2160,
@@ -504,7 +504,7 @@
         "h": 720
       }
     },
-    "enemy/boss/maguu-kenki": {
+    "maguu-kenki": {
       "frame": {
         "x": 3780,
         "y": 2160,
@@ -512,7 +512,7 @@
         "h": 720
       }
     },
-    "enemy/boss/narwhal": {
+    "narwhal": {
       "frame": {
         "x": 4200,
         "y": 2160,
@@ -520,7 +520,7 @@
         "h": 720
       }
     },
-    "enemy/boss/oceanid": {
+    "oceanid": {
       "frame": {
         "x": 4620,
         "y": 2160,
@@ -528,7 +528,7 @@
         "h": 720
       }
     },
-    "enemy/boss/raijin": {
+    "raijin": {
       "frame": {
         "x": 5040,
         "y": 2160,
@@ -536,7 +536,7 @@
         "h": 720
       }
     },
-    "enemy/boss/scorpion-sacred": {
+    "scorpion-sacred": {
       "frame": {
         "x": 5460,
         "y": 2160,
@@ -544,7 +544,7 @@
         "h": 720
       }
     },
-    "enemy/boss/seahorse-primo": {
+    "seahorse-primo": {
       "frame": {
         "x": 5880,
         "y": 2160,
@@ -552,7 +552,7 @@
         "h": 720
       }
     },
-    "enemy/boss/terrorshroom": {
+    "terrorshroom": {
       "frame": {
         "x": 6300,
         "y": 2160,
@@ -560,7 +560,7 @@
         "h": 720
       }
     },
-    "enemy/boss/xiuhcoatl": {
+    "xiuhcoatl": {
       "frame": {
         "x": 6720,
         "y": 2160,
@@ -568,7 +568,7 @@
         "h": 720
       }
     },
-    "enemy/boss/yumkasaur": {
+    "yumkasaur": {
       "frame": {
         "x": 7140,
         "y": 2160,
@@ -576,7 +576,7 @@
         "h": 720
       }
     },
-    "enemy/eremite/daythunder": {
+    "daythunder": {
       "frame": {
         "x": 0,
         "y": 2880,
@@ -584,7 +584,7 @@
         "h": 720
       }
     },
-    "enemy/eremite/desert-clearwater": {
+    "desert-clearwater": {
       "frame": {
         "x": 420,
         "y": 2880,
@@ -592,7 +592,7 @@
         "h": 720
       }
     },
-    "enemy/eremite/floral-dancer": {
+    "floral-dancer": {
       "frame": {
         "x": 840,
         "y": 2880,
@@ -600,7 +600,7 @@
         "h": 720
       }
     },
-    "enemy/eremite/muscleman": {
+    "muscleman": {
       "frame": {
         "x": 1260,
         "y": 2880,
@@ -608,7 +608,7 @@
         "h": 720
       }
     },
-    "enemy/eremite/stone-enchanter": {
+    "stone-enchanter": {
       "frame": {
         "x": 1680,
         "y": 2880,
@@ -616,7 +616,7 @@
         "h": 720
       }
     },
-    "enemy/eremite/sunfrost": {
+    "sunfrost": {
       "frame": {
         "x": 2100,
         "y": 2880,
@@ -624,7 +624,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/anemoboxer": {
+    "anemoboxer": {
       "frame": {
         "x": 2520,
         "y": 2880,
@@ -632,7 +632,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/cryo-cicin-mage": {
+    "cryo-cicin-mage": {
       "frame": {
         "x": 2940,
         "y": 2880,
@@ -640,7 +640,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/cryogunner": {
+    "cryogunner": {
       "frame": {
         "x": 3360,
         "y": 2880,
@@ -648,7 +648,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/electro-cicin-mage": {
+    "electro-cicin-mage": {
       "frame": {
         "x": 3780,
         "y": 2880,
@@ -656,7 +656,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/electrohammer": {
+    "electrohammer": {
       "frame": {
         "x": 4200,
         "y": 2880,
@@ -664,7 +664,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/escadron-ice": {
+    "escadron-ice": {
       "frame": {
         "x": 4620,
         "y": 2880,
@@ -672,7 +672,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/geochanter": {
+    "geochanter": {
       "frame": {
         "x": 5040,
         "y": 2880,
@@ -680,7 +680,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/hydrogunner": {
+    "hydrogunner": {
       "frame": {
         "x": 5460,
         "y": 2880,
@@ -688,7 +688,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/maiden-water": {
+    "maiden-water": {
       "frame": {
         "x": 5880,
         "y": 2880,
@@ -696,7 +696,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/pyro-agent": {
+    "pyro-agent": {
       "frame": {
         "x": 6300,
         "y": 2880,
@@ -704,7 +704,7 @@
         "h": 720
       }
     },
-    "enemy/fatui/pyroslinger": {
+    "pyroslinger": {
       "frame": {
         "x": 6720,
         "y": 2880,
@@ -712,7 +712,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/anemo-samachurl": {
+    "anemo-samachurl": {
       "frame": {
         "x": 7140,
         "y": 2880,
@@ -720,7 +720,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/berserker": {
+    "berserker": {
       "frame": {
         "x": 0,
         "y": 3600,
@@ -728,7 +728,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/blazing": {
+    "blazing": {
       "frame": {
         "x": 420,
         "y": 3600,
@@ -736,7 +736,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/crackling": {
+    "crackling": {
       "frame": {
         "x": 840,
         "y": 3600,
@@ -744,7 +744,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/cryo-shooter": {
+    "cryo-shooter": {
       "frame": {
         "x": 1260,
         "y": 3600,
@@ -752,7 +752,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/dendro-samachurl": {
+    "dendro-samachurl": {
       "frame": {
         "x": 1680,
         "y": 3600,
@@ -760,7 +760,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/electro-samachurl": {
+    "electro-samachurl": {
       "frame": {
         "x": 2100,
         "y": 3600,
@@ -768,7 +768,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/electro-shooter": {
+    "electro-shooter": {
       "frame": {
         "x": 2520,
         "y": 3600,
@@ -776,7 +776,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/fighter": {
+    "fighter": {
       "frame": {
         "x": 2940,
         "y": 3600,
@@ -784,7 +784,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/geo-samachurl": {
+    "geo-samachurl": {
       "frame": {
         "x": 3360,
         "y": 3600,
@@ -792,7 +792,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/hilistray-water": {
+    "hilistray-water": {
       "frame": {
         "x": 3780,
         "y": 3600,
@@ -800,7 +800,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/hydro-samachurl": {
+    "hydro-samachurl": {
       "frame": {
         "x": 4200,
         "y": 3600,
@@ -808,7 +808,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/ice-shieldwall": {
+    "ice-shieldwall": {
       "frame": {
         "x": 4620,
         "y": 3600,
@@ -816,7 +816,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/lawachurl": {
+    "lawachurl": {
       "frame": {
         "x": 5040,
         "y": 3600,
@@ -824,7 +824,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/rock-shieldwall": {
+    "rock-shieldwall": {
       "frame": {
         "x": 5460,
         "y": 3600,
@@ -832,7 +832,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/shooter": {
+    "shooter": {
       "frame": {
         "x": 5880,
         "y": 3600,
@@ -840,7 +840,7 @@
         "h": 720
       }
     },
-    "enemy/hilichurl/wooden-shieldwall": {
+    "wooden-shieldwall": {
       "frame": {
         "x": 6300,
         "y": 3600,
@@ -848,7 +848,7 @@
         "h": 720
       }
     },
-    "enemy/kairagi/dancing-thunder": {
+    "dancing-thunder": {
       "frame": {
         "x": 6720,
         "y": 3600,
@@ -856,7 +856,7 @@
         "h": 720
       }
     },
-    "enemy/kairagi/fiery-might": {
+    "fiery-might": {
       "frame": {
         "x": 7140,
         "y": 3600,
@@ -864,7 +864,7 @@
         "h": 720
       }
     },
-    "enemy/kairagi/hitsukeban": {
+    "hitsukeban": {
       "frame": {
         "x": 0,
         "y": 4320,
@@ -872,7 +872,7 @@
         "h": 720
       }
     },
-    "enemy/kairagi/jintouban": {
+    "jintouban": {
       "frame": {
         "x": 420,
         "y": 4320,
@@ -880,7 +880,7 @@
         "h": 720
       }
     },
-    "enemy/kairagi/kikouban": {
+    "kikouban": {
       "frame": {
         "x": 840,
         "y": 4320,
@@ -888,7 +888,7 @@
         "h": 720
       }
     },
-    "enemy/shroom/cryoshroom": {
+    "cryoshroom": {
       "frame": {
         "x": 1260,
         "y": 4320,
@@ -896,7 +896,7 @@
         "h": 720
       }
     },
-    "enemy/shroom/dendroshroom": {
+    "dendroshroom": {
       "frame": {
         "x": 1680,
         "y": 4320,
@@ -904,7 +904,7 @@
         "h": 720
       }
     },
-    "enemy/shroom/geoshroom": {
+    "geoshroom": {
       "frame": {
         "x": 2100,
         "y": 4320,
@@ -912,7 +912,7 @@
         "h": 720
       }
     },
-    "enemy/shroom/hydroshroom": {
+    "hydroshroom": {
       "frame": {
         "x": 2520,
         "y": 4320,
@@ -920,7 +920,7 @@
         "h": 720
       }
     },
-    "enemy/shroom/pyro-flower": {
+    "pyro-flower": {
       "frame": {
         "x": 2940,
         "y": 4320,
@@ -928,7 +928,7 @@
         "h": 720
       }
     },
-    "enemy/slime/cryo": {
+    "cryo": {
       "frame": {
         "x": 3360,
         "y": 4320,
@@ -936,7 +936,7 @@
         "h": 720
       }
     },
-    "enemy/slime/electro": {
+    "electro": {
       "frame": {
         "x": 3780,
         "y": 4320,
@@ -944,7 +944,7 @@
         "h": 720
       }
     },
-    "enemy/slime/hydro-phantasm": {
+    "hydro-phantasm": {
       "frame": {
         "x": 4200,
         "y": 4320,
@@ -952,7 +952,7 @@
         "h": 720
       }
     },
-    "enemy/slime/hydro": {
+    "hydro": {
       "frame": {
         "x": 4620,
         "y": 4320,
@@ -960,7 +960,7 @@
         "h": 720
       }
     },
-    "enemy/slime/large-cryo": {
+    "large-cryo": {
       "frame": {
         "x": 5040,
         "y": 4320,
@@ -968,7 +968,7 @@
         "h": 720
       }
     },
-    "enemy/slime/large-hydro": {
+    "large-hydro": {
       "frame": {
         "x": 5460,
         "y": 4320,
@@ -976,7 +976,7 @@
         "h": 720
       }
     },
-    "food/life-essence": {
+    "life-essence": {
       "frame": {
         "x": 5880,
         "y": 4320,
@@ -984,7 +984,7 @@
         "h": 720
       }
     },
-    "food/macarons": {
+    "macarons": {
       "frame": {
         "x": 6300,
         "y": 4320,
@@ -992,7 +992,7 @@
         "h": 720
       }
     },
-    "food/mystique-soup": {
+    "mystique-soup": {
       "frame": {
         "x": 6720,
         "y": 4320,
@@ -1000,7 +1000,7 @@
         "h": 720
       }
     },
-    "food/pizza": {
+    "pizza": {
       "frame": {
         "x": 7140,
         "y": 4320,
@@ -1008,7 +1008,7 @@
         "h": 720
       }
     },
-    "food/roast-chicken": {
+    "roast-chicken": {
       "frame": {
         "x": 0,
         "y": 5040,
@@ -1016,7 +1016,7 @@
         "h": 720
       }
     },
-    "trap/abyss-call": {
+    "abyss-call": {
       "frame": {
         "x": 420,
         "y": 5040,
@@ -1024,7 +1024,7 @@
         "h": 720
       }
     },
-    "trap/breathe-fire": {
+    "breathe-fire": {
       "frame": {
         "x": 840,
         "y": 5040,
@@ -1032,7 +1032,7 @@
         "h": 720
       }
     },
-    "trap/quicksand": {
+    "quicksand": {
       "frame": {
         "x": 1260,
         "y": 5040,
@@ -1040,7 +1040,7 @@
         "h": 720
       }
     },
-    "treasure/bribery": {
+    "bribery": {
       "frame": {
         "x": 1680,
         "y": 5040,
@@ -1048,7 +1048,7 @@
         "h": 720
       }
     },
-    "treasure/chest": {
+    "chest": {
       "frame": {
         "x": 2100,
         "y": 5040,
@@ -1056,7 +1056,7 @@
         "h": 720
       }
     },
-    "treasure/gold-mine": {
+    "gold-mine": {
       "frame": {
         "x": 2520,
         "y": 5040,
@@ -1064,7 +1064,7 @@
         "h": 720
       }
     },
-    "weapon/bow/amos": {
+    "amos": {
       "frame": {
         "x": 2940,
         "y": 5040,
@@ -1072,7 +1072,7 @@
         "h": 720
       }
     },
-    "weapon/bow/elegy": {
+    "elegy": {
       "frame": {
         "x": 3360,
         "y": 5040,
@@ -1080,7 +1080,7 @@
         "h": 720
       }
     },
-    "weapon/bow/fish": {
+    "fish": {
       "frame": {
         "x": 3780,
         "y": 5040,
@@ -1088,15 +1088,15 @@
         "h": 720
       }
     },
-    "weapon/bow/forest": {
+    "forest": {
       "frame": {
         "x": 4200,
-        "y": 5040,
+        "y": 6480,
         "w": 420,
         "h": 720
       }
     },
-    "weapon/bow/raven": {
+    "raven": {
       "frame": {
         "x": 4620,
         "y": 5040,
@@ -1104,15 +1104,15 @@
         "h": 720
       }
     },
-    "weapon/bow/sacrificial": {
+    "sacrificial": {
       "frame": {
-        "x": 5040,
-        "y": 5040,
+        "x": 4620,
+        "y": 6480,
         "w": 420,
         "h": 720
       }
     },
-    "weapon/bow/simulacra": {
+    "simulacra": {
       "frame": {
         "x": 5460,
         "y": 5040,
@@ -1120,15 +1120,15 @@
         "h": 720
       }
     },
-    "weapon/bow/skyward": {
+    "skyward": {
       "frame": {
-        "x": 5880,
-        "y": 5040,
+        "x": 5040,
+        "y": 6480,
         "w": 420,
         "h": 720
       }
     },
-    "weapon/catalyst/dreams": {
+    "dreams": {
       "frame": {
         "x": 6300,
         "y": 5040,
@@ -1136,7 +1136,7 @@
         "h": 720
       }
     },
-    "weapon/catalyst/eternal-flow": {
+    "eternal-flow": {
       "frame": {
         "x": 6720,
         "y": 5040,
@@ -1144,7 +1144,7 @@
         "h": 720
       }
     },
-    "weapon/catalyst/flowing-purity": {
+    "flowing-purity": {
       "frame": {
         "x": 7140,
         "y": 5040,
@@ -1152,15 +1152,7 @@
         "h": 720
       }
     },
-    "weapon/catalyst/forest": {
-      "frame": {
-        "x": 0,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/catalyst/magic-guide": {
+    "magic-guide": {
       "frame": {
         "x": 420,
         "y": 5760,
@@ -1168,7 +1160,7 @@
         "h": 720
       }
     },
-    "weapon/catalyst/remembrance": {
+    "remembrance": {
       "frame": {
         "x": 840,
         "y": 5760,
@@ -1176,7 +1168,7 @@
         "h": 720
       }
     },
-    "weapon/catalyst/sacred-winds": {
+    "sacred-winds": {
       "frame": {
         "x": 1260,
         "y": 5760,
@@ -1184,31 +1176,15 @@
         "h": 720
       }
     },
-    "weapon/catalyst/sacrificial": {
+    "steampunk": {
       "frame": {
-        "x": 1680,
-        "y": 5760,
+        "x": 5880,
+        "y": 6480,
         "w": 420,
         "h": 720
       }
     },
-    "weapon/catalyst/skyward": {
-      "frame": {
-        "x": 2100,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/catalyst/steampunk": {
-      "frame": {
-        "x": 2520,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/claymore/beacon": {
+    "beacon": {
       "frame": {
         "x": 2940,
         "y": 5760,
@@ -1216,7 +1192,7 @@
         "h": 720
       }
     },
-    "weapon/claymore/bell": {
+    "bell": {
       "frame": {
         "x": 3360,
         "y": 5760,
@@ -1224,15 +1200,7 @@
         "h": 720
       }
     },
-    "weapon/claymore/forest": {
-      "frame": {
-        "x": 3780,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/claymore/gravestone": {
+    "gravestone": {
       "frame": {
         "x": 4200,
         "y": 5760,
@@ -1240,7 +1208,7 @@
         "h": 720
       }
     },
-    "weapon/claymore/iron": {
+    "iron": {
       "frame": {
         "x": 4620,
         "y": 5760,
@@ -1248,7 +1216,7 @@
         "h": 720
       }
     },
-    "weapon/claymore/overlord": {
+    "overlord": {
       "frame": {
         "x": 5040,
         "y": 5760,
@@ -1256,31 +1224,7 @@
         "h": 720
       }
     },
-    "weapon/claymore/sacrificial": {
-      "frame": {
-        "x": 5460,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/claymore/skyward": {
-      "frame": {
-        "x": 5880,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/claymore/steampunk": {
-      "frame": {
-        "x": 6300,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/polearm/engulfing-lightning": {
+    "engulfing-lightning": {
       "frame": {
         "x": 6720,
         "y": 5760,
@@ -1288,15 +1232,7 @@
         "h": 720
       }
     },
-    "weapon/polearm/forest": {
-      "frame": {
-        "x": 7140,
-        "y": 5760,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/polearm/jade": {
+    "jade": {
       "frame": {
         "x": 0,
         "y": 6480,
@@ -1304,7 +1240,7 @@
         "h": 720
       }
     },
-    "weapon/polearm/lithic": {
+    "lithic": {
       "frame": {
         "x": 420,
         "y": 6480,
@@ -1312,7 +1248,7 @@
         "h": 720
       }
     },
-    "weapon/polearm/rightful": {
+    "rightful": {
       "frame": {
         "x": 840,
         "y": 6480,
@@ -1320,23 +1256,7 @@
         "h": 720
       }
     },
-    "weapon/polearm/skyward": {
-      "frame": {
-        "x": 1260,
-        "y": 6480,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/polearm/steampunk": {
-      "frame": {
-        "x": 1680,
-        "y": 6480,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/polearm/tassel": {
+    "tassel": {
       "frame": {
         "x": 2100,
         "y": 6480,
@@ -1344,7 +1264,7 @@
         "h": 720
       }
     },
-    "weapon/polearm/vanquisher": {
+    "vanquisher": {
       "frame": {
         "x": 2520,
         "y": 6480,
@@ -1352,7 +1272,7 @@
         "h": 720
       }
     },
-    "weapon/sword/aquila": {
+    "aquila": {
       "frame": {
         "x": 2940,
         "y": 6480,
@@ -1360,7 +1280,7 @@
         "h": 720
       }
     },
-    "weapon/sword/favonius": {
+    "favonius": {
       "frame": {
         "x": 3360,
         "y": 6480,
@@ -1368,7 +1288,7 @@
         "h": 720
       }
     },
-    "weapon/sword/foliar-incision": {
+    "foliar-incision": {
       "frame": {
         "x": 3780,
         "y": 6480,
@@ -1376,31 +1296,7 @@
         "h": 720
       }
     },
-    "weapon/sword/forest": {
-      "frame": {
-        "x": 4200,
-        "y": 6480,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/sword/sacrificial": {
-      "frame": {
-        "x": 4620,
-        "y": 6480,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/sword/skyward": {
-      "frame": {
-        "x": 5040,
-        "y": 6480,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/sword/splendor": {
+    "splendor": {
       "frame": {
         "x": 5460,
         "y": 6480,
@@ -1408,15 +1304,7 @@
         "h": 720
       }
     },
-    "weapon/sword/steampunk": {
-      "frame": {
-        "x": 5880,
-        "y": 6480,
-        "w": 420,
-        "h": 720
-      }
-    },
-    "weapon/sword/traveler": {
+    "traveler": {
       "frame": {
         "x": 6300,
         "y": 6480,

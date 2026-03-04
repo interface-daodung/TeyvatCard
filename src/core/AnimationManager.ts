@@ -3,12 +3,12 @@
 
 import Phaser from 'phaser';
 import CalculatePositionCard from '../utils/CalculatePositionCard.js';
-import Card from '../modules/Card.js';
+import Card from '../modules/card/Card.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 
 interface AnimationQueueItem {
     priority: number;
-    function: (completeCallback: () => void) => void;
+    function: () => Promise<void>;
 }
 
 interface MovementItem {
@@ -19,11 +19,12 @@ interface MovementItem {
 interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: {
         cardManager: {
-            getCard: (index: number) => Phaser.GameObjects.GameObject | null;
+            getCard: (index: number) => { view?: Phaser.GameObjects.GameObject } | null;
             getGridPositionCoordinates: (index: number) => { x: number; y: number } | null;
             swapCard: (fromIndex: number, toIndex: number) => boolean;
-            getAllCards: () => Phaser.GameObjects.GameObject[];
-        },
+            getAllCards: () => unknown[];
+            cards: unknown[];
+        };
         isGameOver: boolean;
     };
     tweens: Phaser.Tweens.TweenManager;
@@ -48,18 +49,13 @@ export default class AnimationManager {
     }
 
     /**
-     * Thêm animation function vào hàng đợi với priority
-     * @param priority - Độ ưu tiên (càng cao càng được ưu tiên chạy trước)
-     * @param animationFunction - Function chứa logic animation
+     * Thêm animation function vào hàng đợi với priority. Hàm trả về Promise, không dùng callback.
      */
-    addToQueue(priority: number, animationFunction: (completeCallback: () => void) => void): void {
+    addToQueue(priority: number, animationFunction: () => Promise<void>): void {
         this.animationQueue.push({
             priority: priority,
             function: animationFunction
         });
-        //console.log(`AnimationManager: Đã thêm animation function với priority ${priority} vào hàng đợi`);
-
-        // Tự động bắt đầu xử lý nếu chưa có gì đang chạy
         if (!this.isProcessing) {
             this.processQueue();
         }
@@ -97,19 +93,15 @@ export default class AnimationManager {
     }
 
     /**
-     * Thực hiện animation function
-     * @param animationFunction - Function chứa logic animation
+     * Thực hiện animation function (trả về Promise).
      */
-    executeAnimation(animationFunction: (completeCallback: () => void) => void): void {
-        try {
-            // Gọi animation function và truyền callback để hoàn thành
-            animationFunction(() => {
+    executeAnimation(animationFunction: () => Promise<void>): void {
+        animationFunction()
+            .then(() => this.completeAnimation())
+            .catch((error) => {
+                console.error('AnimationManager: Lỗi khi thực hiện animation:', error);
                 this.completeAnimation();
             });
-        } catch (error) {
-            console.error('AnimationManager: Lỗi khi thực hiện animation:', error);
-            this.completeAnimation();
-        }
     }
 
     /**
@@ -129,342 +121,243 @@ export default class AnimationManager {
     }
 
     /**
-     * Helper method: Thêm animation di chuyển vào queue với priority 10
-     * @param movementList - Đối tượng cần di chuyển (có thể là 1 object hoặc array)
-     * @param onComplete - Callback khi hoàn thành
+     * Chạy tween di chuyển (không thêm queue). Dùng khi gom nhiều bước trong một queue item.
      */
-    startMoveAnimation(movementList: MovementItem | MovementItem[], onComplete?: () => void): void {
-        this.addToQueue(8, () => {
-            // Kiểm tra xem movementList có phải là array không
-            const targets = Array.isArray(movementList) ? movementList : [movementList];
+    runMoveTweens(movementList: MovementItem | MovementItem[]): Promise<void> {
+        const targets = Array.isArray(movementList) ? movementList : [movementList];
+        if (targets.length === 0) return Promise.resolve();
 
-            // Tạo array để theo dõi số animation đã hoàn thành
-            let completedAnimations = 0;
-            const totalAnimations = targets.length;
-
-            // Tạo animation riêng cho từng thẻ
-            targets.forEach(movement => {
-                const card = this.scene.gameManager?.cardManager.getCard(movement.from);
+        return new Promise<void>((innerResolve) => {
+            let completed = 0;
+            targets.forEach((movement) => {
+                // Sau khi GameManager.apply state, card logic đã ở vị trí movement.to,
+                // view vẫn ở vị trí cũ. Tween card tại index "to" tới tọa độ "to".
+                const card = this.scene.gameManager?.cardManager.getCard(movement.to);
                 const coordinates = this.scene.gameManager?.cardManager.getGridPositionCoordinates(movement.to);
+                const view = card && (card as { view?: Phaser.GameObjects.GameObject }).view ? (card as { view: Phaser.GameObjects.GameObject }).view : card;
 
-                if (!card || !coordinates) {
-                    completedAnimations++;
-                    if (completedAnimations >= totalAnimations) {
-                        if (onComplete && typeof onComplete === 'function') {
-                            onComplete();
-                        }
-                        this.completeAnimation();
-                    }
+                if (!view || !coordinates) {
+                    completed++;
+                    if (completed >= targets.length) innerResolve();
                     return;
                 }
 
-                // Lưu z-index cũ để khôi phục sau
-                const originalDepth = (card as any).depth || 0;
-
-                // Đặt z-index cao hơn cho card đang di chuyển
-                (card as any).setDepth(100);
+                const originalDepth = (view as Phaser.GameObjects.GameObject & { depth?: number }).depth ?? 0;
+                (view as Phaser.GameObjects.GameObject & { setDepth?: (d: number) => void }).setDepth?.(100);
 
                 this.scene.tweens.add({
-                    targets: card,
-                    x: coordinates.x,   // Mỗi card tự có target riêng
+                    targets: view,
+                    x: coordinates.x,
                     y: coordinates.y,
                     duration: 500,
                     ease: 'Power2',
                     onComplete: () => {
-                        // Khôi phục z-index về bình thường
-                        (card as any).setDepth(originalDepth);
-
-                        completedAnimations++;
-
-                        // Kiểm tra xem tất cả animation đã hoàn thành chưa
-                        if (completedAnimations >= totalAnimations) {
-                            //console.log(`AnimationManager: Tất cả ${totalAnimations} thẻ đã di chuyển xong`);
-
-                            // Gọi callback của user trước
-                            if (onComplete && typeof onComplete === 'function') {
-                                onComplete();
-                            } else {
-                                console.error('AnimationManager: Không có callback được gọi');
-                            }
-
-                            // Sau đó gọi completeAnimation để reset trạng thái và xử lý queue tiếp
-                            this.completeAnimation();
-                        }
+                        (view as Phaser.GameObjects.GameObject & { setDepth?: (d: number) => void }).setDepth?.(originalDepth);
+                        completed++;
+                        if (completed >= targets.length) innerResolve();
                     }
                 });
             });
         });
     }
 
+    /**
+     * Thêm animation di chuyển vào queue. Trả về Promise khi hoàn thành (không dùng callback).
+     */
+    startMoveAnimation(movementList: MovementItem | MovementItem[]): Promise<void> {
+        return new Promise((resolve) => {
+            this.addToQueue(8, () => this.runMoveTweens(movementList).then(resolve));
+        });
+    }
 
-    startGameOverAnimation(deck: Phaser.GameObjects.Container[], onComplete?: () => void): void {
-        this.addToQueue(10, () => {
-            let currentIndex = 0;
-            const totalCards = deck.length;
 
-            // Sử dụng Phaser Timer thay vì setTimeout
-            const timer = this.scene.time.addEvent({
-                delay: 200,
-                callback: () => {
-                    if (currentIndex >= totalCards) {
-                        // Đã destroy hết thẻ, dừng timer và hiển thị dialog game over
-                        timer.destroy();
-                        if (onComplete && typeof onComplete === 'function') {
-                            onComplete();
-                        } else {
-                            console.error('AnimationManager: Không có callback được gọi');
-                        }
-                        this.completeAnimation();
-                        return;
+    startGameOverAnimation(deck: Array<{ view?: { playDestroy: () => Promise<void> } }>): Promise<void> {
+        return new Promise((resolve) => {
+            this.addToQueue(10, () => {
+                const runSequence = async (): Promise<void> => {
+                    for (let i = 0; i < deck.length; i++) {
+                        await new Promise<void>((r) => this.scene.time.delayedCall(200, r));
+                        const card = deck[i];
+                        if (card?.view?.playDestroy) await card.view.playDestroy();
                     }
-
-                    const card = deck[currentIndex];
-
-                    if (card && (card as any).ProgressDestroy) {
-                        (card as any).ProgressDestroy();
-                        console.log(`GameManager: Destroying card ${(card as any).name || (card as any).type} at index ${currentIndex}`);
-                    }
-                    currentIndex++;
-                },
-                loop: true
+                };
+                return runSequence().then(resolve);
             });
         });
     }
 
-    startSwapCardsAnimation(form: number, to: number, onComplete?: () => void): void {
-        this.addToQueue(8, () => {
-            const cardForm = this.scene.gameManager?.cardManager.getCard(form);
-            const cardTo = this.scene.gameManager?.cardManager.getCard(to);
+    startSwapCardsAnimation(form: number, to: number): Promise<void> {
+        return new Promise((resolve) => {
+            this.addToQueue(8, () => {
+                const cardForm = this.scene.gameManager?.cardManager.getCard(form);
+                const cardTo = this.scene.gameManager?.cardManager.getCard(to);
+                const viewForm = cardForm && (cardForm as { view?: Phaser.GameObjects.GameObject }).view ? (cardForm as { view: Phaser.GameObjects.GameObject }).view : cardForm;
+                const viewTo = cardTo && (cardTo as { view?: Phaser.GameObjects.GameObject }).view ? (cardTo as { view: Phaser.GameObjects.GameObject }).view : cardTo;
 
-            if (!cardForm || !cardTo || !this.scene.gameManager) {
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
+                if (!viewForm || !viewTo || !this.scene.gameManager) {
+                    resolve();
+                    return Promise.resolve();
                 }
-                this.completeAnimation();
-                return;
-            }
 
-            // đổi frame hoặc texture ở mặt sau/mặt trước
-            this.scene.gameManager.cardManager.swapCard(form, to);
+                this.scene.gameManager.cardManager.swapCard(form, to);
 
-            this.scene.tweens.add({
-                targets: [cardForm, cardTo],
-                scaleX: 0,
-                scaleY: 1.05,
-                duration: 150,
-                ease: 'Linear',
-                onComplete: () => {
+                return new Promise<void>((innerResolve) => {
                     this.scene.tweens.add({
-                        targets: [cardTo, cardForm],
-                        scaleX: 1,
-                        scaleY: 1,
+                        targets: [viewForm, viewTo],
+                        scaleX: 0,
+                        scaleY: 1.05,
                         duration: 150,
                         ease: 'Linear',
                         onComplete: () => {
-                            if (onComplete && typeof onComplete === 'function') {
-                                onComplete();
-                            } else {
-                                console.error('AnimationManager: Không có callback được gọi');
-                            }
-                            this.completeAnimation();
-                        } // callback nếu có
+                            this.scene.tweens.add({
+                                targets: [viewTo, viewForm],
+                                scaleX: 1,
+                                scaleY: 1,
+                                duration: 150,
+                                ease: 'Linear',
+                                onComplete: () => {
+                                    resolve();
+                                    innerResolve();
+                                }
+                            });
+                        }
                     });
-                }
+                });
             });
         });
     }
 
     /**
-     * Bắt đầu animation shuffle toàn bộ thẻ trên bàn chơi
-     * @param onComplete - Callback khi animation hoàn thành
+     * Bắt đầu animation shuffle toàn bộ thẻ. Trả về Promise khi hoàn thành.
      */
-    startShuffleAllCardsAnimation(onComplete?: () => void): void {
-        this.addToQueue(8, () => {
-            if (!this.scene.gameManager) {
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
+    startShuffleAllCardsAnimation(): Promise<void> {
+        return new Promise((resolve) => {
+            this.addToQueue(8, () => {
+                if (!this.scene.gameManager) {
+                    resolve();
+                    return Promise.resolve();
                 }
-                this.completeAnimation();
-                return;
-            }
 
-            const allCards = this.scene.gameManager.cardManager.getAllCards();
-            // Tạo animation lật thẻ cho tất cả
-            // Bước 1: Lật tất cả thẻ (scaleX = 0)
-            this.scene.tweens.add({
-                targets: allCards,
-                scaleX: 0,
-                duration: 150,
-                ease: 'Linear',
-                onComplete: () => {
-                    // Lấy tất cả thẻ hiện tại
-                    // Shuffle vị trí sử dụng shuffleArray
-                    const allCardShuffledPositions = CalculatePositionCard
-                        .shuffleArray(allCards);
+                const allCards = this.scene.gameManager.cardManager.getAllCards() as Array<{ view?: Phaser.GameObjects.GameObject; index?: number }>;
+                const views = allCards.map((c) => c.view).filter(Boolean) as Phaser.GameObjects.GameObject[];
 
-                    allCardShuffledPositions.forEach((card, index) => {
-                        const newCoordinates = this.scene.gameManager?.cardManager.getGridPositionCoordinates(index);
-                        if (newCoordinates) {
-                            card.setPosition(newCoordinates.x, newCoordinates.y);
-                            (card as any).index = index;
-                        }
-                    });
-                    allCards.sort((a, b) => ((a as any).index || 0) - ((b as any).index || 0));
-                    (this.scene.gameManager.cardManager as any).cards = allCards;
-
-                    // Bước 3: Lật lại tất cả thẻ (scaleX = 1)
+                return new Promise<void>((innerResolve) => {
                     this.scene.tweens.add({
-                        targets: allCards,
-                        scaleX: 1,
+                        targets: views,
+                        scaleX: 0,
                         duration: 150,
                         ease: 'Linear',
                         onComplete: () => {
-                            if (onComplete && typeof onComplete === 'function') {
-                                onComplete();
-                            } else {
-                                console.error('AnimationManager: Không có callback được gọi');
-                            }
-                            this.completeAnimation();
+                            const shuffled = CalculatePositionCard.shuffleArray(allCards) as typeof allCards;
+                            shuffled.forEach((card, index) => {
+                                card.index = index;
+                                const coords = this.scene.gameManager?.cardManager.getGridPositionCoordinates(index);
+                                if (coords && card.view) (card.view as any).setPosition(coords.x, coords.y);
+                            });
+                            this.scene.gameManager!.cardManager.cards = shuffled;
+
+                            this.scene.tweens.add({
+                                targets: views,
+                                scaleX: 1,
+                                duration: 150,
+                                ease: 'Linear',
+                                onComplete: () => {
+                                    resolve();
+                                    innerResolve();
+                                }
+                            });
                         }
                     });
-                }
+                });
             });
         });
     }
 
     /**
-     * Bắt đầu animation thở lửa với priority 9
-     * @param onComplete - Callback khi animation hoàn thành
+     * Animation thở lửa. Trả về Promise khi hoàn thành.
      */
-    startBreatheFireAnimation(damage: number, cardList: number[], onComplete?: () => void): void {
-        this.addToQueue(12, () => {
-            // Kiểm tra gameManager còn tồn tại không
-            if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
-                console.warn('AnimationManager: Game không còn tồn tại, bỏ qua animation');
-                this.completeAnimation();
-                // Không gọi onComplete vì game đã kết thúc, không cần callback
-                return;
-            }
-
-            // Logic animation thở lửa sẽ được thêm vào đây
-            // Ví dụ: tạo hiệu ứng lửa, animation cho character, etc.
-            cardList.forEach(cardIndex => {
-                const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
-                if (card?.takeDamage) {
-                    SpritesheetWrapper.animationBreatheFire(this.scene, card.x, card.y);
+    startBreatheFireAnimation(_damage: number, cardList: number[]): Promise<void> {
+        return new Promise((resolve) => {
+            this.addToQueue(12, () => {
+                if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
+                    resolve();
+                    return Promise.resolve();
                 }
-            });
-            // Tạm thời sử dụng setTimeout để mô phỏng thời gian animation
-            setTimeout(() => {
-                // Gọi callback của user trước
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
-                } else {
-                    console.error('AnimationManager: Không có callback được gọi');
-                }
-
-                // Sau đó gọi completeAnimation để reset trạng thái và xử lý queue tiếp
-                this.completeAnimation();
-            }, 510); // Giả sử animation thở lửa mất 1 giây
-        });
-    }
-
-    startExplosiveAnimation(owner: Card, cardList: number[], onComplete?: () => void): void {
-        this.addToQueue(9, () => {
-            // Kiểm tra gameManager còn tồn tại không
-            if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
-                console.warn('AnimationManager: Game không còn tồn tại, bỏ qua animation');
-                this.completeAnimation();
-                // Không gọi onComplete vì game đã kết thúc, không cần callback
-                return;
-            }
-
-            if (!owner || owner.destroyed) {
-                this.completeAnimation();
-                return;
-            }
-
-            // Logic animation bình thường...
-            cardList.forEach(cardIndex => {
-                const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
-                if (card?.takeDamage) {
-                    SpritesheetWrapper.animationBomb(this.scene, card.x, card.y);
-                }
-            });
-
-            setTimeout(() => {
-                // Kiểm tra lại một lần nữa trước khi gọi callback
-                if (this.scene?.gameManager && !owner.destroyed) {
-                    onComplete?.();
-                }
-                this.completeAnimation();
-            }, 510);
-        });
-    }
-
-    /**
-     * Bắt đầu animation hiệu ứng item với priority 7
-     * @param itemImage - Đường dẫn ảnh của item
-     * @param onComplete - Callback khi animation hoàn thành
-     */
-    startItemAnimation(itemImage: string, onComplete?: () => void): void {
-        this.addToQueue(7, () => {
-            if (!this.scene.gameManager) {
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
-                }
-                this.completeAnimation();
-                return;
-            }
-
-            // Lấy kích thước màn hình
-            // const screenWidth = this.scene.cameras.main.width;
-            // const screenHeight = this.scene.cameras.main.height;
-            const coordinates = this.scene.gameManager.cardManager
-                .getGridPositionCoordinates(4);
-
-            if (!coordinates) {
-                if (onComplete && typeof onComplete === 'function') {
-                    onComplete();
-                }
-                this.completeAnimation();
-                return;
-            }
-
-            // Vị trí tâm màn hình
-            const centerX = coordinates.x;
-            const centerY = coordinates.y;
-
-            // Tạo sprite item tại vị trí tâm màn hình
-            const item = this.scene.add.image(centerX, centerY, 'item', itemImage);
-
-            // Đặt z-index cao để hiển thị trên các element khác
-            item.setDepth(200);
-
-            // Bắt đầu với scale nhỏ
-            item.setScale(0);
-
-            // Tạo hiệu ứng scale từ nhỏ đến to và fade out trong 1 animation
-            this.scene.tweens.add({
-                targets: item,
-                scale: 4.5,
-                alpha: 0.1,
-                duration: 300,
-                ease: 'Power2',
-                onComplete: () => {
-                    // Xóa sprite sau khi animation hoàn thành
-                    item.destroy();
-
-                    // Gọi callback của user trước
-                    if (onComplete && typeof onComplete === 'function') {
-                        onComplete();
-                    } else {
-                        console.error('AnimationManager: Không có callback được gọi');
+                cardList.forEach((cardIndex) => {
+                    const card = this.scene.gameManager!.cardManager.getCard(cardIndex) as Card & { view?: { x: number; y: number } };
+                    if (card?.view) {
+                        SpritesheetWrapper.animationBreatheFire(this.scene, card.view.x, card.view.y);
                     }
+                });
+                return new Promise<void>((r) =>
+                    this.scene.time.delayedCall(510, () => {
+                        resolve();
+                        r();
+                    })
+                );
+            });
+        });
+    }
 
-                    // Sau đó gọi completeAnimation để reset trạng thái và xử lý queue tiếp
-                    this.completeAnimation();
+    startExplosiveAnimation(owner: Card, cardList: number[]): Promise<void> {
+        return new Promise((resolve) => {
+            this.addToQueue(9, () => {
+                if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
+                    resolve();
+                    return Promise.resolve();
                 }
+                if (!owner || owner.destroyed) {
+                    resolve();
+                    return Promise.resolve();
+                }
+                cardList.forEach((cardIndex) => {
+                    const card = this.scene.gameManager!.cardManager.getCard(cardIndex) as Card & { view?: { x: number; y: number } };
+                    if (card?.view) {
+                        SpritesheetWrapper.animationBomb(this.scene, card.view.x, card.view.y);
+                    }
+                });
+                return new Promise<void>((r) => {
+                    this.scene.time.delayedCall(510, () => {
+                        if (this.scene?.gameManager && !owner.destroyed) resolve();
+                        r();
+                    });
+                });
+            });
+        });
+    }
+
+    /**
+     * Animation hiệu ứng item. Trả về Promise khi hoàn thành.
+     */
+    startItemAnimation(itemImage: string): Promise<void> {
+        return new Promise((resolve) => {
+            this.addToQueue(7, () => {
+                if (!this.scene.gameManager) {
+                    resolve();
+                    return Promise.resolve();
+                }
+                const coordinates = this.scene.gameManager.cardManager.getGridPositionCoordinates(4);
+                if (!coordinates) {
+                    resolve();
+                    return Promise.resolve();
+                }
+                const item = this.scene.add.image(coordinates.x, coordinates.y, 'item', itemImage);
+                item.setDepth(200);
+                item.setScale(0);
+                return new Promise<void>((innerResolve) => {
+                    this.scene.tweens.add({
+                        targets: item,
+                        scale: 4.5,
+                        alpha: 0.1,
+                        duration: 300,
+                        ease: 'Power2',
+                        onComplete: () => {
+                            item.destroy();
+                            resolve();
+                            innerResolve();
+                        }
+                    });
+                });
             });
         });
     }
