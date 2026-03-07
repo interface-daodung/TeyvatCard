@@ -3,8 +3,8 @@ import { localizationManager } from '../../core/LocalizationManager.js';
 import { dataManager } from '../../core/DataManager.js';
 import type GameManager from '../../core/GameManager.js';
 import { Log } from '../../utils/Log.js';
-import CardView from '../../components/card/CardView.js';
-import type { CardViewOptions } from '../../components/card/CardView.js';
+import CardView from './CardView.js';
+import type { CardViewOptions } from './CardView.js';
 import type { LibraryCardData } from '../../components/LibraryScene/types.js';
 
 export interface SceneWithGameManager extends Phaser.Scene {
@@ -79,7 +79,7 @@ export default class Card {
     /** View hiển thị (tạo khi addCard / ensureView). */
     view: CardView | null = null;
     /** Hàm cộng hưởng (tùy chọn, dùng cho Coin hoặc thẻ đặc biệt). */
-    resonance?: () => void;
+    // resonance?: () => void;
 
     static DEFAULT: CardDefault = {};
 

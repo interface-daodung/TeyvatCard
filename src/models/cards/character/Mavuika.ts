@@ -7,7 +7,8 @@ export default class Mavuika extends Character {
         const config = getCardConfig('mavuika') ?? { id: 'mavuika', name: 'fallback Mavuika', description: '', hp: 10, element: 'pyro' };
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
+
 }

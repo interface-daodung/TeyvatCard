@@ -4,7 +4,7 @@ import type { CardDefault } from '../card/Card.js';
 import type { SceneWithGameManager } from '../card/Card.js';
 import Equipment from './equipment.js';
 import { soundManager } from '../../core/SoundManager.js';
-import type { HudDisplaySpec } from '../../components/card/CardView.js';
+import type { HudDisplaySpec } from '../card/CardView.js';
 
 const POPUP_CONFIG = {
     heal: { color: '#00ff00' as const, prefix: '+' },

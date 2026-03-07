@@ -7,7 +7,7 @@ export default class Venti extends Character {
         const config = getCardConfig('venti') ?? { id: 'venti', name: 'fallback Venti', description: '', hp: 10, element: 'anemo' };
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 }

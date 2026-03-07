@@ -9,7 +9,7 @@ export default class RockShieldwall extends Enemy {
         this.applyConfig(config);
         // this.health = this.GetRandom(3, 10);
         // this.score = this.GetRandom(1, 9);
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 }

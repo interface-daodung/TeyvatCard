@@ -45,8 +45,7 @@ export default class Bomb extends Card {
     CardEffect(): boolean {
         this.scene.gameManager?.animationManager.startSwapCardsAnimation(
             this.index,
-            this.scene.gameManager.cardManager.getCharacterIndex(),
-            () => { }
+            this.scene.gameManager.cardManager.getCharacterIndex()
         );
         return true;
     }

@@ -1,6 +1,6 @@
 import Card, { CardDefault } from '../card/Card.js';
 import type { SceneWithGameManager } from '../card/Card.js';
-import type { CardViewOptions } from '../../components/card/CardView.js';
+import type { CardViewOptions } from '../card/CardView.js';
 import { Log } from '../../utils/Log.js';
 import { soundManager } from '../../core/SoundManager.js';
 

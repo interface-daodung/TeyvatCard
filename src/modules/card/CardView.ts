@@ -7,9 +7,9 @@ import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
 import { dataManager } from '../../core/DataManager.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
-import { showCardInfoDialog } from '../LibraryScene/CardInfoDialog.js';
-import { I18nText } from '../shared/I18nText.js';
-import type { LibraryCardData } from '../LibraryScene/types.js';
+import { showCardInfoDialog } from '../../components/LibraryScene/CardInfoDialog.js';
+import { I18nText } from '../../components/shared/I18nText.js';
+import type { LibraryCardData } from '../../components/LibraryScene/types.js';
 
 export type DisplayPosition = 'leftTop' | 'rightTop' | 'rightBottom' | 'leftBottom';
 

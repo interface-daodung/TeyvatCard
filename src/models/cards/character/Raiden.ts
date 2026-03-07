@@ -7,7 +7,7 @@ export default class Raiden extends Character {
         const config = getCardConfig('raiden') ?? { id: 'raiden', name: 'fallback Raiden', description: '', hp: 10, element: 'electro' };
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 }

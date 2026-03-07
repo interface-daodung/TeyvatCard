@@ -2,21 +2,26 @@
 // Quản lý hàng đợi animation trong game
 
 import Phaser from 'phaser';
-import CalculatePositionCard from '../utils/CalculatePositionCard.js';
 import Card from '../modules/card/Card.js';
-import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
+import { runMoveTweens } from './animations/MoveAnimation';
+import { runGameOverAnimation } from './animations/GameOverAnimation';
+import { runSwapCardsAnimation } from './animations/SwapCardsAnimation';
+import { runShuffleAllCardsAnimation } from './animations/ShuffleAllCardsAnimation';
+import { runBreatheFireAnimation } from './animations/BreatheFireAnimation';
+import { runExplosiveAnimation } from './animations/ExplosiveAnimation';
+import { runItemAnimation } from './animations/ItemAnimation';
 
 interface AnimationQueueItem {
     priority: number;
     function: () => Promise<void>;
 }
 
-interface MovementItem {
+export interface MovementItem {
     from: number;
     to: number;
 }
 
-interface SceneWithGameManager extends Phaser.Scene {
+export interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: {
         cardManager: {
             getCard: (index: number) => { view?: Phaser.GameObjects.GameObject } | null;
@@ -121,44 +126,11 @@ export default class AnimationManager {
     }
 
     /**
-     * Chạy tween di chuyển (không thêm queue). Dùng khi gom nhiều bước trong một queue item.
+     * Chạy tween di chuyển trực tiếp, không qua queue.
+     * Chủ yếu dùng nội bộ trong các queue item phức tạp.
      */
     runMoveTweens(movementList: MovementItem | MovementItem[]): Promise<void> {
-        const targets = Array.isArray(movementList) ? movementList : [movementList];
-        if (targets.length === 0) return Promise.resolve();
-
-        return new Promise<void>((innerResolve) => {
-            let completed = 0;
-            targets.forEach((movement) => {
-                // Sau khi GameManager.apply state, card logic đã ở vị trí movement.to,
-                // view vẫn ở vị trí cũ. Tween card tại index "to" tới tọa độ "to".
-                const card = this.scene.gameManager?.cardManager.getCard(movement.to);
-                const coordinates = this.scene.gameManager?.cardManager.getGridPositionCoordinates(movement.to);
-                const view = card && (card as { view?: Phaser.GameObjects.GameObject }).view ? (card as { view: Phaser.GameObjects.GameObject }).view : card;
-
-                if (!view || !coordinates) {
-                    completed++;
-                    if (completed >= targets.length) innerResolve();
-                    return;
-                }
-
-                const originalDepth = (view as Phaser.GameObjects.GameObject & { depth?: number }).depth ?? 0;
-                (view as Phaser.GameObjects.GameObject & { setDepth?: (d: number) => void }).setDepth?.(100);
-
-                this.scene.tweens.add({
-                    targets: view,
-                    x: coordinates.x,
-                    y: coordinates.y,
-                    duration: 500,
-                    ease: 'Power2',
-                    onComplete: () => {
-                        (view as Phaser.GameObjects.GameObject & { setDepth?: (d: number) => void }).setDepth?.(originalDepth);
-                        completed++;
-                        if (completed >= targets.length) innerResolve();
-                    }
-                });
-            });
-        });
+        return runMoveTweens(this.scene, movementList);
     }
 
     /**
@@ -166,64 +138,20 @@ export default class AnimationManager {
      */
     startMoveAnimation(movementList: MovementItem | MovementItem[]): Promise<void> {
         return new Promise((resolve) => {
-            this.addToQueue(8, () => this.runMoveTweens(movementList).then(resolve));
+            this.addToQueue(8, () => runMoveTweens(this.scene, movementList).then(resolve));
         });
     }
 
 
     startGameOverAnimation(deck: Array<{ view?: { playDestroy: () => Promise<void> } }>): Promise<void> {
         return new Promise((resolve) => {
-            this.addToQueue(10, () => {
-                const runSequence = async (): Promise<void> => {
-                    for (let i = 0; i < deck.length; i++) {
-                        await new Promise<void>((r) => this.scene.time.delayedCall(200, r));
-                        const card = deck[i];
-                        if (card?.view?.playDestroy) await card.view.playDestroy();
-                    }
-                };
-                return runSequence().then(resolve);
-            });
+            this.addToQueue(10, () => runGameOverAnimation(this.scene, deck).then(resolve));
         });
     }
 
     startSwapCardsAnimation(form: number, to: number): Promise<void> {
         return new Promise((resolve) => {
-            this.addToQueue(8, () => {
-                const cardForm = this.scene.gameManager?.cardManager.getCard(form);
-                const cardTo = this.scene.gameManager?.cardManager.getCard(to);
-                const viewForm = cardForm && (cardForm as { view?: Phaser.GameObjects.GameObject }).view ? (cardForm as { view: Phaser.GameObjects.GameObject }).view : cardForm;
-                const viewTo = cardTo && (cardTo as { view?: Phaser.GameObjects.GameObject }).view ? (cardTo as { view: Phaser.GameObjects.GameObject }).view : cardTo;
-
-                if (!viewForm || !viewTo || !this.scene.gameManager) {
-                    resolve();
-                    return Promise.resolve();
-                }
-
-                this.scene.gameManager.cardManager.swapCard(form, to);
-
-                return new Promise<void>((innerResolve) => {
-                    this.scene.tweens.add({
-                        targets: [viewForm, viewTo],
-                        scaleX: 0,
-                        scaleY: 1.05,
-                        duration: 150,
-                        ease: 'Linear',
-                        onComplete: () => {
-                            this.scene.tweens.add({
-                                targets: [viewTo, viewForm],
-                                scaleX: 1,
-                                scaleY: 1,
-                                duration: 150,
-                                ease: 'Linear',
-                                onComplete: () => {
-                                    resolve();
-                                    innerResolve();
-                                }
-                            });
-                        }
-                    });
-                });
-            });
+            this.addToQueue(8, () => runSwapCardsAnimation(this.scene, form, to).then(resolve));
         });
     }
 
@@ -232,44 +160,7 @@ export default class AnimationManager {
      */
     startShuffleAllCardsAnimation(): Promise<void> {
         return new Promise((resolve) => {
-            this.addToQueue(8, () => {
-                if (!this.scene.gameManager) {
-                    resolve();
-                    return Promise.resolve();
-                }
-
-                const allCards = this.scene.gameManager.cardManager.getAllCards() as Array<{ view?: Phaser.GameObjects.GameObject; index?: number }>;
-                const views = allCards.map((c) => c.view).filter(Boolean) as Phaser.GameObjects.GameObject[];
-
-                return new Promise<void>((innerResolve) => {
-                    this.scene.tweens.add({
-                        targets: views,
-                        scaleX: 0,
-                        duration: 150,
-                        ease: 'Linear',
-                        onComplete: () => {
-                            const shuffled = CalculatePositionCard.shuffleArray(allCards) as typeof allCards;
-                            shuffled.forEach((card, index) => {
-                                card.index = index;
-                                const coords = this.scene.gameManager?.cardManager.getGridPositionCoordinates(index);
-                                if (coords && card.view) (card.view as any).setPosition(coords.x, coords.y);
-                            });
-                            this.scene.gameManager!.cardManager.cards = shuffled;
-
-                            this.scene.tweens.add({
-                                targets: views,
-                                scaleX: 1,
-                                duration: 150,
-                                ease: 'Linear',
-                                onComplete: () => {
-                                    resolve();
-                                    innerResolve();
-                                }
-                            });
-                        }
-                    });
-                });
-            });
+            this.addToQueue(8, () => runShuffleAllCardsAnimation(this.scene).then(resolve));
         });
     }
 
@@ -278,51 +169,19 @@ export default class AnimationManager {
      */
     startBreatheFireAnimation(_damage: number, cardList: number[]): Promise<void> {
         return new Promise((resolve) => {
-            this.addToQueue(12, () => {
-                if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
-                    resolve();
-                    return Promise.resolve();
-                }
-                cardList.forEach((cardIndex) => {
-                    const card = this.scene.gameManager!.cardManager.getCard(cardIndex) as Card & { view?: { x: number; y: number } };
-                    if (card?.view) {
-                        SpritesheetWrapper.animationBreatheFire(this.scene, card.view.x, card.view.y);
-                    }
-                });
-                return new Promise<void>((r) =>
-                    this.scene.time.delayedCall(510, () => {
-                        resolve();
-                        r();
-                    })
-                );
-            });
+            this.addToQueue(12, () => runBreatheFireAnimation(this.scene, _damage, cardList).then(resolve));
         });
     }
 
+    // startExplosiveAnimation(owner: Card, cardList: number[]): Promise<void> {
+    //     return new Promise((resolve) => {
+    //         this.addToQueue(9, () => runExplosiveAnimation(this.scene, owner, cardList, resolve));
+    //     });
+    // }
+
     startExplosiveAnimation(owner: Card, cardList: number[]): Promise<void> {
         return new Promise((resolve) => {
-            this.addToQueue(9, () => {
-                if (!this.scene?.gameManager || this.scene.gameManager.isGameOver) {
-                    resolve();
-                    return Promise.resolve();
-                }
-                if (!owner || owner.destroyed) {
-                    resolve();
-                    return Promise.resolve();
-                }
-                cardList.forEach((cardIndex) => {
-                    const card = this.scene.gameManager!.cardManager.getCard(cardIndex) as Card & { view?: { x: number; y: number } };
-                    if (card?.view) {
-                        SpritesheetWrapper.animationBomb(this.scene, card.view.x, card.view.y);
-                    }
-                });
-                return new Promise<void>((r) => {
-                    this.scene.time.delayedCall(510, () => {
-                        if (this.scene?.gameManager && !owner.destroyed) resolve();
-                        r();
-                    });
-                });
-            });
+            this.addToQueue(9, () => runExplosiveAnimation(this.scene, owner, cardList).then(resolve));
         });
     }
 
@@ -331,34 +190,7 @@ export default class AnimationManager {
      */
     startItemAnimation(itemImage: string): Promise<void> {
         return new Promise((resolve) => {
-            this.addToQueue(7, () => {
-                if (!this.scene.gameManager) {
-                    resolve();
-                    return Promise.resolve();
-                }
-                const coordinates = this.scene.gameManager.cardManager.getGridPositionCoordinates(4);
-                if (!coordinates) {
-                    resolve();
-                    return Promise.resolve();
-                }
-                const item = this.scene.add.image(coordinates.x, coordinates.y, 'item', itemImage);
-                item.setDepth(200);
-                item.setScale(0);
-                return new Promise<void>((innerResolve) => {
-                    this.scene.tweens.add({
-                        targets: item,
-                        scale: 4.5,
-                        alpha: 0.1,
-                        duration: 300,
-                        ease: 'Power2',
-                        onComplete: () => {
-                            item.destroy();
-                            resolve();
-                            innerResolve();
-                        }
-                    });
-                });
-            });
+            this.addToQueue(7, () => runItemAnimation(this.scene, itemImage).then(resolve));
         });
     }
 

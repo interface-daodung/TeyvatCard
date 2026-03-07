@@ -4,7 +4,7 @@ import type { SceneWithGameManager } from '../card/Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import { soundManager } from '../../core/SoundManager.js';
 import Character from './character.js';
-import type { HudDisplaySpec } from '../../components/card/CardView.js';
+import type { HudDisplaySpec } from '../card/CardView.js';
 
 export default class Enemy extends Card {
     poisoning: boolean;

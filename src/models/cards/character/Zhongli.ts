@@ -7,7 +7,7 @@ export default class Zhongli extends Character {
         const config = getCardConfig('zhongli') ?? { id: 'zhongli', name: 'fallback Zhongli', description: '', hp: 10, element: 'geo' };
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
-        this.createCard();
-        scene.add.existing(this);
+        // this.createCard();
+        // scene.add.existing(this);
     }
 }

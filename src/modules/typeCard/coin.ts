@@ -1,7 +1,7 @@
 import Card from '../card/Card.js';
 import type { CardDefault } from '../card/Card.js';
 import type { SceneWithGameManager } from '../card/Card.js';
-import type { HudDisplaySpec } from '../../components/card/CardView.js';
+import type { HudDisplaySpec } from '../card/CardView.js';
 
 export default class Coin extends Card {
     score!: number;
@@ -28,7 +28,7 @@ export default class Coin extends Card {
         this.score = score;
         this.view?.updateText('score', this.score);
     }
-
+    // Coin đặc biệt: khi cộng hưởng sẽ tăng gấp đôi điểm và đổi tên (dựa trên nameId), đồng thời có thể thay đổi description (dựa trên config resonanceDescription).
     resonance(): void {
         this.score *= 2;
         this.name = this.name.replace('Mảnh Vỡ Nguyên Tố', 'Nguyên Tố Cộng Hưởng');
