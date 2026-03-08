@@ -15,9 +15,10 @@ export default class TaxWaiver extends Item {
         if (this.active) return false;
         this.active = true;
         this.gameManager = gameManager;
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            (gameManager as any).emitter?.on('gameOver', this.TaxWaiverEffect.bind(this), 10);
-        });
+        gameManager.animationManager.startItemAnimation(this.image);
+        
+        (gameManager as GameManager).emitter?.on('gameOver', this.TaxWaiverEffect.bind(this), 10);
+
         return true;
     }
 

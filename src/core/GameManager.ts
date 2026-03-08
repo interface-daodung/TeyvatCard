@@ -9,11 +9,7 @@ import { dataManager } from './DataManager.js';
 import Card from '../modules/card/Card.js';
 import { Log } from '../utils/Log.js';
 import { soundManager } from './SoundManager.js';
-
-interface MovementItem {
-    from: number;
-    to: number;
-}
+import { ItemButton } from '../components/GameScene/index.js';
 
 interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: GameManager;
@@ -28,6 +24,11 @@ interface SceneWithGameManager extends Phaser.Scene {
     add: Phaser.GameObjects.GameObjectFactory;
 }
 
+export interface IMove {
+	from: number;
+	to: number;
+}
+
 // Khởi tạo instance
 
 export default class GameManager {
@@ -39,7 +40,7 @@ export default class GameManager {
     public cardManager: CardManager;
     public emitter: PriorityEmitter;
     public animationManager: AnimationManager;
-    public itemEquipment?: any[];
+    public itemEquipment?: ItemButton[];
 
     constructor(scene: SceneWithGameManager) {
         this.scene = scene;
@@ -88,7 +89,7 @@ export default class GameManager {
         // 1) Apply state trước (không đợi animation)
         dataManager.setFlag('cardAtOldCharacterPos', this.cardManager.getCard(movement[1].from));
         this.cardManager.removeCard(index);
-        movement.forEach((move) => this.cardManager.moveCard(move.from, move.to));
+        movement.forEach((move: IMove) => this.cardManager.moveCard(move.from, move.to));
         const newCardIndex = movement[movement.length - 1].from;
         const newCard = this.cardManager.cardFactory.createRandomCard(this.scene, newCardIndex) as Card;
         this.cardManager.addCard(newCard, newCardIndex);
@@ -148,8 +149,8 @@ export default class GameManager {
         this.coin += points;
         soundManager.play('Coin-sound');
         if (energy && this.itemEquipment) {
-            this.itemEquipment.forEach(item => {
-                if (item.cooldowninning) {
+            this.itemEquipment.forEach((item: ItemButton | undefined) => {
+                if (item?.cooldowninning) {
                     item.cooldowninning(energy);
                 }
             });

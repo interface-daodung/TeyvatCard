@@ -12,6 +12,7 @@ export default class Catalyst extends Item {
     }
 
     override effect(gameManager: GameManager): boolean {
+        gameManager.animationManager.startItemAnimation(this.image);
         const factory = gameManager.cardManager.cardFactory as any;
         const catalystWeapons = factory.getWeaponClassesByCategory('catalyst');
         if (!catalystWeapons.length) {

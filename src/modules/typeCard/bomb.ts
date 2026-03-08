@@ -1,6 +1,7 @@
 import Card, { CardDefault } from '../card/Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../card/Card.js';
 import type { SceneWithGameManager } from '../card/Card.js';
+import { CardViewOptions } from '../card/CardView.js';
 
 export default class Bomb extends Card {
     countdown!: number;
@@ -20,22 +21,22 @@ export default class Bomb extends Card {
         }
     }
 
-    addDisplayHUD(): void {
-        this.countdownDisplay = this.createDisplay(
-            { fillColor: 0xc57826, text: this.countdown.toString() },
-            'rightTop' as DisplayPosition
-        );
-        this.bombDisplay = this.createDisplay(
-            { fillColor: 0xff6600, text: this.damage.toString() },
-            'rightBottom' as DisplayPosition
-        );
+    override buildViewOptions(): Partial<CardViewOptions> {
+        return {
+            hudDisplays: [
+                { key: 'countdown', fillColor: 0xc57826, text: String(this.countdown), position: 'rightTop' },
+                { key: 'bomb', fillColor: 0xff6600, text: String(this.damage), position: 'rightBottom' }
+            ]
+        };
     }
 
     takeDamage(damage: number, type: 'damage'): number {
         // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
         this.damage = Math.max(0, this.damage - damage);
-        this.bombDisplay.updateText(this.damage.toString());
+        // this.bombDisplay.updateText(this.damage.toString());
         // this.showPopup(damage, type); cầm sửa 
+        // this.view?.updateText('countdown', this.countdown);
+        this.view?.updateText('bomb', this.damage);
         if (this.damage <= 0) {
             this.die();
         }

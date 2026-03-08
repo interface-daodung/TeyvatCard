@@ -66,9 +66,7 @@ export default class Item {
 
     effect(gameManager: GameManager): boolean {
         this.gameManager = gameManager;
-        this.gameManager.animationManager.startItemAnimation(this.image, () => {
-            console.log(`Sử dụng item: ${this.nameId}`);
-        });
+        this.gameManager.animationManager.startItemAnimation(this.image);
         return false;
     }
 

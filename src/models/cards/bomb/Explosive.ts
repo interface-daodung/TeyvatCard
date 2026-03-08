@@ -39,7 +39,8 @@ export default class Explosive extends Bomb {
     BombCountdownEffect(): void {
         this.countdown--;
         console.log(`Bomb at index ${this.index} countdown: ${this.countdown}`);
-        this.countdownDisplay.updateText(this.countdown.toString());
+        // this.countdownDisplay.updateText(this.countdown.toString());
+        this.view?.updateText('countdown', this.countdown);
         if (this.countdown <= 0) {
             this.Detonation();
         }
@@ -51,22 +52,24 @@ export default class Explosive extends Bomb {
 
         this.scene.gameManager?.animationManager.startExplosiveAnimation(
             this,
-            adjacentPositions,
+            adjacentPositions
             // () => {
-            //     if (this.destroyed) return;
-
-            //     soundManager.play('bomb-sound');
-
-            //     adjacentPositions.forEach(cardIndex => {
-            //         const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
-            //         if (card?.takeDamage) {
-            //             card.takeDamage(this.damage, 'damage');
-            //         }
-            //     });
-
-            //     this.die();
+            //     
             // }
         );
-        
+
+        if (this.destroyed) return;
+
+        soundManager.play('bomb-sound');
+
+        adjacentPositions.forEach(cardIndex => {
+            const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+            if (card?.takeDamage) {
+                card.takeDamage(this.damage, 'damage');
+            }
+        });
+
+        this.die();
+
     }
 }

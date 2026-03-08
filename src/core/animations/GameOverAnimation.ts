@@ -6,10 +6,10 @@ export function runGameOverAnimation(
 ): Promise<void> {
     const runSequence = async (): Promise<void> => {
         for (let i = 0; i < deck.length; i++) {
-            await new Promise<void>((r) => scene.time.delayedCall(200, r));
+            await new Promise<void>((r) => scene.time.delayedCall(100, r));
             const card = deck[i];
             if (card?.view?.playDestroy) {
-                await card.view.playDestroy();
+                card.view.playDestroy();
             }
         }
     };

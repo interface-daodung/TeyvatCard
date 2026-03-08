@@ -2,6 +2,7 @@ import Card from '../card/Card.js';
 import type { CardDefault } from '../card/Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../card/Card.js';
 import type { SceneWithGameManager } from '../card/Card.js';
+import { CardViewOptions } from '../card/CardView.js';
 
 export default class Food extends Card {
     food!: number;
@@ -18,11 +19,15 @@ export default class Food extends Card {
         }
     }
 
-    addDisplayHUD(): void {
-        this.foodDisplay = this.createDisplay(
-            { fillColor: 0xff6600, text: this.food.toString() },
-            'rightBottom' as DisplayPosition
-        );
+    /* Food class - REMOVE addDisplayHUD(), ADD buildViewOptions() instead
+    *
+    */   
+    override buildViewOptions(): Partial<CardViewOptions> {
+        return {
+            hudDisplays: [
+                { key: 'food', fillColor: 0xff6600, text: String(this.food), position: 'rightBottom' }
+            ]
+        };
     }
 
     takeDamage(damage: number, type: 'damage'): number {

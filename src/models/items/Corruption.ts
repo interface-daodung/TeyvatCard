@@ -14,9 +14,9 @@ export default class Corruption extends Item {
     override effect(gameManager: GameManager): boolean {
         if (this.active) return false;
         this.active = true;
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            gameManager.emitter.on('completeMove', this.onCompleteMove.bind(this), 10);
-        });
+        gameManager.animationManager.startItemAnimation(this.image);
+        
+        gameManager.emitter.on('completeMove', this.onCompleteMove.bind(this), 10);
         return true;
     }
 

@@ -8,8 +8,8 @@ export default class BlackHole extends Item {
     }
 
     override effect(gameManager: GameManager): boolean {
-        gameManager.animationManager.startItemAnimation(this.image, () => {});
-        gameManager.animationManager.startShuffleAllCardsAnimation(() => {});
+        gameManager.animationManager.startItemAnimation(this.image);
+        gameManager.animationManager.startShuffleAllCardsAnimation();
         return true;
     }
 }

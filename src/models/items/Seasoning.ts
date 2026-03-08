@@ -14,12 +14,12 @@ export default class Seasoning extends Item {
             if (card?.type === 'food') foodCount++;
         });
         if (foodCount === 0) return false;
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            gameManager.cardManager.getAllCards().forEach(card => {
-                if (card?.type === 'food') {
-                    this.seasoning(card as Food);
-                }
-            });
+        gameManager.animationManager.startItemAnimation(this.image);
+
+        gameManager.cardManager.getAllCards().forEach(card => {
+            if (card?.type === 'food') {
+                this.seasoning(card as Food);
+            }
         });
         return true;
     }

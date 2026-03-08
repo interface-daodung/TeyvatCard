@@ -1,6 +1,7 @@
 import Card, { CardDefault } from '../card/Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../card/Card.js';
 import type { SceneWithGameManager } from '../card/Card.js';
+import { CardViewOptions } from '../card/CardView.js';
 
 export default class Trap extends Card {
     damage!: number;
@@ -17,10 +18,10 @@ export default class Trap extends Card {
         }
     }
 
-     takeDamage(damage: number, type: 'damage'): number {
+    takeDamage(damage: number, type: 'damage'): number {
         // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
         this.damage = Math.max(0, this.damage - damage);
-        this.damageDisplay.updateText(this.damage.toString());
+        this.view?.updateText('damage', this.damage);
         // this.showPopup(damage, type); cầm sửa 
         if (this.damage <= 0) {
             this.die();
@@ -38,12 +39,11 @@ export default class Trap extends Card {
     //     }
     // }
 
-    addDisplayHUD(): void {
-        if (this.damage) {
-            this.damageDisplay = this.createDisplay(
-                { fillColor: 0xff6600, text: this.damage.toString() },
-                'rightBottom' as DisplayPosition
-            );
-        }
+    override buildViewOptions(): Partial<CardViewOptions> {
+        return {
+            hudDisplays: this.damage
+                ? [{ key: 'damage', fillColor: 0xff6600, text: String(this.damage), position: 'rightBottom' }]
+                : []
+        };
     }
 }

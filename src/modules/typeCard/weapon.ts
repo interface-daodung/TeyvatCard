@@ -1,7 +1,8 @@
 import Card from '../card/Card.js';
 import type { CardDefault } from '../card/Card.js';
-import type { CreateDisplayResult, DisplayPosition } from '../card/Card.js';
+import type { CreateDisplayResult } from '../card/Card.js';
 import type { SceneWithGameManager } from '../card/Card.js';
+import { CardViewOptions } from '../card/CardView.js';
 import Character from './character.js';
 import Equipment from './equipment.js';
 
@@ -20,17 +21,18 @@ export default class Weapon extends Card {
         }
     }
 
-    addDisplayHUD(): void {
-        this.durabilityDisplay = this.createDisplay(
-            { fillColor: 0xff6600, text: String(this.durability) },
-            'rightBottom' as DisplayPosition
-        );
+    override buildViewOptions(): Partial<CardViewOptions> {
+        return {
+            hudDisplays: [
+                { key: 'durability', fillColor: 0xff6600, text: String(this.durability), position: 'rightBottom' }
+            ]
+        };
     }
 
     takeDamage(damage: number, type: 'damage'): number {
         // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
         this.durability = Math.max(0, this.durability - damage);
-        this.durabilityDisplay.updateText(this.durability.toString());
+        this.view?.updateText('durability', this.durability);        
         // this.showPopup(damage, type); cầm sửa 
         if (this.durability <= 0) {
             this.die();

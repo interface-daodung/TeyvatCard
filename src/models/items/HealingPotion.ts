@@ -12,9 +12,10 @@ export default class HealingPotion extends Item {
         if (cardCharacter?.hp >= cardCharacter?.getMaxHP()) {
             return false;
         }
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            cardCharacter?.heal(this.power);
-        });
+        gameManager.animationManager.startItemAnimation(this.image);
+
+        cardCharacter?.heal(this.power);
+        
         return true;
     }
 }

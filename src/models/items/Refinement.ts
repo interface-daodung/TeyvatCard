@@ -14,12 +14,13 @@ export default class Refinement extends Item {
             if (card?.type === 'weapon') weaponCount++;
         });
         if (weaponCount === 0) return false;
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            gameManager.cardManager.getAllCards().forEach(card => {
-                if (card?.type === 'weapon') {
-               this.refinement(card as Weapon);
-                }
-            });
+        
+        gameManager.animationManager.startItemAnimation(this.image);
+
+        gameManager.cardManager.getAllCards().forEach(card => {
+            if (card?.type === 'weapon') {
+                this.refinement(card as Weapon);
+            }
         });
         return true;
     }

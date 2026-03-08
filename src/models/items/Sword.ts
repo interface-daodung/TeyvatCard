@@ -11,6 +11,8 @@ export default class Sword extends Item {
     }
 
     override effect(gameManager: GameManager): boolean {
+        gameManager.animationManager.startItemAnimation(this.image);
+
         const factory = gameManager.cardManager.cardFactory as any;
         const swordWeapons = factory.getWeaponClassesByCategory('sword');
         if (!swordWeapons.length) {

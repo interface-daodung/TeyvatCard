@@ -5,15 +5,12 @@ import type { SceneWithGameManager } from '../AnimationManager.js';
 export function runExplosiveAnimation(
     scene: SceneWithGameManager,
     owner: Card,
-    cardList: number[],
-    resolveOuter: () => void
+    cardList: number[]
 ): Promise<void> {
     if (!scene?.gameManager || scene.gameManager.isGameOver) {
-        resolveOuter();
         return Promise.resolve();
     }
     if (!owner || owner.destroyed) {
-        resolveOuter();
         return Promise.resolve();
     }
 
@@ -24,11 +21,9 @@ export function runExplosiveAnimation(
         }
     });
 
-    return new Promise<void>((r) => {
+    return new Promise<void>((resolve) => {
         scene.time.delayedCall(510, () => {
-            if (scene?.gameManager && !owner.destroyed) resolveOuter();
-            r();
+            resolve();
         });
     });
 }
-

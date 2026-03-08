@@ -17,9 +17,9 @@ export default class Quicksand extends Trap {
         // this.ProgressDestroy();
         const newCard = this.scene.gameManager?.cardManager.cardFactory.createRandomCard(this.scene, this.index);
         if (newCard) {
-            // this.scene.gameManager?.cardManager.addCard(newCard, this.index).processCreation?.();
+            this.scene.gameManager?.cardManager.addCard(newCard, this.index);
         }
-        // this.scene.gameManager?.animationManager.startShuffleAllCardsAnimation(() => {});
+        this.scene.gameManager?.animationManager.startShuffleAllCardsAnimation();
         return true;
     }
 }

@@ -229,6 +229,7 @@ export default class AnimationManager {
 
     /**
      * Dọn dẹp tài nguyên
+     * hàm này ko nên dùng 
      */
     destroy(): void {
         console.log('AnimationManager: Đang dọn dẹp...');

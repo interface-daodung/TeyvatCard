@@ -8,6 +8,7 @@ export default class Cooldown extends Item {
     }
 
     override effect(gameManager: GameManager): boolean {
+        gameManager.animationManager.startItemAnimation(this.image);
         let itemCount = 0;
         gameManager.itemEquipment?.forEach((item: any) => {
             if (item.cooldown > 0 && item.item?.nameId !== this.nameId) {
@@ -19,7 +20,6 @@ export default class Cooldown extends Item {
             }
         });
         if (itemCount === 3) return false;
-        gameManager.animationManager.startItemAnimation(this.image, () => {});
         return true;
     }
 }

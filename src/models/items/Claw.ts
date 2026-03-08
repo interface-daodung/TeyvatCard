@@ -13,12 +13,12 @@ export default class Claw extends Item {
             if (card?.type === 'enemy') enemyCount++;
         });
         if (enemyCount === 0) return false;
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            gameManager.cardManager.getAllCards().forEach(card => {
-                if (card?.type === 'enemy' && (card as any).takeDamage) {
-                    (card as any).takeDamage(this.power);
-                }
-            });
+        gameManager.animationManager.startItemAnimation(this.image);
+
+        gameManager.cardManager.getAllCards().forEach(card => {
+            if (card?.type === 'enemy' && (card as any).takeDamage) {
+                (card as any).takeDamage(this.power);
+            }
         });
         return true;
     }
