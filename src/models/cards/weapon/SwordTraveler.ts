@@ -3,7 +3,7 @@ import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 
 export default class SwordTraveler extends Weapon {
-    static CARD_KEY = 'SwordTraveler';
+    // static CARD_KEY = 'SwordTraveler';
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('SwordTraveler') ?? { id: 'sword-traveler', name: 'Sword Traveler', description: '', category: 'sword', rarity: 4 };
         super(scene, x, y, index, config.name!, config.id!);

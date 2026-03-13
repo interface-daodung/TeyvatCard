@@ -17,11 +17,17 @@ export default class Enemy extends Card {
         this.poisoning = false;
     }
 
+    addDisplayHUD(): void {
+        this.hpDisplay = this.createDisplay(
+            { fillColor: 0xff0000, text: String(this.health) },
+            'rightTop' as DisplayPosition
+        );
+    }
+
     override applyConfig(config: CardDefault): void {
         super.applyConfig(config);
         if (config.element != null) (this as any).element = config.element;
         // if (config.rarity != null) (this as any).rarity = config.rarity;
-
         if (config.healthMin != null && config.healthMax != null) {
             this.health = this.GetRandom(config.healthMin, config.healthMax);
         }
@@ -40,19 +46,14 @@ export default class Enemy extends Card {
         if (unsub && typeof unsub === 'function') {
             this.unsubscribeList.push(unsub);
         }
+        console.log(`Enemy ${this.nameId} is now poisoned.`);
     }
 
     PoisoningEffect(): void {
         if (this.health > 1 && this.poisoning) {
             this.takeDamage(1, 'poisoning');
         }
-    }
-
-    addDisplayHUD(): void {
-        this.hpDisplay = this.createDisplay(
-            { fillColor: 0xff0000, text: String(this.health) },
-            'rightTop' as DisplayPosition
-        );
+        console.log(`Enemy ${this.nameId} takes 1 poison damage, health is now ${this.health}.`);
     }
 
     takeDamage(damage: number, type?: string): number {
@@ -63,6 +64,10 @@ export default class Enemy extends Card {
         if (type === 'slash') {
             SpritesheetWrapper.animationSlash(this.scene, this.x, this.y);
             soundManager.play('sword-sound');
+        }
+        if (type === 'poisoning') {
+            SpritesheetWrapper.animationStatePoison(this.scene, this.x, this.y);
+            soundManager.play('poison');
         }
 
         this.showPopup(damage, 'damage');
@@ -78,8 +83,13 @@ export default class Enemy extends Card {
         const color = type === 'heal' ? '#00ff00' : type === 'damage' ? '#ff0000' : '#ffffff';
         const prefix = type === 'heal' ? '+' : type === 'damage' ? '-' : '';
 
+        const popupTextPosition = {
+            x: (Math.random() * 2 - 1) * 30,
+            y: (Math.random() * 2 - 1) * 30
+        };
+
         const popupText = this.scene.add
-            .text(0, 0, `${prefix}${amount}`, {
+            .text(popupTextPosition.x, popupTextPosition.y, `${prefix}${amount}`, {
                 fontSize: '32px',
                 color: color,
                 fontFamily: 'Arial',
@@ -121,6 +131,7 @@ export default class Enemy extends Card {
         const weapon = cardCharacter?.weapon;
         if (weapon?.durability > 0) {
             const actualDamage = Math.min(weapon.durability, this.health);
+            cardCharacter.weapon.Effect(this, actualDamage, cardCharacter);
             cardCharacter.reduceDurability(actualDamage);
             this.takeDamage(actualDamage, 'slash');
             return true;

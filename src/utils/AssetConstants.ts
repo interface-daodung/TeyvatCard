@@ -23,7 +23,8 @@ export const COIN_ASSETS = [
 export const ANIMATIONS_ASSETS = [
     { key: 'slash-animations', path: 'assets/images/animations/Slash.png' },
     { key: 'bomb-animations', path: 'assets/images/animations/Explosion1.png' },
-    { key: 'breathe-fire-animations', path: 'assets/images/animations/Breath.png' }
+    { key: 'breathe-fire-animations', path: 'assets/images/animations/Breath.png' },
+    { key: 'state-poison-animations', path: 'assets/images/animations/StatePoison.png' }
 ];
 
 export const SOUND_EFFECT_ASSETS = [
@@ -34,7 +35,8 @@ export const SOUND_EFFECT_ASSETS = [
     { key: 'Coin-sound', path: 'assets/sounds/SE/Coin.ogg' },
     { key: 'equip-sound', path: 'assets/sounds/SE/Equip.ogg' },
     { key: 'Quicksand-sound', path: 'assets/sounds/SE/Quicksand.ogg' },
-    { key: 'Chest-sound', path: 'assets/sounds/SE/Chest.ogg' }
+    { key: 'Chest-sound', path: 'assets/sounds/SE/Chest.ogg' },
+    { key: 'poison', path: 'assets/sounds/SE/Poison.ogg' }
 ];
 
 export const BGM_ASSETS = [

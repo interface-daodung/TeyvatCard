@@ -41,7 +41,7 @@ export default class Weapon extends Card {
     /**
      * Tạo Equipment từ config + durability. Weapon con override để trả về custom equipment (vd SwordSplendor_equipment).
      */
-    static createEquipment(config: any, durability: number): Equipment {
+    createEquipment(config: any, durability: number): Equipment {
         return new Equipment(config, durability);
     }
 
@@ -50,7 +50,7 @@ export default class Weapon extends Card {
         const weapon = this as Weapon;
 
         (this.scene.gameManager?.cardManager.CardCharacter as Character)?.setWeapon(
-            new Equipment(this.config, weapon.durability)
+            this.createEquipment(this.config, weapon.durability)
         );
 
         return false;

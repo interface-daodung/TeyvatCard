@@ -3,7 +3,7 @@ import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 
 export default class SwordSkyward extends Weapon {
-    static CARD_KEY = 'SwordSkyward';
+    // static CARD_KEY = 'SwordSkyward';
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('SwordSkyward') ?? { id: 'sword-skyward', name: 'Sword Skyward', description: '', category: 'sword', rarity: 4 };
         super(scene, x, y, index, config.name!, config.id!);

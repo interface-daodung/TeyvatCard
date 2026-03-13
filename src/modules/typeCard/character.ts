@@ -193,6 +193,10 @@ export default class Character extends Card {
         // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
         this.hp = Math.max(0, this.hp - damage);
         this.hpDisplay.updateText(this.hp.toString());
+        if (type === 'poisoning') {
+            SpritesheetWrapper.animationStatePoison(this.scene, this.x, this.y);
+            soundManager.play('poison');
+        }
         this.showPopup(damage, type);
         if (this.hp <= 0) {
             this.scene.gameManager?.gameOver();

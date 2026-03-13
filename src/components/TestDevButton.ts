@@ -34,5 +34,22 @@ export function createTestDevButton(
     btn.on('pointerover', () => btn.setStyle({ color: themeManager.getText() }));
     btn.on('pointerout', () => btn.setStyle({ color: themeManager.getNeutral() }));
 
+    // Nút dev phụ để mở scene TestGraphicsRenderTexture
+    const graphicsBtn = scene.add.text(x + 180, y, 'Test Graphics', {
+        fontSize: '20px',
+        color: themeManager.getNeutral(),
+        fontFamily: 'Arial',
+        stroke: themeManager.getSurface(),
+        strokeThickness: 1
+    }).setOrigin(0.5);
+
+    graphicsBtn.setInteractive({ useHandCursor: true });
+    graphicsBtn.on('pointerdown', () => {
+        scene.scene.stop('GameScene');
+        scene.scene.start('LoadingScene', { targetScene: 'TestGraphicsRenderTexture' });
+    });
+    graphicsBtn.on('pointerover', () => graphicsBtn.setStyle({ color: themeManager.getText() }));
+    graphicsBtn.on('pointerout', () => graphicsBtn.setStyle({ color: themeManager.getNeutral() }));
+
     return btn;
 }

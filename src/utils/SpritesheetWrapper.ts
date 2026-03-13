@@ -95,6 +95,19 @@ export class SpritesheetWrapper {
         );
     }
 
+    static animationStatePoison(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
+        return this.animationEffect(
+            scene,
+            x,
+            y,
+            'state-poison-animations',
+            170,
+            170,
+            { start: 0, end: 15 },
+            10
+        );
+    }
+
     /**
      * Tạo character animation (thay thế SpritesheetCharacter.create)
      */
