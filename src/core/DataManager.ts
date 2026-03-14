@@ -19,14 +19,14 @@ const PREFIX = 'T0vt';
 const KNOWN_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
   'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
-  'jwt', 'refreshToken', 'showCardName'
+  'jwt', 'refreshToken', 'showCardName', 'theme'
 ]);
 
 /** Keys dùng cho cloud save (loại jwt, refreshToken). */
 const CLOUD_SAVE_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
   'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
-  'showCardName'
+  'showCardName', 'theme'
 ]);
 
 function serialize<T>(value: T): string {

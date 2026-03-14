@@ -30,14 +30,19 @@ export function createGameUI(
     });
     menuButton.on('pointerdown', onMenuClick);
 
-    const stageText = scene.add.text(width * 0.5, height * 0.035, dungeonStageName, {
-        fontSize: '30px',
-        color: themeManager.getAccent(),
-        fontFamily: 'Arial, sans-serif',
-        fontStyle: 'bold',
-        stroke: themeManager.getNeutral(),
-        strokeThickness: 2
-    }).setOrigin(0.5);
+    const stageText = I18nText.create(
+        scene,
+        width * 0.5,
+        height * 0.035,
+        dungeonStageName,
+        {
+            fontSize: '30px',
+            color: themeManager.getAccent(),
+            fontFamily: 'Arial, sans-serif',
+            fontStyle: 'bold',
+            stroke: themeManager.getNeutral(),
+            strokeThickness: 2
+        }).setOrigin(0.5);
 
     const highScoreText = I18nText.create(scene, width * 0.5, height * 0.07, 'high_score_label', {
         fontSize: '20px',

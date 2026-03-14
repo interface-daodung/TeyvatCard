@@ -74,9 +74,8 @@ export default class RegisterScene extends Phaser.Scene {
         return;
       }
 
-      if (data?.user) AuthManager.setCachedUser(data.user);
-      this.removeForm();
-      this.scene.start(this.returnTo, { fromScene: this.fromScene });
+      alert('Đăng ký thành công, vui lòng đăng nhập.');
+      this.goToLogin();
     } catch {
       alert('Lỗi kết nối. Kiểm tra server đang chạy.');
     } finally {

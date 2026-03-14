@@ -37,6 +37,11 @@ export function createPaginationButtons(scene: Phaser.Scene, width: number, heig
     });
 
     function updatePaginationButtons(currentPage: number, maxPage: number): void {
+        // Nếu scene của button đã bị destroy thì bỏ qua để tránh lỗi setInteractive trên object không còn scene
+        if (!prevButton.scene || !nextButton.scene) {
+            return;
+        }
+
         if (currentPage > 0) {
             prevButton.setText('‹');
             prevButton.setStyle({ color: themeManager.getText() });

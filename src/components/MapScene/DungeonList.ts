@@ -62,7 +62,11 @@ export function createDungeonButtons(
     }
 
     function updateDungeonButton(buttonContainer: Phaser.GameObjects.Container, newName: string, newStageId: string): void {
-        const text = buttonContainer.getAt(1) as Phaser.GameObjects.Text;
+        const text = buttonContainer.getAt(1) as Phaser.GameObjects.Text | undefined;
+        if (!text) {
+            return;
+        }
+
         text.setText(newName);
         const btn = buttonContainer.getAt(0) as ButtonWithDungeonData;
         btn.dungeonData = { name: newName, stageId: newStageId };

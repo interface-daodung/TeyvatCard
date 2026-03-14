@@ -16,7 +16,9 @@ export default class MapScenes extends Phaser.Scene {
     private updateDungeonButton!: (buttonContainer: Phaser.GameObjects.Container, newName: string, newStageId: string) => void;
     private updatePaginationButtons!: (currentPage: number, maxPage: number) => void;
     private dungeonList: DungeonData[] = [];
-    private boundOnLanguageChanged = (): void => this.showCurrentPage();
+    private boundOnLanguageChanged = (): void => {
+        this.showCurrentPage();
+    };
 
     constructor() {
         super({ key: 'MapScenes' });
@@ -59,6 +61,11 @@ export default class MapScenes extends Phaser.Scene {
         this.nextButton.on('pointerdown', () => this.nextPage());
 
         this.game.events.on('languageChanged', this.boundOnLanguageChanged);
+
+        // Đảm bảo gỡ listener khi scene shutdown/destroy để không bị gọi trên scene đã hủy
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.shutdown, this);
+        this.events.once(Phaser.Scenes.Events.DESTROY, this.shutdown, this);
+
         this.showCurrentPage();
     }
 
