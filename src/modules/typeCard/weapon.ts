@@ -45,7 +45,7 @@ export default class Weapon extends Card {
         return new Equipment(config, durability);
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean>   {
 
         const weapon = this as Weapon;
 
@@ -53,7 +53,7 @@ export default class Weapon extends Card {
             this.createEquipment(this.config, weapon.durability)
         );
 
-        return false;
+        return Promise.resolve(false); // Weapon không biến mất sau khi dùng, nên trả về false để không emit 'completeMove';
     }
 }
 

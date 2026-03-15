@@ -42,12 +42,12 @@ export default class Bomb extends Card {
         return this.damage;
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         this.scene.gameManager?.animationManager.startSwapCardsAnimation(
             this.index,
             this.scene.gameManager.cardManager.getCharacterIndex(),
             () => { }
         );
-        return true;
+        return Promise.resolve(true); // Bomb biến mất ngay sau khi dùng, nên trả về true để emit 'completeMove';
     }
 }

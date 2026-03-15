@@ -36,9 +36,9 @@ export default class Food extends Card {
         return this.food;
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         super.CardEffect();
         (this.scene.gameManager?.cardManager.CardCharacter as any)?.heal(this.food);
-        return false;
+        return Promise.resolve(false);
     }
 }

@@ -12,8 +12,8 @@ export default class Empty extends Card {
         scene.add.existing(this);
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         super.CardEffect();
-        return false;
+        return Promise.resolve(false); // Empty không có hiệu ứng gì, nên trả về false để không emit 'completeMove';
     }
 }

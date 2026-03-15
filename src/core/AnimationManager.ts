@@ -5,6 +5,8 @@ import Phaser from 'phaser';
 import CalculatePositionCard from '../utils/CalculatePositionCard.js';
 import Card from '../modules/Card.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
+// import { IAnimationManager } from '../animation/IAnimationManager.js';
+import { ISceneWithGameManager } from '../animation/ISceneWithGameManager.js';
 
 interface AnimationQueueItem {
     priority: number;
@@ -16,29 +18,29 @@ interface MovementItem {
     to: number;
 }
 
-interface SceneWithGameManager extends Phaser.Scene {
-    gameManager?: {
-        cardManager: {
-            getCard: (index: number) => Phaser.GameObjects.GameObject | null;
-            getGridPositionCoordinates: (index: number) => { x: number; y: number } | null;
-            swapCard: (fromIndex: number, toIndex: number) => boolean;
-            getAllCards: () => Phaser.GameObjects.GameObject[];
-        },
-        isGameOver: boolean;
-    };
-    tweens: Phaser.Tweens.TweenManager;
-    time: Phaser.Time.Clock;
-    add: Phaser.GameObjects.GameObjectFactory;
-}
+// interface SceneWithGameManager extends Phaser.Scene {
+//     gameManager?: {
+//         cardManager: {
+//             getCard: (index: number) => Phaser.GameObjects.GameObject | null;
+//             getGridPositionCoordinates: (index: number) => { x: number; y: number } | null;
+//             swapCard: (fromIndex: number, toIndex: number) => boolean;
+//             getAllCards: () => Phaser.GameObjects.GameObject[];
+//         },
+//         isGameOver: boolean;
+//     };
+//     tweens: Phaser.Tweens.TweenManager;
+//     time: Phaser.Time.Clock;
+//     add: Phaser.GameObjects.GameObjectFactory;
+// }
 
 export default class AnimationManager {
-    private scene: SceneWithGameManager;
+    private scene: ISceneWithGameManager;
     private animationQueue: AnimationQueueItem[];
     /** Trạng thái đang chạy animation (public để GameManager/Card kiểm tra trước khi di chuyển) */
     public isProcessing: boolean;
     private currentAnimation: AnimationQueueItem | null;
 
-    constructor(scene: SceneWithGameManager) {
+    constructor(scene: ISceneWithGameManager) {
         this.scene = scene;
         this.animationQueue = []; // Hàng đợi animation functions với priority
         this.isProcessing = false; // Trạng thái xử lý

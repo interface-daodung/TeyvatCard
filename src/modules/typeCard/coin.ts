@@ -62,13 +62,12 @@ export default class Coin extends Card {
         }
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         if (this.nameId.endsWith('resonance')) {
             this.scene.gameManager?.addCoin(this.score, 3);
         } else {
             this.scene.gameManager?.addCoin(this.score, 1);
         }
-        // soundManager.play('Coin-sound');
-        return false;
+        return Promise.resolve(false); // Coin không biến mất sau khi dùng, nên trả về false để không emit 'completeMove';
     }
 }

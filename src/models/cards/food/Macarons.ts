@@ -13,7 +13,7 @@ export default class Macarons extends Food {
         scene.add.existing(this);
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         super.CardEffect();
         // console.log(`Mystique Soup effect: healing ${this.food} HP to the character.`);
         if (this.scene.gameManager.cardManager.CardCharacter instanceof Character) {
@@ -22,6 +22,6 @@ export default class Macarons extends Food {
             if (import.meta.env.VITE_IS_DEV === 'true')
                 console.error('No character found to apply Mystique Soup effect.');
         }
-        return false;
+        return Promise.resolve(false); // Macarons không biến mất sau khi dùng, nên trả về false để không emit 'completeMove';
     }
 }

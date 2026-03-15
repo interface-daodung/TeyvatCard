@@ -67,7 +67,7 @@ export default class GameManager {
      * Di chuyển card từ vị trí cũ sang vị trí mới
      * @param index - Vị trí card cũ
      */
-    moveCharacter(index: number): void {
+    async moveCharacter(index: number): Promise<void> {
 
         // Nếu đang xử lý animation thì không di chuyển
         if (this.animationManager.isProcessing || this.OnCompleteMoveCount !== 0) {
@@ -77,8 +77,8 @@ export default class GameManager {
         const characterIndex = this.cardManager.getCharacterIndex();
 
         if (CalculatePositionCard.isValidMove(characterIndex, index)) {
-            const card = this.cardManager.getCard(index);
-            if ((card as Card)?.CardEffect()) {
+            const card = this.cardManager.getCard(index) as Card;
+            if (await card?.CardEffect()) {
                 dataManager.setFlag('cardAtOldCharacterPos', undefined);
                 // Emit event completeMove để tất cả card có thể xử lý
                 this.emitter.emit('completeMove');

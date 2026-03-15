@@ -12,7 +12,7 @@ export default class Quicksand extends Trap {
         scene.add.existing(this);
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         soundManager.play('Quicksand-sound');
         this.ProgressDestroy();
         const newCard = this.scene.gameManager?.cardManager.cardFactory.createRandomCard(this.scene, this.index);
@@ -20,6 +20,6 @@ export default class Quicksand extends Trap {
             this.scene.gameManager?.cardManager.addCard(newCard, this.index).processCreation?.();
         }
         this.scene.gameManager?.animationManager.startShuffleAllCardsAnimation(() => {});
-        return true;
+        return Promise.resolve(true); // Quicksand sẽ biến mất sau khi dùng, nhưng vẫn muốn emit 'completeMove' để kích hoạt hiệu ứng xáo trộn bài, nên trả về true;
     }
 }

@@ -66,8 +66,10 @@ export default class Enemy extends Card {
             soundManager.play('sword-sound');
         }
         if (type === 'poisoning') {
-            SpritesheetWrapper.animationStatePoison(this.scene, this.x, this.y);
-            soundManager.play('poison');
+            const effect = SpritesheetWrapper.animationStatePoison(this.scene, 0, 0); // 0,0 = tâm card
+            this.add(effect); // ✅ gắn làm con → tự follow card khi di chuyển
+            // soundManager.play('poison');
+
         }
 
         this.showPopup(damage, 'damage');
@@ -126,7 +128,7 @@ export default class Enemy extends Card {
         }
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         const cardCharacter = this.scene.gameManager?.cardManager.CardCharacter as Character;
         const weapon = cardCharacter?.weapon;
         if (weapon?.durability > 0) {
@@ -134,12 +136,13 @@ export default class Enemy extends Card {
             cardCharacter.weapon.Effect(this, actualDamage, cardCharacter);
             cardCharacter.reduceDurability(actualDamage);
             this.takeDamage(actualDamage, 'slash');
-            return true;
+            return Promise.resolve(true); // Enemy biến mất ngay sau khi dùng, nên trả về true để emit 'completeMove';
         }
         this.scene.gameManager?.addCoin(this.score);
         if (cardCharacter?.takeDamage(this.health, 'damage') === 0) {
-            return true;
+            return Promise.resolve(true);// Enemy biến mất ngay sau khi dùng, nên trả về true để emit 'completeMove';
+
         }
-        return false;
+        return Promise.resolve(false); // Enemy không biến mất sau khi dùng, nên trả về false để không emit 'completeMove';
     }
 }

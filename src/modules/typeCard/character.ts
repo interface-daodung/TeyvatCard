@@ -194,7 +194,8 @@ export default class Character extends Card {
         this.hp = Math.max(0, this.hp - damage);
         this.hpDisplay.updateText(this.hp.toString());
         if (type === 'poisoning') {
-            SpritesheetWrapper.animationStatePoison(this.scene, this.x, this.y);
+            const effect = SpritesheetWrapper.animationStatePoison(this.scene, 0, 0); // 0,0 = tâm card
+            this.add(effect); // ✅ gắn làm con → tự follow card khi di chuyển
             soundManager.play('poison');
         }
         this.showPopup(damage, type);
@@ -260,7 +261,7 @@ export default class Character extends Card {
     setWeapon(weapon: Equipment): void {
         const currentDurability = this.weapon?.durability ?? 0;
         if (weapon.durability > currentDurability) {
-            if(currentDurability>0){
+            if (currentDurability > 0) {
                 this.scene.gameManager?.addCoin(currentDurability);
             }
             this.weapon = weapon;

@@ -14,7 +14,7 @@ export default class MystiqueSoup extends Food {
         scene.add.existing(this);
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean>{
         // console.log(`Mystique Soup effect: healing ${this.food} HP to the character.`);
         if (this.scene.gameManager?.cardManager.CardCharacter instanceof Character) {
             this.scene.gameManager.cardManager.CardCharacter.takeDamage(this.food, 'poisoning');
@@ -22,6 +22,6 @@ export default class MystiqueSoup extends Food {
         } else {
             Log.error('No character found to apply Mystique Soup effect.');
         }
-        return false;
+        return Promise.resolve(false); // Mystique Soup không biến mất sau khi dùng, nên trả về false để không emit 'completeMove';
     }
 }

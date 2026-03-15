@@ -40,7 +40,7 @@ export default class BreatheFire extends Trap {
         scene.add.existing(this);
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         this.findAdjacentTargets().forEach(cardIndex => {
             const card = this.scene.gameManager?.cardManager.getCard(cardIndex) as Card;
             if (card?.takeDamage) {
@@ -54,7 +54,7 @@ export default class BreatheFire extends Trap {
                 soundManager.play('breathe-fire-sound');
             }
         );
-        return false;
+        return Promise.resolve(false);
     }
 
     initializeArrows(): void {

@@ -304,9 +304,9 @@ export default class Card extends Phaser.GameObjects.Container {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> { 
         Log.info(`Card ${this.name} (${this.nameId}) đang chạy hiệu ứng...`);
-        return false;
+        return Promise.resolve(false);
     }
 
     takeDamage(damage: number, type?: string): void {
