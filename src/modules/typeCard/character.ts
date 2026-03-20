@@ -7,17 +7,21 @@ import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
 import Equipment from './equipment.js';
 import { soundManager } from '../../core/SoundManager.js';
+import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
+import { animationCurse } from '@/src/animations/Sprites/animationCurse.js';
 
 
 export default class Character extends Card {
     level: number;
     hp: number;
+    element: string = 'error';
     weapon: Equipment | null;
     hpDisplay!: CreateDisplayResult;
     weaponDisplay!: CreateDisplayResult;
     weaponBadgeDisplay!: { updateTexture: (texture: string) => void; destroy: () => void };
     /** HP base từ config (JSON/DEFAULT), dùng trong getMaxHP nếu có */
     configHp?: number;
+    private _elementalBurstCooldown: number = 0;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'character');
@@ -28,7 +32,7 @@ export default class Character extends Card {
 
     override applyConfig(config: CardDefault): void {
         super.applyConfig(config);
-        if (config.element != null) (this as any).element = config.element;
+        if (config.element != null) this.element = config.element;
         if (config.hp != null) this.configHp = config.hp;
         this.hp = this.getMaxHP();
     }
@@ -63,6 +67,25 @@ export default class Character extends Card {
             super.createCard();
         }
     }
+
+    /*
+    * Tạo display HUD cho nhân vật
+    * @param options: CreateDisplayOptions
+    * @param position: DisplayPosition = 'leftTop' | 'rightTop' | 'rightBottom' | 'leftBottom'
+    * @returns CreateDisplayResult
+    */
+    addDisplayHUD(): void {
+        this.hpDisplay = this.createDisplay(
+            { fillColor: 0xff0000, text: this.hp.toString() },
+            'rightTop' as DisplayPosition
+        );
+        this.weaponDisplay = this.createDisplay(
+            { fillColor: 0xff6600, text: String(this.weapon?.durability ?? 0) },
+            'leftBottom' as DisplayPosition
+        );
+        this.weaponBadgeDisplay = this.createBadgeDisplay();
+    }
+
     // trạng thái bị đầu độc
     poisoning: boolean = false;
 
@@ -177,27 +200,26 @@ export default class Character extends Card {
     }
 
 
-    addDisplayHUD(): void {
-        this.hpDisplay = this.createDisplay(
-            { fillColor: 0xff0000, text: this.hp.toString() },
-            'rightTop' as DisplayPosition
-        );
-        this.weaponDisplay = this.createDisplay(
-            { fillColor: 0xff6600, text: String(this.weapon?.durability ?? 0) },
-            'leftBottom' as DisplayPosition
-        );
-        this.weaponBadgeDisplay = this.createBadgeDisplay();
-    }
 
-    takeDamage(damage: number, type: 'poisoning' | 'damage'): number {
-        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
-        this.hp = Math.max(0, this.hp - damage);
-        this.hpDisplay.updateText(this.hp.toString());
+
+    takeDamage(damage: number, type: 'poisoning' | 'damage' | 'curse'): number {
         if (type === 'poisoning') {
-            const effect = SpritesheetWrapper.animationStatePoison(this.scene, 0, 0); // 0,0 = tâm card
-            this.add(effect); // ✅ gắn làm con → tự follow card khi di chuyển
+            // const effect = ; // 0,0 = tâm card
+            this.add(animationStatePoison(this.scene, 0, 0)); // ✅ gắn làm con → tự follow card khi di chuyển
             soundManager.play('poison');
+            this.hp = Math.max(1, this.hp - damage);
+        } else if (type === 'curse') {
+            this.add(animationCurse(this.scene, 0, 0)); // ✅ gắn làm con → tự follow card khi di chuyển
+            // soundManager.play('curse');
+            this.hp = 1; // Bị nguyền rủa → HP về 1, không chết được nhưng cũng không thể thấp hơn 1
+        } else {
+            this.hp = Math.max(0, this.hp - damage);
         }
+
+        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
+        // this.hp = Math.max(0, this.hp - damage);
+        this.hpDisplay.updateText(this.hp.toString());
+
         this.showPopup(damage, type);
         if (this.hp <= 0) {
             this.scene.gameManager?.gameOver();
@@ -213,8 +235,14 @@ export default class Character extends Card {
 
 
 
-    showPopup(amount: number, type: keyof typeof POPUP_CONFIG = 'error'): void {
-        const config = POPUP_CONFIG[type];
+    showPopup(
+        amount: number,
+        type: keyof typeof POPUP_CONFIG | { color: string; prefix: string } = 'error'
+    ): void {
+        const config =
+            typeof type === 'string'
+                ? POPUP_CONFIG[type as keyof typeof POPUP_CONFIG] ?? POPUP_CONFIG.error
+                : type;
         const color = config.color;
         const prefix = config.prefix;
 
@@ -250,7 +278,7 @@ export default class Character extends Card {
 
     getMaxHP(): number {
         const baseHp = this.configHp ?? (this.constructor as typeof Card & { DEFAULT?: { hp?: number } }).DEFAULT?.hp ?? 10;
-        return baseHp + this.getLevel() - 1;
+        return baseHp + this.getLevel();
     }
 
     getLevel(): number {
@@ -322,6 +350,27 @@ export default class Character extends Card {
             (this.scene as any).sellButton?.updateButton();
         }
     }
+
+    elementalBurst(): void {
+        // Logic của elemental burst
+        // Có thể thêm hiệu ứng hoặc âm thanh khi sử dụng elemental burst
+    }
+
+    get elementalBurstCooldown(): number {
+        return this._elementalBurstCooldown;
+    }
+
+    set elementalBurstCooldown(value: number) {
+        this._elementalBurstCooldown = Math.max(0, value);
+        (this.scene as any).updateSkillButtonCooldown?.();
+    }
+    // elementalBurstCooldownMax: number = 20; // Ví dụ: elemental burst có cooldown 5 lượt
+
+    elementalRecharge(element: string): void {
+        // Logic của elemental recharge
+        // Có thể thêm hiệu ứng hoặc âm thanh khi sử dụng elemental recharge
+
+    }
 }
 
 
@@ -330,5 +379,6 @@ const POPUP_CONFIG = {
     heal: { color: '#00ff00', prefix: '+' },
     damage: { color: '#ff0000', prefix: '-' },
     poisoning: { color: '#800080', prefix: '-' },
+    curse: { color: '#000000', prefix: '!' },
     error: { color: '#ffffff', prefix: '' }
 } as const;

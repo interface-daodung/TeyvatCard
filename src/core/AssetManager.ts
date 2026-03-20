@@ -215,6 +215,9 @@ export default class AssetManager {
                 this.loadAudios([...BGM_ASSETS]);
                 break;
             case 'GameScene':
+                // Load background texture theo map_background (public/data/dungeonList.json)
+                // Texture key = tên file (ví dụ BideBao.webp => key 'BideBao')
+                this.queueGameSceneMapBackgroundTexture();
                 this.loadAudios([...SOUND_EFFECT_ASSETS]);
                 this.loadImages([...ANIMATIONS_ASSETS]);
                 break;
@@ -231,6 +234,46 @@ export default class AssetManager {
             default:
                 Log.warn('[AssetManager] Không có config assets cho scene:', sceneName);
                 break;
+        }
+    }
+
+    /**
+     * Với GameScene: đọc dungeonList từ DataManager và load map_background lên texture.
+     * - URI ví dụ: "/assets/images/ui/background/BideBao.webp"
+     * - Texture key: "BideBao"
+     */
+    private queueGameSceneMapBackgroundTexture(): void {
+        if (!this.scene) return;
+
+        const dungeonList = dataManager.getFlag<unknown>('dungeonList');
+        const uris: string[] = [];
+
+        if (Array.isArray(dungeonList)) {
+            for (const d of dungeonList) {
+                const uri = (d as Record<string, unknown>)?.map_background;
+                if (typeof uri === 'string' && uri.trim()) {
+                    uris.push(uri);
+                }
+            }
+        } else if (dungeonList && typeof dungeonList === 'object') {
+            const uri = (dungeonList as Record<string, unknown>)?.map_background;
+            if (typeof uri === 'string' && uri.trim()) uris.push(uri);
+        }
+
+        if (uris.length === 0) {
+            Log.warn('[AssetManager] GameScene: dungeonList.map_background is missing; skip map background texture');
+            return;
+        }
+
+        // Load each background texture once.
+        const seen = new Set<string>();
+        for (const mapBackgroundUri of uris) {
+            const fileName = mapBackgroundUri.split('/').pop() ?? '';
+            const textureKey = fileName.replace(/\.[^/.]+$/i, '');
+
+            if (!textureKey || seen.has(textureKey)) continue;
+            seen.add(textureKey);
+            this.loadImage(textureKey, mapBackgroundUri);
         }
     }
 

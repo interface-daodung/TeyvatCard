@@ -24,7 +24,9 @@ export const ANIMATIONS_ASSETS = [
     { key: 'slash-animations', path: 'assets/images/animations/Slash.png' },
     { key: 'bomb-animations', path: 'assets/images/animations/Explosion1.png' },
     { key: 'breathe-fire-animations', path: 'assets/images/animations/Breath.png' },
-    { key: 'state-poison-animations', path: 'assets/images/animations/StatePoison.png' }
+    { key: 'state-poison-animations', path: 'assets/images/animations/StatePoison.png' },
+    { key: 'exploit-animations', path: 'assets/images/animations/Earth3.png' },
+    { key: 'curse-animations', path: 'assets/images/animations/Darkness3.png' }
 ];
 
 export const SOUND_EFFECT_ASSETS = [
@@ -68,7 +70,22 @@ export const CHARACTER_SPRITE_ASSETS = [
     { key: 'nahida-sprite', path: 'assets/images/cards/character-sprite/nahida.webp' },
     { key: 'raiden-sprite', path: 'assets/images/cards/character-sprite/raiden.webp' },
     { key: 'venti-sprite', path: 'assets/images/cards/character-sprite/venti.webp' },
-    { key: 'zhongli-sprite', path: 'assets/images/cards/character-sprite/zhongli.webp' }
+    { key: 'zhongli-sprite', path: 'assets/images/cards/character-sprite/zhongli.webp' },
+    { key: 'venti-skill', path: 'assets/images/skill/venti.png' },
+    { key: 'raiden-skill', path: 'assets/images/skill/raiden.png' },
+    { key: 'zhongli-skill', path: 'assets/images/skill/zhongli.png' },
+    { key: 'eula-skill', path: 'assets/images/skill/eula.png' },
+    { key: 'furina-skill', path: 'assets/images/skill/furina.png' },
+    { key: 'mavuika-skill', path: 'assets/images/skill/mavuika.png' },
+    { key: 'nahida-skill', path: 'assets/images/skill/nahida.png' },
+    { key: 'venti-icon-skill', path: 'assets/images/skill/icon/venti.png' },
+    { key: 'raiden-icon-skill', path: 'assets/images/skill/icon/raiden.png' },
+    { key: 'zhongli-icon-skill', path: 'assets/images/skill/icon/zhongli.png' },
+    { key: 'eula-icon-skill', path: 'assets/images/skill/icon/eula.png' },
+    { key: 'furina-icon-skill', path: 'assets/images/skill/icon/furina.png' },
+    { key: 'furina-icon-skill-2', path: 'assets/images/skill/icon/furina2.png' },
+    { key: 'mavuika-icon-skill', path: 'assets/images/skill/icon/mavuika.png' },
+    { key: 'nahida-icon-skill', path: 'assets/images/skill/icon/nahida.png' }
 ];
 
 

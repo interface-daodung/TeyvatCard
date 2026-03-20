@@ -6,11 +6,13 @@ import {
     createGameUI,
     createItemButton,
     createItemButtonsFromStorage,
+    createSkillButton,
     showItemNotReadyToast,
     createSellWeapon,
     createTutorialLayer,
     type ItemData,
     type ItemButton,
+    type SkillButton,
     type SellButton
 } from '../components/GameScene/index.js';
 import { getShowGuideSetting, setShowGuideSetting } from '../components/SettingsScene/GameSettingPopup.js';
@@ -23,6 +25,7 @@ interface SceneData {
 interface DungeonData {
     stageId: string;
     name: string;
+    map_background?: string;
 }
 
 export default class GameScene extends Phaser.Scene {
@@ -33,7 +36,12 @@ export default class GameScene extends Phaser.Scene {
     public highScoreText!: Phaser.GameObjects.Text;
     public coinText!: Phaser.GameObjects.Text;
     public itemEquipment!: ItemButton[];
+    public skillButton?: SkillButton;
+    public cardCharacter?: Character;
     public sellButton!: SellButton;
+    private backgroundImage?: Phaser.GameObjects.Image;
+    private backgroundOverlay?: Phaser.GameObjects.Rectangle;
+    private backgroundTextureKey: string = 'background';
 
     constructor() {
         super({ key: 'GameScene' });
@@ -46,14 +54,34 @@ export default class GameScene extends Phaser.Scene {
         const arr = Array.isArray(list) ? list : [];
         const dungeon = arr.find(d => d.stageId === this.stageId);
         this.dungeonStageName = dungeon?.name || '';
+
+        // Background per dungeon (from dungeonList.json)
+        const mapBackgroundUri = dungeon?.map_background;
+        if (typeof mapBackgroundUri === 'string') {
+            const fileName = mapBackgroundUri.split('/').pop() ?? '';
+            const textureKey = fileName.replace(/\.[^/.]+$/i, '');
+            // Only switch background if texture is available (loaded during LoadingScene preload).
+            if (textureKey && this.textures.exists(textureKey)) {
+                this.backgroundTextureKey = textureKey;
+            }
+        }
+
         this.gameManager = new GameManager(this);
     }
 
     create(): void {
         const { width, height } = this.scale;
 
-        this.add.image(width / 2, height / 2, 'background');
-        this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
+        this.backgroundImage = this.add.image(width / 2, 0, this.backgroundTextureKey)
+            .setDepth(-1000);
+        this.backgroundOverlay = this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser())
+            .setAlpha(0.5)
+            .setDepth(-999);
+
+        // COVER mode: giữ tỉ lệ và phủ kín full màn hình theo overlay.
+        // Để giảm hiện tượng bị cắt "phía trên", mình căn ảnh theo mép trên
+        // (cắt chủ yếu ở phía dưới khi tỉ lệ không khớp).
+        this.applyBackgroundCover(width, height, this.backgroundTextureKey);
 
         const uiRefs = createGameUI(
             this,
@@ -88,19 +116,39 @@ export default class GameScene extends Phaser.Scene {
 
         this.gameManager.cardManager.initializeCreateDeck();
 
-        const cardCharacter = this.gameManager.cardManager.CardCharacter as Character;
+        this.cardCharacter = this.gameManager.cardManager.CardCharacter as Character;
+        if ((this.cardCharacter?.level ?? 0) >= 3) {
+            const skillIconKey = `${this.cardCharacter.nameId}-icon-skill`;
+            this.skillButton = createSkillButton(
+                this,
+                width * 0.6,
+                height * 0.15,
+                skillIconKey,
+                this.cardCharacter.elementalBurstCooldown,
+                () => {
+                    if ((this.cardCharacter?.elementalBurstCooldown ?? 1) > 0) {
+                        return false;
+                    }
+                    this.cardCharacter?.elementalBurst();
+                    return true;
+                },
+                () => showItemNotReadyToast(this)
+            );
+            this.updateSkillButtonCooldown();
+        }
+
         this.sellButton = createSellWeapon(
             this,
             width * 0.75,
             height * 0.95,
-            () => cardCharacter?.weapon,
+            () => this.cardCharacter?.weapon,
             () => {
-                const weapon = cardCharacter?.weapon;
+                const weapon = this.cardCharacter?.weapon;
                 if (weapon?.durability > 0) {
                     this.gameManager.addCoin(weapon.price);
-                    cardCharacter.weapon = null;
-                    cardCharacter.weaponDisplay?.updateText(0);
-                    cardCharacter.weaponBadgeDisplay?.updateTexture('');
+                    this.cardCharacter!.weapon = null;
+                    this.cardCharacter!.weaponDisplay?.updateText(0);
+                    this.cardCharacter!.weaponBadgeDisplay?.updateTexture('');
                     this.sellButton.hideButton();
                 }
             }
@@ -110,5 +158,49 @@ export default class GameScene extends Phaser.Scene {
             setShowGuideSetting(false);
             createTutorialLayer(this, width, height, () => {});
         }
+    }
+
+    public updateSkillButtonCooldown(): void {
+        if (!this.skillButton || !this.cardCharacter) return;
+
+        try {
+            this.skillButton.setCooldown(this.cardCharacter.elementalBurstCooldown);
+        } catch (err) {
+            console.warn('updateSkillButtonCooldown failed (ignored):', err);
+        }
+    }
+
+    /**
+     * Đổi texture của nền màn hình real-time.
+     * Lưu ý: không destroy/add lại để hạn chế lỗi render order/depth.
+     */
+    public setBackgroundTexture(textureKey: string): void {
+        this.backgroundImage?.setTexture(textureKey);
+    }
+
+    private applyBackgroundCover(width: number, height: number, textureKey: string): void {
+        if (!this.backgroundImage) return;
+
+        const texture = this.textures.get(textureKey);
+        const sourceImage = texture?.getSourceImage?.() as HTMLImageElement | undefined;
+        const imgW = sourceImage?.width ?? 0;
+        const imgH = sourceImage?.height ?? 0;
+
+        if (!imgW || !imgH) {
+            // Fallback: không lấy được kích thước ảnh nguồn thì giữ nguyên hiển thị.
+            this.backgroundImage.setOrigin(0.5, 0);
+            this.backgroundImage.setPosition(width / 2, 0);
+            return;
+        }
+
+        const scaleX = width / imgW;
+        const scaleY = height / imgH;
+        const coverScale = Math.max(scaleX, scaleY);
+
+        this.backgroundImage
+            .setOrigin(0.5, 0)
+            .setPosition(width / 2, 0)
+            .setScale(coverScale)
+            .setDepth(-1000);
     }
 }

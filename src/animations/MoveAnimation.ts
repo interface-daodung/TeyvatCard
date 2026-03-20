@@ -1,18 +1,14 @@
-// animations/MoveAnimation.ts
-import { IAnimationManager } from './IAnimationManager.js';
+import type { MovementItem, AnimationManager } from './types.js';
 
-interface MovementItem {
-    from: number;
-    to: number;
-}
+const PRIORITY = 6; // Đặt độ ưu tiên cho MoveAnimation, có thể điều chỉnh nếu cần thiết
 
 export class MoveAnimation {
     static run(
-        manager: IAnimationManager,
+        manager: AnimationManager,
         movementList: MovementItem | MovementItem[],
         onComplete?: () => void
     ): void {
-        manager.addToQueue(8, (completeCallback) => {
+        manager.addToQueue(PRIORITY, (completeCallback) => {
             const targets = Array.isArray(movementList) ? movementList : [movementList];
 
             let completedAnimations = 0;
@@ -46,7 +42,7 @@ export class MoveAnimation {
 
                         if (completedAnimations >= totalAnimations) {
                             onComplete?.();
-                            completeCallback(); // ← thay this.completeAnimation()
+                            completeCallback();
                         }
                     }
                 });
@@ -55,7 +51,7 @@ export class MoveAnimation {
     }
 
     static async runAsync(
-        manager: IAnimationManager,
+        manager: AnimationManager,
         movementList: MovementItem | MovementItem[]
     ): Promise<void> {
         return manager.animationAsync(

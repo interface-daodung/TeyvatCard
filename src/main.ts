@@ -14,13 +14,13 @@ import RegisterScene from './scenes/RegisterScene.js';
 import TestGraphicsRenderTexture from './scenes/TestGraphicsRenderTexture.js';
 import { setupPWA } from './pwa/register';
 import { soundManager } from './core/SoundManager.js';
-import { themeManager } from './core/ThemeManager.js';
+// import { themeManager } from './core/ThemeManager.js';
 
 // Nếu đang ở đường dẫn /verify thì dùng trang tĩnh verify-email.html thay vì load game
-if (window.location.pathname === '/verify') {
-  // Giữ nguyên query ?token=...
-  window.location.replace(`/verify-email.html${window.location.search}`);
-}
+// if (window.location.pathname === '/verify') {
+//   // Giữ nguyên query ?token=...
+//   window.location.replace(`/verify-email.html${window.location.search}`);
+// }
 
 // Màu nền trước khi load theme (LoadingScene chưa chạy). Theme thật áp dụng sau khi load theme.json.
 const INITIAL_BACKGROUND_COLOR = '#000000';
@@ -52,10 +52,11 @@ const config: Phaser.Types.Core.GameConfig = {
 setupPWA();
 
 // Khởi tạo game (chỉ khi không redirect verify)
-if (window.location.pathname !== '/verify') {
-  const game = new Phaser.Game(config);
-  soundManager.setGame(game);
+// if (window.location.pathname !== '/verify')
+// {
+const game = new Phaser.Game(config);
+soundManager.setGame(game);
 
-  // Export để có thể truy cập từ console
-  (window as Window & { game?: Phaser.Game }).game = game;
-}
+// Export để có thể truy cập từ console
+(window as Window & { game?: Phaser.Game }).game = game;
+// }

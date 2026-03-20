@@ -5,6 +5,8 @@ import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
 import { soundManager } from '../../core/SoundManager.js';
 import Character from './character.js';
+import { animationSlash } from '@/src/animations/Sprites/animationSlash.js';
+import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
 
 export default class Enemy extends Card {
     poisoning: boolean;
@@ -62,11 +64,10 @@ export default class Enemy extends Card {
         this.health -= damage;
         this.hpDisplay.updateText(this.health.toString());
         if (type === 'slash') {
-            SpritesheetWrapper.animationSlash(this.scene, this.x, this.y);
+            animationSlash(this.scene, this.x, this.y);
             soundManager.play('sword-sound');
-        }
-        if (type === 'poisoning') {
-            const effect = SpritesheetWrapper.animationStatePoison(this.scene, 0, 0); // 0,0 = tâm card
+        } else if (type === 'poisoning') {
+            const effect = animationStatePoison(this.scene, 0, 0); // 0,0 = tâm card
             this.add(effect); // ✅ gắn làm con → tự follow card khi di chuyển
             // soundManager.play('poison');
 

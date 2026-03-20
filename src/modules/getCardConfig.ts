@@ -67,7 +67,7 @@ function mapLibraryEntryToCardDefault(entry: LibraryEntry): CardDefault {
         name: `adventureCard.${id}.name`,
         description: `adventureCard.${id}.description`,
         rarity: entry.rarity,
-        element: (type === 'enemy' || type === 'character') ? entry.element : undefined,
+        element: (type === 'enemy' || type === 'character' || type === 'coin') ? entry.element : undefined,
         category: entry.category,
         clan: type === 'enemy' ? entry.clan : undefined,
         resonanceDescription: `adventureCard.${id}.resonanceDescription`,

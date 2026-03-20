@@ -3,6 +3,7 @@ import { getCardConfig } from '../../modules/getCardConfig.js';
 import type GameManager from '../../core/GameManager.js';
 import Equipment from '../../modules/typeCard/equipment.js';
 import { Log } from '../../utils/Log.js';
+import { ItemAnimation } from '@/src/animations/ItemAnimation.js';
 
 export default class Sword extends Item {
     constructor() {
@@ -11,6 +12,8 @@ export default class Sword extends Item {
     }
 
     override effect(gameManager: GameManager): boolean {
+        ItemAnimation.runAsync(gameManager.animationManager, this.image);
+
         const factory = gameManager.cardManager.cardFactory as any;
         const swordWeapons = factory.getWeaponClassesByCategory('sword');
         if (!swordWeapons.length) {

@@ -1,5 +1,6 @@
 import Item from '../../modules/Item.js';
 import type GameManager from '../../core/GameManager.js';
+import { ItemAnimation } from '@/src/animations/ItemAnimation.js';
 
 export default class Cooldown extends Item {
     constructor() {
@@ -19,7 +20,8 @@ export default class Cooldown extends Item {
             }
         });
         if (itemCount === 3) return false;
-        gameManager.animationManager.startItemAnimation(this.image, () => {});
+        ItemAnimation.runAsync(gameManager.animationManager, this.image);
+        // gameManager.animationManager.startItemAnimation(this.image, () => {});
         return true;
     }
 }

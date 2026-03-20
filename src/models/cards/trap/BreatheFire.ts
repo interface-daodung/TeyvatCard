@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import Trap from '../../../modules/typeCard/trap.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
-import { soundManager } from '../../../core/SoundManager.js';
 import Card from '../../../modules/Card.js';
+import { BreatheFireAnimation } from '@/src/animations/BreatheFireAnimation.js';
 
 type ArrowDirection = 'top' | 'bottom' | 'left' | 'right';
 
@@ -25,7 +25,6 @@ export default class BreatheFire extends Trap {
         const config = getCardConfig('BreatheFire') ?? { id: 'breathe-fire', name: 'Breathe Fire', description: '', rarity: 2 };
         super(scene, x, y, index, config.name!, config.id!);
         this.applyConfig(config);
-        // this.damage = this.GetRandom(1, 7);
         this.trapId = `breathe-fire-${Date.now()}-${Math.random()}`;
 
         const unsub = this.scene.gameManager?.emitter.on(
@@ -40,20 +39,21 @@ export default class BreatheFire extends Trap {
         scene.add.existing(this);
     }
 
-    CardEffect(): Promise<boolean> {
+    async CardEffect(): Promise<boolean> {
         this.findAdjacentTargets().forEach(cardIndex => {
             const card = this.scene.gameManager?.cardManager.getCard(cardIndex) as Card;
             if (card?.takeDamage) {
                 card.takeDamage(this.damage, 'damage');
             }
         });
-        this.scene.gameManager?.animationManager.startBreatheFireAnimation(
-            this.damage,
-            this.findAdjacentTargets(),
-            () => {
-                soundManager.play('breathe-fire-sound');
-            }
-        );
+        await BreatheFireAnimation.runAsync(this.scene.gameManager!.animationManager, this.damage, this.findAdjacentTargets());
+        // this.scene.gameManager?.animationManager.startBreatheFireAnimation(
+        //     this.damage,
+        //     this.findAdjacentTargets(),
+        //     () => {
+        //         soundManager.play('breathe-fire-sound');
+        //     }
+        // );
         return Promise.resolve(false);
     }
 

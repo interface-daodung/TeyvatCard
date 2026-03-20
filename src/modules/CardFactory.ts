@@ -25,7 +25,7 @@ interface DungeonItem {
     availableCards: Record<string, string[]>;
 }
 
-class CardFactory {
+export class CardFactory {
     static instance: CardFactory | null = null;
 
     characterClasses: Record<string, new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card>;

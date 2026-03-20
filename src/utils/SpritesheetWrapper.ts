@@ -6,9 +6,9 @@ export interface AnimationFrames {
 }
 
 /** Sprite với pulseTimer (dùng cho stopPulseSprite) */
-export interface SpriteWithPulseTimer extends Phaser.GameObjects.Sprite {
-    pulseTimer?: Phaser.Time.TimerEvent;
-}
+// export interface SpriteWithPulseTimer extends Phaser.GameObjects.Sprite {
+//     pulseTimer?: Phaser.Time.TimerEvent;
+// }
 
 export class SpritesheetWrapper {
     /**
@@ -56,57 +56,57 @@ export class SpritesheetWrapper {
     /**
      * Phát animation slash effect với tham số cố định
      */
-    static animationSlash(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
-        return this.animationEffect(
-            scene,
-            x,
-            y,
-            'slash-animations',
-            170,
-            170,
-            { start: 0, end: 4 },
-            12
-        );
-    }
+    // static animationSlash(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
+    //     return this.animationEffect(
+    //         scene,
+    //         x,
+    //         y,
+    //         'slash-animations',
+    //         170,
+    //         170,
+    //         { start: 0, end: 4 },
+    //         12
+    //     );
+    // }
 
-    static animationBomb(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
-        return this.animationEffect(
-            scene,
-            x,
-            y,
-            'bomb-animations',
-            170,
-            170,
-            { start: 0, end: 11 },
-            24
-        );
-    }
+    // static animationBomb(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
+    //     return this.animationEffect(
+    //         scene,
+    //         x,
+    //         y,
+    //         'bomb-animations',
+    //         170,
+    //         170,
+    //         { start: 0, end: 11 },
+    //         24
+    //     );
+    // }
 
-    static animationBreatheFire(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
-        return this.animationEffect(
-            scene,
-            x,
-            y,
-            'breathe-fire-animations',
-            170,
-            170,
-            { start: 0, end: 14 },
-            30
-        );
-    }
+    // static animationBreatheFire(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
+    //     return this.animationEffect(
+    //         scene,
+    //         x,
+    //         y,
+    //         'breathe-fire-animations',
+    //         170,
+    //         170,
+    //         { start: 0, end: 14 },
+    //         30
+    //     );
+    // }
 
-    static animationStatePoison(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
-        return this.animationEffect(
-            scene,
-            x,
-            y,
-            'state-poison-animations',
-            170,
-            170,
-            { start: 0, end: 15 },
-            10
-        );
-    }
+    // static animationStatePoison(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Sprite {
+    //     return this.animationEffect(
+    //         scene,
+    //         x,
+    //         y,
+    //         'state-poison-animations',
+    //         170,
+    //         170,
+    //         { start: 0, end: 15 },
+    //         10
+    //     );
+    // }
 
     /**
      * Tạo character animation (thay thế SpritesheetCharacter.create)
@@ -145,80 +145,80 @@ export class SpritesheetWrapper {
         return sprite;
     }
 
-    static setSpriteTint(sprite: Phaser.GameObjects.Sprite, color: number): Phaser.GameObjects.Sprite {
-        sprite.setTint(color);
-        return sprite;
-    }
+    // static setSpriteTint(sprite: Phaser.GameObjects.Sprite, color: number): Phaser.GameObjects.Sprite {
+    //     sprite.setTint(color);
+    //     return sprite;
+    // }
 
-    static setSpriteTintWithAlpha(
-        sprite: Phaser.GameObjects.Sprite,
-        color: number,
-        alpha: number
-    ): Phaser.GameObjects.Sprite {
-        sprite.setTintFill(color);
-        sprite.setAlpha(alpha);
-        return sprite;
-    }
+    // static setSpriteTintWithAlpha(
+    //     sprite: Phaser.GameObjects.Sprite,
+    //     color: number,
+    //     alpha: number
+    // ): Phaser.GameObjects.Sprite {
+    //     sprite.setTintFill(color);
+    //     sprite.setAlpha(alpha);
+    //     return sprite;
+    // }
 
-    static clearSpriteTint(sprite: Phaser.GameObjects.Sprite): Phaser.GameObjects.Sprite {
-        sprite.clearTint();
-        return sprite;
-    }
+    // static clearSpriteTint(sprite: Phaser.GameObjects.Sprite): Phaser.GameObjects.Sprite {
+    //     sprite.clearTint();
+    //     return sprite;
+    // }
 
-    static flashSprite(
-        sprite: Phaser.GameObjects.Sprite,
-        color: number = 0xffffff,
-        duration: number = 200
-    ): Phaser.GameObjects.Sprite {
-        const originalTint = sprite.tint;
+    // static flashSprite(
+    //     sprite: Phaser.GameObjects.Sprite,
+    //     color: number = 0xffffff,
+    //     duration: number = 200
+    // ): Phaser.GameObjects.Sprite {
+    //     const originalTint = sprite.tint;
 
-        sprite.setTint(color);
+    //     sprite.setTint(color);
 
-        sprite.scene.time.delayedCall(duration, () => {
-            sprite.setTint(originalTint);
-        });
+    //     sprite.scene.time.delayedCall(duration, () => {
+    //         sprite.setTint(originalTint);
+    //     });
 
-        return sprite;
-    }
+    //     return sprite;
+    // }
 
-    static pulseSprite(
-        sprite: Phaser.GameObjects.Sprite,
-        color: number = 0xffffff,
-        interval: number = 500,
-        duration: number = 200
-    ): Phaser.GameObjects.Sprite {
-        const s = sprite as SpriteWithPulseTimer;
-        const originalTint = sprite.tint;
-        let isFlashing = false;
+    // static pulseSprite(
+    //     sprite: Phaser.GameObjects.Sprite,
+    //     color: number = 0xffffff,
+    //     interval: number = 500,
+    //     duration: number = 200
+    // ): Phaser.GameObjects.Sprite {
+    //     const s = sprite as SpriteWithPulseTimer;
+    //     const originalTint = sprite.tint;
+    //     let isFlashing = false;
 
-        const pulseTimer = sprite.scene.time.addEvent({
-            delay: interval,
-            callback: () => {
-                if (!isFlashing) {
-                    isFlashing = true;
-                    sprite.setTint(color);
+    //     const pulseTimer = sprite.scene.time.addEvent({
+    //         delay: interval,
+    //         callback: () => {
+    //             if (!isFlashing) {
+    //                 isFlashing = true;
+    //                 sprite.setTint(color);
 
-                    sprite.scene.time.delayedCall(duration, () => {
-                        sprite.setTint(originalTint);
-                        isFlashing = false;
-                    });
-                }
-            },
-            loop: true
-        });
+    //                 sprite.scene.time.delayedCall(duration, () => {
+    //                     sprite.setTint(originalTint);
+    //                     isFlashing = false;
+    //                 });
+    //             }
+    //         },
+    //         loop: true
+    //     });
 
-        s.pulseTimer = pulseTimer;
+    //     s.pulseTimer = pulseTimer;
 
-        return sprite;
-    }
+    //     return sprite;
+    // }
 
-    static stopPulseSprite(sprite: Phaser.GameObjects.Sprite): Phaser.GameObjects.Sprite {
-        const s = sprite as SpriteWithPulseTimer;
-        if (s.pulseTimer) {
-            s.pulseTimer.destroy();
-            s.pulseTimer = undefined;
-            sprite.clearTint();
-        }
-        return sprite;
-    }
+    // static stopPulseSprite(sprite: Phaser.GameObjects.Sprite): Phaser.GameObjects.Sprite {
+    //     const s = sprite as SpriteWithPulseTimer;
+    //     if (s.pulseTimer) {
+    //         s.pulseTimer.destroy();
+    //         s.pulseTimer = undefined;
+    //         sprite.clearTint();
+    //     }
+    //     return sprite;
+    // }
 }

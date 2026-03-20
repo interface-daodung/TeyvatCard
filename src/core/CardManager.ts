@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import cardFactory from '../modules/CardFactory.js';
-// import CardFactory from '../modules/CardFactory.js';
+import type Character from '../modules/typeCard/character.js';
+import type { CardFactory } from '../modules/CardFactory.js';
+// import type { SceneWithGameManager } from '../animations/types.d.ts';
+
 
 /** Card: Container + field/method dùng trong game. Không Omit type/name/setInteractive/disableInteractive để tương thích GameObject. */
 interface Card extends Phaser.GameObjects.Container {
@@ -28,8 +31,8 @@ export default class CardManager {
     private spacing: number;
     private gridStartX: number;
     private gridStartY: number;
-    public cardFactory:  any //typeof CardFactory;; // CardFactory type sẽ được định nghĩa sau
-    public CardCharacter: Card | null;
+    public cardFactory: CardFactory; // CardFactory type sẽ được định nghĩa sau
+    public CardCharacter: Character;
 
     constructor(scene: SceneWithGameManager) {
         this.scene = scene;
@@ -129,7 +132,7 @@ export default class CardManager {
             return;
         }
 
-        this.CardCharacter = this.cardFactory.createCharacter(this.scene, coord_start.x, coord_start.y, 4) as Card;
+        this.CardCharacter = this.cardFactory.createCharacter(this.scene as any, coord_start.x, coord_start.y, 4) as Character;
         this.addCard(this.CardCharacter, 4);
 
         // Tạo 9 cards mới
@@ -139,7 +142,7 @@ export default class CardManager {
                 // Tạo card mới sử dụng CardFactory
                 if (i === 4) continue;
                 // Tạo card ngẫu nhiên
-                const card = this.cardFactory.createRandomCard(this.scene, i) as Card;
+                const card = this.cardFactory.createRandomCard(this.scene as any, i) as Card;
                 // Thêm card vào vị trí grid
                 this.addCard(card, i);
             }
@@ -148,7 +151,7 @@ export default class CardManager {
         // Kiểm tra Element Resonance sau khi di chuyển card
         if (this.scene.gameManager) {
             this.scene.gameManager.emitter
-                .on('completeMove', this.checkElementResonance.bind(this), 2);
+                .on('completeMove', this.checkElementResonance.bind(this), 99);
         }
     }
 
@@ -284,27 +287,27 @@ export default class CardManager {
      */
     checkElementResonance(): number {
         const cardsToResonate = new Set<Card>(); // Lưu các card cần gọi Resonance()
-        
+
         // BƯỚC 1: Kiểm tra tất cả hàng và cột để tìm các card cần xử lý
         // Kiểm tra các hàng (0-2)
         for (let row = 0; row < 3; row++) {
             const rowCards: Card[] = [];
-            
+
             // Lấy các card trong hàng
             for (let col = 0; col < 3; col++) {
                 const index = row * 3 + col;
                 const card = this.cards[index];
-                
+
                 if (card && card.type === 'coin' && card.nameId && card.nameId.endsWith('fragment')) {
                     rowCards.push(card);
                 }
             }
-            
+
             // Kiểm tra xem có đúng 3 card cùng nameId trong hàng không
             if (rowCards.length === 3) {
                 const firstCardNameId = rowCards[0].nameId;
                 const allSameNameId = rowCards.every(card => card.nameId === firstCardNameId);
-                
+
                 if (allSameNameId && firstCardNameId) {
                     // Thêm các card vào danh sách cần xử lý
                     rowCards.forEach(card => {
@@ -314,26 +317,26 @@ export default class CardManager {
                 }
             }
         }
-        
+
         // Kiểm tra các cột (0-2)
         for (let col = 0; col < 3; col++) {
             const colCards: Card[] = [];
-            
+
             // Lấy các card trong cột
             for (let row = 0; row < 3; row++) {
                 const index = row * 3 + col;
                 const card = this.cards[index];
-                
+
                 if (card && card.type === 'coin' && card.nameId && card.nameId.endsWith('fragment')) {
                     colCards.push(card);
                 }
             }
-            
+
             // Kiểm tra xem có đúng 3 card cùng nameId trong cột không
             if (colCards.length === 3) {
                 const firstCardNameId = colCards[0].nameId;
                 const allSameNameId = colCards.every(card => card.nameId === firstCardNameId);
-                
+
                 if (allSameNameId && firstCardNameId) {
                     // Thêm các card vào danh sách cần xử lý
                     colCards.forEach(card => {
@@ -343,7 +346,7 @@ export default class CardManager {
                 }
             }
         }
-        
+
         // BƯỚC 2: Gọi Resonance() cho tất cả card đã được xác định
         if (cardsToResonate.size > 0) {
             console.log(`Element Resonance: ${cardsToResonate.size} cards triggered`);
@@ -353,8 +356,8 @@ export default class CardManager {
                 }
             });
         }
-        
+
         return cardsToResonate.size; // Trả về số lượng card đã được xử lý
     }
-    
+
 }

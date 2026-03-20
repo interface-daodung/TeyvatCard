@@ -249,6 +249,12 @@ export default class Card extends Phaser.GameObjects.Container {
         this.setScale(1.0);
     }
 
+    /*
+    * Tạo display HUD cho card
+    * @param options: CreateDisplayOptions
+    * @param position: DisplayPosition = 'leftTop' | 'rightTop' | 'rightBottom' | 'leftBottom'
+    * @returns CreateDisplayResult
+    */
     createDisplay(
         options: CreateDisplayOptions = {},
         position: DisplayPosition

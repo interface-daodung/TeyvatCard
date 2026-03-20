@@ -14,6 +14,12 @@ export interface ItemButton {
     cooldowninning: (count: number) => void;
 }
 
+export interface SkillButton {
+    skillButton: Phaser.GameObjects.Container;
+    setCooldown: (cooldown: number) => void;
+    setTextureKey: (textureKey: string) => void;
+}
+
 export interface SellButton {
     updateButton: () => void;
     hideButton: () => void;

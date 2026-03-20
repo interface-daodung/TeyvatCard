@@ -7,6 +7,7 @@ export default class Coin extends Card {
     score!: number;
     rarity!: number;
     coinDisplay!: CreateDisplayResult;
+    element!: string;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'coin');
@@ -15,6 +16,8 @@ export default class Coin extends Card {
 
     override applyConfig(config: CardDefault): void {
         super.applyConfig(config);
+        this.element = config.element; //  thêm thuộc tính element cho Coin, lấy từ config
+        console.log(`Applying config for ${this.name}: element=${this.element}, score=${this.score}`);
         // if (config.rarity != null) this.rarity = config.rarity;
     }
 
@@ -68,6 +71,7 @@ export default class Coin extends Card {
         } else {
             this.scene.gameManager?.addCoin(this.score, 1);
         }
+        this.scene.gameManager.cardManager.CardCharacter.elementalRecharge(this.element);
         return Promise.resolve(false); // Coin không biến mất sau khi dùng, nên trả về false để không emit 'completeMove';
     }
 }

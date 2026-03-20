@@ -1,6 +1,7 @@
 import Treasure from '../../../modules/typeCard/treasure.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
+import { animationExploit } from '@/src/animations/Sprites/animationExploit.js';
 
 export default class GoldMine extends Treasure {
     Reserves: number;
@@ -21,6 +22,7 @@ export default class GoldMine extends Treasure {
             this.ProgressDestroy();
             return Promise.resolve(false);
         }
+        this.add(animationExploit(this.scene, 0, 0));
         // thêm hiệu ứng fade out  
         this.scene.gameManager?.addCoin(this.GetRandom(1, 10));
         return Promise.resolve(true); // vẫn còn vàng, nên trả về true để không emit 'completeMove';
