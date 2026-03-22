@@ -26,7 +26,9 @@ export const ANIMATIONS_ASSETS = [
     { key: 'breathe-fire-animations', path: 'assets/images/animations/Breath.png' },
     { key: 'state-poison-animations', path: 'assets/images/animations/StatePoison.png' },
     { key: 'exploit-animations', path: 'assets/images/animations/Earth3.png' },
-    { key: 'curse-animations', path: 'assets/images/animations/Darkness3.png' }
+    { key: 'curse-animations', path: 'assets/images/animations/Darkness3.png' },
+    { key: 'refinement-animations', path: 'assets/images/animations/StateUp1.png' },
+    { key: 'raiden-skill-animations', path: 'assets/images/animations/StateParalys.png' }
 ];
 
 export const SOUND_EFFECT_ASSETS = [

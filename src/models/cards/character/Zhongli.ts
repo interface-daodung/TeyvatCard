@@ -79,26 +79,11 @@ export default class Zhongli extends Character {
 
     private readonly elementalBurstCooldownMax = 6; // Số lượt cooldown cho elemental burst   
 
-    elementalRecharge(element: string): void {
-        // Logic của elemental recharge
-        // Có thể thêm hiệu ứng hoặc âm thanh khi sử dụng elemental recharge
-        if (element === this.element) {
-            this.elementalBurstCooldown -= 2; // Nếu nhận được nguyên tố Geo, tăng cooldown thêm 2 lượt
-            // console.log('Zhongli received Geo elemental recharge, increasing elemental burst cooldown by 2', this.elementalBurstCooldown);
-        } else {             // Có thể thêm logic khác nếu nhận được nguyên tố khác
-            this.elementalBurstCooldown--;
-            // console.log('Zhongli received elemental recharge, increasing elemental burst cooldown by 1',
-            //     this.elementalBurstCooldown, element);
-
-        }
-
-        this.elementalBurstCooldown = Math.max(0, this.elementalBurstCooldown);
-
+    override elementalRecharge(element: string): void {
+        super.elementalRecharge(element);
         if (this.elementalBurstCooldown === 0) {
             this.elementalBurst();
         }
-
-        console.log(`Zhongli received elemental recharge of ${element}`);
     }
 
 }

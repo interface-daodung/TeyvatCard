@@ -4,7 +4,7 @@ import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
 import { soundManager } from '../../core/SoundManager.js';
-import Character from './character.js';
+import Character, { type DamageElement } from './character.js';
 import { animationSlash } from '@/src/animations/Sprites/animationSlash.js';
 import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
 
@@ -58,7 +58,7 @@ export default class Enemy extends Card {
         console.log(`Enemy ${this.nameId} takes 1 poison damage, health is now ${this.health}.`);
     }
 
-    takeDamage(damage: number, type?: string): number {
+    takeDamage(damage: number, type?: string, element: DamageElement | null = null): number {
         if (this.health <= 0) return 0;
         // super.takeDamage(damage, type);
         this.health -= damage;

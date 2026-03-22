@@ -17,6 +17,7 @@ import {
 } from '../components/GameScene/index.js';
 import { getShowGuideSetting, setShowGuideSetting } from '../components/SettingsScene/GameSettingPopup.js';
 import Character from '../modules/typeCard/character.js';
+import Mavuika from '../models/cards/character/Mavuika.js';
 
 interface SceneData {
     stageId?: string;
@@ -117,6 +118,9 @@ export default class GameScene extends Phaser.Scene {
         this.gameManager.cardManager.initializeCreateDeck();
 
         this.cardCharacter = this.gameManager.cardManager.CardCharacter as Character;
+        if (this.cardCharacter instanceof Mavuika) {
+            this.cardCharacter.setToken();
+        }
         if ((this.cardCharacter?.level ?? 0) >= 3) {
             const skillIconKey = `${this.cardCharacter.nameId}-icon-skill`;
             this.skillButton = createSkillButton(
@@ -174,8 +178,28 @@ export default class GameScene extends Phaser.Scene {
      * Đổi texture của nền màn hình real-time.
      * Lưu ý: không destroy/add lại để hạn chế lỗi render order/depth.
      */
-    public setBackgroundTexture(textureKey: string): void {
-        this.backgroundImage?.setTexture(textureKey);
+    public setBackgroundTexture(textureKey?: string | 'default'): void {
+        // Quy ước:
+        // - Gọi `setBackgroundTexture()` hoặc `setBackgroundTexture('default')` => khôi phục nền theo dungeon (`backgroundTextureKey`)
+        // - Gọi với `textureKey` cụ thể => đổi nền sang texture đó (không ghi đè `backgroundTextureKey`)
+        const keyToSet =
+            textureKey === undefined || textureKey === 'default'
+                ? this.backgroundTextureKey
+                : textureKey;
+
+        if (!this.backgroundImage) return;
+        if (!this.textures.exists(keyToSet)) {
+            console.warn('setBackgroundTexture failed (texture not found):', keyToSet);
+            return;
+        }
+
+        this.backgroundImage.setTexture(keyToSet);
+
+        // Khi đổi sang texture có tỉ lệ khác, cần re-apply cover để tránh bị lệch crop.
+        const { width, height } = this.scale;
+        if (typeof width === 'number' && typeof height === 'number') {
+            this.applyBackgroundCover(width, height, keyToSet);
+        }
     }
 
     private applyBackgroundCover(width: number, height: number, textureKey: string): void {

@@ -10,6 +10,19 @@ import { soundManager } from '../../core/SoundManager.js';
 import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
 import { animationCurse } from '@/src/animations/Sprites/animationCurse.js';
 
+export type DamageElement =
+    | 'anemo'
+    | 'cryo'
+    | 'dendro'
+    | 'electro'
+    | 'geo'
+    | 'hydro'
+    | 'pyro';
+
+export type DamageType =
+    | 'poisoning'
+    | 'damage'
+    | 'curse';
 
 export default class Character extends Card {
     level: number;
@@ -202,7 +215,11 @@ export default class Character extends Card {
 
 
 
-    takeDamage(damage: number, type: 'poisoning' | 'damage' | 'curse'): number {
+    takeDamage(
+        damage: number,
+        type: DamageType,
+        element: DamageElement | null = null
+    ): number {
         if (type === 'poisoning') {
             // const effect = ; // 0,0 = tâm card
             this.add(animationStatePoison(this.scene, 0, 0)); // ✅ gắn làm con → tự follow card khi di chuyển
@@ -366,10 +383,14 @@ export default class Character extends Card {
     }
     // elementalBurstCooldownMax: number = 20; // Ví dụ: elemental burst có cooldown 5 lượt
 
+    /** Trùng `element` với nhân vật: −2 cooldown burst; khác: −1. Override nếu cần (vd. Zhongli). */
     elementalRecharge(element: string): void {
-        // Logic của elemental recharge
-        // Có thể thêm hiệu ứng hoặc âm thanh khi sử dụng elemental recharge
-
+        if (element === this.element) {
+            this.elementalBurstCooldown -= 2;
+        } else {
+            this.elementalBurstCooldown--;
+        }
+        this.elementalBurstCooldown = Math.max(0, this.elementalBurstCooldown);
     }
 }
 

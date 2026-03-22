@@ -24,11 +24,16 @@ export default class Venti extends Character {
         } else {
             return;
         }
-        this.scene.gameManager?.emitter.once(
-            'completeMove',
-            this.EffectelementalBurst.bind(this),
-            10
-        );
+
+        // tiềm ẩn lỗi            
+        SkillAnimation.runAsync(this.scene.gameManager.animationManager, this.nameId);
+        ShuffleAllCardsAnimation.runAsync(this.scene.gameManager.animationManager);
+
+        // this.scene.gameManager?.emitter.once(
+        //     'completeMove',
+        //     this.EffectelementalBurst.bind(this),
+        //     10
+        // );
     }
 
     EffectelementalBurst(): void {
@@ -36,20 +41,5 @@ export default class Venti extends Character {
         ShuffleAllCardsAnimation.runAsync(this.scene.gameManager.animationManager);
     }
 
-    readonly elementalBurstCooldownMax = 10; // Số lượt cooldown cho elemental burst   
-
-    elementalRecharge(element: string): void {
-        // Logic của elemental recharge
-        if (element === this.element) {
-            this.elementalBurstCooldown -= 2;
-        } else {
-            this.elementalBurstCooldown--;
-        }
-
-        this.elementalBurstCooldown = Math.max(0, this.elementalBurstCooldown);
-
-
-        console.log(`Venti received elemental recharge of ${element}`);
-    }
-
+    readonly elementalBurstCooldownMax = 20; // Số lượt cooldown cho elemental burst
 }
