@@ -2,7 +2,6 @@ import Character from '../../../modules/typeCard/character.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import Enemy from '@/src/modules/typeCard/enemy.js';
-import { animationSlash } from '@/src/animations/Sprites/animationSlash.js';
 
 export default class Eula extends Character {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {

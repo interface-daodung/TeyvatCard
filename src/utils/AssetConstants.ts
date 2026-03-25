@@ -87,7 +87,11 @@ export const CHARACTER_SPRITE_ASSETS = [
     { key: 'furina-icon-skill', path: 'assets/images/skill/icon/furina.png' },
     { key: 'furina-icon-skill-2', path: 'assets/images/skill/icon/furina2.png' },
     { key: 'mavuika-icon-skill', path: 'assets/images/skill/icon/mavuika.png' },
-    { key: 'nahida-icon-skill', path: 'assets/images/skill/icon/nahida.png' }
+    { key: 'nahida-icon-skill', path: 'assets/images/skill/icon/nahida.png' },
+
+    { key: 'hilichurlToken', path: 'assets/images/skill/hilichurlToken.webp' },
+    { key: 'anemo-samachurl-skill', path: 'assets/images/skill/anemo-samachurl.png' },
+    { key: 'arrow-animations', path: 'assets/images/animations/ArrowSpecial.png' },
 ];
 
 
@@ -222,9 +226,12 @@ export const WEAPON_BOW_BADGE_ASSETS = [
     { key: 'bow-simulacra-badge', path: 'resources/badge/bow/simulacra.webp' },
     { key: 'bow-fish-badge', path: 'resources/badge/bow/fish.webp' }
 ];
-
+// "C:\Users\inter\OneDrive\Documents\GitHub\TeyvatCardGameBackend\TeyvatCard\public\assets\images\skill\hilichurlToken.webp"
 // Enemy cards - Hilichurl
 export const ENEMY_HILICHURL_ASSETS = [
+    // { key: 'hilichurl-token', path: 'assets/images/skill/hilichurlToken.webp' },
+
+    { key: 'hilichurl', path: 'resources/cards/enemy/hilichurl/hilichurl.webp' },
     { key: 'anemo-samachurl', path: 'resources/cards/enemy/hilichurl/anemo-samachurl.webp' },
     { key: 'electro-samachurl', path: 'resources/cards/enemy/hilichurl/electro-samachurl.webp' },
     { key: 'hydro-samachurl', path: 'resources/cards/enemy/hilichurl/hydro-samachurl.webp' },
@@ -248,6 +255,11 @@ export const ENEMY_HILICHURL_ASSETS = [
 
     { key: 'hilistray-water', path: 'resources/cards/enemy/hilichurl/hilistray-water.webp' }
 ];
+
+/** Ảnh token UI (AnemoSamachurl — bộ đếm sama), key texture: `hilichurlToken`. */
+// export const HILICHURL_TOKEN_UI_ASSETS = [
+//     { key: 'hilichurlToken', path: 'resources/cards/enemy/hilichurl/hilichurl-token.webp' }
+// ];
 
 // Enemy cards - Abyss
 export const ENEMY_ABYSS_ASSETS = [

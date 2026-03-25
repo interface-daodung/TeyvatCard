@@ -29,12 +29,22 @@ export default class Furina extends Character {
     Ousia_Reload_Max = 3;
     Ousia_DMG: number = 1;
 
+    /**
+     * takeDamage method.
+     * @param damage TODO
+     * @param type TODO
+     * @returns TODO
+     */
     override takeDamage(damage: number, type: 'poisoning' | 'damage' | 'curse'): number {
         const result = super.takeDamage(damage, type);
         this.SalonSolitaire(false);
         return result;
     }
 
+    /**
+     * heal method.
+     * @param healAmount TODO
+     */
     override heal(healAmount: number): void {
         super.heal(healAmount);
         this.SalonSolitaire(true); // hp tăng
@@ -103,6 +113,7 @@ export default class Furina extends Character {
         this.Mademoiselle_Crabaletta?.setVisible(count >= 3);
     }
 
+    /** preloadOusiaTokens method. */
     private preloadOusiaTokens(): void {
         if (!this.scene) return;
 
@@ -130,6 +141,10 @@ export default class Furina extends Character {
 
 
     // isIncrease = true: hp tăng, isIncrease = false: hp giảm
+    /**
+     * SalonSolitaire method.
+     * @param isIncrease TODO
+     */
     SalonSolitaire(isIncrease: boolean): void {
         if (this.Pneuma_or_Ousia) {
             // Pneuma: chỉ phản ứng khi HP giảm => heal Many_heal (default 1).
@@ -164,6 +179,7 @@ export default class Furina extends Character {
         this.setToken();
     }
 
+    /** Retaliate method. */
     private Retaliate(): void {
         const gameManager = this.scene.gameManager;
         if (!gameManager) return;
@@ -180,6 +196,7 @@ export default class Furina extends Character {
         console.log('Furina Retaliate target', target);
     }
 
+    /** elementalBurst method. */
     elementalBurst(): void {
         // Logic của elemental burst
         this.Pneuma_or_Ousia = !this.Pneuma_or_Ousia;

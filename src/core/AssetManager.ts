@@ -29,7 +29,8 @@ import {
     CHARACTER_SPRITE_ASSETS,
     SOUND_EFFECT_ASSETS,
     ANIMATIONS_ASSETS,
-    BGM_ASSETS
+    BGM_ASSETS,
+    // HILICHURL_TOKEN_UI_ASSETS
 } from '../utils/AssetConstants.js';
 import { dataManager } from './DataManager.js';
 import { Log } from '../utils/Log.js';
@@ -219,7 +220,9 @@ export default class AssetManager {
                 // Texture key = tên file (ví dụ BideBao.webp => key 'BideBao')
                 this.queueGameSceneMapBackgroundTexture();
                 this.loadAudios([...SOUND_EFFECT_ASSETS]);
-                this.loadImages([...ANIMATIONS_ASSETS]);
+                // SkillAnimation dùng texture key `{nameId}-skill` (CHARACTER_SPRITE_ASSETS); MenuScene cũng load
+                // nhưng vào GameScene trực tiếp hoặc sau reload cache có thể thiếu — preload ở đây để luôn có.
+                this.loadImages([...ANIMATIONS_ASSETS, ...CHARACTER_SPRITE_ASSETS]);
                 break;
             case 'EquipScene':
                 debugLog('EquipScene: chỉ atlas (item) đã load ở phase 1');

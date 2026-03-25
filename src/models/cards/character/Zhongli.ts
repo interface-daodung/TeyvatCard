@@ -22,6 +22,7 @@ export default class Zhongli extends Character {
     shield: number = 0;
     shieldDisplay: CreateDisplayResult;
 
+    /** addDisplayHUD method. set các giá trị mà sẽ phải hiện thị dang ô tròn */
     addDisplayHUD(): void {
         super.addDisplayHUD();
         this.shieldDisplay = this.createDisplay(
@@ -30,6 +31,12 @@ export default class Zhongli extends Character {
         );
     }
 
+    /**
+     * takeDamage method.
+     * @param damage TODO
+     * @param type TODO
+     * @returns TODO
+     */
     takeDamage(damage: number, type: 'poisoning' | 'damage' | 'curse'): number {
         if (type === 'poisoning') {
             this.add(animationStatePoison(this.scene, 0, 0));
@@ -69,6 +76,7 @@ export default class Zhongli extends Character {
         return this.hp;
     }
 
+    /** elementalBurst method. */
     elementalBurst(): void {
         this.elementalBurstCooldown = this.elementalBurstCooldownMax; // Reset cooldown sau khi sử dụng elemental burst
         // Logic của elemental burst
@@ -79,6 +87,10 @@ export default class Zhongli extends Character {
 
     private readonly elementalBurstCooldownMax = 6; // Số lượt cooldown cho elemental burst   
 
+    /**
+     * elementalRecharge method.
+     * @param element TODO
+     */
     override elementalRecharge(element: string): void {
         super.elementalRecharge(element);
         if (this.elementalBurstCooldown === 0) {
