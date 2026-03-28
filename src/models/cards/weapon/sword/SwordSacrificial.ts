@@ -1,7 +1,7 @@
-import Weapon from '../../../modules/typeCard/weapon.js';
-import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
-import Equipment from '@/src/modules/typeCard/equipment.js';
+import Weapon from '../../../../modules/typeCard/weapon.js';
+import { getCardConfig } from '../../../../modules/getCardConfig.js';
+import type { SceneWithGameManager } from '../../../../modules/Card.js';
+import Equipment from '@/src/modules/weaponCategory/equipment.js';
 import Enemy from '@/src/modules/typeCard/enemy.js';
 import Character from '@/src/modules/typeCard/character.js';
 
@@ -23,6 +23,7 @@ export default class SwordSacrificial extends Weapon {
 class SwordSacrificial_equipment extends Equipment {
     Effect(enemy: Enemy, damage: number, character?: Character): boolean {
         character.takeDamage(1, 'damage');
+        enemy.takeDamage(damage, 'slash');
         return true;
     }
 }

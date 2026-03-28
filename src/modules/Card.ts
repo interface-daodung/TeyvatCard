@@ -7,6 +7,7 @@ import { showCardInfoDialog } from '../components/LibraryScene/CardInfoDialog.js
 import { I18nText } from '../components/shared/I18nText.js';
 import type GameManager from '../core/GameManager.js';
 import { Log } from '../utils/Log.js';
+import { createCardImage } from './card/view.js';
 
 export interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: GameManager;
@@ -109,14 +110,10 @@ export default class Card extends Phaser.GameObjects.Container {
     }
 
     createCard(): void {
-        let atlasKey = this.type;
-        const def = this.config ?? (this.constructor as typeof Card).DEFAULT;
-        if (this.type === 'weapon' && def.category) {
-            atlasKey += '-' + def.category;
-        } else if (this.type === 'enemy' && def.clan) {
-            atlasKey += '-' + def.clan;
-        }
-        this.cardImage = this.scene.add.image(0, 0, atlasKey, this.nameId);
+        this.cardImage = createCardImage({
+            scene: this.scene,
+            nameId: this.nameId
+        });
         this.cardImage.setDisplaySize(160, 274.3);
 
         this.border = this.scene.add.graphics();

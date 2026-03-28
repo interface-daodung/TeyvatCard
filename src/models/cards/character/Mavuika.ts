@@ -1,5 +1,5 @@
 import Character, { type DamageElement, type DamageType } from '../../../modules/typeCard/character.js';
-import Equipment from '../../../modules/typeCard/equipment.js';
+import Equipment from '../../../modules/weaponCategory/equipment.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import { soundManager } from '../../../core/SoundManager.js';

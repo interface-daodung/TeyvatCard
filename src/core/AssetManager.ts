@@ -46,6 +46,7 @@ const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
         'atlas/item.json',
         'atlas/character.json',
         'atlas/coin.json',
+        'atlas/weapon-catalyst.json',
         'atlas/weapon-sword.json',
         'atlas/enemy-hilichurl.json',
         'atlas/food.json',
@@ -53,6 +54,7 @@ const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
         'atlas/treasure.json',
         'atlas/bomb.json',
         'atlas/weapon-sword-badge.json',
+        'atlas/weapon-catalyst-badge.json',
     ],
     LibraryScene: [
         'atlas/weapon-sword.json',
@@ -74,6 +76,7 @@ const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
         'atlas/treasure.json',
         'atlas/bomb.json',
         'atlas/coin.json',
+
     ],
     SelectCharacterScene: [
         'atlas/element.json',
@@ -220,6 +223,10 @@ export default class AssetManager {
                 // Texture key = tên file (ví dụ BideBao.webp => key 'BideBao')
                 this.queueGameSceneMapBackgroundTexture();
                 this.loadAudios([...SOUND_EFFECT_ASSETS]);
+                this.loadImages([...WEAPON_CATALYST_BADGE_ASSETS]);
+                this.loadImages([...WEAPON_CATALYST_ASSETS]);
+                this.loadImages([...EMPTY_CARD]);
+                // this.loadImages([...WEAPON_CATALYST_BADGE_ASSETS]);
                 // SkillAnimation dùng texture key `{nameId}-skill` (CHARACTER_SPRITE_ASSETS); MenuScene cũng load
                 // nhưng vào GameScene trực tiếp hoặc sau reload cache có thể thiếu — preload ở đây để luôn có.
                 this.loadImages([...ANIMATIONS_ASSETS, ...CHARACTER_SPRITE_ASSETS]);

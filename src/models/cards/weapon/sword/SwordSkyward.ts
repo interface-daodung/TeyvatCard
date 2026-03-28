@@ -1,6 +1,7 @@
-import Weapon from '../../../modules/typeCard/weapon.js';
-import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import Weapon from '../../../../modules/typeCard/weapon.js';
+import { getCardConfig } from '../../../../modules/getCardConfig.js';
+import type { SceneWithGameManager } from '../../../../modules/Card.js';
+import Equipment from '@/src/modules/weaponCategory/equipment.js';
 
 export default class SwordSkyward extends Weapon {
     // static CARD_KEY = 'SwordSkyward';
@@ -12,4 +13,6 @@ export default class SwordSkyward extends Weapon {
         this.createCard();
         scene.add.existing(this);
     }
+
 }
+ 

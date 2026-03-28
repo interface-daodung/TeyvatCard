@@ -17,7 +17,7 @@ export const COIN_ASSETS = [
     { key: 'hydro-resonance', path: 'resources/cards/coin/hydro-resonance.webp' },
     { key: 'pyro-fragment', path: 'resources/cards/coin/pyro-fragment.webp' },
     { key: 'pyro-resonance', path: 'resources/cards/coin/pyro-resonance.webp' },
-    { key: 'empty', path: 'resources/cards/empty.webp' }
+    { key: 'empty', path: 'assets/images/cards/empty.webp' }
 ];
 
 export const ANIMATIONS_ASSETS = [
@@ -173,6 +173,8 @@ export const WEAPON_SWORD_BADGE_ASSETS = [
     { key: 'sword-foliar-incision-badge', path: 'resources/badge/sword/foliar-incision.webp' },
     { key: 'sword-skyward-badge', path: 'resources/badge/sword/skyward.webp' },
     { key: 'sword-aquila-badge', path: 'resources/badge/sword/aquila.webp' }
+
+
 ];
 
 // Weapon badge - Catalyst
@@ -396,7 +398,7 @@ export const BOMB_ASSETS = [
 
 // Empty card
 export const EMPTY_CARD = [
-    { key: 'empty', path: 'resources/cards/empty.webp' }
+    { key: 'empty', path: 'assets/images/cards/empty.webp' }
 ];
 
 // Item assets
@@ -440,13 +442,7 @@ export const ELEMENT_ASSETS = [
 // Background Elements
 export const BACKGROUND_ASSETS = [
     { key: 'background', path: 'assets/images/ui/background.webp' },
-    // { key: 'background-fontaine', path: 'assets/images/ui/background-fontaine.webp' },
-    // { key: 'background-inazuma', path: 'assets/images/ui/background-inazuma.webp' },
-    // { key: 'background-liyue', path: 'assets/images/ui/background-liyue.webp' },
-    // { key: 'background-mondstadt', path: 'assets/images/ui/background-mondstadt.webp' },
-    // { key: 'background-natlan', path: 'assets/images/ui/background-natlan.webp' },
-    // { key: 'background-nod-krai', path: 'assets/images/ui/background-nod-krai.webp' },
-    // { key: 'background-sumeru', path: 'assets/images/ui/background-sumeru.webp' }
+   
 ];
 
 

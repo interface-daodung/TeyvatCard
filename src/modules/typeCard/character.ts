@@ -5,10 +5,11 @@ import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
-import Equipment from './equipment.js';
+import Equipment from '../weaponCategory/equipment.js';
 import { soundManager } from '../../core/SoundManager.js';
 import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
 import { animationCurse } from '@/src/animations/Sprites/animationCurse.js';
+import { ShowPopup, type PopupPayload } from '../../components/shared/index.js';
 
 export type DamageElement =
     | 'anemo'
@@ -51,7 +52,7 @@ export default class Character extends Card {
     }
 
     createCard(): void {
-        if (this.level > 2) {
+        if (this.level > 8) {
             this.cardImage = SpritesheetWrapper.CharacterAnimation(
                 this.scene,
                 0,
@@ -252,45 +253,8 @@ export default class Character extends Card {
 
 
 
-    showPopup(
-        amount: number,
-        type: keyof typeof POPUP_CONFIG | { color: string; prefix: string } = 'error'
-    ): void {
-        const config =
-            typeof type === 'string'
-                ? POPUP_CONFIG[type as keyof typeof POPUP_CONFIG] ?? POPUP_CONFIG.error
-                : type;
-        const color = config.color;
-        const prefix = config.prefix;
-
-        //(Math.random()*2-1)*max
-        const popupTextPosition = {
-            x: (Math.random() * 2 - 1) * 30,
-            y: (Math.random() * 2 - 1) * 30
-        };
-
-        const popupText = this.scene.add
-            .text(popupTextPosition.x, popupTextPosition.y, `${prefix}${amount}`, {
-                fontSize: '32px',
-                color: color,
-                fontFamily: 'Arial',
-                fontStyle: 'bold',
-                stroke: '#000000',
-                strokeThickness: 4
-            })
-            .setOrigin(0.5)
-            .setDepth(2002);
-
-        this.add(popupText);
-
-        this.scene.tweens.add({
-            targets: popupText,
-            y: -50,
-            alpha: 0.1,
-            duration: 2000,
-            ease: 'Power2',
-            onComplete: () => popupText.destroy()
-        });
+    showPopup(amount: number, type: PopupPayload = 'error'): void {
+        ShowPopup.show(this, amount, type);
     }
 
     getMaxHP(): number {
@@ -394,12 +358,3 @@ export default class Character extends Card {
     }
 }
 
-
-// Đặt bên ngoài class
-const POPUP_CONFIG = {
-    heal: { color: '#00ff00', prefix: '+' },
-    damage: { color: '#ff0000', prefix: '-' },
-    poisoning: { color: '#800080', prefix: '-' },
-    curse: { color: '#000000', prefix: '!' },
-    error: { color: '#ffffff', prefix: '' }
-} as const;

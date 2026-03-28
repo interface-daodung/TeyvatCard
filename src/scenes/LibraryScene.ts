@@ -20,7 +20,7 @@ export default class LibraryScene extends Phaser.Scene {
     }
 
     preload(): void {
-        // this.load.image('empty', 'assets/images/cards/empty.webp');
+        this.load.image('empty', 'assets/images/cards/empty.webp');
     }
 
     create(): void {

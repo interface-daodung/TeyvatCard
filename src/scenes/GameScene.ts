@@ -18,6 +18,7 @@ import {
 import { getShowGuideSetting, setShowGuideSetting } from '../components/SettingsScene/GameSettingPopup.js';
 import Character from '../modules/typeCard/character.js';
 import Mavuika from '../models/cards/character/Mavuika.js';
+import { CardFactory } from '../modules/CardFactory.js';
 
 interface SceneData {
     stageId?: string;
@@ -67,6 +68,7 @@ export default class GameScene extends Phaser.Scene {
             }
         }
 
+        CardFactory.getInstance();
         this.gameManager = new GameManager(this);
     }
 

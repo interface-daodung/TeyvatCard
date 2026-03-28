@@ -25,6 +25,15 @@ interface DungeonItem {
     availableCards: Record<string, string[]>;
 }
 
+interface LibraryEntry {
+    className?: string;
+    element?: string;
+}
+
+type LibraryCards = Record<string, LibraryEntry[]>;
+
+type CardClassRegistry = Record<string, typeof Card>;
+
 export class CardFactory {
     static instance: CardFactory | null = null;
 
@@ -61,62 +70,73 @@ export class CardFactory {
         const register = (key: string, cls: new (...args: any[]) => Card) => {
             (this.cardClasses as any)[key] = cls;
         };
-
-        this.coinClasses = {
-            pyro: CardClasses.PyroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            hydro: CardClasses.HydroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            geo: CardClasses.GeoFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            anemo: CardClasses.AnemoFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            electro: CardClasses.ElectroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            cryo: CardClasses.CryoFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card,
-            dendro: CardClasses.DendroFragment as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card
+        const allCardClassEntries = Object.entries(CardClasses).filter(
+            ([, cls]) => typeof cls === 'function'
+        ) as [string, typeof Card][];
+        const allCardClasses = Object.fromEntries(allCardClassEntries) as CardClassRegistry;
+        const resolveByClassName = (className?: string): typeof Card | undefined => {
+            if (!className) {
+                console.error('[CardFactory] Missing className in libraryCards entry');
+                return undefined;
+            }
+            const cls = allCardClasses[className];
+            if (!cls) {
+                console.error(`[CardFactory] Class "${className}" not found in cardImports exports`);
+                return undefined;
+            }
+            register(className, cls);
+            return cls;
         };
-        [
-            ['PyroFragment', CardClasses.PyroFragment], ['HydroFragment', CardClasses.HydroFragment], ['GeoFragment', CardClasses.GeoFragment],
-            ['AnemoFragment', CardClasses.AnemoFragment], ['ElectroFragment', CardClasses.ElectroFragment], ['CryoFragment', CardClasses.CryoFragment],
-            ['DendroFragment', CardClasses.DendroFragment]
-        ].forEach(([key, cls]) => register(key as string, cls as any));
+        const getTypeClassesFromLibrary = (library: LibraryCards, typeKey: string): (typeof Card)[] => {
+            const entries = library[typeKey];
+            if (!Array.isArray(entries)) {
+                console.error(`[CardFactory] libraryCards.${typeKey} is missing or not an array`);
+                return [];
+            }
+            const classes: (typeof Card)[] = [];
+            entries.forEach((entry) => {
+                const cls = resolveByClassName(entry?.className);
+                if (cls) classes.push(cls);
+            });
+            return classes;
+        };
 
-        this.weaponClasses = [
-            CardClasses.SwordSteampunk, CardClasses.SwordForest, CardClasses.SwordSkyward, CardClasses.SwordSplendor, CardClasses.SwordTraveler, CardClasses.SwordSacrificial
-        ];
-        register('SwordSteampunk', CardClasses.SwordSteampunk as any);
-        register('SwordForest', CardClasses.SwordForest as any);
-        register('SwordSkyward', CardClasses.SwordSkyward as any);
-        register('SwordSplendor', CardClasses.SwordSplendor as any);
-        register('SwordTraveler', CardClasses.SwordTraveler as any);
-        register('SwordSacrificial', CardClasses.SwordSacrificial as any);
+        const libraryCards = dataManager.getFlag<LibraryCards>('libraryCards');
+        this.coinClasses = {};
+        if (!libraryCards || typeof libraryCards !== 'object') {
+            console.error('[CardFactory] libraryCards flag is missing. Ensure LoadingScene sets dataManager.setFlag("libraryCards", data)');
+            this.weaponClasses = [];
+            this.enemyClasses = [];
+            this.foodClasses = [];
+            this.trapClasses = [];
+            this.treasureClasses = [];
+        } else {
+            const library = libraryCards as LibraryCards;
+            this.weaponClasses = getTypeClassesFromLibrary(library, 'weapon');
+            this.enemyClasses = getTypeClassesFromLibrary(library, 'enemy');
+            this.foodClasses = getTypeClassesFromLibrary(library, 'food');
+            this.trapClasses = getTypeClassesFromLibrary(library, 'trap');
+            this.treasureClasses = getTypeClassesFromLibrary(library, 'treasure');
+            getTypeClassesFromLibrary(library, 'bomb');
+            getTypeClassesFromLibrary(library, 'empty');
 
-        this.enemyClasses = [
-            CardClasses.AnemoSamachurl, CardClasses.ElectroSamachurl, CardClasses.DendroSamachurl, CardClasses.GeoSamachurl, CardClasses.HydroSamachurl,
-            CardClasses.HilichurlFighter, CardClasses.HilistrayWater, CardClasses.WoodenShieldwall, CardClasses.Lawachurl, CardClasses.RockShieldwall,
-            CardClasses.Berserker, CardClasses.Blazing, CardClasses.IceShieldwall, CardClasses.Shooter, CardClasses.Crackling, CardClasses.CryoShooter, CardClasses.ElectroShooter
-        ];
-        [
-            ['AnemoSamachurl', CardClasses.AnemoSamachurl], ['ElectroSamachurl', CardClasses.ElectroSamachurl],
-            ['DendroSamachurl', CardClasses.DendroSamachurl], ['GeoSamachurl', CardClasses.GeoSamachurl],
-            ['HydroSamachurl', CardClasses.HydroSamachurl], ['HilichurlFighter', CardClasses.HilichurlFighter],
-            ['HilistrayWater', CardClasses.HilistrayWater], ['WoodenShieldwall', CardClasses.WoodenShieldwall],
-            ['Lawachurl', CardClasses.Lawachurl], ['RockShieldwall', CardClasses.RockShieldwall], ['Berserker', CardClasses.Berserker],
-            ['Blazing', CardClasses.Blazing], ['IceShieldwall', CardClasses.IceShieldwall], ['Shooter', CardClasses.Shooter],
-            ['Crackling', CardClasses.Crackling], ['CryoShooter', CardClasses.CryoShooter], ['ElectroShooter', CardClasses.ElectroShooter]
-        ].forEach(([key, cls]) => register(key as string, cls as any));
-
-        this.foodClasses = [CardClasses.LifeEssence, CardClasses.MystiqueSoup, CardClasses.Pizza, CardClasses.RoastChicken, CardClasses.Macarons];
-        [['LifeEssence', CardClasses.LifeEssence], ['MystiqueSoup', CardClasses.MystiqueSoup], ['Pizza', CardClasses.Pizza],
-            ['RoastChicken', CardClasses.RoastChicken], ['Macarons', CardClasses.Macarons]
-        ].forEach(([key, cls]) => register(key as string, cls as any));
-
-        this.trapClasses = [CardClasses.AbyssCall, CardClasses.BreatheFire, CardClasses.Quicksand];
-        [['AbyssCall', CardClasses.AbyssCall], ['BreatheFire', CardClasses.BreatheFire], ['Quicksand', CardClasses.Quicksand]
-        ].forEach(([key, cls]) => register(key as string, cls as any));
-
-        this.treasureClasses = [CardClasses.Chest, CardClasses.Bribery, CardClasses.GoldMine];
-        [['Chest', CardClasses.Chest], ['Bribery', CardClasses.Bribery], ['GoldMine', CardClasses.GoldMine]
-        ].forEach(([key, cls]) => register(key as string, cls as any));
-
-        register('Explosive', CardClasses.Explosive as any);
-        register('Empty', CardClasses.Empty as any);
+            const coinEntries = library.coin;
+            if (!Array.isArray(coinEntries)) {
+                console.error('[CardFactory] libraryCards.coin is missing or not an array');
+            } else {
+                coinEntries.forEach((entry) => {
+                    const cls = resolveByClassName(entry?.className);
+                    const element = entry?.element;
+                    if (!element) {
+                        console.error('[CardFactory] Coin entry missing element');
+                        return;
+                    }
+                    if (cls) {
+                        this.coinClasses[element] = cls as unknown as new (scene: SceneWithGameManager, x: number, y: number, index: number) => Card;
+                    }
+                });
+            }
+        }
 
         this.cardClasses.add = function (this: CardClassesMap, classes: (typeof Card)[]) {
             classes.forEach((cls: typeof Card & { name?: string }) => {
@@ -263,11 +283,15 @@ export class CardFactory {
     }
 
     /** Tạo coin khi enemy chết: dùng element hiện tại để chọn class (pyro, hydro, ...). */
-    createCoin(scene: SceneWithGameManager, index: number, score?: number | null): Card {
+    createCoin(scene: SceneWithGameManager, index: number, score?: number | null): Card | null {
         const coords = scene.gameManager!.cardManager.getGridPositionCoordinates(index);
         const x = coords?.x ?? 0;
         const y = coords?.y ?? 0;
-        const CoinClass = this.coinClasses[this.element] ?? this.coinClasses['cryo'];
+        const CoinClass = this.coinClasses[this.element];
+        if (!CoinClass) {
+            console.error(`[CardFactory] Coin class for element "${this.element}" is not registered. Coin will not spawn.`);
+            return null;
+        }
         const coin = new CoinClass(scene, x, y, index) as Card & { setScore?: (s: number) => void };
         if (score != null && coin.setScore) coin.setScore(score);
         return coin;
@@ -471,5 +495,4 @@ export class CardFactory {
     }
 }
 
-const cardFactory = CardFactory.getInstance();
-export default cardFactory;
+export default CardFactory;

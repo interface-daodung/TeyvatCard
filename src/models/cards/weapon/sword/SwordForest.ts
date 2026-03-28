@@ -1,7 +1,7 @@
-import Weapon from '../../../modules/typeCard/weapon.js';
-import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
-import Equipment from '@/src/modules/typeCard/equipment.js';
+import Weapon from '../../../../modules/typeCard/weapon.js';
+import { getCardConfig } from '../../../../modules/getCardConfig.js';
+import type { SceneWithGameManager } from '../../../../modules/Card.js';
+import Equipment from '@/src/modules/weaponCategory/equipment.js';
 import Enemy from '@/src/modules/typeCard/enemy.js';
 
 export default class SwordForest extends Weapon {
@@ -23,6 +23,7 @@ export default class SwordForest extends Weapon {
 class SwordForest_equipment extends Equipment {
     Effect(enemy: Enemy, damage: number): boolean {
         enemy.setPoisoning();
+        enemy.takeDamage(damage, 'slash');
         return true;
     }
 }

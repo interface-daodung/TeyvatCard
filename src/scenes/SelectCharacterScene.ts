@@ -190,7 +190,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
             this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
             this.currentCardContainer.remove(this.cardBorder, false);
             this.currentCardContainer.add(this.cardBorder);
-        } else if (level > 2) {
+        } else if (level > 8) {
             this.currentCardImage = SpritesheetWrapper.CharacterAnimation(this, 0, 0, currentCard.id + '-sprite', 300, 514);
             this.currentCardContainer.add(this.currentCardImage);
             this.cardBorder.clear();

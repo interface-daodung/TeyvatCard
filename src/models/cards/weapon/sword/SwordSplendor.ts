@@ -1,8 +1,8 @@
-import Weapon from '../../../modules/typeCard/weapon.js';
-import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import Weapon from '../../../../modules/typeCard/weapon.js';
+import { getCardConfig } from '../../../../modules/getCardConfig.js';
+import type { SceneWithGameManager } from '../../../../modules/Card.js';
 import Character from '@/src/modules/typeCard/character.js';
-import Equipment from '@/src/modules/typeCard/equipment.js';
+import Equipment from '@/src/modules/weaponCategory/equipment.js';
 
 export default class SwordSplendor extends Weapon {
     // static CARD_KEY = 'SwordSplendor';

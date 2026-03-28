@@ -7,13 +7,14 @@ import { soundManager } from '../../core/SoundManager.js';
 import Character, { type DamageElement } from './character.js';
 import { animationSlash } from '@/src/animations/Sprites/animationSlash.js';
 import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
+import { ShowPopup, type PopupPayload } from '../../components/shared/index.js';
 
 export default class Enemy extends Card {
     poisoning: boolean;
     health!: number;
     score!: number;
     hpDisplay!: CreateDisplayResult;
-
+    clan!: string;
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'enemy');
         this.poisoning = false;
@@ -28,6 +29,7 @@ export default class Enemy extends Card {
 
     override applyConfig(config: CardDefault): void {
         super.applyConfig(config);
+        this.clan = config.clan;
         if (config.element != null) (this as any).element = config.element;
         // if (config.rarity != null) (this as any).rarity = config.rarity;
         if (config.healthMin != null && config.healthMax != null) {
@@ -73,7 +75,8 @@ export default class Enemy extends Card {
 
         }
 
-        this.showPopup(damage, 'damage');
+        const popupType: PopupPayload = type === 'poisoning' ? 'poisoning' : 'damage';
+        this.showPopup(damage, popupType);
         this.cardImage.setTint(0xe05656);
         setTimeout(() => this.cardImage.clearTint(), 200);
         if (this.health <= 0) {
@@ -82,37 +85,8 @@ export default class Enemy extends Card {
         return damage;
     }
 
-    showPopup(amount: number, type: 'heal' | 'damage' = 'heal'): void {
-        const color = type === 'heal' ? '#00ff00' : type === 'damage' ? '#ff0000' : '#ffffff';
-        const prefix = type === 'heal' ? '+' : type === 'damage' ? '-' : '';
-
-        const popupTextPosition = {
-            x: (Math.random() * 2 - 1) * 30,
-            y: (Math.random() * 2 - 1) * 30
-        };
-
-        const popupText = this.scene.add
-            .text(popupTextPosition.x, popupTextPosition.y, `${prefix}${amount}`, {
-                fontSize: '32px',
-                color: color,
-                fontFamily: 'Arial',
-                fontStyle: 'bold',
-                stroke: '#000000',
-                strokeThickness: 4
-            })
-            .setOrigin(0.5)
-            .setDepth(2002);
-
-        this.add(popupText);
-
-        this.scene.tweens.add({
-            targets: popupText,
-            y: -50,
-            alpha: 0.1,
-            duration: 2000,
-            ease: 'Power2',
-            onComplete: () => popupText.destroy()
-        });
+    showPopup(amount: number, type: PopupPayload = 'heal'): void {
+        ShowPopup.show(this, amount, type);
     }
 
     die(): void {
@@ -136,7 +110,6 @@ export default class Enemy extends Card {
             const actualDamage = Math.min(weapon.durability, this.health);
             cardCharacter.weapon.Effect(this, actualDamage, cardCharacter);
             cardCharacter.reduceDurability(actualDamage);
-            this.takeDamage(actualDamage, 'slash');
             return Promise.resolve(true); // Enemy biến mất ngay sau khi dùng, nên trả về true để emit 'completeMove';
         }
         this.scene.gameManager?.addCoin(this.score);

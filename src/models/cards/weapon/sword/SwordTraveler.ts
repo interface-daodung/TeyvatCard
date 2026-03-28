@@ -1,6 +1,6 @@
-import Weapon from '../../../modules/typeCard/weapon.js';
-import { getCardConfig } from '../../../modules/getCardConfig.js';
-import type { SceneWithGameManager } from '../../../modules/Card.js';
+import Weapon from '../../../../modules/typeCard/weapon.js';
+import { getCardConfig } from '../../../../modules/getCardConfig.js';
+import type { SceneWithGameManager } from '../../../../modules/Card.js';
 
 export default class SwordTraveler extends Weapon {
     // static CARD_KEY = 'SwordTraveler';

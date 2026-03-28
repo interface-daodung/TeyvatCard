@@ -8,7 +8,8 @@
     "build": "cross-env NODE_ENV=production vite build",
     "build:no-pwa": "cross-env NODE_ENV=production vite build --config vite.config.no-pwa.ts",
     "start": "cross-env NODE_ENV=production vite preview",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gen:card-imports": "node scripts/generate-card-imports.mjs"
   },
   "dependencies": {
     "crypto-js": "^4.2.0",

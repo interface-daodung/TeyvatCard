@@ -4,10 +4,11 @@ import type { SceneWithGameManager } from '../../modules/Card.js';
 
 export default class Empty extends Card {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
-        const config = getCardConfig('Empty') ?? { id: 'coin', name: 'Empty', description: '' };
+        const config = getCardConfig('Empty') ?? { id: 'coin', name: 'Empty', description: '', nameId: 'empty' };
         super(scene, x, y, index, config.name!, config.id!, 'empty');
         this.applyConfig(config);
         this.type = 'coin';
+        this.nameId = 'empty';
         this.createCard();
         scene.add.existing(this);
     }

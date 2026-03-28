@@ -1,7 +1,7 @@
 import Item from '../../modules/Item.js';
 import { getCardConfig } from '../../modules/getCardConfig.js';
 import type GameManager from '../../core/GameManager.js';
-import Equipment from '../../modules/typeCard/equipment.js';
+import Equipment from '../../modules/weaponCategory/equipment.js';
 import { Log } from '../../utils/Log.js';
 import { ItemAnimation } from '@/src/animations/ItemAnimation.js';
 
