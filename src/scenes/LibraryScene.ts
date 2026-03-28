@@ -11,6 +11,7 @@ import {
     type GameObjectWithChildren
 } from '../components/LibraryScene/index.js';
 import { GameTitle } from '../components/shared/index.js';
+import { Log } from '../utils/Log.js';
 
 export default class LibraryScene extends Phaser.Scene {
     private cardInfoDialogHandle?: CardInfoDialogHandle;
@@ -21,6 +22,7 @@ export default class LibraryScene extends Phaser.Scene {
 
     preload(): void {
         this.load.image('empty', 'assets/images/cards/empty.webp');
+        Log.error('LibraryScene preload');
     }
 
     create(): void {

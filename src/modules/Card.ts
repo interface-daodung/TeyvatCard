@@ -110,9 +110,13 @@ export default class Card extends Phaser.GameObjects.Container {
     }
 
     createCard(): void {
+        const def = this.config ?? (this.constructor as typeof Card).DEFAULT;
         this.cardImage = createCardImage({
             scene: this.scene,
-            nameId: this.nameId
+            nameId: this.nameId,
+            type: this.type,
+            category: def.category,
+            clan: def.clan
         });
         this.cardImage.setDisplaySize(160, 274.3);
 

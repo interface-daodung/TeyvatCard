@@ -5,6 +5,8 @@ interface ImportMetaEnv {
   readonly VITE_API_URL?: string;
   readonly VITE_GOOGLE_CLIENT_ID?: string;
   readonly VITE_IS_DEV?: string;
+  /** `true`: khi gửi client-log-error thất bại, log ra console (dùng khi test preview + API local). */
+  readonly VITE_DEBUG_CLIENT_LOG?: string;
   readonly VITE_STORAGE_SECRET_KEY?: string;
 }
 

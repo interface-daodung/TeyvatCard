@@ -1,5 +1,7 @@
 import type Phaser from 'phaser';
 import { dataManager } from '../../core/DataManager.js';
+import { getLibraryCardAtlasKey } from '../../components/LibraryScene/libraryCardAtlas.js';
+import type { LibraryCardData } from '../../components/LibraryScene/types.js';
 
 interface LibraryEntry {
     id?: string;
@@ -14,6 +16,10 @@ type LibraryCards = Record<string, LibraryEntry[]>;
 export interface CardImageInput {
     scene: Phaser.Scene;
     nameId: string;
+    /** Từ Card.config — giống CardInfoDialog / libraryCardAtlas, không phụ thuộc chỉ tra libraryCards */
+    type?: string;
+    category?: string;
+    clan?: string;
 }
 
 export function buildCardAtlasKey(entry?: LibraryEntry): string {
@@ -48,18 +54,41 @@ function findLibraryEntry(nameId: string): LibraryEntry | undefined {
 }
 
 export function createCardImage(input: CardImageInput): Phaser.GameObjects.Image {
-    // Ưu tiên texture đơn: key trực tiếp là nameId.
-   // ' vì sao 'empty' load rồi mà ko chạy dc 
+    // Texture đơn: key trùng nameId (nếu có preload riêng).
     if (input.scene.textures.exists(input.nameId)) {
         return input.scene.add.image(0, 0, input.nameId);
     }
 
-    const entry = findLibraryEntry(input.nameId);
-    const atlasKey = buildCardAtlasKey(entry);
-    if (atlasKey && input.scene.textures.exists(atlasKey)) {
-        return input.scene.add.image(0, 0, atlasKey, input.nameId);
+    let atlasKey = '';
+    let frameId = input.nameId;
+
+    if (input.type) {
+        const k = getLibraryCardAtlasKey({
+            type: input.type,
+            id: input.nameId,
+            name: '',
+            description: '',
+            category: input.category,
+            clan: input.clan
+        } as LibraryCardData);
+        atlasKey = k.atlasKey;
+        frameId = k.frameId;
+    } else {
+        const entry = findLibraryEntry(input.nameId);
+        atlasKey = buildCardAtlasKey(entry);
+        frameId = input.nameId;
     }
 
-    // Fallback cuối cùng để tránh vỡ luồng render; Phaser sẽ báo missing texture nếu không có key.
-    return input.scene.add.image(0, 0, input.nameId);
+    if (atlasKey && input.scene.textures.exists(atlasKey)) {
+        try {
+            const texture = input.scene.textures.get(atlasKey);
+            if (texture.getFrameNames().includes(frameId)) {
+                return input.scene.add.image(0, 0, atlasKey, frameId);
+            }
+        } catch {
+            // fallback empty
+        }
+    }
+
+    return input.scene.add.image(0, 0, 'empty');
 }

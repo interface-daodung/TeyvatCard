@@ -1,5 +1,6 @@
 import Item from '../../modules/Item.js';
 import { getCardConfig } from '../../modules/getCardConfig.js';
+import { getWeaponClassesByCategory } from '../../modules/card/cardFactoryLibrary.js';
 import type GameManager from '../../core/GameManager.js';
 import Equipment from '../../modules/weaponCategory/equipment.js';
 import { Log } from '../../utils/Log.js';
@@ -14,8 +15,8 @@ export default class Sword extends Item {
     override effect(gameManager: GameManager): boolean {
         ItemAnimation.runAsync(gameManager.animationManager, this.image);
 
-        const factory = gameManager.cardManager.cardFactory as any;
-        const swordWeapons = factory.getWeaponClassesByCategory('sword');
+        const factory = gameManager.cardManager.cardFactory;
+        const swordWeapons = getWeaponClassesByCategory(factory.cardClasses, factory.weaponClasses, 'sword');
         if (!swordWeapons.length) {
             Log.error('[Sword.effect] Không có weapon nào có category "sword". Kiểm tra weaponClasses và libraryCards (category).');
             return false;

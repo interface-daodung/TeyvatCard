@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import type Character from '../modules/typeCard/character.js';
 import { CardFactory } from '../modules/CardFactory.js';
+import { setCurrentStage } from '../modules/card/cardFactoryStageWeight.js';
 // import type { SceneWithGameManager } from '../animations/types.d.ts';
 
 
@@ -50,7 +51,9 @@ export default class CardManager {
 
         // Liên kết đến CardFactory singleton (init lazy khi vào GameScene)
         this.cardFactory = CardFactory.getInstance();
-        this.cardFactory.setCurrentStage(scene.stageId);
+        if (scene.stageId) {
+            setCurrentStage(scene.stageId);
+        }
 
         this.CardCharacter = null;
     }

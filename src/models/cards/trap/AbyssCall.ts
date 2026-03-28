@@ -1,6 +1,7 @@
 import Trap from '../../../modules/typeCard/trap.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
+import { getEnemyKeysByClan } from '../../../modules/card/cardFactoryLibrary.js';
 import { Log } from '../../../utils/Log.js';
 
 const HILICHURL_CLAN = 'hilichurl';
@@ -17,7 +18,9 @@ export default class AbyssCall extends Trap {
     CardEffect(): Promise<boolean> {
         this.ProgressDestroy();
         const factory = this.scene.gameManager?.cardManager?.cardFactory;
-        const keys = factory?.getEnemyKeysByClan(HILICHURL_CLAN) ?? [];
+        const keys = factory
+            ? getEnemyKeysByClan(factory.cardClasses, factory.enemyClasses, HILICHURL_CLAN)
+            : [];
         if (keys.length === 0) {
             Log.warn(`[AbyssCall.CardEffect] Không có enemy nào có clan "${HILICHURL_CLAN}". Kiểm tra enemyClasses và libraryCards (clan).`);
             return Promise.resolve(true);
