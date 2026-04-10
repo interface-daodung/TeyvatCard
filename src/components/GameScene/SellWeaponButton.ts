@@ -64,10 +64,13 @@ export function createSellWeapon(
             if (weapon?.durability > 0) {
                 sellButtonContainer.setVisible(true);
                 priceText.setText(weapon.price.toString());
-                weaponImage.setTexture(
-                    'weapon-' + weapon.default.category + '-badge',
-                    weapon.default.id + '-badge'
-                );
+                const badgeKey = weapon.default.id + '-badge';
+                const atlasKey = 'weapon-' + weapon.default.category + '-badge';
+                if (scene.textures.exists(badgeKey)) {
+                    weaponImage.setTexture(badgeKey);
+                } else {
+                    weaponImage.setTexture(atlasKey, badgeKey);
+                }
                 weaponImage.setDisplaySize(40, 40);
             }
         },

@@ -89,20 +89,26 @@ export default class Mavuika extends Character {
             }
 
             const atlasKey = 'weapon-' + category + '-badge';
-            if (!this.scene.textures.exists(atlasKey)) {
+            const singleBadgeKey = frame;
+            const hasSingleBadgeTexture = this.scene.textures.exists(singleBadgeKey);
+            if (!hasSingleBadgeTexture && !this.scene.textures.exists(atlasKey)) {
                 img?.setVisible(false);
                 continue;
             }
 
             if (!img) {
                 this.slotTokenImages[i] = this.scene.add
-                    .image(xs[i], tokenY, atlasKey, frame)
+                    .image(xs[i], tokenY, hasSingleBadgeTexture ? singleBadgeKey : atlasKey, hasSingleBadgeTexture ? undefined : frame)
                     .setOrigin(0.5)
                     .setDisplaySize(120, 120)
                     .setDepth(10)
                     .setVisible(true);
             } else {
-                img.setTexture(atlasKey, frame);
+                if (hasSingleBadgeTexture) {
+                    img.setTexture(singleBadgeKey);
+                } else {
+                    img.setTexture(atlasKey, frame);
+                }
                 img.setPosition(xs[i], tokenY);
                 img.setVisible(true);
             }

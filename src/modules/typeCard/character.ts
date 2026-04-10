@@ -297,10 +297,12 @@ export default class Character extends Card {
         return {
             updateTexture: (newTexture: string) => {
                 if (this.weapon && (this.weapon as any).default?.category) {
-                    badgeDisplay.setTexture(
-                        'weapon-' + (this.weapon as any).default.category + '-badge',
-                        newTexture
-                    );
+                    const atlasKey = 'weapon-' + (this.weapon as any).default.category + '-badge';
+                    if (newTexture && this.scene.textures.exists(newTexture)) {
+                        badgeDisplay.setTexture(newTexture);
+                    } else {
+                        badgeDisplay.setTexture(atlasKey, newTexture);
+                    }
                 } else {
                     badgeDisplay.setTexture(newTexture);
                 }

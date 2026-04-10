@@ -43,7 +43,7 @@ const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
         'atlas/coin.json',
     ],
     GameScene: [
-        'atlas/item.json',
+        // 'atlas/item.json',
         'atlas/character.json',
         'atlas/coin.json',
         'atlas/weapon-catalyst.json',
@@ -125,9 +125,24 @@ interface AssetFile {
     path: string;
 }
 
+interface LibraryCardEntry {
+    id?: string;
+    type?: string;
+    className?: string;
+    image?: string;
+}
+
+interface DungeonStage {
+    availableCards?: Record<string, unknown>;
+}
+
 export default class AssetManager {
     private static instance: AssetManager;
     private scene: Phaser.Scene | null;
+    private isAtlasMode = false;
+    private assetVariantCache: 'desktop' | 'mobile' = 'desktop';
+    private gpuProfileResolved = false;
+    private loadErrorHookedScene: Phaser.Scene | null = null;
 
     constructor() {
         if (AssetManager.instance) {
@@ -143,6 +158,7 @@ export default class AssetManager {
      */
     setScene(scene: Phaser.Scene): void {
         this.scene = scene;
+        this.bindDetailedLoadErrorLogger();
     }
 
     /**
@@ -156,7 +172,9 @@ export default class AssetManager {
             return;
         }
 
-        const atlasPaths = ATLAS_PATHS_BY_SCENE[sceneName] ?? [];
+        // Tạm thời cho phép GameScene chuyển qua cơ chế load ảnh đơn để so sánh hiệu năng.
+        const isGameSceneSingleImageMode = sceneName === 'GameScene' && !this.isAtlasMode;
+        const atlasPaths = isGameSceneSingleImageMode ? [] : (ATLAS_PATHS_BY_SCENE[sceneName] ?? []);
         const onAllLoaded = callback ?? (() => {});
 
         if (atlasPaths.length > 0) {
@@ -223,8 +241,12 @@ export default class AssetManager {
                 // Texture key = tên file (ví dụ BideBao.webp => key 'BideBao')
                 this.queueGameSceneMapBackgroundTexture();
                 this.loadAudios([...SOUND_EFFECT_ASSETS]);
-                this.loadImages([...WEAPON_CATALYST_BADGE_ASSETS]);
-                this.loadImages([...WEAPON_CATALYST_ASSETS]);
+                // this.loadImages([...WEAPON_CATALYST_BADGE_ASSETS]);
+                if (this.isAtlasMode) {
+                    // this.loadImages([...WEAPON_CATALYST_ASSETS]);
+                } else {
+                    this.loadGameSceneSingleCardImagesByDungeonConfig();
+                }
                 this.loadImages([...EMPTY_CARD]);
                 // this.loadImages([...WEAPON_CATALYST_BADGE_ASSETS]);
                 // SkillAnimation dùng texture key `{nameId}-skill` (CHARACTER_SPRITE_ASSETS); MenuScene cũng load
@@ -288,6 +310,88 @@ export default class AssetManager {
     }
 
     /**
+     * GameScene (non-atlas): lọc card className theo dungeonList.availableCards và load ảnh đơn.
+     * Data nguồn lấy từ flag `libraryCards` + `dungeonList` đã được LoadingScene preload.
+     */
+    private loadGameSceneSingleCardImagesByDungeonConfig(): void {
+        const libraryCardsRaw = dataManager.getFlag<unknown>('libraryCards');
+        const dungeonListRaw = dataManager.getFlag<unknown>('dungeonList');
+
+        if (!libraryCardsRaw || typeof libraryCardsRaw !== 'object') {
+            Log.warn('[AssetManager] GameScene(single-image): thiếu libraryCards trong DataManager flag');
+            return;
+        }
+        if (!Array.isArray(dungeonListRaw)) {
+            Log.warn('[AssetManager] GameScene(single-image): dungeonList không hợp lệ');
+            return;
+        }
+
+        const cardInfoByClassName = new Map<string, { id: string; image: string; type?: string }>();
+        const libraryCards = libraryCardsRaw as Record<string, unknown>;
+
+        for (const value of Object.values(libraryCards)) {
+            if (!Array.isArray(value)) continue;
+            for (const item of value) {
+                if (!item || typeof item !== 'object') continue;
+                const card = item as LibraryCardEntry;
+                if (
+                    typeof card.className === 'string' &&
+                    card.className.trim() &&
+                    typeof card.id === 'string' &&
+                    card.id.trim() &&
+                    typeof card.image === 'string' &&
+                    card.image.trim()
+                ) {
+                    cardInfoByClassName.set(card.className, {
+                        id: card.id,
+                        image: card.image,
+                        type: card.type
+                    });
+                }
+            }
+        }
+
+        const seenClassName = new Set<string>();
+        for (const stage of dungeonListRaw as DungeonStage[]) {
+            const availableCards = stage?.availableCards;
+            if (!availableCards || typeof availableCards !== 'object') continue;
+
+            for (const classNames of Object.values(availableCards)) {
+                if (!Array.isArray(classNames)) continue;
+
+                for (const classNameRaw of classNames) {
+                    if (typeof classNameRaw !== 'string' || !classNameRaw.trim()) continue;
+                    if (seenClassName.has(classNameRaw)) continue;
+                    seenClassName.add(classNameRaw);
+
+                    const cardInfo = cardInfoByClassName.get(classNameRaw);
+                    if (!cardInfo) continue;
+
+                    this.loadImage(cardInfo.id, cardInfo.image);
+                    if (cardInfo.type === 'weapon') {
+                        const badgePath = this.getWeaponBadgePathFromCardImage(cardInfo.image);
+                        if (badgePath) {
+                            this.loadImage(`${cardInfo.id}-badge`, badgePath);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Ví dụ:
+     * /assets/images/cards/weapon/catalyst/magic-guide.webp
+     * -> /assets/images/badge/catalyst/magic-guide.webp
+     */
+    private getWeaponBadgePathFromCardImage(imagePath: string): string | null {
+        if (!imagePath.includes('/cards/weapon/')) {
+            return null;
+        }
+        return imagePath.replace('/cards/weapon/', '/badge/');
+    }
+
+    /**
      * Load sprite sheet với logic tự động
      * Nếu key có đuôi "sprite" thì load như sprite sheet
      */
@@ -296,23 +400,25 @@ export default class AssetManager {
             Log.warn('AssetManager: Scene chưa được set');
             return;
         }
+        const resolvedPath = this.resolveImagePathByGpuProfile(path);
+        console.info('%c[info][AssetManager] load image', 'color:#16a34a;font-weight:700;', { key, source: path, resolved: resolvedPath });
 
         if (!this.scene.textures.exists(key)) {
             // Kiểm tra nếu key có đuôi "sprite" thì load như sprite sheet
             if (key.endsWith('sprite')) {
-                this.scene.load.spritesheet(key, path, {
+                this.scene.load.spritesheet(key, resolvedPath, {
                     frameWidth: 350,
                     frameHeight: 590
                 });
             } else if (key.endsWith('animations')) {
-                this.scene.load.spritesheet(key, path, {
+                this.scene.load.spritesheet(key, resolvedPath, {
                     frameWidth: 192,
                     frameHeight: 192
                 });
             }
             else {
                 // Nếu không có đuôi "sprite" thì load như image bình thường
-                this.scene.load.image(key, path);
+                this.scene.load.image(key, resolvedPath);
                 // console.log(`AssetManager: Đã load image ${key} từ ${path}`);
             }
         } else {
@@ -368,6 +474,79 @@ export default class AssetManager {
      */
     loadAudios(files: AssetFile[]): void {
         files.forEach(file => this.loadAudio(file.key, file.path));
+    }
+
+    private bindDetailedLoadErrorLogger(): void {
+        if (!this.scene) return;
+        if (this.loadErrorHookedScene === this.scene) return;
+
+        this.loadErrorHookedScene = this.scene;
+        this.scene.load.on('loaderror', (file: Phaser.Loader.File) => {
+            console.error('[AssetManager] Load error', {
+                key: file?.key,
+                type: file?.type,
+                src: file?.src,
+                url: file?.url,
+                state: file?.state,
+                xhrLoader: file?.xhrLoader,
+                data: file?.data
+            });
+        });
+    }
+
+    private resolveImagePathByGpuProfile(path: string): string {
+        if (!path.includes('/assets/images/')) {
+            return path;
+        }
+        const variant = this.getAssetVariantByGpuProfile();
+        return path.replace('/assets/images/', `/assets/${variant}/`);
+    }
+
+    private getAssetVariantByGpuProfile(): 'desktop' | 'mobile' {
+        if (this.gpuProfileResolved) {
+            return this.assetVariantCache;
+        }
+
+        try {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) {
+                this.assetVariantCache = 'mobile';
+                this.gpuProfileResolved = true;
+                console.warn('[AssetManager] WebGL unavailable, fallback to mobile images');
+                return this.assetVariantCache;
+            }
+
+            const webgl = gl as WebGLRenderingContext;
+            const maxTextureSize = Number(webgl.getParameter(webgl.MAX_TEXTURE_SIZE) ?? 0);
+
+            let renderer = 'unknown';
+            const debugInfo = webgl.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                const rawRenderer = webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                if (typeof rawRenderer === 'string' && rawRenderer.trim()) {
+                    renderer = rawRenderer;
+                }
+            }
+
+            // Chỉ dựa theo năng lực GPU texture size: mobile yếu thì dùng ảnh mobile.
+            this.assetVariantCache = maxTextureSize >= 8192 ? 'desktop' : 'mobile';
+            this.gpuProfileResolved = true;
+            console.info('%c[info][AssetManager] GPU profile', 'color:#16a34a;font-weight:700;', {
+                variant: this.assetVariantCache,
+                maxTextureSize,
+                renderer
+            });
+
+            // Giải phóng context tạm để tránh rò rỉ WebGL context.
+            const loseContextExt = webgl.getExtension('WEBGL_lose_context');
+            loseContextExt?.loseContext();
+        } catch (error) {
+            this.assetVariantCache = 'mobile';
+            this.gpuProfileResolved = true;
+            console.warn('[AssetManager] Cannot read WebGL profile, fallback to mobile images', error);
+        }
+        return this.assetVariantCache;
     }
 
     /**
