@@ -5,7 +5,6 @@ import type { VitePWAOptions } from 'vite-plugin-pwa';
 // options are in one place for easier debugging and tweaking.
 // theme_color/background_color: màu cố định để tránh import ThemeManager khi build (gây lỗi với vite-plugin-pwa).
 const bgColor = '#1a1a2e';
-const ghPagesBase = '/TeyvatCard/';
 
 export const pwaOptions: VitePWAOptions = {
   // how the service worker register script is injected
@@ -21,19 +20,18 @@ export const pwaOptions: VitePWAOptions = {
     background_color: bgColor,
     display: 'standalone',
     orientation: 'portrait',
-    start_url: ghPagesBase,
-    scope: ghPagesBase,
-    id: ghPagesBase,
+    start_url: '/',
+    id: '/',
     icons: [
       {
-        src: `${ghPagesBase}favicon.ico`,
+        src: '/favicon.ico',
         sizes: '32x32',
         type: 'image/x-icon',
         purpose: 'any',
       },
       // Installability requires at least one PNG/WebP icon >= 144px. Add public/icon-192.webp (192×192).
       {
-        src: `${ghPagesBase}icon-192.webp`,
+        src: '/icon-192.webp',
         sizes: '192x192',
         type: 'image/webp',
         purpose: 'any',
@@ -41,13 +39,13 @@ export const pwaOptions: VitePWAOptions = {
     ],
     screenshots: [
       {
-        src: `${ghPagesBase}assets/images/ui/screenshots.webp`,
+        src: '/assets/images/ui/screenshots.webp',
         sizes: '720x1280',
         label: 'Teyvat Card',
         form_factor: 'wide',
       },
       {
-        src: `${ghPagesBase}assets/images/ui/screenshots.webp`,
+        src: '/assets/images/ui/screenshots.webp',
         sizes: '720x1280',
         label: 'Teyvat Card',
         form_factor: 'narrow',
@@ -61,11 +59,11 @@ export const pwaOptions: VitePWAOptions = {
       '**/*.{js,css,html}',
       'assets/images/ui/**/*.{png,jpg,jpeg,webp,svg,json}',
     ],
-    navigateFallback: '/TeyvatCard/index.html',
+    navigateFallback: '/index.html',
     runtimeCaching: [
       {
         // Cache only the variant actually requested by runtime logic (/assets/desktop or /assets/mobile).
-        urlPattern: /^\/(?:TeyvatCard\/)?assets\/(desktop|mobile)\//,
+        urlPattern: /^\/assets\/(desktop|mobile)\//,
         handler: 'CacheFirst',
         options: {
           cacheName: 'tcg-variant-assets',
@@ -76,7 +74,7 @@ export const pwaOptions: VitePWAOptions = {
         },
       },
       {
-        urlPattern: /^\/(?:TeyvatCard\/)?assets\/sounds\//,
+        urlPattern: /^\/assets\/sounds\//,
         handler: 'CacheFirst',
         options: {
           cacheName: 'tcg-sounds',

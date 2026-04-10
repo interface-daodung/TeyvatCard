@@ -9,6 +9,9 @@ import { defineConfig } from 'vite';
 export default defineConfig(({ command }) => ({
   // Keep assets under /TeyvatCard/ for GitHub Pages production build.
   base: command === 'build' ? '/TeyvatCard/' : '/',
+  define: {
+    __PWA_ENABLED__: false,
+  },
   server: {
     port: 3000,
     host: '0.0.0.0',

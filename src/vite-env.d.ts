@@ -12,6 +12,8 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
+declare const __PWA_ENABLED__: boolean;
+
 interface CredentialResponse {
   credential?: string;
   clientId?: string;

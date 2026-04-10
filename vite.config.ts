@@ -10,7 +10,8 @@ export default defineConfig(({ command }) => ({
   base: command === 'build' ? '/TeyvatCard/' : '/',
   define: {
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'dev': process.env.NODE_ENV === 'development'
+        'dev': process.env.NODE_ENV === 'development',
+        __PWA_ENABLED__: true,
   },
   server: {
     port: 3000,
