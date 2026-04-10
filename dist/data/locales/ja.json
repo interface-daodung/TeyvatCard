@@ -274,5 +274,6 @@
   "adventureCard.catalyst-sacrificial.description": "所有者は、命を究極の魔法の力と交換するために、首に新鮮な血を振りかけなければなりません。",
   "adventureCard.catalyst-remembrance.name": "追悼の鐘",
   "adventureCard.catalyst-remembrance.description": "エコーが死から響き渡り、さまよう魂たちを目覚めさせる。それぞれの鳴る鐘は召喚であり、現実と虚無を憂鬱なメロディで結びつけています。",
-  "map.babel_tower.name": "バベルの塔"
+  "map.babel_tower.name": "バベルの塔",
+  "apply_character_theme": "キャラクターテーマを適用"
 }

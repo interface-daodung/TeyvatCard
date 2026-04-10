@@ -107,8 +107,8 @@ export function createGameSettingPopup(
     overlay.setInteractive({ useHandCursor: false });
     overlay.on('pointerdown', onClose);
 
-    const panelWidth = width * 0.75;
-    const panelHeight = height * 0.68;
+    const panelWidth = width * 0.85;
+    const panelHeight = height * 0.75;
     const radius = Math.min(panelWidth, panelHeight) * 0.04;
     const panel = scene.add.graphics();
     panel.fillStyle(themeManager.getSurfacePhaser(), 0.7);
@@ -116,7 +116,7 @@ export function createGameSettingPopup(
     panel.fillRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
     panel.strokeRoundedRect(-panelWidth / 2, -panelHeight / 2, panelWidth, panelHeight, radius);
 
-    const title = new I18nText(scene, 0, -panelHeight / 2 + 50, 'gameSetting', {
+    const title = new I18nText(scene, 0, -panelHeight / 2 + 120, 'gameSetting', {
         fontSize: '36px',
         color: themeManager.getAccent(),
         fontFamily: 'Arial',

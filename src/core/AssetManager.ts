@@ -34,6 +34,10 @@ import {
 } from '../utils/AssetConstants.js';
 import { dataManager } from './DataManager.js';
 import { Log } from '../utils/Log.js';
+import {
+    registerDefaultTextureBindingsForAtlas,
+    registerDefaultTextureBindingsForImageKey,
+} from './AnimationManager.js';
 
 /** Danh sách atlas JSON theo scene (đường dẫn trong public/data, đọc qua DataManager) */
 const ATLAS_PATHS_BY_SCENE: Record<string, string[]> = {
@@ -424,6 +428,8 @@ export default class AssetManager {
         } else {
             // console.log(`AssetManager: ${key} đã tồn tại`);
         }
+
+        registerDefaultTextureBindingsForImageKey(key);
     }
 
     /**
@@ -446,6 +452,8 @@ export default class AssetManager {
         }
 
         const atlasKey = jsonData.meta.image.replace('.webp', '');
+        registerDefaultTextureBindingsForAtlas(atlasKey, jsonData);
+
         if (this.scene.textures.exists(atlasKey)) {
             debugLog('Atlas đã tồn tại:', atlasKey);
             return;

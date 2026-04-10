@@ -1,115 +1,98 @@
-// AnimationManager.ts
-// Core engine - chỉ quản lý hàng đợi, không chứa logic animation cụ thể
-import type { AnimationQueueItem, SceneWithGameManager } from '../animations/types.js';
+import type {
+    AnimationManager as IAnimationManager,
+    AnimationQueueItem,
+    SceneWithGameManager,
+} from '../animations/types.js';
+import TextureManager from './TextureManager.js';
+import { Log } from '../utils/Log.js';
 
-// ──────────────────────────────────────────────────────────────────────────────
+/** JSON atlas tối thiểu (chỉ cần `frames`) — khớp dữ liệu từ `AssetManager.loadAtlas`. */
+export interface AtlasJsonWithFrames {
+    frames: Record<string, unknown>;
+}
 
-export default class AnimationManager {
+/**
+ * Queue animation theo priority; dùng bởi MoveAnimation, GameOverAnimation, v.v.
+ */
+export default class AnimationManager implements IAnimationManager {
     readonly scene: SceneWithGameManager;
 
-    private animationQueue: AnimationQueueItem[];
-    /** Trạng thái đang chạy animation (public để GameManager/Card kiểm tra trước khi di chuyển) */
-    public isProcessing: boolean;
-    private currentAnimation: AnimationQueueItem | null;
+    /** `true` khi đang chạy một animation trong queue (hoặc chờ callback hoàn tất). */
+    isProcessing = false;
+
+    private readonly queue: AnimationQueueItem[] = [];
 
     constructor(scene: SceneWithGameManager) {
         this.scene = scene;
-        this.animationQueue = [];
-        this.isProcessing = false;
-        this.currentAnimation = null;
     }
 
-    // ── Queue engine ────────────────────────────────────────────────────────────
-
-    /**
-     * Thêm animation function vào hàng đợi với priority.
-     * Priority cao hơn → chạy trước.
-     */
     addToQueue(
         priority: number,
-        animationFunction: (completeCallback: () => void) => void
+        animationFunction: (completeCallback: () => void) => void,
     ): void {
-        this.animationQueue.push({ priority, function: animationFunction });
-
+        this.queue.push({ priority, function: animationFunction });
+        this.queue.sort((a, b) => b.priority - a.priority);
         if (!this.isProcessing) {
-            this.processQueue();
+            this.flushQueue();
         }
     }
 
-    /** Xử lý hàng đợi – lấy phần tử có priority cao nhất */
-    processQueue(): void {
-        if (this.animationQueue.length === 0 || this.isProcessing) return;
+    completeAnimation(): void {
+        this.isProcessing = false;
+        this.flushQueue();
+    }
+
+    animationAsync(runner: (callback: () => void) => void): Promise<void> {
+        return new Promise((resolve) => {
+            runner(() => resolve());
+        });
+    }
+
+    private flushQueue(): void {
+        if (this.isProcessing) return;
+        const item = this.queue.shift();
+        if (!item) return;
 
         this.isProcessing = true;
-
-        let maxIdx = 0;
-        for (let i = 1; i < this.animationQueue.length; i++) {
-            if (this.animationQueue[i].priority > this.animationQueue[maxIdx].priority) {
-                maxIdx = i;
-            }
-        }
-
-        const item = this.animationQueue.splice(maxIdx, 1)[0];
-        this.currentAnimation = item;
-        this.executeAnimation(item.function);
+        item.function(() => {
+            this.isProcessing = false;
+            this.flushQueue();
+        });
     }
+}
 
-    /** Thực thi một animation function */
-    executeAnimation(
-        animationFunction: (completeCallback: () => void) => void
-    ): void {
+/**
+ * Đăng ký mặc định vào `TextureManager` khi queue load ảnh/spritesheet:
+ * logical key = texture key Phaser (`key` truyền vào `load.image` / `load.spritesheet`).
+ */
+export function registerDefaultTextureBindingsForImageKey(textureKey: string): void {
+    try {
+        TextureManager.registerImageDefault(textureKey, textureKey);
+    } catch (err) {
+        Log.warn('[AnimationManager] registerDefaultTextureBindingsForImageKey:', textureKey, err);
+    }
+}
+
+/**
+ * Đăng ký mặc định mỗi frame trong atlas: logical key = tên frame (trùng giữa atlas → cảnh báo / throw qua TextureManager).
+ */
+export function registerDefaultTextureBindingsForAtlas(
+    atlasKey: string,
+    jsonData: AtlasJsonWithFrames,
+): void {
+    const frames = jsonData.frames;
+    if (!frames || typeof frames !== 'object') return;
+
+    for (const frameName of Object.keys(frames)) {
         try {
-            animationFunction(() => this.completeAnimation());
-        } catch (error) {
-            console.error('AnimationManager: Lỗi khi thực hiện animation:', error);
-            this.completeAnimation();
+            TextureManager.registerAtlasDefault(frameName, atlasKey, frameName);
+        } catch (err) {
+            Log.warn(
+                '[AnimationManager] registerDefaultTextureBindingsForAtlas:',
+                atlasKey,
+                frameName,
+                err,
+            );
         }
-    }
-
-    /** Đánh dấu animation hiện tại đã xong, kéo tiếp queue */
-    completeAnimation(): void {
-        this.currentAnimation = null;
-        this.isProcessing = false;
-
-        if (this.animationQueue.length > 0) {
-            this.processQueue();
-        }
-    }
-
-    /**
-     * Wrap bất kỳ animation nào thành Promise.
-     * Dùng cho các class con muốn hỗ trợ async/await.
-     */
-    animationAsync(runner: (callback: () => void) => void): Promise<void> {
-        return new Promise<void>(resolve => runner(resolve));
-    }
-
-    // ── Utility ─────────────────────────────────────────────────────────────────
-
-    clearQueue(): void {
-        this.animationQueue = [];
-    }
-
-    stopCurrentAnimation(): void {
-        if (this.currentAnimation) {
-            this.scene.tweens.killAll();
-        }
-    }
-
-    getStatus(): { queueLength: number; isProcessing: boolean; currentAnimation: string | null } {
-        return {
-            queueLength: this.animationQueue.length,
-            isProcessing: this.isProcessing,
-            currentAnimation: this.currentAnimation
-                ? `priority: ${this.currentAnimation.priority}`
-                : null
-        };
-    }
-
-    destroy(): void {
-        console.log('AnimationManager: Đang dọn dẹp...');
-        this.clearQueue();
-        this.stopCurrentAnimation();
-        (this as any).scene = null;
     }
 }

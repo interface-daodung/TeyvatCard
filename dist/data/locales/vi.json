@@ -274,5 +274,6 @@
   "adventureCard.catalyst-sacrificial.description": "Kẻ sở hữu phải tưới máu tươi lên các cổ tự để đánh đổi sinh mệnh lấy quyền năng ma thuật tối thượng.",
   "adventureCard.catalyst-remembrance.name": "Chuông tưởng nhớ",
   "adventureCard.catalyst-remembrance.description": "Tiếng ngân vang vọng từ cõi chết, đánh thức những linh hồn lang thang. Mỗi hồi chuông là một lời triệu hồi, kết nối thực tại với hư vô bằng giai điệu u buồn đến xé lòng.",
-  "map.babel_tower.name": "Tháp Babel"
+  "map.babel_tower.name": "Tháp Babel",
+  "apply_character_theme": "Áp dụng theme chủ đề nhân vật"
 }
