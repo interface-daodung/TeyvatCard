@@ -8,8 +8,9 @@
 import CryptoJS from 'crypto-js';
 import Phaser from 'phaser';
 
-/** Đường dẫn gốc cho thư mục public/data (URL khi chạy app) */
-const DATA_BASE_PATH = '/data/';
+/** Đường dẫn gốc cho thư mục public/data (URL khi chạy app). */
+const BASE_URL = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+const DATA_BASE_PATH = `${BASE_URL}data/`;
 
 const IS_DEV = import.meta.env.VITE_IS_DEV === 'true';
 const SECRET_KEY = import.meta.env.VITE_STORAGE_SECRET_KEY || 'teyvat-default-obfuscation-key';
