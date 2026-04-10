@@ -7,8 +7,6 @@
     "dev": "cross-env NODE_ENV=development vite",
     "build": "cross-env NODE_ENV=production vite build",
     "build:no-pwa": "cross-env NODE_ENV=production vite build --config vite.config.no-pwa.ts",
-    "build:gh": "npm run build",
-    "build:gh:no-pwa": "npm run build:no-pwa",
     "start": "cross-env NODE_ENV=production vite preview",
     "preview": "vite preview"
   },

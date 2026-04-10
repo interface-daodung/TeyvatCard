@@ -48,10 +48,8 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: [LoadingScene, MenuScene, SelectCharacterScene, EquipScene, LibraryScene, MapScenes, GameScene, SettingsScene, PaymentScene, LoginScene, RegisterScene, TestGraphicsRenderTexture]
 };
 
-// Khởi tạo PWA chỉ khi build bật PWA.
-if (__PWA_ENABLED__) {
-  setupPWA();
-}
+// Khởi tạo PWA (tách riêng để dễ bật/tắt và debug)
+setupPWA();
 
 // Khởi tạo game (chỉ khi không redirect verify)
 if (window.location.pathname !== '/verify') {

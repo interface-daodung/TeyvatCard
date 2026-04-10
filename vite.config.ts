@@ -5,13 +5,10 @@ import { pwaOptions } from './src/pwa/config';
 
 // Tạm bỏ vite-plugin-remove-console: gây lỗi "(0 , w1.default)(...).find is not a function" với Vite 6.
 // Có thể bật lại khi plugin đã tương thích.
-export default defineConfig(({ command }) => ({
-  // GitHub Pages serves this app from /TeyvatCard/ in production builds.
-  base: command === 'build' ? '/TeyvatCard/' : '/',
+export default defineConfig({
   define: {
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'dev': process.env.NODE_ENV === 'development',
-        __PWA_ENABLED__: true,
+        'dev': process.env.NODE_ENV === 'development'
   },
   server: {
     port: 3000,
@@ -37,5 +34,5 @@ export default defineConfig(({ command }) => ({
     VitePWA(pwaOptions),
     // removeConsole() — gây lỗi .find với Vite 6, dùng terserOptions.drop_console ở trên
   ],
-}));
+});
 

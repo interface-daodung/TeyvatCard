@@ -6,12 +6,7 @@ import { defineConfig } from 'vite';
  * Cả hai plugin đều có thể gây lỗi "(0 , w1.default)(...).find is not a function" với Vite 6.
  * Chạy: npm run build:no-pwa
  */
-export default defineConfig(({ command }) => ({
-  // Keep assets under /TeyvatCard/ for GitHub Pages production build.
-  base: command === 'build' ? '/TeyvatCard/' : '/',
-  define: {
-    __PWA_ENABLED__: false,
-  },
+export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
@@ -27,4 +22,4 @@ export default defineConfig(({ command }) => ({
     }
   },
   plugins: [],
-}));
+});
