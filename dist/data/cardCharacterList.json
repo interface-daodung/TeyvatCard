@@ -1,0 +1,352 @@
+[
+  {
+    "id": "eula",
+    "name": "character.eula.name",
+    "description": "character.eula.description",
+    "hp": 10,
+    "element": "cryo",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "id": "furina",
+    "name": "character.furina.name",
+    "description": "character.furina.description",
+    "hp": 10,
+    "element": "hydro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "id": "mavuika",
+    "name": "character.mavuika.name",
+    "description": "character.mavuika.description",
+    "hp": 8,
+    "element": "pyro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "id": "nahida",
+    "name": "character.nahida.name",
+    "description": "character.nahida.description",
+    "hp": 8,
+    "element": "dendro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "id": "raiden",
+    "name": "character.raiden.name",
+    "description": "character.raiden.description",
+    "hp": 8,
+    "element": "electro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "id": "venti",
+    "name": "character.venti.name",
+    "description": "character.venti.description",
+    "hp": 8,
+    "element": "anemo",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ]
+  },
+  {
+    "id": "zhongli",
+    "name": "character.zhongli.name",
+    "description": "character.zhongli.description",
+    "hp": 9,
+    "element": "geo",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ]
+  }
+]

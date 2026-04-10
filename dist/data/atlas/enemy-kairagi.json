@@ -1,0 +1,53 @@
+{
+  "frames": {
+    "dancing-thunder": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "fiery-might": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "kikouban": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "jintouban": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hitsukeban": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-kairagi.webp",
+    "size": {
+      "w": 1260,
+      "h": 1440
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\kairagi\\enemy-kairagi.webp"
+  }
+}

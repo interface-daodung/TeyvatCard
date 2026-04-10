@@ -1,0 +1,157 @@
+{
+  "frames": {
+    "dvalin": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "yumkasaur": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "golden-wolflord": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "terrorshroom": {
+      "frame": {
+        "x": 1260,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "seahorse-primo": {
+      "frame": {
+        "x": 1680,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "maguu-kenki": {
+      "frame": {
+        "x": 2100,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "xiuhcoatl": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "apep": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "azhdaha": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "chrysopelea-sacred": {
+      "frame": {
+        "x": 1260,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "scorpion-sacred": {
+      "frame": {
+        "x": 1680,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "raijin": {
+      "frame": {
+        "x": 2100,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hermit-crab-promo": {
+      "frame": {
+        "x": 0,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "effigy-electric": {
+      "frame": {
+        "x": 420,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "narwhal": {
+      "frame": {
+        "x": 840,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "oceanid": {
+      "frame": {
+        "x": 1260,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "la-signora": {
+      "frame": {
+        "x": 1680,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "effigy-ice": {
+      "frame": {
+        "x": 2100,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-boss.webp",
+    "size": {
+      "w": 2520,
+      "h": 2160
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\boss\\enemy-boss.webp"
+  }
+}

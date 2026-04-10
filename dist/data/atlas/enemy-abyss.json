@@ -1,0 +1,85 @@
+{
+  "frames": {
+    "electro-mage": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "cryo-mage": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hydro-mage": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "pyro-mage": {
+      "frame": {
+        "x": 1260,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "rockfond": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "thundercraven": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "deacon-fire": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "invoker-electric": {
+      "frame": {
+        "x": 1260,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "herald-water": {
+      "frame": {
+        "x": 0,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-abyss.webp",
+    "size": {
+      "w": 1680,
+      "h": 2160
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\abyss\\enemy-abyss.webp"
+  }
+}

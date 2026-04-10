@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Holographic Card – 3D Tilt</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #101014;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+
+  /* Perspective wrapper */
+  .scene {
+    perspective: 900px;
+    perspective-origin: 50% 50%;
+  }
+
+  /* The card itself — receives CSS 3D transform */
+  .card-wrap {
+    width: 420px;
+    height: 720px;
+    border-radius: 18px;
+    transform-style: preserve-3d;
+    transition: transform 0.08s linear;
+    will-change: transform;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Phaser canvas sits inside, borderradius clipped */
+  .card-wrap canvas {
+    border-radius: 18px;
+    display: block;
+    width: 420px !important;
+    height: 720px !important;
+  }
+
+  /* Holographic overlay — reacts to tilt */
+  .holo-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+    mix-blend-mode: color-dodge;
+    background: linear-gradient(
+      115deg,
+      transparent 20%,
+      rgba(255,255,180,0.15) 30%,
+      rgba(0,255,200,0.18) 40%,
+      rgba(120,80,255,0.15) 50%,
+      rgba(255,80,120,0.15) 60%,
+      transparent 80%
+    );
+    background-size: 200% 200%;
+  }
+
+  /* Specular shine */
+  .shine {
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255,255,255,0.22) 0%,
+      transparent 60%
+    );
+  }
+
+  .card-wrap:hover .holo-overlay,
+  .card-wrap:hover .shine {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="card-wrap" id="cardWrap">
+    <!-- Phaser renders here -->
+    <div class="holo-overlay" id="holoOverlay"></div>
+    <div class="shine" id="shine"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+<script>
+
+// ─── Holographic WebGL pipeline ───────────────────────────────────────────────
+
+class HoloPipeline extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
+  constructor(game) {
+    super({
+      game,
+      renderer: game.renderer,
+      fragShader: `
+        precision mediump float;
+
+        uniform sampler2D uMainSampler;
+        uniform float     time;
+        uniform vec2      mouse;
+
+        varying vec2 outTexCoord;
+
+        float rand(vec2 co){
+          return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+
+        vec3 rainbow(float t){
+          return vec3(
+            sin(t)         * 0.5 + 0.5,
+            sin(t + 2.094) * 0.5 + 0.5,
+            sin(t + 4.188) * 0.5 + 0.5
+          );
+        }
+
+        void main(){
+          vec2 uv   = outTexCoord;
+          vec4 base = texture2D(uMainSampler, uv);
+
+          uv += rand(uv + time) * 0.008;
+
+          vec3 spectrum = rainbow(time + uv.x * 10.0 + uv.y * 4.0);
+
+          float sparkle = step(0.997, rand(uv * 500.0 + time));
+
+          vec2  light = mouse - uv;
+          float dist  = length(light);
+          float spec  = pow(max(1.0 - dist, 0.0), 6.0);
+
+          vec3 holo = spectrum * spec * 0.9 + sparkle * 1.2;
+
+          gl_FragColor = vec4(base.rgb + holo * base.a, base.a);
+        }
+      `
+    });
+  }
+}
+
+// ─── Phaser Scene ─────────────────────────────────────────────────────────────
+
+class SceneMain extends Phaser.Scene {
+
+  preload() {
+    this.load.image(
+      "card",
+      "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/nahida.webp"
+    );
+  }
+
+  create() {
+    const { width: w, height: h } = this.scale;
+
+    this.renderer.pipelines.add("Holo", new HoloPipeline(this.game));
+
+    const card = this.add.image(w / 2, h / 2, "card");
+    card.setDisplaySize(420, 720);
+    card.setPipeline("Holo");
+
+    this._mouse = { x: 0.5, y: 0.5 };
+  }
+
+  update(time) {
+    const pipeline = this.renderer.pipelines.get("Holo");
+    pipeline.set1f("time",  time * 0.002);
+    pipeline.set2f("mouse", this._mouse.x, this._mouse.y);
+  }
+}
+
+// ─── Boot Phaser inside card-wrap ─────────────────────────────────────────────
+
+const cardWrap = document.getElementById("cardWrap");
+
+const game = new Phaser.Game({
+  type:            Phaser.WEBGL,
+  width:           420,
+  height:          720,
+  backgroundColor: "#00000000",
+  transparent:     true,
+  parent:          cardWrap,
+  scene:           [SceneMain],
+  // insert canvas BEFORE the overlays
+  callbacks: {
+    postBoot(g) {
+      const canvas = g.canvas;
+      cardWrap.insertBefore(canvas, cardWrap.firstChild);
+    }
+  }
+});
+
+// ─── 3D Tilt via CSS transform ─────────────────────────────────────────────────
+
+const shine        = document.getElementById("shine");
+const MAX_ROT      = 18;          // degrees
+const SMOOTH       = 0.10;
+
+let targetRX = 0, targetRY = 0;
+let currentRX = 0, currentRY = 0;
+let rafId = null;
+let mouseNX = 0.5, mouseNY = 0.5;
+let isHover = false;
+
+function applyTransform() {
+  const scale = isHover ? 1.04 : 1.0;
+  cardWrap.style.transform =
+    `scale(${scale}) rotateX(${currentRX.toFixed(3)}deg) rotateY(${currentRY.toFixed(3)}deg)`;
+  shine.style.setProperty("--mx", `${mouseNX * 100}%`);
+  shine.style.setProperty("--my", `${mouseNY * 100}%`);
+}
+
+function animLoop() {
+  currentRX += (targetRX - currentRX) * SMOOTH;
+  currentRY += (targetRY - currentRY) * SMOOTH;
+
+  applyTransform();
+
+  // pass normalised mouse to Phaser shader
+  if (game.scene.scenes[0]) {
+    game.scene.scenes[0]._mouse = { x: mouseNX, y: 1 - mouseNY };
+  }
+
+  const diff = Math.abs(targetRX - currentRX) + Math.abs(targetRY - currentRY);
+  if (diff > 0.01 || isHover) {
+    rafId = requestAnimationFrame(animLoop);
+  } else {
+    rafId = null;
+  }
+}
+
+function startAnim() {
+  if (!rafId) rafId = requestAnimationFrame(animLoop);
+}
+
+cardWrap.addEventListener("mouseenter", () => {
+  isHover = true;
+  cardWrap.style.transition = "box-shadow 0.3s";
+  cardWrap.style.boxShadow  = "0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(100,200,255,0.15)";
+  startAnim();
+});
+
+cardWrap.addEventListener("mousemove", e => {
+  const rect = cardWrap.getBoundingClientRect();
+  // normalised –0.5 … +0.5
+  const nx = (e.clientX - rect.left)  / rect.width  - 0.5;
+  const ny = (e.clientY - rect.top)   / rect.height - 0.5;
+
+  // rotateX: tilt up/down  (positive nx → tilt card top toward viewer)
+  // rotateY: tilt left/right
+  targetRX = -ny * MAX_ROT * 2;   // invert so card "follows" cursor naturally
+  targetRY =  nx * MAX_ROT * 2;
+
+  mouseNX = nx + 0.5;
+  mouseNY = ny + 0.5;
+
+  startAnim();
+});
+
+cardWrap.addEventListener("mouseleave", () => {
+  isHover = false;
+  targetRX = 0;
+  targetRY = 0;
+  cardWrap.style.boxShadow = "none";
+  startAnim();
+});
+
+// touch support
+cardWrap.addEventListener("touchmove", e => {
+  e.preventDefault();
+  const t    = e.touches[0];
+  const rect = cardWrap.getBoundingClientRect();
+  const nx   = (t.clientX - rect.left)  / rect.width  - 0.5;
+  const ny   = (t.clientY - rect.top)   / rect.height - 0.5;
+
+  targetRX = -ny * MAX_ROT * 2;
+  targetRY =  nx * MAX_ROT * 2;
+  mouseNX  = nx + 0.5;
+  mouseNY  = ny + 0.5;
+  isHover  = true;
+  startAnim();
+}, { passive: false });
+
+cardWrap.addEventListener("touchend", () => {
+  isHover = false; targetRX = 0; targetRY = 0; startAnim();
+});
+
+</script>
+</body>
+</html>

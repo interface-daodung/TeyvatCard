@@ -1,0 +1,61 @@
+{
+  "frames": {
+    "slime-electro": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "slime-cryo": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "slime-hydro": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "slime-large-hydro": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "slime-large-cryo": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hydro-phantasm": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-slime.webp",
+    "size": {
+      "w": 1260,
+      "h": 1440
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\slime\\enemy-slime.webp"
+  }
+}

@@ -9,6 +9,7 @@ const LOGIN_SCENE_KEY = 'LoginScene';
 
 const SHOW_CARD_NAME_KEY = 'showCardName';
 const SHOW_GUIDE_FLAG_KEY = 'showGuide';
+const APPLY_CHARACTER_THEME_KEY = 'applyCharacterTheme';
 
 /** Hiển thị tên thẻ bài: mặc định false, lưu localStorage */
 function getShowCardName(): boolean {
@@ -27,6 +28,16 @@ function getShowGuide(): boolean {
 
 function setShowGuide(value: boolean): void {
     dataManager.setFlag(SHOW_GUIDE_FLAG_KEY, value);
+}
+
+/** Áp dụng theme theo chủ đề nhân vật: mặc định true, lưu localStorage */
+function getApplyCharacterTheme(): boolean {
+    const v = dataManager.get<boolean>(APPLY_CHARACTER_THEME_KEY);
+    return v ?? true;
+}
+
+function setApplyCharacterTheme(value: boolean): void {
+    dataManager.set(APPLY_CHARACTER_THEME_KEY, value);
 }
 
 /**
@@ -97,7 +108,7 @@ export function createGameSettingPopup(
     overlay.on('pointerdown', onClose);
 
     const panelWidth = width * 0.75;
-    const panelHeight = height * 0.58;
+    const panelHeight = height * 0.68;
     const radius = Math.min(panelWidth, panelHeight) * 0.04;
     const panel = scene.add.graphics();
     panel.fillStyle(themeManager.getSurfacePhaser(), 0.7);
@@ -129,7 +140,7 @@ export function createGameSettingPopup(
     const gap = 20;
     const rowGap = 28;
     const toggleRowHeight = 50;
-    const totalContentHeight = btnHeight + rowGap + toggleRowHeight + rowGap + toggleRowHeight;
+    const totalContentHeight = btnHeight + rowGap + toggleRowHeight + rowGap + toggleRowHeight + rowGap + toggleRowHeight;
     const contentStartY = -totalContentHeight / 2 + btnHeight / 2;
     const contentY = contentStartY;
 
@@ -214,6 +225,7 @@ export function createGameSettingPopup(
 
     const toggleY1 = contentY + btnHeight / 2 + rowGap + toggleRowHeight / 2;
     const toggleY2 = toggleY1 + toggleRowHeight / 2 + rowGap + toggleRowHeight / 2;
+    const toggleY3 = toggleY2 + toggleRowHeight / 2 + rowGap + toggleRowHeight / 2;
 
     const toggleCardName = createToggleRow(
         scene,
@@ -237,6 +249,17 @@ export function createGameSettingPopup(
         true
     );
 
+    const toggleApplyCharacterTheme = createToggleRow(
+        scene,
+        0,
+        toggleY3,
+        'apply_character_theme',
+        getApplyCharacterTheme,
+        setApplyCharacterTheme,
+        () => {},
+        true
+    );
+
     popupContainer.add([
         overlay,
         panel,
@@ -247,7 +270,8 @@ export function createGameSettingPopup(
         saveBtn,
         saveText,
         toggleCardName,
-        toggleShowGuide
+        toggleShowGuide,
+        toggleApplyCharacterTheme
     ]);
     popupContainer.setVisible(false);
     return popupContainer;
@@ -266,4 +290,9 @@ export function getShowGuideSetting(): boolean {
 /** Ghi cờ hiển thị hướng dẫn (session). Gọi khi đã xem xong tutorial. */
 export function setShowGuideSetting(value: boolean): void {
     setShowGuide(value);
+}
+
+/** Dùng khi cần biết có áp dụng theme chủ đề nhân vật hay không. */
+export function getApplyCharacterThemeSetting(): boolean {
+    return getApplyCharacterTheme();
 }

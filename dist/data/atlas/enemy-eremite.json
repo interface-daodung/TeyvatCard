@@ -1,0 +1,61 @@
+{
+  "frames": {
+    "sunfrost": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "stone-enchanter": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "desert-clearwater": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "daythunder": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "floral-dancer": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "muscleman": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-eremite.webp",
+    "size": {
+      "w": 1260,
+      "h": 1440
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\eremite\\enemy-eremite.webp"
+  }
+}

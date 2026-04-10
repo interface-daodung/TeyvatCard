@@ -1,0 +1,29 @@
+{
+  "frames": {
+    "explosive": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "scare": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "bomb.webp",
+    "size": {
+      "w": 840,
+      "h": 720
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\bomb\\bomb.webp"
+  }
+}

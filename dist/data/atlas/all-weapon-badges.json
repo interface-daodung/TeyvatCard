@@ -1,0 +1,373 @@
+{
+  "frames": {
+    "sword-traveler-badge": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-steampunk-badge": {
+      "frame": {
+        "x": 256,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-forest-badge": {
+      "frame": {
+        "x": 512,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-sacrificial-badge": {
+      "frame": {
+        "x": 768,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-favonius-badge": {
+      "frame": {
+        "x": 1024,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-splendor-badge": {
+      "frame": {
+        "x": 1280,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-foliar-incision-badge": {
+      "frame": {
+        "x": 1536,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-skyward-badge": {
+      "frame": {
+        "x": 0,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "sword-aquila-badge": {
+      "frame": {
+        "x": 256,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-magic-guide-badge": {
+      "frame": {
+        "x": 512,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-flowing-purity-badge": {
+      "frame": {
+        "x": 768,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-forest-badge": {
+      "frame": {
+        "x": 1024,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-sacrificial-badge": {
+      "frame": {
+        "x": 1280,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-eternal-flow-badge": {
+      "frame": {
+        "x": 1536,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-steampunk-badge": {
+      "frame": {
+        "x": 0,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-remembrance-badge": {
+      "frame": {
+        "x": 256,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-dreams-badge": {
+      "frame": {
+        "x": 512,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-sacred-winds-badge": {
+      "frame": {
+        "x": 768,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "catalyst-skyward-badge": {
+      "frame": {
+        "x": 1024,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-steampunk-badge": {
+      "frame": {
+        "x": 1280,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-forest-badge": {
+      "frame": {
+        "x": 1536,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-skyward-badge": {
+      "frame": {
+        "x": 0,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-sacrificial-badge": {
+      "frame": {
+        "x": 256,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-iron-badge": {
+      "frame": {
+        "x": 512,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-overlord-badge": {
+      "frame": {
+        "x": 768,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-bell-badge": {
+      "frame": {
+        "x": 1024,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-beacon-badge": {
+      "frame": {
+        "x": 1280,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "claymore-gravestone-badge": {
+      "frame": {
+        "x": 1536,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-steampunk-badge": {
+      "frame": {
+        "x": 0,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-forest-badge": {
+      "frame": {
+        "x": 256,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-skyward-badge": {
+      "frame": {
+        "x": 512,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-engulfing-lightning-badge": {
+      "frame": {
+        "x": 768,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-tassel-badge": {
+      "frame": {
+        "x": 1024,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-vanquisher-badge": {
+      "frame": {
+        "x": 1280,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-rightful-badge": {
+      "frame": {
+        "x": 1536,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-lithic-badge": {
+      "frame": {
+        "x": 0,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "polearm-jade-badge": {
+      "frame": {
+        "x": 256,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-forest-badge": {
+      "frame": {
+        "x": 512,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-elegy-badge": {
+      "frame": {
+        "x": 768,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-skyward-badge": {
+      "frame": {
+        "x": 1024,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-sacrificial-badge": {
+      "frame": {
+        "x": 1280,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-raven-badge": {
+      "frame": {
+        "x": 1536,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-amos-badge": {
+      "frame": {
+        "x": 0,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-simulacra-badge": {
+      "frame": {
+        "x": 256,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      }
+    },
+    "bow-fish-badge": {
+      "frame": {
+        "x": 512,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      }
+    }
+  },
+  "meta": {
+    "image": "all-weapon-badges.webp",
+    "size": {
+      "w": 1792,
+      "h": 1792
+    },
+    "scale": "1",
+    "path": "assets\\images\\badge\\all-weapon-badges.webp"
+  }
+}

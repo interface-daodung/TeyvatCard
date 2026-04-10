@@ -1,0 +1,101 @@
+{
+  "frames": {
+    "pyroslinger": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "hydrogunner": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "geochanter": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "electrohammer": {
+      "frame": {
+        "x": 1260,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "cryogunner": {
+      "frame": {
+        "x": 1680,
+        "y": 0,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "anemoboxer": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "electro-cicin-mage": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "pyro-agent": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "cryo-cicin-mage": {
+      "frame": {
+        "x": 1260,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "escadron-ice": {
+      "frame": {
+        "x": 1680,
+        "y": 720,
+        "w": 420,
+        "h": 720
+      }
+    },
+    "maiden-water": {
+      "frame": {
+        "x": 0,
+        "y": 1440,
+        "w": 420,
+        "h": 720
+      }
+    }
+  },
+  "meta": {
+    "image": "enemy-fatui.webp",
+    "size": {
+      "w": 2100,
+      "h": 2160
+    },
+    "scale": "1",
+    "path": "assets\\images\\cards\\enemy\\fatui\\enemy-fatui.webp"
+  }
+}

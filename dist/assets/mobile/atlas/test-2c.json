@@ -1,0 +1,29 @@
+{
+  "frames": {
+    "Fenglong": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "FavoniusChurch": {
+      "frame": {
+        "x": 105,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    }
+  },
+  "meta": {
+    "image": "test-2c.webp",
+    "size": {
+      "w": 210,
+      "h": 180
+    },
+    "scale": "1",
+    "path": "assets/mobile/atlas/test-2c.webp"
+  }
+}

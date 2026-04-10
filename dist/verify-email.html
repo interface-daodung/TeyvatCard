@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Xác nhận email - TeyvatCard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #e5e7eb;
+      position: relative;
+    }
+
+    /* ── Static background (máy yếu) ── */
+    .bg-static {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.95)),
+        url("/mailBg.webp") center / cover no-repeat;
+    }
+
+    /* ── Dynamic background (máy mạnh) ── */
+    .bg-dynamic {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .bg-dynamic iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* overlay mờ phủ lên iframe */
+    .bg-dynamic::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.95));
+      pointer-events: none;
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 92%;
+      max-width: 520px;
+      padding: 38px 34px;
+
+      border-radius: 22px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.75),
+        inset 0 0 20px rgba(59, 130, 246, 0.12);
+
+      backdrop-filter: blur(14px);
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 50px;
+      margin-bottom: 14px;
+      color: #60a5fa;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #93c5fd;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #cbd5f5;
+      margin-bottom: 26px;
+    }
+
+    .status {
+      font-size: 17px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .status--loading {
+      color: #93c5fd;
+    }
+
+    .status--success {
+      color: #86efac;
+    }
+
+    .status--error {
+      color: #fca5a5;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-top: 18px;
+      line-height: 1.5;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      border-top-color: #60a5fa;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width:520px) {
+      .title {
+        font-size: 23px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+      }
+
+      .status {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background được inject bằng JS -->
+  <div id="bg-root"></div>
+
+  <div class="card">
+    <div class="icon">
+      <i class="fa-solid fa-envelope-circle-check"></i>
+    </div>
+
+    <div class="title">Xác nhận địa chỉ email</div>
+
+    <div class="subtitle">
+      Hệ thống đang kiểm tra và xác nhận email của bạn cho tài khoản
+      <strong>TeyvatCard</strong>.<br>
+      Quá trình này chỉ mất vài giây, vui lòng chờ trong giây lát.
+    </div>
+
+    <div id="status" class="status status--loading">
+      <span class="spinner"></span>
+      Đang xử lý yêu cầu xác nhận...
+    </div>
+
+    <div id="hint" class="hint"></div>
+  </div>
+
+  <script>
+    /* ── 1. Kiểm tra cấu hình máy & chọn background ── */
+    (function () {
+      var isLowEnd =
+        (navigator.hardwareConcurrency || 99) <= 4 ||
+        (navigator.deviceMemory || 99) <= 4;
+
+      var bgRoot = document.getElementById("bg-root");
+
+      if (isLowEnd) {
+        /* Máy yếu → background tĩnh */
+        var div = document.createElement("div");
+        div.className = "bg-static";
+        bgRoot.appendChild(div);
+      } else {
+        /* Máy mạnh → iframe bg.html */
+        var wrap = document.createElement("div");
+        wrap.className = "bg-dynamic";
+
+        var iframe = document.createElement("iframe");
+        iframe.src = "/background.html";
+        iframe.setAttribute("loading", "eager");
+        iframe.setAttribute("aria-hidden", "true");
+        iframe.setAttribute("tabindex", "-1");
+
+        wrap.appendChild(iframe);
+        bgRoot.appendChild(wrap);
+      }
+    })();
+
+    /* ── 2. Xác nhận email ── */
+    (function () {
+      function getToken() {
+        var params = new URLSearchParams(window.location.search);
+        return params.get("token") || "";
+      }
+
+      var statusEl = document.getElementById("status");
+      var hintEl = document.getElementById("hint");
+      var token = getToken();
+
+      if (!token || token.length < 10) {
+        statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Token xác nhận không hợp lệ hoặc đã thiếu.';
+        statusEl.className = "status status--error";
+        return;
+      }
+
+      fetch("/api/auth/verify-email?token=" + encodeURIComponent(token), {
+        method: "GET",
+        credentials: "include"
+      })
+        .then(function (res) {
+          var type = res.headers.get("content-type") || "";
+
+          if (!res.ok) {
+            if (type.includes("application/json")) {
+              return res.json().then(function (body) {
+                throw new Error(body.error || "Xác nhận email thất bại");
+              });
+            }
+            throw new Error("Máy chủ trả về phản hồi không hợp lệ.");
+          }
+
+          if (!type.includes("application/json")) {
+            throw new Error("Máy chủ trả về HTML thay vì JSON.");
+          }
+
+          return res.json();
+        })
+        .then(function (body) {
+          statusEl.innerHTML =
+            '<i class="fa-solid fa-circle-check"></i> ' +
+            (body.message || "Email của bạn đã được xác nhận thành công.");
+
+          statusEl.className = "status status--success";
+
+          hintEl.textContent =
+            "Cảm ơn bạn đã xác nhận email. Bạn có thể quay lại trò chơi TeyvatCard và tiếp tục trải nghiệm.";
+
+          try { localStorage.setItem("teyvat_email_verified", "1"); } catch (e) { }
+        })
+        .catch(function (err) {
+          statusEl.innerHTML =
+            '<i class="fa-solid fa-circle-xmark"></i> ' +
+            (err.message || "Xác nhận email thất bại.");
+
+          statusEl.className = "status status--error";
+        });
+    })();
+  </script>
+
+</body>
+
+</html>
