@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movement Calculator — Extended Grids</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Sora:wght@300;400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090f;
+      --s1: #0f1018;
+      --s2: #14161f;
+      --s3: #1a1d28;
+      --b1: #1e2235;
+      --b2: #2a2f45;
+      --b3: #363d58;
+      --accent: #7dd3fc;
+      --accent2: #38bdf8;
+      --green: #86efac;
+      --green2: #4ade80;
+      --yellow: #fde68a;
+      --yellow2: #fbbf24;
+      --purple: #c4b5fd;
+      --purple2: #a78bfa;
+      --red: #fca5a5;
+      --red2: #f87171;
+      --orange: #fdba74;
+      --text: #e2e8f0;
+      --t2: #94a3b8;
+      --t3: #64748b;
+      --t4: #3b4558;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Sora', sans-serif;
+      --r: 8px;
+      --r2: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* dot-matrix bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(125, 211, 252, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 28px 24px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    /* ── HEADER ── */
+    .hdr {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--b1);
+      gap: 20px;
+    }
+
+    .hdr-left h1 {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+    }
+
+    .hdr-left p {
+      font-size: 12px;
+      color: var(--t3);
+      margin-top: 4px;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid;
+      font-weight: 600;
+    }
+
+    .badge-green {
+      background: #86efac12;
+      color: var(--green);
+      border-color: #86efac30;
+    }
+
+    .badge-blue {
+      background: #7dd3fc12;
+      color: var(--accent);
+      border-color: #7dd3fc30;
+    }
+
+    .badge-yellow {
+      background: #fde68a12;
+      color: var(--yellow);
+      border-color: #fde68a30;
+    }
+
+    .badge-purple {
+      background: #c4b5fd12;
+      color: var(--purple);
+      border-color: #c4b5fd30;
+    }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* ── PANEL ── */
+    .panel {
+      background: var(--s1);
+      border: 1px solid var(--b1);
+      border-radius: var(--r2);
+      overflow: hidden;
+    }
+
+    .panel-hdr {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--b1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--t3);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    /* ── GRID SELECTOR ── */
+    .grid-size-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .size-btn {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--b2);
+      background: var(--s2);
+      color: var(--t2);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .size-btn:hover {
+      border-color: var(--b3);
+      color: var(--text);
+    }
+
+    .size-btn.active {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      color: #000;
+    }
+
+    /* ── GRID VIS ── */
+    #grid-vis {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .cell {
+      aspect-ratio: 1;
+      border-radius: 7px;
+      border: 1.5px solid var(--b2);
+      background: var(--s3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.12s;
+      position: relative;
+      font-family: var(--mono);
+      user-select: none;
+    }
+
+    .cell:hover {
+      border-color: var(--b3);
+      background: #1e2235;
+    }
+
+    .cell.disabled {
+      opacity: 0.3;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .cell .ci {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--t2);
+      line-height: 1;
+    }
+
+    .cell .ct {
+      font-size: 8px;
+      color: var(--t4);
+      margin-top: 2px;
+    }
+
+    .cell.is-from {
+      border-color: var(--yellow2);
+      background: #fbbf2415;
+      box-shadow: 0 0 12px #fbbf2420;
+    }
+
+    .cell.is-from .ci {
+      color: var(--yellow2);
+    }
+
+    .cell.is-to {
+      border-color: var(--accent2);
+      background: #38bdf815;
+      box-shadow: 0 0 12px #38bdf820;
+    }
+
+    .cell.is-to .ci {
+      color: var(--accent2);
+    }
+
+    .cell.is-chain-0 {
+      border-color: var(--green2);
+      background: #4ade8015;
+    }
+
+    .cell.is-chain-0 .ci {
+      color: var(--green2);
+    }
+
+    .cell.is-chain-1 {
+      border-color: var(--purple2);
+      background: #a78bfa15;
+    }
+
+    .cell.is-chain-1 .ci {
+      color: var(--purple2);
+    }
+
+    .cell.is-chain-2 {
+      border-color: var(--orange);
+      background: #fdba7415;
+    }
+
+    .cell.is-chain-2 .ci {
+      color: var(--orange);
+    }
+
+    .cell.is-chain-3 {
+      border-color: var(--red2);
+      background: #f8717115;
+    }
+
+    .cell.is-chain-3 .ci {
+      color: var(--red2);
+    }
+
+    .role-badge {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      font-size: 7px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: var(--mono);
+      line-height: 1.4;
+    }
+
+    .rb-from {
+      background: #fbbf2430;
+      color: var(--yellow2);
+    }
+
+    .rb-to {
+      background: #38bdf820;
+      color: var(--accent2);
+    }
+
+    .rb-c0 {
+      background: #4ade8020;
+      color: var(--green2);
+    }
+
+    .rb-c1 {
+      background: #a78bfa20;
+      color: var(--purple2);
+    }
+
+    .rb-c2 {
+      background: #fdba7420;
+      color: var(--orange);
+    }
+
+    .rb-c3 {
+      background: #f8717120;
+      color: var(--red2);
+    }
+
+    /* ── CONTROLS ── */
+    .ctrl-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .ctrl-box {
+      flex: 1;
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .ctrl-lbl {
+      font-size: 9px;
+      font-family: var(--mono);
+      color: var(--t3);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 2px;
+    }
+
+    .ctrl-val {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: var(--mono);
+      line-height: 1;
+    }
+
+    .cv-from {
+      color: var(--yellow2);
+    }
+
+    .cv-to {
+      color: var(--accent2);
+    }
+
+    /* ── FORMULA BOX ── */
+    .formula-box {
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--t2);
+      min-height: 80px;
+      margin-bottom: 12px;
+    }
+
+    .fc {
+      color: var(--t4);
+      font-style: italic;
+    }
+
+    .fk {
+      color: var(--purple);
+    }
+
+    .ff {
+      color: var(--accent);
+    }
+
+    .fn {
+      color: var(--yellow);
+    }
+
+    .fo {
+      color: var(--green);
+    }
+
+    .fe {
+      color: var(--red);
+    }
+
+    /* ── CHAIN VIS ── */
+    .chain-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      padding: 10px 12px;
+      background: var(--s2);
+      border: 1px solid var(--b1);
+      border-radius: 8px;
+      min-height: 42px;
+    }
+
+    .csq {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .csq-from {
+      background: #fbbf2430;
+      color: var(--yellow2);
+    }
+
+    .csq-to {
+      background: #38bdf820;
+      color: var(--accent2);
+    }
+
+    .csq-0 {
+      background: #4ade8020;
+      color: var(--green2);
+    }
+
+    .csq-1 {
+      background: #a78bfa20;
+      color: var(--purple2);
+    }
+
+    .csq-2 {
+      background: #fdba7420;
+      color: var(--orange);
+    }
+
+    .csq-3 {
+      background: #f8717120;
+      color: var(--red2);
+    }
+
+    .carr {
+      color: var(--t4);
+      font-size: 11px;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--b1);
+    }
+
+    .leg {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-family: var(--mono);
+      color: var(--t3);
+    }
+
+    .leg-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── SUMMARY CARDS ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: var(--s1);
+      border: 1px solid var(--b1);
+      border-radius: var(--r);
+      padding: 12px 14px;
+    }
+
+    .card-lbl {
+      font-size: 10px;
+      font-family: var(--mono);
+      color: var(--t3);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 5px;
+    }
+
+    .card-val {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: var(--mono);
+      line-height: 1;
+    }
+
+    /* ── TABLE ── */
+    .tbl-wrap {
+      max-height: calc(100vh - 280px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--b2) transparent;
+    }
+
+    .tbl-wrap::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .tbl-wrap::-webkit-scrollbar-thumb {
+      background: var(--b2);
+      border-radius: 2px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    thead th {
+      padding: 9px 12px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--t3);
+      background: var(--s2);
+      border-bottom: 1px solid var(--b1);
+      position: sticky;
+      top: 0;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--b1);
+      cursor: pointer;
+      transition: background 0.08s;
+    }
+
+    tbody tr:hover {
+      background: #ffffff04;
+    }
+
+    tbody tr.active {
+      background: #7dd3fc06;
+      outline: 1px solid #7dd3fc20;
+      outline-offset: -1px;
+    }
+
+    td {
+      padding: 7px 12px;
+      color: var(--t2);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .tg-from {
+      background: #fbbf2415;
+      color: var(--yellow);
+      border: 1px solid #fbbf2430;
+    }
+
+    .tg-to {
+      background: #38bdf815;
+      color: var(--accent);
+      border: 1px solid #38bdf830;
+    }
+
+    .tg-corner {
+      background: #c4b5fd15;
+      color: var(--purple);
+      border: 1px solid #c4b5fd30;
+    }
+
+    .tg-edge {
+      background: #7dd3fc10;
+      color: var(--t2);
+      border: 1px solid var(--b2);
+    }
+
+    .tg-inner {
+      background: #4ade8010;
+      color: var(--green);
+      border: 1px solid #4ade8030;
+    }
+
+    .tg-grid {
+      background: #fde68a10;
+      color: var(--yellow);
+      border: 1px solid #fde68a25;
+      font-size: 9px;
+    }
+
+    .check-pass {
+      color: var(--green2);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .check-fail {
+      color: var(--red2);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .chain-inline {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .csi {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    /* tab */
+    .tab-row {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 14px;
+      background: var(--s2);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--b1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--t3);
+      cursor: pointer;
+      transition: all .1s;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .tab-btn.active {
+      background: var(--b2);
+      color: var(--text);
+    }
+
+    /* notice box */
+    .notice {
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: #fde68a0c;
+      border: 1px solid #fde68a25;
+      font-size: 11px;
+      color: var(--t2);
+      margin-bottom: 14px;
+    }
+
+    .notice span {
+      color: var(--yellow);
+      font-weight: 600;
+    }
+
+    /* no-table note */
+    .no-table {
+      padding: 14px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--t3);
+      font-family: var(--mono);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <div class="hdr">
+      <div class="hdr-left">
+        <h1>calculateMovement — Extended Grid Support</h1>
+        <p>Hàm tổng quát cho mọi lưới cols×rows, kiểm tra tự động với MOVEMENT_TABLE (3×3)</p>
+        <div class="badge-row">
+          <span class="badge badge-blue">2×2</span>
+          <span class="badge badge-green">3×2</span>
+          <span class="badge badge-yellow">4×3</span>
+          <span class="badge badge-purple">4×4</span>
+          <span class="badge badge-green">3×4</span>
+          <span class="badge badge-blue">3×3 (ground truth)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+
+      <!-- LEFT: visualizer -->
+      <div style="position:sticky;top:20px;">
+        <div class="panel">
+          <div class="panel-hdr">
+            <div class="panel-title">
+              <div class="dot" style="background:var(--accent)"></div>Grid Visualizer
+            </div>
+            <div id="grid-label" style="font-family:var(--mono);font-size:10px;color:var(--t3)">—</div>
+          </div>
+          <div class="panel-body">
+
+            <div style="margin-bottom:10px;">
+              <div class="ctrl-lbl" style="margin-bottom:5px;">Chọn lưới</div>
+              <div class="grid-size-row" id="size-btns">
+                <button class="size-btn" data-cols="2" data-rows="2">2×2</button>
+                <button class="size-btn" data-cols="3" data-rows="2">3×2</button>
+                <button class="size-btn active" data-cols="3" data-rows="3">3×3</button>
+                <button class="size-btn" data-cols="4" data-rows="3">4×3</button>
+                <button class="size-btn" data-cols="4" data-rows="4">4×4</button>
+                <button class="size-btn" data-cols="3" data-rows="4">3×4</button>
+              </div>
+            </div>
+
+            <div class="ctrl-row">
+              <div class="ctrl-box">
+                <div class="ctrl-lbl">from (ô trống)</div>
+                <div class="ctrl-val cv-from" id="dsp-from">—</div>
+              </div>
+              <div class="ctrl-box">
+                <div class="ctrl-lbl">to (thẻ di chuyển)</div>
+                <div class="ctrl-val cv-to" id="dsp-to">—</div>
+              </div>
+            </div>
+
+            <div id="grid-vis"></div>
+
+            <div class="formula-box" id="formula-box">
+              <span class="fc">// Click ô để chọn from, sau đó chọn to</span>
+            </div>
+
+            <div class="chain-row" id="chain-row">
+              <span style="font-size:10px;font-family:var(--mono);color:var(--t4)">chuỗi di chuyển sẽ hiện ở đây</span>
+            </div>
+
+            <div class="legend">
+              <div class="leg">
+                <div class="leg-dot" style="background:var(--yellow2)"></div>from
+              </div>
+              <div class="leg">
+                <div class="leg-dot" style="background:var(--accent2)"></div>to
+              </div>
+              <div class="leg">
+                <div class="leg-dot" style="background:var(--green2)"></div>chain[0]
+              </div>
+              <div class="leg">
+                <div class="leg-dot" style="background:var(--purple2)"></div>chain[1]
+              </div>
+              <div class="leg">
+                <div class="leg-dot" style="background:var(--orange)"></div>chain[2]
+              </div>
+              <div class="leg">
+                <div class="leg-dot" style="background:var(--red2)"></div>chain[3]
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: table -->
+      <div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="card-lbl">Total cases</div>
+            <div class="card-val" id="c-total" style="color:var(--accent)">—</div>
+          </div>
+          <div class="card">
+            <div class="card-lbl">Pass ✓</div>
+            <div class="card-val" id="c-pass" style="color:var(--green2)">—</div>
+          </div>
+          <div class="card">
+            <div class="card-lbl">Fail ✗</div>
+            <div class="card-val" id="c-fail" style="color:var(--red2)">—</div>
+          </div>
+          <div class="card">
+            <div class="card-lbl">Accuracy</div>
+            <div class="card-val" id="c-acc" style="color:var(--green2)">—</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-hdr">
+            <div class="panel-title">
+              <div class="dot" style="background:var(--green2)"></div>Bảng kiểm tra
+            </div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--t3)" id="grid-mode-lbl">mode: 3×3 + ground
+              truth</div>
+          </div>
+          <div class="panel-body" style="padding:12px 0 0;">
+
+            <div style="padding:0 12px 10px;">
+              <div class="tab-row">
+                <button class="tab-btn active" id="tab-all" onclick="setTab('all')">Tất cả</button>
+                <button class="tab-btn" id="tab-corner" onclick="setTab('corner')">Corner</button>
+                <button class="tab-btn" id="tab-edge" onclick="setTab('edge')">Edge</button>
+                <button class="tab-btn" id="tab-inner" onclick="setTab('inner')">Inner</button>
+                <button class="tab-btn" id="tab-fail" onclick="setTab('fail')">Fail only</button>
+              </div>
+            </div>
+
+            <div id="table-notice" class="notice" style="margin:0 12px 10px;display:none">
+              <span>Lưu ý:</span> Lưới này không có MOVEMENT_TABLE ground truth.
+              Cột "Kết quả" kiểm tra tính nhất quán nội tại (chain in-bounds + first là lân cận hợp lệ của from).
+            </div>
+
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>grid</th>
+                    <th>from</th>
+                    <th>type</th>
+                    <th>to</th>
+                    <th>to type</th>
+                    <th>chuỗi di chuyển</th>
+                    <th>chain length</th>
+                    <th>công thức</th>
+                    <th>kết quả</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+              <div id="no-rows" class="no-table" style="display:none">Không có case nào trong filter này</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // =============================================================
+    //  MOVEMENT TABLE 3×3 — ground truth
+    // =============================================================
+    const MOVEMENT_TABLE_3x3 = {
+      0: { 3: { chain: [1, 2] }, 1: { chain: [3, 6] } },
+      2: { 5: { chain: [1, 0] }, 1: { chain: [5, 8] } },
+      6: { 3: { chain: [7, 8] }, 7: { chain: [3, 0] } },
+      8: { 5: { chain: [7, 6] }, 7: { chain: [5, 2] } },
+      4: { 1: { chain: [7] }, 3: { chain: [5] }, 5: { chain: [3] }, 7: { chain: [1] } },
+      5: { 2: { chain: [8] }, 8: { chain: [2] }, 4: { chain: [2] } },
+      3: { 0: { chain: [6] }, 4: { chain: [6] }, 6: { chain: [0] } },
+      1: { 0: { chain: [2] }, 2: { chain: [0] }, 4: { chain: [0] } },
+      7: { 6: { chain: [8] }, 4: { chain: [8] }, 8: { chain: [6] } },
+    };
+
+    // =============================================================
+    //  CORE ALGORITHM
+    // =============================================================
+    function getPos(idx, cols) {
+      return { row: Math.floor(idx / cols), col: idx % cols };
+    }
+
+    function toIdx(row, col, cols) {
+      return row * cols + col;
+    }
+
+    function isInBounds(row, col, cols, rows) {
+      return row >= 0 && row < rows && col >= 0 && col < cols;
+    }
+
+    function getAdjacentPositions(idx, cols, rows) {
+      const { row, col } = getPos(idx, cols);
+      const adj = [];
+      if (row > 0) adj.push(toIdx(row - 1, col, cols));
+      if (row < rows - 1) adj.push(toIdx(row + 1, col, cols));
+      if (col > 0) adj.push(toIdx(row, col - 1, cols));
+      if (col < cols - 1) adj.push(toIdx(row, col + 1, cols));
+      return adj;
+    }
+
+    function getNodeType(idx, cols, rows) {
+      const { row, col } = getPos(idx, cols);
+      const onRowEdge = row === 0 || row === rows - 1;
+      const onColEdge = col === 0 || col === cols - 1;
+      if (onRowEdge && onColEdge) return 'corner';
+      if (onRowEdge || onColEdge) return 'edge';
+      return 'inner';
+    }
+
+    /**
+     * Hàm tính toán tổng quát cho mọi lưới cols×rows.
+     *
+     * Quy tắc:
+     *   - corner:  first = lân cận còn lại của from (adj \ {to})
+     *   - inner:   first = 2*from - to  (đối diện thẳng)
+     *   - edge:    first = 2*from - to  nếu in-bounds và là adj hợp lệ
+     *              ngược lại (to là inner): xoay 90° CW từ hướng di chuyển
+     *
+     * Chain:
+     *   Từ first, tiếp tục đi theo hướng (first - from) cho đến khi
+     *   out-of-bounds.
+     *
+     * @param {number} from
+     * @param {number} to
+     * @param {number} cols
+     * @param {number} rows
+     * @returns {{ first: number, chain: number[], formulaUsed: string, movement: Array }}
+     */
+    function calculateMovementGeneral(from, to, cols, rows) {
+      const fromPos = getPos(from, cols);
+      const toPos = getPos(to, cols);
+      const nodeType = getNodeType(from, cols, rows);
+
+      // Hướng di chuyển from→to
+      const drow = toPos.row - fromPos.row;
+      const dcol = toPos.col - fromPos.col;
+
+      let first;
+      let formulaUsed;
+
+      if (nodeType === 'corner') {
+        // Góc: lấy lân cận còn lại (không phải to)
+        const adj = getAdjacentPositions(from, cols, rows);
+        first = adj.find(p => p !== to);
+        formulaUsed = 'corner: adj(from) \\ {to}';
+
+      } else {
+        // Thử công thức chung: đối diện với to qua from
+        const candidateRow = fromPos.row - drow;
+        const candidateCol = fromPos.col - dcol;
+
+        if (isInBounds(candidateRow, candidateCol, cols, rows)) {
+          first = toIdx(candidateRow, candidateCol, cols);
+          formulaUsed = 'general: 2×from − to';
+        } else {
+          // out-of-bounds → edge nhìn vào trong: xoay 90° CW
+          // CW rotation: (drow, dcol) → (dcol, -drow)
+          const r2 = dcol;
+          const c2 = -drow;
+          const candidateRow2 = fromPos.row + r2;
+          const candidateCol2 = fromPos.col + c2;
+          if (isInBounds(candidateRow2, candidateCol2, cols, rows)) {
+            first = toIdx(candidateRow2, candidateCol2, cols);
+            formulaUsed = 'edge→inner: CW rotate(dir)';
+          } else {
+            // thử CCW: (drow, dcol) → (-dcol, drow)
+            const r3 = -dcol;
+            const c3 = drow;
+            const candidateRow3 = fromPos.row + r3;
+            const candidateCol3 = fromPos.col + c3;
+            if (isInBounds(candidateRow3, candidateCol3, cols, rows)) {
+              first = toIdx(candidateRow3, candidateCol3, cols);
+              formulaUsed = 'edge→inner: CCW rotate(dir)';
+            } else {
+              first = null;
+              formulaUsed = 'no valid first found';
+            }
+          }
+        }
+      }
+
+      // Build chain: từ first tiếp tục theo hướng from → first cho đến hết lưới
+      const chain = [];
+      if (first !== null) {
+        const firstPos = getPos(first, cols);
+        // Hướng chain = from → first (tiếp tục cùng chiều)
+        const chainDrow = firstPos.row - fromPos.row;
+        const chainDcol = firstPos.col - fromPos.col;
+
+        let cur = first;
+        while (true) {
+          chain.push(cur);
+          const curPos = getPos(cur, cols);
+          const nextRow = curPos.row + chainDrow;
+          const nextCol = curPos.col + chainDcol;
+          if (!isInBounds(nextRow, nextCol, cols, rows)) break;
+          cur = toIdx(nextRow, nextCol, cols);
+        }
+      }
+
+      // Build movement sequence: chain[last]→...→chain[0]→from←to
+      const movement = [];
+      movement.push({ from, to });
+      if (chain.length > 0) {
+        movement.push({ from: chain[0], to: from });
+        for (let i = 1; i < chain.length; i++) {
+          movement.push({ from: chain[i], to: chain[i - 1] });
+        }
+      }
+
+      return { first, chain, formulaUsed, movement };
+    }
+
+    // =============================================================
+    //  BUILD ALL CASES cho mọi lưới
+    // =============================================================
+    const GRID_CONFIGS = [
+      { cols: 2, rows: 2, label: '2×2' },
+      { cols: 3, rows: 2, label: '3×2' },
+      { cols: 3, rows: 3, label: '3×3' },
+      { cols: 4, rows: 3, label: '4×3' },
+      { cols: 4, rows: 4, label: '4×4' },
+      { cols: 3, rows: 4, label: '3×4' },
+    ];
+
+    function buildCasesForGrid(cols, rows) {
+      const cases = [];
+      const total = cols * rows;
+      for (let from = 0; from < total; from++) {
+        const adj = getAdjacentPositions(from, cols, rows);
+        for (const to of adj) {
+          const calcResult = calculateMovementGeneral(from, to, cols, rows);
+          let pass;
+          let groundTruth = null;
+
+          if (cols === 3 && rows === 3 && MOVEMENT_TABLE_3x3[from] && MOVEMENT_TABLE_3x3[from][to]) {
+            // Có ground truth
+            groundTruth = MOVEMENT_TABLE_3x3[from][to].chain;
+            const calcChain = calcResult.chain;
+            pass = JSON.stringify(groundTruth) === JSON.stringify(calcChain);
+          } else {
+            // Kiểm tra tính nhất quán nội tại:
+            // 1. first phải là lân cận hợp lệ của from
+            // 2. tất cả chain items phải in-bounds
+            // 3. chain không rỗng
+            const adjFrom = getAdjacentPositions(from, cols, rows);
+            const firstIsAdj = calcResult.first !== null && adjFrom.includes(calcResult.first);
+            const chainInBounds = calcResult.chain.every(c => c >= 0 && c < cols * rows);
+            pass = firstIsAdj && chainInBounds && calcResult.chain.length > 0;
+          }
+
+          cases.push({
+            cols, rows, from, to,
+            fromType: getNodeType(from, cols, rows),
+            toType: getNodeType(to, cols, rows),
+            calcResult, groundTruth, pass,
+          });
+        }
+      }
+      return cases;
+    }
+
+    // Build all
+    const allCasesByGrid = {};
+    for (const g of GRID_CONFIGS) {
+      allCasesByGrid[g.label] = buildCasesForGrid(g.cols, g.rows);
+    }
+
+    // =============================================================
+    //  STATE
+    // =============================================================
+    let currentGrid = GRID_CONFIGS[2]; // default 3×3
+    let selectedFrom = null;
+    let activeRowIdx = null;
+    let currentTab = 'all';
+    let currentCases = [];
+
+    // =============================================================
+    //  RENDER TABLE
+    // =============================================================
+    const CHAIN_COLORS = ['csq-0', 'csq-1', 'csq-2', 'csq-3'];
+    const CHAIN_BG = ['#4ade8020', '#a78bfa20', '#fdba7420', '#f8717120'];
+    const CHAIN_TC = ['var(--green2)', 'var(--purple2)', 'var(--orange)', 'var(--red2)'];
+
+    function chainInlineHTML(from, to, chain) {
+      let h = `<div class="chain-inline">`;
+      for (let i = chain.length - 1; i >= 0; i--) {
+        h += `<span class="csi ${CHAIN_COLORS[i]}">${chain[i]}</span>`;
+        h += `<span class="carr">→</span>`;
+      }
+      h += `<span class="csi csq-from">${from}</span>`;
+      h += `<span class="carr">←</span>`;
+      h += `<span class="csi csq-to">${to}</span>`;
+      h += `</div>`;
+      return h;
+    }
+
+    function getFilteredCases() {
+      const all = allCasesByGrid[currentGrid.label] || [];
+      if (currentTab === 'all') return all;
+      if (currentTab === 'corner') return all.filter(c => c.fromType === 'corner');
+      if (currentTab === 'edge') return all.filter(c => c.fromType === 'edge');
+      if (currentTab === 'inner') return all.filter(c => c.fromType === 'inner');
+      if (currentTab === 'fail') return all.filter(c => !c.pass);
+      return all;
+    }
+
+    function renderTable() {
+      const cases = getFilteredCases();
+      currentCases = cases;
+
+      // update summary with ALL cases (not filtered)
+      const all = allCasesByGrid[currentGrid.label] || [];
+      const total = all.length;
+      const passed = all.filter(c => c.pass).length;
+      const failed = total - passed;
+      document.getElementById('c-total').textContent = total;
+      document.getElementById('c-pass').textContent = passed;
+      document.getElementById('c-fail').textContent = failed;
+      document.getElementById('c-acc').textContent = total ? ((passed / total) * 100).toFixed(0) + '%' : '—';
+      document.getElementById('c-fail').style.color = failed > 0 ? 'var(--red2)' : 'var(--green2)';
+
+      const has33 = currentGrid.cols === 3 && currentGrid.rows === 3;
+      document.getElementById('table-notice').style.display = has33 ? 'none' : 'block';
+      document.getElementById('grid-mode-lbl').textContent =
+        `mode: ${currentGrid.label}${has33 ? ' + ground truth' : ' (consistency check)'}`;
+
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+
+      if (cases.length === 0) {
+        document.getElementById('no-rows').style.display = 'flex';
+        return;
+      }
+      document.getElementById('no-rows').style.display = 'none';
+
+      cases.forEach((c, i) => {
+        const tr = document.createElement('tr');
+        tr.dataset.idx = i;
+
+        const typeTag = (t) => {
+          if (t === 'corner') return `<span class="tag tg-corner">corner</span>`;
+          if (t === 'inner') return `<span class="tag tg-inner">inner</span>`;
+          return `<span class="tag tg-edge">edge</span>`;
+        };
+
+        const check = c.pass
+          ? `<span class="check-pass">✓ pass</span>`
+          : `<span class="check-fail">✗ FAIL</span>`;
+
+        tr.innerHTML = `
+      <td><span class="tag tg-grid">${c.cols}×${c.rows}</span></td>
+      <td><span class="tag tg-from">${c.from}</span></td>
+      <td>${typeTag(c.fromType)}</td>
+      <td><span class="tag tg-to">${c.to}</span></td>
+      <td>${typeTag(c.toType)}</td>
+      <td>${chainInlineHTML(c.from, c.to, c.calcResult.chain)}</td>
+      <td style="text-align:center;color:var(--t2)">${c.calcResult.chain.length}</td>
+      <td style="color:var(--t3);font-size:10px">${c.calcResult.formulaUsed}</td>
+      <td>${check}</td>
+    `;
+        tr.addEventListener('click', () => selectCase(i));
+        tbody.appendChild(tr);
+      });
+    }
+
+    // =============================================================
+    //  GRID VISUALIZER
+    // =============================================================
+    function renderGridVis() {
+      const { cols, rows } = currentGrid;
+      const vis = document.getElementById('grid-vis');
+      vis.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      vis.innerHTML = '';
+      document.getElementById('grid-label').textContent = `${cols}×${rows}`;
+
+      for (let i = 0; i < cols * rows; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.idx = i;
+        const type = getNodeType(i, cols, rows);
+        const typeShort = type === 'corner' ? 'C' : type === 'edge' ? 'E' : 'I';
+        cell.innerHTML = `<div class="ci">${i}</div><div class="ct">${typeShort}</div>`;
+        cell.addEventListener('click', () => onCellClick(i));
+        vis.appendChild(cell);
+      }
+    }
+
+    function updateCellStyles(activeCase) {
+      const cells = document.getElementById('grid-vis').querySelectorAll('.cell');
+      cells.forEach(c => {
+        c.className = 'cell';
+        const b = c.querySelector('.role-badge');
+        if (b) b.remove();
+      });
+
+      if (!activeCase) {
+        if (selectedFrom !== null) {
+          cells[selectedFrom].classList.add('is-from');
+          addBadge(cells[selectedFrom], 'FROM', 'rb-from');
+          const adj = getAdjacentPositions(selectedFrom, currentGrid.cols, currentGrid.rows);
+          adj.forEach(a => cells[a].classList.add('is-to'));
+        }
+        return;
+      }
+
+      const { from, to, calcResult } = activeCase;
+      cells[from].classList.add('is-from');
+      addBadge(cells[from], 'FROM', 'rb-from');
+      cells[to].classList.add('is-to');
+      addBadge(cells[to], 'TO', 'rb-to');
+
+      const chainClasses = ['is-chain-0', 'is-chain-1', 'is-chain-2', 'is-chain-3'];
+      const chainBadges = ['rb-c0', 'rb-c1', 'rb-c2', 'rb-c3'];
+      calcResult.chain.forEach((ci, i) => {
+        if (i < chainClasses.length && ci >= 0 && ci < cells.length) {
+          cells[ci].classList.add(chainClasses[i]);
+          addBadge(cells[ci], `#${i + 1}`, chainBadges[i]);
+        }
+      });
+    }
+
+    function addBadge(cell, text, cls) {
+      const b = document.createElement('span');
+      b.className = `role-badge ${cls}`;
+      b.textContent = text;
+      cell.appendChild(b);
+    }
+
+    function onCellClick(idx) {
+      const { cols, rows } = currentGrid;
+      if (selectedFrom === null) {
+        selectedFrom = idx;
+        document.getElementById('dsp-from').textContent = idx;
+        document.getElementById('dsp-to').textContent = '—';
+        updateCellStyles(null);
+        document.getElementById('formula-box').innerHTML = `<span class="fc">// from = ${idx} (${getNodeType(idx, cols, rows)})</span><br><span class="fc">// Chọn ô to liền kề...</span>`;
+        document.getElementById('chain-row').innerHTML = '<span style="font-size:10px;font-family:var(--mono);color:var(--t4)">chờ chọn to...</span>';
+        clearActiveRow();
+        return;
+      }
+
+      const adj = getAdjacentPositions(selectedFrom, cols, rows);
+      if (!adj.includes(idx)) {
+        // Reset và chọn from mới
+        selectedFrom = idx;
+        document.getElementById('dsp-from').textContent = idx;
+        document.getElementById('dsp-to').textContent = '—';
+        updateCellStyles(null);
+        clearActiveRow();
+        return;
+      }
+
+      document.getElementById('dsp-to').textContent = idx;
+      // Find in table
+      const caseIdx = currentCases.findIndex(c => c.from === selectedFrom && c.to === idx);
+      if (caseIdx >= 0) {
+        selectCase(caseIdx);
+      } else {
+        // Compute directly
+        const cr = calculateMovementGeneral(selectedFrom, idx, cols, rows);
+        const dummy = {
+          cols, rows, from: selectedFrom, to: idx,
+          fromType: getNodeType(selectedFrom, cols, rows),
+          toType: getNodeType(idx, cols, rows),
+          calcResult: cr, pass: true
+        };
+        updateCellStyles(dummy);
+        renderFormulaBox(dummy);
+        renderChainRow(dummy);
+      }
+
+      selectedFrom = null;
+    }
+
+    function selectCase(idx) {
+      const c = currentCases[idx];
+      updateCellStyles(c);
+      renderFormulaBox(c);
+      renderChainRow(c);
+      document.getElementById('dsp-from').textContent = c.from;
+      document.getElementById('dsp-to').textContent = c.to;
+
+      clearActiveRow();
+      const rows = document.getElementById('tbody').querySelectorAll('tr');
+      if (rows[idx]) {
+        rows[idx].classList.add('active');
+        rows[idx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+      activeRowIdx = idx;
+    }
+
+    function clearActiveRow() {
+      document.getElementById('tbody').querySelectorAll('tr.active').forEach(r => r.classList.remove('active'));
+    }
+
+    function renderFormulaBox(c) {
+      const { cols, rows } = currentGrid;
+      const { from, to, fromType, toType, calcResult } = c;
+      const { formulaUsed, chain } = calcResult;
+      const fromPos = getPos(from, cols);
+      const toPos = getPos(to, cols);
+      const drow = toPos.row - fromPos.row;
+      const dcol = toPos.col - fromPos.col;
+
+      let lines = [];
+      lines.push(`<span class="fc">// from=${from} (${fromType}), to=${to} (${toType}), lưới ${cols}×${rows}</span>`);
+
+      if (fromType === 'corner') {
+        const adj = getAdjacentPositions(from, cols, rows);
+        lines.push(`<span class="fk">const</span> adj = <span class="fc">[${adj.join(', ')}]</span>`);
+        lines.push(`first = adj.<span class="ff">find</span>(p => p !== <span class="fn">${to}</span>) <span class="fo">= ${chain[0]}</span>`);
+        if (chain.length > 1) {
+          for (let i = 1; i < chain.length; i++) {
+            lines.push(`chain[${i}] = 2×<span class="fn">${chain[i - 1]}</span> − <span class="fn">${i === 1 ? from : chain[i - 2]}</span> <span class="fo">= ${chain[i]}</span>`);
+          }
+        }
+      } else if (formulaUsed.includes('CW') || formulaUsed.includes('CCW')) {
+        lines.push(`dir = (drow=<span class="fn">${drow}</span>, dcol=<span class="fn">${dcol}</span>)`);
+        const tag = formulaUsed.includes('CW') ? 'CW' : 'CCW';
+        lines.push(`<span class="fc">// ${tag} rotate → first out-of-bounds via 2×from−to</span>`);
+        const r2 = formulaUsed.includes('CW') ? dcol : -dcol;
+        const c2 = formulaUsed.includes('CW') ? -drow : drow;
+        lines.push(`rotated = (<span class="fn">${r2}</span>, <span class="fn">${c2}</span>)`);
+        lines.push(`first = from + r×cols + c = <span class="fn">${from}</span> + <span class="fn">${r2}</span>×<span class="fn">${cols}</span> + <span class="fn">${c2}</span> <span class="fo">= ${chain[0]}</span>`);
+      } else {
+        lines.push(`<span class="fc">// Công thức chung: đối diện với to qua from</span>`);
+        lines.push(`first = 2 × from − to = 2×<span class="fn">${from}</span> − <span class="fn">${to}</span> <span class="fo">= ${chain[0]}</span>`);
+        if (chain.length > 1) {
+          for (let i = 1; i < chain.length; i++) {
+            lines.push(`<span class="fc">// chain tiếp tục cùng hướng</span>`);
+            lines.push(`chain[${i}] = 2×<span class="fn">${chain[i - 1]}</span> − <span class="fn">${i === 1 ? from : chain[i - 2]}</span> <span class="fo">= ${chain[i]}</span>`);
+          }
+        }
+      }
+
+      if (c.groundTruth) {
+        lines.push(`<span class="fc">// ground truth: [${c.groundTruth.join(', ')}] → calc: [${chain.join(', ')}] ${c.pass ? '✓' : '✗'}</span>`);
+      }
+
+      document.getElementById('formula-box').innerHTML = lines.map(l => `<div>${l}</div>`).join('');
+    }
+
+    function renderChainRow(c) {
+      const { from, to, calcResult } = c;
+      const { chain } = calcResult;
+      const cr = document.getElementById('chain-row');
+
+      let h = '';
+      for (let i = chain.length - 1; i >= 0; i--) {
+        const cc = CHAIN_COLORS[Math.min(i, 3)];
+        h += `<span class="csq ${cc}">${chain[i]}</span>`;
+        h += `<span class="carr">→</span>`;
+      }
+      h += `<span class="csq csq-from">${from}</span>`;
+      h += `<span class="carr">←</span>`;
+      h += `<span class="csq csq-to">${to}</span>`;
+
+      cr.innerHTML = h;
+    }
+
+    // =============================================================
+    //  GRID SIZE BUTTONS
+    // =============================================================
+    document.getElementById('size-btns').addEventListener('click', e => {
+      const btn = e.target.closest('.size-btn');
+      if (!btn) return;
+      const cols = parseInt(btn.dataset.cols);
+      const rows = parseInt(btn.dataset.rows);
+      currentGrid = GRID_CONFIGS.find(g => g.cols === cols && g.rows === rows);
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedFrom = null;
+      activeRowIdx = null;
+      renderGridVis();
+      updateCellStyles(null);
+      document.getElementById('dsp-from').textContent = '—';
+      document.getElementById('dsp-to').textContent = '—';
+      document.getElementById('formula-box').innerHTML = `<span class="fc">// Lưới ${cols}×${rows} — Click ô để bắt đầu</span>`;
+      document.getElementById('chain-row').innerHTML = '<span style="font-size:10px;font-family:var(--mono);color:var(--t4)">chuỗi di chuyển sẽ hiện ở đây</span>';
+      renderTable();
+    });
+
+    // =============================================================
+    //  TABS
+    // =============================================================
+    function setTab(tab) {
+      currentTab = tab;
+      ['all', 'corner', 'edge', 'inner', 'fail'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+      });
+      renderTable();
+    }
+
+    // =============================================================
+    //  INIT
+    // =============================================================
+    renderGridVis();
+    renderTable();
+  </script>
+</body>
+
+</html>

@@ -1,21 +1,23 @@
 [
   {
     "stageId": "dungeon_abyss_chamber",
-    "name": "Abyss Chamber",
+    "name": "map.dungeon_abyss_chamber.name",
     "typeRatios": {
-      "enemies": 10,
-      "food": 13,
-      "weapons": 20,
-      "coins": 5,
-      "traps": 17,
-      "treasures": 30,
-      "bombs": 5
+      "enemies": 12,
+      "food": 19,
+      "weapons": 22,
+      "coins": 8,
+      "traps": 18,
+      "treasures": 20,
+      "bombs": 1
     },
     "availableCards": {
       "enemies": [
         "AnemoSamachurl",
         "CryoShooter",
-        "Crackling"
+        "Crackling",
+        "ElectroShooter",
+        "Shooter"
       ],
       "food": [
         "MystiqueSoup",
@@ -23,23 +25,173 @@
         "Macarons"
       ],
       "weapons": [
-        "SwordForest",
-        "SwordSplendor"
+        "SwordSteampunk"
       ],
       "coins": [
         "HydroFragment"
       ],
       "traps": [
         "Quicksand",
+        "AbyssCall",
         "BreatheFire"
       ],
       "treasures": [
         "GoldMine",
-        "Chest"
+        "Chest",
+        "Bribery"
       ],
       "bombs": [
         "Explosive"
       ]
-    }
+    },
+    "map_background": "/assets/images/ui/background/BideBao.webp"
+  },
+  {
+    "stageId": "Chuiliu_Swamp",
+    "name": "map.Chuiliu_Swamp.name",
+    "typeRatios": {
+      "enemies": 30,
+      "food": 15,
+      "weapons": 30,
+      "coins": 10,
+      "traps": 5,
+      "treasures": 5,
+      "bombs": 5
+    },
+    "availableCards": {
+      "enemies": [
+        "Blazing",
+        "Crackling",
+        "DendroSamachurl",
+        "ElectroSamachurl",
+        "AnemoSamachurl",
+        "Berserker",
+        "CryoShooter",
+        "HilichurlFighter",
+        "ElectroShooter",
+        "GeoSamachurl",
+        "HydroSamachurl",
+        "Shooter"
+      ],
+      "food": [
+        "RoastChicken",
+        "Pizza",
+        "Macarons",
+        "MystiqueSoup"
+      ],
+      "weapons": [
+        "SwordSplendor",
+        "SwordSteampunk"
+      ],
+      "coins": [
+        "HydroFragment"
+      ],
+      "traps": [
+        "AbyssCall",
+        "BreatheFire"
+      ],
+      "treasures": [
+        "Chest",
+        "Bribery"
+      ],
+      "bombs": []
+    },
+    "map_background": "/assets/images/ui/background/Chuiliu.webp"
+  },
+  {
+    "stageId": "Howling_cliff",
+    "name": "map.Howling_cliff.name",
+    "typeRatios": {
+      "enemies": 30,
+      "food": 15,
+      "weapons": 20,
+      "coins": 20,
+      "traps": 5,
+      "treasures": 5,
+      "bombs": 5
+    },
+    "availableCards": {
+      "enemies": [
+        "AnemoSamachurl",
+        "DendroSamachurl",
+        "GeoSamachurl",
+        "HilichurlFighter",
+        "Crackling",
+        "Blazing",
+        "Lawachurl"
+      ],
+      "food": [
+        "RoastChicken"
+      ],
+      "weapons": [
+        "SwordSteampunk",
+        "SwordTraveler",
+        "SwordSkyward",
+        "SwordSacrificial"
+      ],
+      "coins": [
+        "AnemoFragment",
+        "GeoFragment"
+      ],
+      "traps": [
+        "AbyssCall",
+        "BreatheFire"
+      ],
+      "treasures": [
+        "Bribery",
+        "Chest",
+        "GoldMine"
+      ],
+      "bombs": []
+    },
+    "map_background": "/assets/images/ui/background/XuanmuRen.webp"
+  },
+  {
+    "stageId": "babel_tower",
+    "name": "map.babel_tower.name",
+    "typeRatios": {
+      "enemies": 20,
+      "food": 20,
+      "weapons": 39,
+      "coins": 10,
+      "traps": 5,
+      "treasures": 5,
+      "bombs": 1
+    },
+    "availableCards": {
+      "enemies": [
+        "Berserker",
+        "Blazing",
+        "Crackling",
+        "ElectroSamachurl",
+        "HilichurlFighter"
+      ],
+      "food": [
+        "RoastChicken",
+        "Pizza"
+      ],
+      "weapons": [
+        "CatalystRemembrance",
+        "CatalystSacrificial",
+        "CatalystSkyward",
+        "CatalystSteampunk",
+        "CatalystForest",
+        "CatalystDreams",
+        "CatalystMagicGuide"
+      ],
+      "coins": [
+        "GeoFragment",
+        "PyroFragment"
+      ],
+      "traps": [
+        "AbyssCall"
+      ],
+      "treasures": [
+        "Chest",
+        "Bribery"
+      ],
+      "bombs": []
+    },
+    "map_background": "/assets/images/ui/background/Fankang.webp"
   }
 ]

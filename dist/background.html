@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Falling Cards</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #6a9befa3;
+        }
+
+        #scene {
+            position: fixed;
+            inset: 0;
+            perspective: 1200px;
+            overflow: hidden;
+        }
+
+        .wrapper {
+            position: absolute;
+            top: 0;
+            transform-style: preserve-3d;
+        }
+
+        .card {
+            aspect-ratio: 7/12;
+            transform-style: preserve-3d;
+            animation: fall linear forwards;
+        }
+
+        .inner {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+            animation: flip linear infinite;
+        }
+
+        .face {
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            backface-visibility: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .back {
+            transform: rotateY(180deg);
+        }
+
+        .depth-near {
+            filter: blur(0px);
+            opacity: 1;
+        }
+
+        .depth-mid {
+            filter: blur(1px);
+            opacity: 0.85;
+        }
+
+        .depth-far {
+            filter: blur(2.5px);
+            opacity: 0.6;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-40vh);
+            }
+
+            to {
+                transform: translateY(120vh);
+            }
+        }
+
+        @keyframes flip {
+            0% {
+                transform: rotateY(0deg);
+            }
+
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="scene"></div>
+
+    <script>
+        const scene = document.getElementById("scene")
+
+        const images = [
+            "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/eula.webp",
+            "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/furina.webp",
+            "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/mavuika.webp",
+            "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/zhongli.webp",
+            "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/raiden.webp",
+            "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/venti.webp",
+            "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/nahida.webp"
+
+
+        ]
+
+        const backCover = "https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/empty.webp"
+
+        const depthLevels = [
+            { z: 200, scale: 1, class: "depth-near", width: 140 },
+            { z: -100, scale: 0.65, class: "depth-mid", width: 90 },
+            { z: -400, scale: 0.35, class: "depth-far", width: 50 }
+        ]
+
+        const LANES = 20
+        const laneWidth = window.innerWidth / LANES
+
+        const laneCooldown = [
+            new Array(LANES).fill(0),
+            new Array(LANES).fill(0),
+            new Array(LANES).fill(0)
+        ]
+
+        const activeX = []
+        const MIN_DISTANCE = 120
+
+        const rand = (a, b) => Math.random() * (b - a) + a
+
+        function spawnCard() {
+            const depthIndex = Math.floor(Math.random() * 3)
+            const lanes = laneCooldown[depthIndex]
+            const lane = Math.floor(Math.random() * LANES)
+
+            if (Date.now() < lanes[lane]) return
+
+            const conf = depthLevels[depthIndex]
+            const x = lane * laneWidth + laneWidth / 2 - conf.width / 2
+
+            const tooClose = activeX.some(ax => Math.abs(ax - x) < MIN_DISTANCE)
+            if (tooClose) return
+
+            lanes[lane] = Date.now() + rand(4000, 8000)
+
+            const wrapper = document.createElement("div")
+            wrapper.className = "wrapper " + conf.class
+            wrapper.style.left = x + "px"
+            wrapper.style.transform = `translateZ(${conf.z}px) scale(${conf.scale})`
+
+            const card = document.createElement("div")
+            card.className = "card"
+            card.style.width = conf.width + "px"
+
+            const fall = rand(10, 18)
+            card.style.animationDuration = fall + "s"
+
+            const inner = document.createElement("div")
+            inner.className = "inner"
+            inner.style.animationDuration = rand(30, 50) + "s"
+
+            const front = document.createElement("div")
+            front.className = "face"
+
+            const back = document.createElement("div")
+            back.className = "face back"
+
+            const fimg = document.createElement("img")
+            fimg.src = images[Math.floor(Math.random() * images.length)]
+
+            const bimg = document.createElement("img")
+            bimg.src = backCover
+
+            front.appendChild(fimg)
+            back.appendChild(bimg)
+            inner.append(front, back)
+            card.appendChild(inner)
+            wrapper.appendChild(card)
+            scene.appendChild(wrapper)
+
+            activeX.push(x)
+
+            setTimeout(() => {
+                wrapper.remove()
+                const idx = activeX.indexOf(x)
+                if (idx !== -1) activeX.splice(idx, 1)
+            }, fall * 1000)
+        }
+
+        setInterval(spawnCard, 200)
+    </script>
+
+</body>
+
+</html>

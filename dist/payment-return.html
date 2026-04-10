@@ -1,76 +1,241 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kết quả thanh toán</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      font-family: "Segoe UI", Arial, sans-serif;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #fff;
       padding: 20px;
-    }
-    .box {
-      background: rgba(255,255,255,0.08);
-      border: 2px solid #95245b;
-      border-radius: 12px;
-      padding: 32px;
-      text-align: center;
-      max-width: 400px;
-    }
-    h1 { font-size: 24px; margin-bottom: 16px; color: #ffd700; }
-    p { font-size: 16px; margin-bottom: 24px; color: #e0e0e0; }
-    .close-btn {
-      background: #95245b;
       color: #fff;
-      border: none;
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
+      position: relative;
     }
-    .close-btn:hover { background: #b52d6b; }
+
+    /* ── Static background (máy yếu) ── */
+    .bg-static {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.95)),
+        url("/mailBg.webp") center / cover no-repeat;
+    }
+
+    /* ── Dynamic background (máy mạnh) ── */
+    .bg-dynamic {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .bg-dynamic iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .bg-dynamic::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.95));
+      pointer-events: none;
+    }
+
+    /* ── Box ── */
+    .box {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      padding: 42px 36px;
+
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(14px);
+
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      border-radius: 18px;
+
+      text-align: center;
+
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.55),
+        inset 0 0 25px rgba(59, 130, 246, 0.15);
+    }
+
+    .icon {
+      font-size: 60px;
+      margin-bottom: 18px;
+      color: #60a5fa;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 14px;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+
+    p {
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 28px;
+      color: #e2e8f0;
+    }
+
+    .close-btn {
+      background: linear-gradient(135deg, #2563eb, #1e3a8a);
+      border: none;
+      color: white;
+
+      padding: 14px 30px;
+      font-size: 16px;
+      font-weight: 600;
+
+      border-radius: 10px;
+      cursor: pointer;
+
+      transition: all .25s ease;
+    }
+
+    .close-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
+    }
+
+    .close-btn:active {
+      transform: scale(.96);
+    }
   </style>
 </head>
+
 <body>
+
+  <!-- Background được inject bằng JS -->
+  <div id="bg-root"></div>
+
   <div class="box">
-    <h1 id="title">Đang xử lý...</h1>
-    <p id="msg">Cửa sổ này sẽ tự đóng.</p>
-    <button class="close-btn" onclick="window.close()">Đóng cửa sổ</button>
+    <div id="icon" class="icon">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+    </div>
+
+    <h1 id="title">Đang xử lý thanh toán...</h1>
+
+    <p id="msg">
+      Hệ thống đang xác nhận giao dịch của bạn.<br>
+      Vui lòng chờ trong giây lát. Cửa sổ này sẽ tự đóng sau khi hoàn tất.
+    </p>
+
+    <button class="close-btn" onclick="window.close()">
+      Đóng cửa sổ
+    </button>
   </div>
+
   <script>
-    (function() {
+    /* ── 1. Kiểm tra cấu hình máy & chọn background ── */
+    (function () {
+      var isLowEnd =
+        (navigator.hardwareConcurrency || 99) <= 4 ||
+        (navigator.deviceMemory || 99) <= 4;
+
+      var bgRoot = document.getElementById("bg-root");
+
+      if (isLowEnd) {
+        var div = document.createElement("div");
+        div.className = "bg-static";
+        bgRoot.appendChild(div);
+      } else {
+        var wrap = document.createElement("div");
+        wrap.className = "bg-dynamic";
+
+        var iframe = document.createElement("iframe");
+        iframe.src = "/background.html";
+        iframe.setAttribute("loading", "eager");
+        iframe.setAttribute("aria-hidden", "true");
+        iframe.setAttribute("tabindex", "-1");
+
+        wrap.appendChild(iframe);
+        bgRoot.appendChild(wrap);
+      }
+    })();
+
+    /* ── 2. Xử lý kết quả thanh toán ── */
+    (function () {
+
       const params = new URLSearchParams(location.search);
       const orderCode = params.get('orderCode');
       const cancel = params.get('cancel');
+
       const title = document.getElementById('title');
       const msg = document.getElementById('msg');
+      const icon = document.getElementById('icon');
 
       if (cancel === '1') {
-        title.textContent = 'Đã hủy thanh toán';
-        msg.textContent = 'Bạn có thể đóng cửa sổ này.';
+
+        icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+        title.textContent = 'Thanh toán đã bị hủy';
+        msg.innerHTML =
+          'Giao dịch thanh toán đã được hủy.<br>' +
+          'Nếu đây là nhầm lẫn, bạn có thể thực hiện lại giao dịch từ trang trò chơi.';
+
       } else if (orderCode && window.opener) {
+
         try {
-          window.opener.postMessage({ type: 'payos_return', orderCode: parseInt(orderCode, 10), cancel: false }, '*');
-          title.textContent = 'Thanh toán thành công!';
-          msg.textContent = 'Cửa sổ game sẽ cập nhật số xu. Bạn có thể đóng cửa sổ này.';
+
+          window.opener.postMessage({
+            type: 'payos_return',
+            orderCode: parseInt(orderCode, 10),
+            cancel: false
+          }, '*');
+
+          icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+          title.textContent = 'Thanh toán thành công';
+          msg.innerHTML =
+            'Cảm ơn bạn đã thực hiện thanh toán.<br>' +
+            'Số xu trong trò chơi sẽ được cập nhật ngay lập tức.<br>' +
+            'Bạn có thể quay lại trò chơi hoặc đóng cửa sổ này.';
+
         } catch (e) {
-          title.textContent = 'Đã chuyển hướng';
-          msg.textContent = 'Vui lòng quay lại game để kiểm tra.';
+
+          icon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+          title.textContent = 'Thanh toán đã hoàn tất';
+          msg.innerHTML =
+            'Giao dịch của bạn đã được xử lý.<br>' +
+            'Vui lòng quay lại trò chơi để kiểm tra số dư sau khi thanh toán.';
         }
+
       } else {
-        title.textContent = 'Hoàn tất';
-        msg.textContent = 'Bạn có thể đóng cửa sổ này.';
+
+        icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+        title.textContent = 'Hoàn tất giao dịch';
+        msg.innerHTML =
+          'Cảm ơn bạn đã sử dụng dịch vụ.<br>' +
+          'Bạn có thể đóng cửa sổ này và tiếp tục trải nghiệm trò chơi.';
       }
-      setTimeout(function() { window.close(); }, 3000);
+
+      setTimeout(function () {
+        window.close();
+      }, 4000);
+
     })();
   </script>
+
 </body>
+
 </html>

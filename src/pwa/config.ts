@@ -53,12 +53,38 @@ export const pwaOptions: VitePWAOptions = {
     ],
   },
   workbox: {
-    // Cache static game assets (JS/CSS/HTML and Phaser assets).
+    // Precache only app shell + small shared assets.
+    // Device-specific assets are cached at runtime based on actual requests from AssetManager.
     globPatterns: [
       '**/*.{js,css,html}',
-      'assets/**/*.{png,jpg,jpeg,webp,svg,ogg,mp3}',
+      'assets/images/ui/**/*.{png,jpg,jpeg,webp,svg,json}',
     ],
     navigateFallback: '/index.html',
+    runtimeCaching: [
+      {
+        // Cache only the variant actually requested by runtime logic (/assets/desktop or /assets/mobile).
+        urlPattern: /^\/assets\/(desktop|mobile)\//,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'tcg-variant-assets',
+          expiration: {
+            maxEntries: 1200,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          },
+        },
+      },
+      {
+        urlPattern: /^\/assets\/sounds\//,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'tcg-sounds',
+          expiration: {
+            maxEntries: 300,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          },
+        },
+      },
+    ],
     // TEMP: allow very large assets (up to 100 MB) to be precached while testing.
     // TODO: lower this once assets are optimized/split.
     maximumFileSizeToCacheInBytes: 100 * 1024 * 1024,

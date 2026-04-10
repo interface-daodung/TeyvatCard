@@ -4,11 +4,12 @@
     "basePower": 0,
     "baseCooldown": 20,
     "maxLevel": 10,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 0,
         "cooldown": 20,
-        "price": 500
+        "price": 0
       },
       {
         "power": 0,
@@ -55,18 +56,20 @@
         "cooldown": 11,
         "price": 500
       }
-    ]
+    ],
+    "nameClass": "BlackHole.ts"
   },
   {
     "nameId": "catalyst",
     "basePower": 2,
     "baseCooldown": 20,
     "maxLevel": 10,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 2,
         "cooldown": 20,
-        "price": 500
+        "price": 0
       },
       {
         "power": 3,
@@ -113,18 +116,20 @@
         "cooldown": 20,
         "price": 500
       }
-    ]
+    ],
+    "nameClass": "Catalyst.ts"
   },
   {
     "nameId": "claw",
     "basePower": 3,
     "baseCooldown": 20,
     "maxLevel": 10,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 3,
         "cooldown": 20,
-        "price": 50
+        "price": 0
       },
       {
         "power": 4,
@@ -171,18 +176,20 @@
         "cooldown": 16,
         "price": 500
       }
-    ]
+    ],
+    "nameClass": "Claw.ts"
   },
   {
     "nameId": "cooldown",
     "basePower": 5,
     "baseCooldown": 30,
     "maxLevel": 11,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 5,
         "cooldown": 30,
-        "price": 50
+        "price": 0
       },
       {
         "power": 5,
@@ -234,18 +241,20 @@
         "cooldown": 20,
         "price": 1000
       }
-    ]
+    ],
+    "nameClass": "Cooldown.ts"
   },
   {
     "nameId": "corruption",
     "basePower": 1,
     "baseCooldown": 0,
     "maxLevel": 3,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 1,
         "cooldown": 0,
-        "price": 5000
+        "price": 0
       },
       {
         "power": 2,
@@ -257,18 +266,20 @@
         "cooldown": 0,
         "price": 2000
       }
-    ]
+    ],
+    "nameClass": "Corruption.ts"
   },
   {
     "nameId": "healing-potion",
     "basePower": 5,
     "baseCooldown": 20,
     "maxLevel": 9,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 5,
         "cooldown": 20,
-        "price": 500
+        "price": 0
       },
       {
         "power": 6,
@@ -310,18 +321,20 @@
         "cooldown": 12,
         "price": 900
       }
-    ]
+    ],
+    "nameClass": "HealingPotion.ts"
   },
   {
     "nameId": "refinement",
     "basePower": 5,
     "baseCooldown": 20,
     "maxLevel": 10,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 5,
         "cooldown": 20,
-        "price": 50
+        "price": 0
       },
       {
         "power": 6,
@@ -368,18 +381,20 @@
         "cooldown": 15,
         "price": 500
       }
-    ]
+    ],
+    "nameClass": "Refinement.ts"
   },
   {
     "nameId": "repair",
     "basePower": 8,
     "baseCooldown": 20,
     "maxLevel": 9,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 8,
         "cooldown": 20,
-        "price": 50
+        "price": 0
       },
       {
         "power": 9,
@@ -421,18 +436,20 @@
         "cooldown": 16,
         "price": 450
       }
-    ]
+    ],
+    "nameClass": "Repair.ts"
   },
   {
     "nameId": "seasoning",
     "basePower": 5,
     "baseCooldown": 20,
     "maxLevel": 10,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 5,
         "cooldown": 20,
-        "price": 50
+        "price": 0
       },
       {
         "power": 6,
@@ -479,18 +496,20 @@
         "cooldown": 16,
         "price": 500
       }
-    ]
+    ],
+    "nameClass": "Seasoning.ts"
   },
   {
     "nameId": "sword",
     "basePower": 2,
     "baseCooldown": 20,
     "maxLevel": 10,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 2,
-        "cooldown": 1,
-        "price": 50
+        "cooldown": 20,
+        "price": 0
       },
       {
         "power": 3,
@@ -537,18 +556,20 @@
         "cooldown": 20,
         "price": 500
       }
-    ]
+    ],
+    "nameClass": "Sword.ts"
   },
   {
     "nameId": "tax-waiver",
     "basePower": 1,
     "baseCooldown": 50,
     "maxLevel": 3,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 1,
         "cooldown": 50,
-        "price": 20000
+        "price": 0
       },
       {
         "power": 2,
@@ -560,18 +581,20 @@
         "cooldown": 50,
         "price": 50000
       }
-    ]
+    ],
+    "nameClass": "TaxWaiver.ts"
   },
   {
     "nameId": "toxic",
     "basePower": 1,
     "baseCooldown": 20,
     "maxLevel": 9,
+    "unlockPrice": 0,
     "levelStats": [
       {
         "power": 1,
         "cooldown": 20,
-        "price": 50
+        "price": 0
       },
       {
         "power": 1,
@@ -613,6 +636,7 @@
         "cooldown": 12,
         "price": 450
       }
-    ]
+    ],
+    "nameClass": "Toxic.ts"
   }
 ]

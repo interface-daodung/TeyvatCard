@@ -1,7 +1,7 @@
 [
   {
     "id": "eula",
-    "name": "Eula",
+    "name": "character.eula.name",
     "description": "character.eula.description",
     "hp": 10,
     "element": "cryo",
@@ -45,15 +45,15 @@
       },
       {
         "level": 10,
-        "price": 0
+        "price": 1000
       }
     ]
   },
   {
     "id": "furina",
-    "name": "Furina",
+    "name": "character.furina.name",
     "description": "character.furina.description",
-    "hp": 12,
+    "hp": 10,
     "element": "hydro",
     "maxLevel": 10,
     "levelStats": [
@@ -95,13 +95,13 @@
       },
       {
         "level": 10,
-        "price": 0
+        "price": 1000
       }
     ]
   },
   {
     "id": "mavuika",
-    "name": "Mavuika",
+    "name": "character.mavuika.name",
     "description": "character.mavuika.description",
     "hp": 8,
     "element": "pyro",
@@ -145,13 +145,13 @@
       },
       {
         "level": 10,
-        "price": 0
+        "price": 1000
       }
     ]
   },
   {
     "id": "nahida",
-    "name": "Nahida",
+    "name": "character.nahida.name",
     "description": "character.nahida.description",
     "hp": 8,
     "element": "dendro",
@@ -195,13 +195,13 @@
       },
       {
         "level": 10,
-        "price": 0
+        "price": 1000
       }
     ]
   },
   {
     "id": "raiden",
-    "name": "Raiden",
+    "name": "character.raiden.name",
     "description": "character.raiden.description",
     "hp": 8,
     "element": "electro",
@@ -245,13 +245,13 @@
       },
       {
         "level": 10,
-        "price": 0
+        "price": 1000
       }
     ]
   },
   {
     "id": "venti",
-    "name": "Venti",
+    "name": "character.venti.name",
     "description": "character.venti.description",
     "hp": 8,
     "element": "anemo",
@@ -295,15 +295,15 @@
       },
       {
         "level": 10,
-        "price": 0
+        "price": 1000
       }
     ]
   },
   {
     "id": "zhongli",
-    "name": "Zhongli",
+    "name": "character.zhongli.name",
     "description": "character.zhongli.description",
-    "hp": 6,
+    "hp": 9,
     "element": "geo",
     "maxLevel": 10,
     "levelStats": [
@@ -345,7 +345,7 @@
       },
       {
         "level": 10,
-        "price": 0
+        "price": 1000
       }
     ]
   }

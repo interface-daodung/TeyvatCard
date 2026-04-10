@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Card + Foil Shader + Glow Layer</title>
+
+<style>
+body{
+ margin:0;
+ background:#101014;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ height:100vh;
+}
+</style>
+</head>
+
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+
+<script>
+
+const CARD_W = 210;
+const CARD_H = 360;
+
+const PADDING = 80;
+
+/* =========================
+   HOLOGRAPHIC CARD SHADER
+   ========================= */
+
+class HoloPipeline extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline{
+
+constructor(game){
+super({
+game,
+renderer:game.renderer,
+
+fragShader:`
+
+precision mediump float;
+
+uniform sampler2D uMainSampler;
+uniform float uTime;
+uniform float uSweep;
+
+varying vec2 outTexCoord;
+
+float rand(vec2 co){
+ return fract(sin(dot(co,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+vec3 rainbow(float t){
+ return vec3(
+  sin(t)*0.5+0.5,
+  sin(t+2.094)*0.5+0.5,
+  sin(t+4.188)*0.5+0.5
+ );
+}
+
+float edgeMask(vec2 uv){
+ vec2 d=min(uv,1.0-uv);
+ return smoothstep(0.0,0.01,min(d.x,d.y));
+}
+
+float strip(float d,float c,float w){
+ return smoothstep(c-w,c,d)-smoothstep(c,c+w,d);
+}
+
+void main(){
+
+vec2 uv=outTexCoord;
+
+vec4 base=texture2D(uMainSampler,uv);
+
+float mask=edgeMask(uv);
+
+/* foil diffraction */
+
+float foilAngle = dot(uv-0.5, vec2(1.2,0.7));
+vec3 foilColor = rainbow(foilAngle*6.0 + uTime*0.5) * 0.25;
+
+/* sweep */
+
+float diag = dot(uv, vec2(1.0,1.0));
+
+float s1 = strip(diag,uSweep,0.2);
+float s2 = strip(diag,uSweep-0.15,0.05);
+float s3 = strip(diag,uSweep-0.30,0.01);
+
+float core = s1+s2+s3;
+
+/* glow */
+
+float g1 = strip(diag,uSweep,0.05);
+float g2 = strip(diag,uSweep-0.15,0.05);
+float g3 = strip(diag,uSweep-0.30,0.05);
+
+float glowWide = strip(diag,uSweep,0.12);
+
+float glow = g1+g2+g3 + glowWide*0.6;
+
+/* rainbow specular */
+
+vec3 specColor = rainbow(diag*8.0 + uTime*1.5);
+
+vec3 specular =
+      specColor * core * 0.9 +
+      specColor * glow * 0.35;
+
+/* sparkle trail */
+
+float sparkle = 0.0;
+
+for(int i=0;i<6;i++){
+
+ vec2 p = uv + vec2(float(i)*0.02);
+
+ float d = abs(dot(p,vec2(1.0,1.0)) - (uSweep-0.35));
+
+ float s = step(0.997, rand(p*600.0 + uTime));
+
+ sparkle += s * smoothstep(0.2,0.0,d);
+
+}
+
+sparkle *= 0.9;
+
+vec3 sparkleColor = vec3(1.0)*sparkle;
+
+/* final */
+
+vec3 color = base.rgb;
+
+color += foilColor;
+color += specular;
+color += sparkleColor;
+
+float alpha = base.a * mask;
+
+gl_FragColor = vec4(color*alpha,alpha);
+
+}
+`
+});
+}
+}
+
+/* =========================
+   GLOW BORDER SHADER
+   ========================= */
+
+class GlowPipeline extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline{
+
+constructor(game){
+super({
+game,
+renderer:game.renderer,
+
+fragShader:`
+
+precision mediump float;
+
+uniform sampler2D uMainSampler;
+uniform float uTime;
+
+varying vec2 outTexCoord;
+
+vec3 rainbow(float t){
+ return vec3(
+  sin(t)*0.5+0.5,
+  sin(t+2.094)*0.5+0.5,
+  sin(t+4.188)*0.5+0.5
+ );
+}
+
+void main(){
+
+vec2 uv = outTexCoord;
+
+vec4 base = texture2D(uMainSampler,uv);
+
+float d = distance(uv,vec2(0.5));
+
+float glow = smoothstep(0.6,0.2,d);
+
+vec3 col = rainbow(uTime + d*4.0);
+
+gl_FragColor = vec4(col*glow*0.7, glow*0.7);
+
+}
+`
+});
+}
+}
+
+class SceneMain extends Phaser.Scene{
+
+preload(){
+
+this.load.image(
+'card',
+'https://raw.githubusercontent.com/interface-daodung/TeyvatCardGameBackend/refs/heads/main/admin-web/public/assets/images/cards/character/nahida.webp'
+);
+
+}
+
+create(){
+
+const W=this.scale.width;
+const H=this.scale.height;
+
+this.renderer.pipelines.add('Holo', new HoloPipeline(this.game));
+this.renderer.pipelines.add('Glow', new GlowPipeline(this.game));
+
+/* ROOT */
+
+this.root = this.add.container(W/2,H/2);
+
+/* GLOW CONTAINER */
+
+this.glowContainer = this.add.container(0,0);
+
+const rt = this.add.renderTexture(0,0,CARD_W+PADDING,CARD_H+PADDING);
+
+rt.draw('card',(CARD_W+PADDING)/2,(CARD_H+PADDING)/2);
+
+rt.setPipeline('Glow');
+
+this.glowContainer.add(rt);
+
+/* CARD CONTAINER */
+
+this.cardContainer = this.add.container(0,0);
+
+this.card = this.add.image(0,0,'card');
+
+this.card.setDisplaySize(CARD_W,CARD_H);
+
+this.card.setPipeline('Holo');
+
+this.card.setInteractive();
+
+this.cardContainer.add(this.card);
+
+/* ADD ORDER */
+
+this.root.add(this.glowContainer);
+this.root.add(this.cardContainer);
+
+/* HOVER LOGIC */
+
+this.sweep=-1.5;
+this.isHover=false;
+
+this.card.on('pointerover',()=>{
+
+ if(!this.isHover){
+  this.isHover=true;
+  this.sweep=-1.2;
+ }
+
+});
+
+}
+
+update(time){
+
+const holo=this.renderer.pipelines.get('Holo');
+const glow=this.renderer.pipelines.get('Glow');
+
+if(holo){
+ holo.set1f('uTime',time*0.002);
+ holo.set1f('uSweep',this.sweep);
+}
+
+if(glow){
+ glow.set1f('uTime',time*0.001);
+}
+
+if(this.sweep>-2){
+
+ this.sweep+=0.12;
+
+ if(this.sweep>2.0){
+  this.sweep=-2;
+  this.isHover=false;
+ }
+
+}
+
+}
+
+}
+
+new Phaser.Game({
+
+type:Phaser.WEBGL,
+
+width:window.innerWidth,
+height:window.innerHeight,
+
+backgroundColor:"#101014",
+
+scene:[SceneMain]
+
+});
+
+</script>
+
+</body>
+</html>
