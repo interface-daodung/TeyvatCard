@@ -274,5 +274,6 @@
   "adventureCard.catalyst-sacrificial.description": "The possessor must pour fresh blood onto the ancient temples to exchange their life for ultimate magical power.",
   "adventureCard.catalyst-remembrance.name": "Catalyst remembrance",
   "adventureCard.catalyst-remembrance.description": "The echoing bells reverberate from the realm of the dead, awakening wandering souls. Each chime is a summons, connecting reality with nothingness through a heart-wrenching, mournful melody.",
-  "map.babel_tower.name": "Babel Tower"
+  "map.babel_tower.name": "Babel Tower",
+  "apply_character_theme": "Apply character theme"
 }
