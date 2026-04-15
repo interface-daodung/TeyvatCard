@@ -13,6 +13,18 @@ function getScene(parent: Phaser.Scene | Phaser.GameObjects.Container): Phaser.S
     return parent;
 }
 
+function getFallbackTextureKey(scene: Phaser.Scene): string | null {
+    const candidates = ['__MISSING', '__WHITE'];
+    for (const key of candidates) {
+        if (scene.textures.exists(key)) {
+            return key;
+        }
+    }
+
+    const textureKeys = scene.textures.getTextureKeys();
+    return textureKeys.length > 0 ? textureKeys[0] : null;
+}
+
 /**
  * Đăng ký tên logic → atlas + frame hoặc texture đơn (key Phaser sau load).
  * Mỗi `keyName` chỉ đăng ký một lần; trùng tên sẽ throw.
@@ -123,6 +135,19 @@ export default class TextureManager {
         TextureManager.registry.set(keyName, { kind: 'image', textureKey });
     }
 
+    /**
+     * Dùng cho luồng theme runtime: cho phép đổi binding hiện có sang image binding mới.
+     * Nếu key chưa có thì tạo mới, nếu đã có (atlas/image) thì ghi đè sang image.
+     */
+    static upsertImageBinding(keyName: string, textureKey: string): void {
+        TextureManager.warnIfDuplicatePhysicalBinding(
+            TextureManager.physicalKeyImage(textureKey),
+            keyName,
+            `image texture (textureKey="${textureKey}")`,
+        );
+        TextureManager.registry.set(keyName, { kind: 'image', textureKey });
+    }
+
     private static assertUnique(keyName: string): void {
         if (TextureManager.registry.has(keyName)) {
             throw new Error(
@@ -133,6 +158,48 @@ export default class TextureManager {
 
     static has(keyName: string): boolean {
         return TextureManager.registry.has(keyName);
+    }
+
+    static getFallbackTextureKeyForScene(scene: Phaser.Scene): string | null {
+        return getFallbackTextureKey(scene);
+    }
+
+    /**
+     * Đổi texture của một `Image` theo logical key đã đăng ký.
+     * Trả về `true` nếu dùng binding đúng key, `false` nếu phải fallback.
+     */
+    static setImageTexture(image: Phaser.GameObjects.Image, keyName: string): boolean {
+        const scene = image.scene;
+        const binding = TextureManager.registry.get(keyName);
+        if (!binding) {
+            const fallbackKey = getFallbackTextureKey(scene);
+            if (!fallbackKey) {
+                throw new Error(
+                    `TextureManager: unknown key "${keyName}" and no fallback texture is available.`,
+                );
+            }
+            Log.warn(
+                `[TextureManager] Unknown key "${keyName}". Using fallback texture "${fallbackKey}".`,
+            );
+            image.setTexture(fallbackKey);
+            return false;
+        }
+
+        if (binding.kind === 'atlas') {
+            image.setTexture(binding.atlasKey, binding.frameName);
+        } else {
+            image.setTexture(binding.textureKey);
+        }
+        return true;
+    }
+
+    /**
+     * Sau khi Phaser đã load/reload ảnh đơn với cùng texture key (ví dụ asset theme),
+     * gọi để ép `Image` áp lại pixel theo logical key đã đăng ký.
+     * Tương đương `setImageTexture` — đặt tên rõ mục đích theme.
+     */
+    static applyThemeTextureToImage(image: Phaser.GameObjects.Image, keyName: string): boolean {
+        return TextureManager.setImageTexture(image, keyName);
     }
 
     /**
@@ -146,14 +213,25 @@ export default class TextureManager {
         y: number,
         keyName: string,
     ): Phaser.GameObjects.Image {
+        const scene = getScene(parent);
         const binding = TextureManager.registry.get(keyName);
         if (!binding) {
-            throw new Error(
-                `TextureManager: unknown key "${keyName}". Register with registerAtlas or registerImage first.`,
+            const fallbackKey = getFallbackTextureKey(scene);
+            if (!fallbackKey) {
+                throw new Error(
+                    `TextureManager: unknown key "${keyName}" and no fallback texture is available.`,
+                );
+            }
+            Log.warn(
+                `[TextureManager] Unknown key "${keyName}". Using fallback texture "${fallbackKey}".`,
             );
+            const fallbackImage = scene.add.image(x, y, fallbackKey);
+            if (parent instanceof Phaser.GameObjects.Container) {
+                parent.add(fallbackImage);
+            }
+            return fallbackImage;
         }
 
-        const scene = getScene(parent);
         let image: Phaser.GameObjects.Image;
         if (binding.kind === 'atlas') {
             image = scene.add.image(x, y, binding.atlasKey, binding.frameName);

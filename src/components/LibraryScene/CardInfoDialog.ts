@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import { I18nText } from '../shared/index.js';
-import { createCardImage } from './libraryCardAtlas.js';
 import type { LibraryCardData } from './types.js';
 
 export interface CardInfoDialogHandle {
@@ -44,7 +44,10 @@ export function showCardInfoDialog(
     const cardTop = typeY + 22;
     const cardY = cardTop + cardH / 2;
 
-    const cardImg = createCardImage(scene, cardData, cardW, cardH);
+    const cardImg = TextureManager.has(cardData.id)
+        ? TextureManager.image(scene, 0, 0, cardData.id)
+        : TextureManager.image(scene, 0, 0, 'empty');
+    cardImg.setDisplaySize(cardW, cardH);
     cardImg.setPosition(0, cardY);
 
     const isCharacter = cardData.type === 'character';

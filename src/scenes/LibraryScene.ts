@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
+import TextureManager from '../core/TextureManager.js';
 import {
     createBackButton,
     createCardPanel,
@@ -21,14 +22,13 @@ export default class LibraryScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.load.image('empty', 'assets/images/cards/empty.webp');
-        Log.error('LibraryScene preload');
+        
     }
 
     create(): void {
         const { width, height } = this.scale;
 
-        this.add.image(width / 2, height / 2, 'background');
+        TextureManager.image(this, width / 2, height / 2, 'background').setDisplaySize(width, height);
         this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
         GameTitle.create(this, width / 2, height * 0.12, 'library_title');

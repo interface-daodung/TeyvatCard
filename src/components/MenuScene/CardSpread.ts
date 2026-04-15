@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { CardCharacter } from './types.js';
 
@@ -55,7 +56,7 @@ function createIndividualCard(
     if (hasSpriteSuffix) {
         cardImage = SpritesheetWrapper.CharacterAnimation(scene, 0, 0, textureCard, cardWidth, cardHeight);
     } else {
-        cardImage = scene.add.image(0, 0, 'character', textureCard).setDisplaySize(cardWidth, cardHeight);
+        cardImage = TextureManager.image(scene, 0, 0, textureCard).setDisplaySize(cardWidth, cardHeight);
     }
 
     const individualCardContainer = scene.add.container(offsetX, offsetY);

@@ -7,6 +7,7 @@ import { dataManager } from '../core/DataManager.js';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { createPackageButton, showToast, type PackageDef } from '../components/PaymentScene/index.js';
 import { GameTitle } from '../components/shared/index.js';
+import TextureManager from '../core/TextureManager.js';
 
 const STARTER_PACK_KEY = 'starterPackPurchased';
 
@@ -43,8 +44,8 @@ export default class PaymentScene extends Phaser.Scene {
     private setupPaymentUI(): void {
         const { width, height } = this.scale;
 
-        this.add.image(width / 2, height / 2, 'background');
-        this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
+        TextureManager.image(this, width / 2, height / 2, 'background').setDisplaySize(width, height);
+        // this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
         GameTitle.create(this, width / 2, height * 0.12, 'payment');
 
         const buttonWidth = width * 0.75;

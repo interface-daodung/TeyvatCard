@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
+import TextureManager from '../../core/TextureManager.js';
 
 export interface CharacterCardDisplayRefs {
     currentCardContainer: Phaser.GameObjects.Container;
@@ -14,7 +15,7 @@ export function createCurrentCardDisplay(
     initialCardId: string
 ): CharacterCardDisplayRefs {
     const currentCardContainer = scene.add.container(width / 2, height * 0.65);
-    const currentCardImage = scene.add.image(0, 0, 'character', initialCardId);
+    const currentCardImage = TextureManager.image(scene, 0, 0, initialCardId);
     currentCardImage.setDisplaySize(300, 514);
 
     const cardBorder = scene.add.graphics();

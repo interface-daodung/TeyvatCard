@@ -84,6 +84,11 @@ export function registerDefaultTextureBindingsForAtlas(
     if (!frames || typeof frames !== 'object') return;
 
     for (const frameName of Object.keys(frames)) {
+        // Cache guard: nếu logical key đã có binding (atlas/image) thì không đăng ký lại.
+        // Trường hợp phổ biến: key này đã được ThemeManager rebind sang image runtime.
+        if (TextureManager.has(frameName)) {
+            continue;
+        }
         try {
             TextureManager.registerAtlasDefault(frameName, atlasKey, frameName);
         } catch (err) {
@@ -96,3 +101,5 @@ export function registerDefaultTextureBindingsForAtlas(
         }
     }
 }
+
+ 

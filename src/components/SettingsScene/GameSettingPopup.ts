@@ -38,6 +38,7 @@ function getApplyCharacterTheme(): boolean {
 
 function setApplyCharacterTheme(value: boolean): void {
     dataManager.set(APPLY_CHARACTER_THEME_KEY, value);
+    themeManager.applyThemeFromDataPreferences();
 }
 
 /**

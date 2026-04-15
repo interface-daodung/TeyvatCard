@@ -3,6 +3,7 @@ import { localizationManager } from '../core/LocalizationManager.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { dataManager } from '../core/DataManager.js';
+import TextureManager from '../core/TextureManager.js';
 import { showToast } from '../components/PaymentScene/Toast.js';
 import { SpritesheetWrapper } from '../utils/SpritesheetWrapper.js';
 import {
@@ -67,7 +68,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
     create(): void {
         const { width, height } = this.scale;
 
-        this.add.image(width / 2, height / 2, 'background').setDisplaySize(width, height);
+        TextureManager.image(this, width / 2, height / 2, 'background').setDisplaySize(width, height);
         const headerRef = HeaderUI.createHeaderUI(this, width, height);
         this.updateCoinDisplay = headerRef.updateCoinDisplay;
         GameTitle.create(this, width / 2, height * 0.12, 'character_title');
@@ -99,9 +100,8 @@ export default class SelectCharacterScene extends Phaser.Scene {
                 const canUnlock = level === 0;
                 const canUpgrade = level > 0 && level < maxLevel;
                 if (canUnlock || canUpgrade) {
-                    this.upgradeButton.setTint(themeManager.getNeutralPhaser());
                     this.upgradeButton.setScale(1.1);
-                    this.upgradeButton.setStyle({ color: themeManager.getAccent() });
+                    this.upgradeButton.setStyle({ color: themeManager.getNeutral() });
                     this.cardHPText.setI18nKey('coin_amount').setI18nParams({ amount: this.upgradeCharacterPrice() });
                 }
             },
@@ -124,7 +124,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
             const card = this.cards[this.currentCardIndex];
             const levelData = dataManager.get<Record<string, number>>('characterLevel') ?? {};
             if ((levelData[card.id] ?? 0) > 0) dataManager.set('selectedCharacter', card.id);
-            this.scene.start('MenuScene');
+            this.scene.start('LoadingScene', { targetScene: 'MenuScene' });
         }, 'select');
 
         this.updateCardDisplay();
@@ -156,7 +156,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
         const hp = currentCard.hp + (isUnlocked ? level : 0);
 
         this.cardNameText.setI18nKey(`character.${currentCard.id}.name`);
-        this.cardElementImage.setTexture('element', `element-${currentCard.element.toLowerCase()}`);
+        TextureManager.setImageTexture(this.cardElementImage, `${currentCard.element.toLowerCase()}`);
         this.cardDescriptionText.setI18nKey(currentCard.description);
         this.cardHPText.hp = hp;
         this.cardHPText.setI18nKey('hp_label').setI18nParams({ hp });
@@ -181,7 +181,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         this.currentCardContainer.remove(this.currentCardImage, true);
         if (!isUnlocked) {
-            this.currentCardImage = this.add.image(0, 0, 'coin', 'empty');
+            this.currentCardImage = TextureManager.image(this, 0, 0, 'empty');
             this.currentCardImage.setDisplaySize(300, 514);
             this.currentCardImage.setOrigin(0.5, 0.5);
             this.currentCardContainer.add(this.currentCardImage);
@@ -199,7 +199,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
             this.cardBorder.fillRoundedRect(-152, -259, 304, 518, 28);
             this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
         } else {
-            this.currentCardImage = this.add.image(0, 0, 'character', currentCard.id);
+            this.currentCardImage = TextureManager.image(this, 0, 0, currentCard.id);
             this.currentCardImage.setDisplaySize(300, 514);
             this.currentCardContainer.add(this.currentCardImage);
             this.cardBorder.clear();

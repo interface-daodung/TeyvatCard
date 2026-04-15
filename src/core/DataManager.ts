@@ -33,14 +33,14 @@ const PREFIX = 'T0vt';
 const KNOWN_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
   'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
-  'jwt', 'refreshToken', 'showCardName', 'theme'
+  'jwt', 'refreshToken', 'showCardName', 'theme', 'applyCharacterTheme'
 ]);
 
 /** Keys dùng cho cloud save (loại jwt, refreshToken). */
 const CLOUD_SAVE_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
   'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
-  'showCardName', 'theme'
+  'showCardName', 'theme', 'applyCharacterTheme'
 ]);
 
 function serialize<T>(value: T): string {
@@ -234,15 +234,12 @@ class DataManager {
    * Queue load app JSON + locales, xong thì ghi flag / setTranslations và gọi callback.
    */
   queueAppDataAndThenOnThemeLoaded(scene: Phaser.Scene, onThemeLoaded: () => void): void {
-    for (const dataPath of APP_DATA_PATHS) {
-      this.queueJsonFromData(scene, dataPath);
-    }
-    for (const dataPath of LOCALE_DATA_PATHS) {
-      this.queueJsonFromData(scene, dataPath);
-    }
-    scene.load.once('complete', () => {
-      for (const dataPath of APP_DATA_PATHS) {
-        const key = this.getDataCacheKey(dataPath);
+    const appKeys = APP_DATA_PATHS.map((dataPath) => this.getDataCacheKey(dataPath));
+    const localeKeys = LOCALE_DATA_PATHS.map((dataPath) => this.getDataCacheKey(dataPath));
+    const hasAllCachedData = [...appKeys, ...localeKeys].every((key) => scene.cache.json.exists(key));
+
+    const hydrateCachedData = (): void => {
+      for (const key of appKeys) {
         const data = this.getJsonFromCache<unknown>(scene, key);
         if (data !== undefined) {
           this.setFlag(key, data);
@@ -256,6 +253,22 @@ class DataManager {
         en: en ?? {},
         ja: ja ?? {},
       });
+    };
+
+    if (hasAllCachedData) {
+      hydrateCachedData();
+      onThemeLoaded();
+      return;
+    }
+
+    for (const dataPath of APP_DATA_PATHS) {
+      this.queueJsonFromData(scene, dataPath);
+    }
+    for (const dataPath of LOCALE_DATA_PATHS) {
+      this.queueJsonFromData(scene, dataPath);
+    }
+    scene.load.once('complete', () => {
+      hydrateCachedData();
       onThemeLoaded();
     });
     scene.load.start();

@@ -1,10 +1,12 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import { I18nText } from '../shared/index.js';
 
 export interface MenuButtonResult {
     text: Phaser.GameObjects.Text;
     container: Phaser.GameObjects.Container;
+    icon: Phaser.GameObjects.Image;
 }
 
 /**
@@ -21,7 +23,7 @@ export function createMenuButton(
 ): MenuButtonResult {
     const button = scene.add.container(x, y);
 
-    const icon = scene.add.image(0, 20, 'item', iconName);
+    const icon = TextureManager.image(button, 0, 20, iconName);
     icon.setDisplaySize(180, 180);
 
     const text = new I18nText(scene, 0, -80, labelKey, {
@@ -32,7 +34,7 @@ export function createMenuButton(
         strokeThickness: 2
     }).setOrigin(0.5);
     text.setAlpha(0);
-    button.add([icon, text]);
+    button.add(text);
     button.setInteractive(new Phaser.Geom.Rectangle(-90, -90, 180, 180), Phaser.Geom.Rectangle.Contains);
 
     button.on('pointerdown', () => {
@@ -59,5 +61,5 @@ export function createMenuButton(
         button.setScale(1);
     });
 
-    return { text, container: button };
+    return { text, container: button, icon };
 }

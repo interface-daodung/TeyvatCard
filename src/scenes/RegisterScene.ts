@@ -6,6 +6,7 @@ import { localizationManager } from '../core/LocalizationManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { createBackButton, GameTitle } from '../components/shared/index.js';
 import { createRegisterForm } from '../components/RegisterScene/index.js';
+import TextureManager from '../core/TextureManager.js';
 
 export default class RegisterScene extends Phaser.Scene {
   private fromScene = 'MenuScene';
@@ -22,7 +23,7 @@ export default class RegisterScene extends Phaser.Scene {
     this.fromScene = data?.fromScene || 'MenuScene';
     this.returnTo = data?.returnTo || 'PaymentScene';
 
-    this.add.image(width / 2, height / 2, 'background');
+    TextureManager.image(this, width / 2, height / 2, 'background').setDisplaySize(width, height);
     this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
     GameTitle.create(this, width / 2, height * 0.1, 'register');

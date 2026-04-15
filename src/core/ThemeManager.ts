@@ -6,8 +6,11 @@
  * Không fallback: nếu không đọc được hoặc dữ liệu không hợp lệ thì báo lỗi.
  */
 
+import Phaser from 'phaser';
 import { dataManager } from './DataManager.js';
 import { Log } from '../utils/Log.js';
+import AssetManager from './AssetManager.js';
+import TextureManager from './TextureManager.js';
 
 /** 7 màu chủ đảo + Success/Warning/Error/Info */
 export interface ThemePalette {
@@ -90,11 +93,27 @@ function normalizeThemeList(data: unknown): { name: string; colors: ThemePalette
     });
 }
 
+interface ThemeAssetsBlock {
+    background?: string;
+    icons?: {
+        compass?: string;
+        equip?: string;
+        library?: string;
+    };
+}
+
+interface ThemeJsonEntry {
+    name?: string;
+    assets?: ThemeAssetsBlock;
+}
+
 export default class ThemeManager {
     private static instance: ThemeManager;
     private palette: ThemePalette | null = null;
     private themeList: { name: string; colors: ThemePalette }[] = [];
     private _loaded = false;
+    private scene: Phaser.Scene | null = null;
+    private themeJsonCacheKey = 'theme';
 
     private constructor() {}
 
@@ -111,19 +130,15 @@ export default class ThemeManager {
      * Không fallback: load/parse thất bại thì reject và log lỗi.
      */
     loadTheme(scene: Phaser.Scene, dataPath = 'theme.json', cacheKey = 'theme'): Promise<void> {
+        this.scene = scene;
+        this.themeJsonCacheKey = cacheKey;
         return dataManager
             .loadJsonFromData<unknown>(scene, dataPath, cacheKey)
             .then((data) => {
                 const list = normalizeThemeList(data);
                 this.themeList = list;
-                const defaultTheme = list[0];
-                const savedName = dataManager.get<string>('theme');
-                const toApply = savedName != null
-                    ? list.find((t) => t.name === savedName) ?? defaultTheme
-                    : defaultTheme;
-                this.palette = toApply.colors;
-                dataManager.set('theme', toApply.name);
                 this._loaded = true;
+                this.applyThemeFromDataPreferences();
             })
             .catch((err) => {
                 Log.error('[ThemeManager] Không đọc được theme. Bắt buộc phải có theme.json hợp lệ.', dataPath, err);
@@ -133,20 +148,181 @@ export default class ThemeManager {
             });
     }
 
+    private getUiAssetVariantByGpuProfile(): 'desktop' | 'mobile' {
+        return AssetManager.getAssetVariantByGpuProfile();
+    }
+
+    private getCurrentScene(): Phaser.Scene | null {
+        return this.scene;
+    }
+
+    private getThemeAssetsByName(themeName: string): ThemeAssetsBlock | null {
+        const scene = this.getCurrentScene();
+        if (!scene) return null;
+
+        const raw = dataManager.getJsonFromCache<unknown>(scene, this.themeJsonCacheKey);
+        if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+            return null;
+        }
+        const entry = this.findThemeJsonEntry(raw as Record<string, unknown>, themeName);
+        if (!entry || !entry.assets || typeof entry.assets !== 'object') {
+            return null;
+        }
+        return entry.assets;
+    }
+
+    private findThemeJsonEntry(raw: Record<string, unknown>, themeName: string): ThemeJsonEntry | null {
+        const direct = raw[themeName];
+        if (direct && typeof direct === 'object' && !Array.isArray(direct)) {
+            return direct as ThemeJsonEntry;
+        }
+        for (const [, value] of Object.entries(raw)) {
+            if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+            const candidateName = (value as ThemeJsonEntry).name;
+            if (typeof candidateName === 'string' && candidateName === themeName) {
+                return value as ThemeJsonEntry;
+            }
+        }
+        return null;
+    }
+
+    private extractFileNameNoExt(url: string): string {
+        const cleaned = url.split('?')[0].split('#')[0];
+        const fileName = cleaned.substring(cleaned.lastIndexOf('/') + 1);
+        const noExt = fileName.replace(/\.[^/.]+$/i, '');
+        return noExt || 'unknown';
+    }
+
+    private buildThemeTextureKey(logicalKey: 'background' | 'compass' | 'equip' | 'library', url: string): string {
+        return `theme-${logicalKey}-${this.extractFileNameNoExt(url)}`;
+    }
+
+    private resolveThemeIconImageUrl(url: string): string {
+        if (!url.includes('/assets/images/ui/')) {
+            return url;
+        }
+        const variant = this.getUiAssetVariantByGpuProfile();
+        return url.replace('/assets/images/ui/', `/assets/images/${variant}/ui/`);
+    }
+
+    private loadThemeAssetAndRebind(
+        scene: Phaser.Scene,
+        logicalKey: 'background' | 'compass' | 'equip' | 'library',
+        sourceUrl: string,
+    ): void {
+        const finalUrl = logicalKey === 'background' ? sourceUrl : this.resolveThemeIconImageUrl(sourceUrl);
+        const textureKey = this.buildThemeTextureKey(logicalKey, sourceUrl);
+        const fallbackTextureKey = TextureManager.getFallbackTextureKeyForScene(scene);
+        let didResolveBinding = false;
+
+        const bindFallback = (reason: unknown): void => {
+            if (didResolveBinding) return;
+            didResolveBinding = true;
+            if (!fallbackTextureKey) {
+                Log.error(`[ThemeManager] Không có fallback texture để bind "${logicalKey}"`, reason);
+                return;
+            }
+            TextureManager.upsertImageBinding(logicalKey, fallbackTextureKey);
+            Log.warn(`[ThemeManager] Bind fallback texture cho "${logicalKey}"`, {
+                fallbackTextureKey,
+                sourceUrl: finalUrl,
+                reason,
+            });
+        };
+
+        if (scene.textures.exists(textureKey)) {
+            didResolveBinding = true;
+            TextureManager.upsertImageBinding(logicalKey, textureKey);
+            return;
+        }
+
+        const onError = (file: Phaser.Loader.File): void => {
+            if (file.key !== textureKey) return;
+            scene.load.off('loaderror', onError);
+            bindFallback('loaderror');
+        };
+
+        scene.load.once(`filecomplete-image-${textureKey}`, () => {
+            scene.load.off('loaderror', onError);
+            if (didResolveBinding) return;
+            if (scene.textures.exists(textureKey)) {
+                didResolveBinding = true;
+                TextureManager.upsertImageBinding(logicalKey, textureKey);
+                return;
+            }
+            bindFallback('filecomplete-without-texture');
+        });
+        scene.load.once('complete', () => {
+            if (didResolveBinding) return;
+            if (scene.textures.exists(textureKey)) return;
+            bindFallback('complete-without-texture');
+        });
+        scene.load.on('loaderror', onError);
+        scene.load.image(textureKey, finalUrl);
+    }
+
+    private queueThemeTextureBindings(themeName: string): void {
+        const scene = this.getCurrentScene();
+        if (!scene) {
+            Log.warn('[ThemeManager] Chưa có scene để load theme assets');
+            return;
+        }
+
+        const assets = this.getThemeAssetsByName(themeName);
+        if (!assets) return;
+
+        let queuedCount = 0;
+        if (typeof assets.background === 'string' && assets.background.trim()) {
+            this.loadThemeAssetAndRebind(scene, 'background', assets.background.trim());
+            queuedCount += 1;
+        }
+        const iconMappings: Array<{ key: 'compass' | 'equip' | 'library'; url?: string }> = [
+            { key: 'compass', url: assets.icons?.compass },
+            { key: 'equip', url: assets.icons?.equip },
+            { key: 'library', url: assets.icons?.library },
+        ];
+        for (const item of iconMappings) {
+            if (!item.url || !item.url.trim()) continue;
+            this.loadThemeAssetAndRebind(scene, item.key, item.url.trim());
+            queuedCount += 1;
+        }
+
+        if (queuedCount > 0 && !scene.load.isLoading()) {
+            scene.load.start();
+        }
+    }
+
     /**
      * Áp dụng theme đã lưu (gọi sau khi load theme xong, ví dụ khi mở game).
-     * Đọc dataManager.get('theme') và set palette theo tên; nếu chưa load theme thì no-op.
+     * Đồng bộ với `applyCharacterTheme` / `selectedCharacter` (giống `loadTheme`).
      */
     applySavedTheme(): void {
+        this.applyThemeFromDataPreferences();
+    }
+
+    /**
+     * Áp theme theo local: `applyCharacterTheme === false` → luôn theme tên `"default"`;
+     * `true` → theme trùng `selectedCharacter`, không có thì fallback `"default"`.
+     */
+    applyThemeFromDataPreferences(): void {
         if (!this._loaded || this.themeList.length === 0) return;
-        const savedName = dataManager.get<string>('theme');
-        const theme = savedName != null
-            ? this.themeList.find((t) => t.name === savedName)
-            : this.themeList[0];
-        if (theme) {
-            this.palette = theme.colors;
-            dataManager.set('theme', theme.name);
+
+        const defaultNamed =
+            this.themeList.find((t) => t.name === 'default') ?? this.themeList[0];
+
+        const applyCharacterTheme = dataManager.get<boolean>('applyCharacterTheme') === true;
+        if (!applyCharacterTheme) {
+            this.setThemeByName(defaultNamed.name);
+            return;
         }
+
+        const selectedCharacter = dataManager.get<string>('selectedCharacter');
+        const characterTheme =
+            selectedCharacter != null
+                ? this.themeList.find((t) => t.name === selectedCharacter)
+                : undefined;
+        const toApply = characterTheme ?? defaultNamed;
+        this.setThemeByName(toApply.name);
     }
 
     /** Đổi theme theo tên và lưu vào dataManager */
@@ -162,6 +338,7 @@ export default class ThemeManager {
         }
         this.palette = theme.colors;
         dataManager.set('theme', theme.name);
+        this.queueThemeTextureBindings(theme.name);
     }
 
     getCurrentThemeName(): string | null {
