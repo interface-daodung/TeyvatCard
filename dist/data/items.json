@@ -57,7 +57,9 @@
         "price": 500
       }
     ],
-    "nameClass": "BlackHole.ts"
+    "nameClass": "BlackHole.ts",
+    "image": "/assets/images/item/black-hole.webp",
+    "attached": []
   },
   {
     "nameId": "catalyst",
@@ -117,7 +119,9 @@
         "price": 500
       }
     ],
-    "nameClass": "Catalyst.ts"
+    "nameClass": "Catalyst.ts",
+    "image": "/assets/images/item/catalyst.webp",
+    "attached": []
   },
   {
     "nameId": "claw",
@@ -177,7 +181,9 @@
         "price": 500
       }
     ],
-    "nameClass": "Claw.ts"
+    "nameClass": "Claw.ts",
+    "image": "/assets/images/item/claw.webp",
+    "attached": []
   },
   {
     "nameId": "cooldown",
@@ -242,7 +248,9 @@
         "price": 1000
       }
     ],
-    "nameClass": "Cooldown.ts"
+    "nameClass": "Cooldown.ts",
+    "image": "/assets/images/item/cooldown.webp",
+    "attached": []
   },
   {
     "nameId": "corruption",
@@ -267,7 +275,17 @@
         "price": 2000
       }
     ],
-    "nameClass": "Corruption.ts"
+    "nameClass": "Corruption.ts",
+    "image": "/assets/images/item/corruption.webp",
+    "attached": [
+      {
+        "nameId": "curse",
+        "image": "/assets/images/animations/Darkness3.png",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 1
+      }
+    ]
   },
   {
     "nameId": "healing-potion",
@@ -322,7 +340,9 @@
         "price": 900
       }
     ],
-    "nameClass": "HealingPotion.ts"
+    "nameClass": "HealingPotion.ts",
+    "image": "/assets/images/item/healing-potion.webp",
+    "attached": []
   },
   {
     "nameId": "refinement",
@@ -382,7 +402,9 @@
         "price": 500
       }
     ],
-    "nameClass": "Refinement.ts"
+    "nameClass": "Refinement.ts",
+    "image": "/assets/images/item/refinement.webp",
+    "attached": []
   },
   {
     "nameId": "repair",
@@ -437,7 +459,9 @@
         "price": 450
       }
     ],
-    "nameClass": "Repair.ts"
+    "nameClass": "Repair.ts",
+    "image": "/assets/images/item/repair.webp",
+    "attached": []
   },
   {
     "nameId": "seasoning",
@@ -497,7 +521,9 @@
         "price": 500
       }
     ],
-    "nameClass": "Seasoning.ts"
+    "nameClass": "Seasoning.ts",
+    "image": "/assets/images/item/seasoning.webp",
+    "attached": []
   },
   {
     "nameId": "sword",
@@ -557,7 +583,9 @@
         "price": 500
       }
     ],
-    "nameClass": "Sword.ts"
+    "nameClass": "Sword.ts",
+    "image": "/assets/images/item/sword.webp",
+    "attached": []
   },
   {
     "nameId": "tax-waiver",
@@ -582,7 +610,9 @@
         "price": 50000
       }
     ],
-    "nameClass": "TaxWaiver.ts"
+    "nameClass": "TaxWaiver.ts",
+    "image": "/assets/images/item/tax-waiver.webp",
+    "attached": []
   },
   {
     "nameId": "toxic",
@@ -637,6 +667,8 @@
         "price": 450
       }
     ],
-    "nameClass": "Toxic.ts"
+    "nameClass": "Toxic.ts",
+    "image": "/assets/images/item/toxic.webp",
+    "attached": []
   }
 ]

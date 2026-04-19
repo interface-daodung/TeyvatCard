@@ -3,18 +3,19 @@ import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
 import Character from './character.js';
-import Equipment from './equipment.js';
+import Equipment from '../weaponCategory/equipment.js';
 
 export default class Weapon extends Card {
     durability!: number;
     durabilityDisplay!: CreateDisplayResult;
-
+    category!: string;
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'weapon');
     }
 
     override applyConfig(config: CardDefault): void {
         super.applyConfig(config);
+        this.category = config.category;
         if (config.durabilityMin != null && config.durabilityMax != null) {
             this.durability = this.GetRandom(config.durabilityMin, config.durabilityMax);
         }
@@ -45,7 +46,7 @@ export default class Weapon extends Card {
         return new Equipment(config, durability);
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean>   {
 
         const weapon = this as Weapon;
 
@@ -53,7 +54,7 @@ export default class Weapon extends Card {
             this.createEquipment(this.config, weapon.durability)
         );
 
-        return false;
+        return Promise.resolve(false); // Weapon không biến mất sau khi dùng, nên trả về false để không emit 'completeMove';
     }
 }
 

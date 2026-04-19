@@ -1,0 +1,29 @@
+{
+  "frames": {
+    "skill-icon": {
+      "frame": {
+        "x": 64,
+        "y": 128,
+        "w": 64,
+        "h": 64
+      }
+    },
+    "skill-icon-1": {
+      "frame": {
+        "x": 0,
+        "y": 128,
+        "w": 64,
+        "h": 64
+      }
+    }
+  },
+  "meta": {
+    "image": "skills.webp",
+    "size": {
+      "w": 128,
+      "h": 192
+    },
+    "scale": "1",
+    "path": "assets/mobile/atlas/skills.webp"
+  }
+}

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { dataManager } from '../core/DataManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import { localizationManager } from '../core/LocalizationManager.js';
+import TextureManager from '../core/TextureManager.js';
 import { createDungeonButtons, createPaginationButtons } from '../components/MapScene/index.js';
 import { GameTitle } from '../components/shared/index.js';
 import type { DungeonData } from '../components/MapScene/index.js';
@@ -34,7 +35,7 @@ export default class MapScenes extends Phaser.Scene {
     create(): void {
         const { width, height } = this.scale;
 
-        this.add.image(width / 2, height / 2, 'background');
+        TextureManager.image(this, width / 2, height / 2, 'background').setDisplaySize(width, height);
         this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
         GameTitle.create(this, width / 2, height * 0.18, 'dungeon_map');
 

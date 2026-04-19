@@ -7,6 +7,7 @@ import { showCardInfoDialog } from '../components/LibraryScene/CardInfoDialog.js
 import { I18nText } from '../components/shared/I18nText.js';
 import type GameManager from '../core/GameManager.js';
 import { Log } from '../utils/Log.js';
+import { createCardImage } from './card/view.js';
 
 export interface SceneWithGameManager extends Phaser.Scene {
     gameManager?: GameManager;
@@ -46,6 +47,13 @@ export interface CardDefault {
 export interface CreateDisplayOptions {
     fillColor?: number;
     text?: string;
+    /**
+     * Emoji / ký tự làm nền (ví dụ 🛡️). Vẽ trước số nên nằm phía sau.
+     * Khi có `backgroundIcon`, không vẽ hình tròn `graphics` để icon làm nền rõ ràng.
+     */
+    backgroundIcon?: string;
+    /** `fontSize` CSS cho icon nền (mặc định `36px`). */
+    backgroundIconSize?: string;
 }
 
 export type DisplayPosition = 'leftTop' | 'rightTop' | 'rightBottom' | 'leftBottom';
@@ -109,14 +117,14 @@ export default class Card extends Phaser.GameObjects.Container {
     }
 
     createCard(): void {
-        let atlasKey = this.type;
         const def = this.config ?? (this.constructor as typeof Card).DEFAULT;
-        if (this.type === 'weapon' && def.category) {
-            atlasKey += '-' + def.category;
-        } else if (this.type === 'enemy' && def.clan) {
-            atlasKey += '-' + def.clan;
-        }
-        this.cardImage = this.scene.add.image(0, 0, atlasKey, this.nameId);
+        this.cardImage = createCardImage({
+            scene: this.scene,
+            nameId: this.nameId,
+            type: this.type,
+            category: def.category,
+            clan: def.clan
+        });
         this.cardImage.setDisplaySize(160, 274.3);
 
         this.border = this.scene.add.graphics();
@@ -249,25 +257,59 @@ export default class Card extends Phaser.GameObjects.Container {
         this.setScale(1.0);
     }
 
+    /*
+    * Tạo display HUD cho card (tròn + số, hoặc icon nền + số nếu có `backgroundIcon`).
+    * `updateText`: ẩn cả container khi giá trị parse ra số === 0 (giống HP).
+    */
     createDisplay(
         options: CreateDisplayOptions = {},
         position: DisplayPosition
     ): CreateDisplayResult {
-        const { fillColor = 0x00ff00, text = '0' } = options;
+        const {
+            fillColor = 0x00ff00,
+            text = '0',
+            backgroundIcon,
+            backgroundIconSize = '36px'
+        } = options;
 
-        const background = this.scene.add.graphics();
-        background.fillStyle(fillColor);
-        background.fillCircle(0, 0, 18);
+        const iconKey = backgroundIcon?.trim();
+        const useIconBackground = Boolean(iconKey);
 
-        const textDisplay = this.scene.add.text(0, 0, text.toString(), {
+        let backgroundGraphics: Phaser.GameObjects.Graphics | null = null;
+        let iconBackground: Phaser.GameObjects.Text | null = null;
+        const stack: Phaser.GameObjects.GameObject[] = [];
+
+        if (useIconBackground && iconKey) {
+            iconBackground = this.scene.add.text(0, 0, iconKey, {
+                fontSize: backgroundIconSize,
+                fontFamily: 'Arial, sans-serif'
+            });
+            iconBackground.setOrigin(0.5);
+            stack.push(iconBackground);
+        } else {
+            backgroundGraphics = this.scene.add.graphics();
+            backgroundGraphics.fillStyle(fillColor);
+            backgroundGraphics.fillCircle(0, 0, 18);
+            stack.push(backgroundGraphics);
+        }
+
+        const textStyle: Phaser.Types.GameObjects.Text.TextStyle = {
             fontSize: '20px',
             color: themeManager.getText(),
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'
-        });
+        };
+        if (useIconBackground) {
+            textStyle.stroke = '#000000';
+            textStyle.strokeThickness = 3;
+        }
+
+        const textDisplay = this.scene.add.text(0, 0, text.toString(), textStyle);
         textDisplay.setOrigin(0.5);
 
-        const display = this.scene.add.container(0, 0, [background, textDisplay]);
+        stack.push(textDisplay);
+
+        const display = this.scene.add.container(0, 0, stack);
 
         if (position === 'leftTop') display.setPosition(-57, -113);
         else if (position === 'rightTop') display.setPosition(57, -113);
@@ -290,8 +332,13 @@ export default class Card extends Phaser.GameObjects.Container {
                 }
             },
             updateColor: (newColor: number) => {
-                if (background?.fillStyle) {
-                    background.fillStyle(newColor);
+                if (backgroundGraphics) {
+                    backgroundGraphics.clear();
+                    backgroundGraphics.fillStyle(newColor, 1);
+                    backgroundGraphics.fillCircle(0, 0, 18);
+                }
+                if (iconBackground) {
+                    iconBackground.setTint(newColor);
                 }
             },
             destroy: () => {
@@ -304,9 +351,9 @@ export default class Card extends Phaser.GameObjects.Container {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> { 
         Log.info(`Card ${this.name} (${this.nameId}) đang chạy hiệu ứng...`);
-        return false;
+        return Promise.resolve(false);
     }
 
     takeDamage(damage: number, type?: string): void {

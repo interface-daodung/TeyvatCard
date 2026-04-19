@@ -4,6 +4,7 @@ import type { SceneWithGameManager } from '../../../modules/Card.js';
 import CalculatePositionCard from '../../../utils/CalculatePositionCard.js';
 import { soundManager } from '../../../core/SoundManager.js';
 import Card from '../../../modules/Card.js';
+import { ExplosiveAnimation } from '@/src/animations/ExplosiveAnimation.js';
 
 export default class Explosive extends Bomb {
     declare rarity: number;
@@ -45,28 +46,44 @@ export default class Explosive extends Bomb {
         }
     }
 
-    Detonation(): void {
+    async Detonation(): Promise<void> {
 
         const adjacentPositions = CalculatePositionCard.getAdjacentPositions(this.index);
 
-        this.scene.gameManager?.animationManager.startExplosiveAnimation(
-            this,
-            adjacentPositions,
-            () => {
-                if (this.destroyed) return;
+        await ExplosiveAnimation.runAsync(this.scene.gameManager!.animationManager, this, adjacentPositions);
 
-                soundManager.play('bomb-sound');
+        if (this.destroyed) {
+            console.warn('Explosive already destroyed, skipping damage application');
+            return;
+        }
 
-                adjacentPositions.forEach(cardIndex => {
-                    const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
-                    if (card?.takeDamage) {
-                        card.takeDamage(this.damage, 'damage');
-                    }
-                });
-
-                this.die();
+        adjacentPositions.forEach(cardIndex => {
+            const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+            if (card?.takeDamage) {
+                card.takeDamage(this.damage, 'damage');
             }
-        );
-        
+        });
+
+        this.die();
+
+        // this.scene.gameManager?.animationManager.startExplosiveAnimation(
+        //     this,
+        //     adjacentPositions,
+        //     () => {
+        //         if (this.destroyed) return;
+
+        //         soundManager.play('bomb-sound');
+
+        //         adjacentPositions.forEach(cardIndex => {
+        //             const card = this.scene.gameManager.cardManager.getCard(cardIndex) as Card;
+        //             if (card?.takeDamage) {
+        //                 card.takeDamage(this.damage, 'damage');
+        //             }
+        //         });
+
+        //         this.die();
+        //     }
+        // );
+
     }
 }

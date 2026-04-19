@@ -56,7 +56,7 @@ export default class Treasure extends Card {
         );
     }
 
-    CardEffect(): boolean {
+    CardEffect(): Promise<boolean> {
         soundManager.play('Chest-sound');
         this.ProgressDestroy();
         const factory = this.scene.gameManager?.cardManager?.cardFactory;
@@ -71,6 +71,6 @@ export default class Treasure extends Card {
         if (newCard) {
             this.scene.gameManager?.cardManager?.addCard(newCard, this.index).processCreation?.();
         }
-        return true;
+        return Promise.resolve(true); // Treasure biến mất sau khi dùng, nên trả về true để emit 'completeMove';
     }
 }

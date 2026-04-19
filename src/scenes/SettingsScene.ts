@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { soundManager } from '../core/SoundManager.js';
 import { themeManager } from '../core/ThemeManager.js';
+import TextureManager from '../core/TextureManager.js';
 import {
     createBackButton,
     createRectTextButton,
@@ -36,7 +37,7 @@ export default class SettingsScene extends Phaser.Scene {
         const { width, height } = this.scale;
         this.boundOnLanguageChanged = this.onLanguageChanged.bind(this);
 
-        this.add.image(width / 2, height / 2, 'background');
+        TextureManager.image(this, width / 2, height / 2, 'background').setDisplaySize(width, height);
         this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser()).setAlpha(0.5);
 
         this.mainUIContainer = this.add.container(0, 0);
@@ -78,7 +79,14 @@ export default class SettingsScene extends Phaser.Scene {
         );
         this.mainUIContainer.add(this.bgmVolumeSliderContainer);
 
-        this.backButton = createBackButton(this, width, height, () => this.scene.start('MenuScene'), 'back_short', this.mainUIContainer);
+        this.backButton = createBackButton(
+            this,
+            width,
+            height,
+            () => this.scene.start('LoadingScene', { targetScene: 'MenuScene' }),
+            'back_short',
+            this.mainUIContainer
+        );
 
         const langResult = createLanguagePopup(this, width, height, () => this.hideLanguagePopup());
         this.langPopupContainer = langResult.container;

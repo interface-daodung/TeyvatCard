@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import type { EquipmentSlot, Item } from './types.js';
 
 const SLOT_SIZE = 120;
@@ -29,7 +30,7 @@ export function createEquipmentSlots(
         slotBg.fillRoundedRect(-SLOT_SIZE / 2, -SLOT_SIZE / 2, SLOT_SIZE, SLOT_SIZE, 10);
         slotBg.strokeRoundedRect(-SLOT_SIZE / 2, -SLOT_SIZE / 2, SLOT_SIZE, SLOT_SIZE, 10);
 
-        const slotImage = scene.add.image(0, 0, 'item', 'equipment-slot');
+        const slotImage = TextureManager.image(scene, 0, 0, 'equipment-slot');
         slotImage.setDisplaySize(SLOT_SIZE * 0.8, SLOT_SIZE * 0.8);
         slotImage.setAlpha(0.3);
         slotImage.setOrigin(0.5);
@@ -54,11 +55,11 @@ export function createEquipmentSlots(
 export function updateSlotDisplay(slot: EquipmentSlot, item: Item | null): void {
     slot.item = item;
     if (item) {
-        slot.image.setTexture('item', item.image);
+        TextureManager.setImageTexture(slot.image, item.image);
         slot.image.setDisplaySize(SLOT_SIZE, SLOT_SIZE);
         slot.image.setAlpha(1);
     } else {
-        slot.image.setTexture('item', 'equipment-slot');
+        TextureManager.setImageTexture(slot.image, 'equipment-slot');
         slot.image.setDisplaySize(SLOT_SIZE * 0.8, SLOT_SIZE * 0.8);
         slot.image.setAlpha(0.3);
     }

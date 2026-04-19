@@ -47,6 +47,16 @@
         "level": 10,
         "price": 1000
       }
+    ],
+    "image": "/assets/images/cards/character/eula.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/eula-sprite.webp",
+    "imageUnlock": "",
+    "attached": [
+      {
+        "nameId": "eula-icon-skill",
+        "image": "/assets/images/skill/eula/skill-icon.webp",
+        "type": "image"
+      }
     ]
   },
   {
@@ -96,6 +106,46 @@
       {
         "level": 10,
         "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/furina.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/furina-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockFurina.webp",
+    "attached": [
+      {
+        "nameId": "furina-icon-skill",
+        "image": "/assets/images/skill/furina/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "furina-icon-skill-2",
+        "image": "/assets/images/skill/furina/skill-icon-1.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "GentilhommeUsher",
+        "image": "/assets/images/skill/furina/GentilhommeUsher.png",
+        "type": "image"
+      },
+      {
+        "nameId": "MademoiselleCrabaletta",
+        "image": "/assets/images/skill/furina/MademoiselleCrabaletta.png",
+        "type": "image"
+      },
+      {
+        "nameId": "SurintendanteChevalmarin",
+        "image": "/assets/images/skill/furina/SurintendanteChevalmarin.png",
+        "type": "image"
+      },
+      {
+        "nameId": "furina-pneuma",
+        "image": "/assets/images/skill/furina/furina-pneuma.png",
+        "type": "image"
+      },
+      {
+        "nameId": "FurinaOusiaChange",
+        "image": "/assets/images/skill/furina/FurinaOusiaChange.png",
+        "type": "image"
       }
     ]
   },
@@ -147,6 +197,23 @@
         "level": 10,
         "price": 1000
       }
+    ],
+    "image": "/assets/images/cards/character/mavuika.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/mavuika-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockMavuika.webp",
+    "attached": [
+      {
+        "nameId": "mavuika-icon-skill",
+        "image": "/assets/images/skill/mavuika/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "refinement",
+        "image": "/assets/images/animations/StateUp1.png",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 18
+      }
     ]
   },
   {
@@ -196,6 +263,21 @@
       {
         "level": 10,
         "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/nahida.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/nahida-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockNahida.webp",
+    "attached": [
+      {
+        "nameId": "background",
+        "image": "/assets/images/skill/nahida/background.png",
+        "type": "image"
+      },
+      {
+        "nameId": "nahida-icon-skill",
+        "image": "/assets/images/skill/nahida/skill-icon.webp",
+        "type": "image"
       }
     ]
   },
@@ -247,6 +329,28 @@
         "level": 10,
         "price": 1000
       }
+    ],
+    "image": "/assets/images/cards/character/raiden.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/raiden-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockRaiden.webp",
+    "attached": [
+      {
+        "nameId": "raiden-icon-skill",
+        "image": "/assets/images/skill/raiden/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "raiden-skill",
+        "image": "/assets/images/skill/raiden/raiden.png",
+        "type": "image"
+      },
+      {
+        "nameId": "raiden-skill-animations",
+        "image": "/assets/images/animations/StateParalys.png",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 1
+      }
     ]
   },
   {
@@ -297,6 +401,23 @@
         "level": 10,
         "price": 1000
       }
+    ],
+    "image": "/assets/images/cards/character/venti.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/venti-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockVenti.webp",
+    "attached": [
+      {
+        "nameId": "venti-icon-skill",
+        "image": "/assets/images/skill/venti/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "venti-skill",
+        "image": "/assets/images/animations/venti.png",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 5
+      }
     ]
   },
   {
@@ -346,6 +467,16 @@
       {
         "level": 10,
         "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/zhongli.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/zhongli-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockZhongli.webp",
+    "attached": [
+      {
+        "nameId": "zhongli-icon-skill",
+        "image": "/assets/images/skill/zhongli/skill-icon.webp",
+        "type": "image"
       }
     ]
   }

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { CardCharacter } from './types.js';
 
@@ -8,6 +9,7 @@ const CARD_HEIGHT = 445.7142;
 const SPACING = -180;
 const ROTATION_ANGLES = [-15, 0, 15];
 const CARD_ORDER = [0, 2, 1];
+const CHARACTER_SPRITESHEET_MIN_LEVEL = 10;
 
 function resolveTextureCards(
     cards: CardCharacter[],
@@ -26,7 +28,11 @@ function resolveTextureCards(
             if (characterLevel != null) {
                 textureCard = textureCard.map(texture => {
                     const level = characterLevel[texture];
-                    return level && level > 2 ? texture + '-sprite' : texture;
+                    if (level == null || level === 0) {
+                        const unlockTextureKey = `unlock${texture.charAt(0).toUpperCase()}${texture.slice(1)}`;
+                        return TextureManager.has(unlockTextureKey) ? unlockTextureKey : texture;
+                    }
+                    return level >= CHARACTER_SPRITESHEET_MIN_LEVEL ? texture + '-sprite' : texture;
                 });
             }
         }
@@ -55,7 +61,7 @@ function createIndividualCard(
     if (hasSpriteSuffix) {
         cardImage = SpritesheetWrapper.CharacterAnimation(scene, 0, 0, textureCard, cardWidth, cardHeight);
     } else {
-        cardImage = scene.add.image(0, 0, 'character', textureCard).setDisplaySize(cardWidth, cardHeight);
+        cardImage = TextureManager.image(scene, 0, 0, textureCard).setDisplaySize(cardWidth, cardHeight);
     }
 
     const individualCardContainer = scene.add.container(offsetX, offsetY);

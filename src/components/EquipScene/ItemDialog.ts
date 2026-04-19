@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
 import { dataManager } from '../../core/DataManager.js';
 import { localizationManager } from '../../core/LocalizationManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import { I18nText } from '../shared/index.js';
 import { showToast } from '../PaymentScene/Toast.js';
 import type { Item, EquipItemData } from './types.js';
@@ -53,7 +54,7 @@ export function showItemDialog(
         fontStyle: 'bold'
     }, { level: item.level }).setOrigin(0.5);
 
-    const itemIcon = scene.add.image(0, -120, 'item', item.image);
+    const itemIcon = TextureManager.image(scene, 0, -120, item.image);
     itemIcon.setDisplaySize(180, 180);
     itemIcon.setOrigin(0.5);
 

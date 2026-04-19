@@ -1,6 +1,7 @@
 import Item from '../../modules/Item.js';
 import type GameManager from '../../core/GameManager.js';
 import Weapon from '@/src/modules/typeCard/weapon.js';
+import { ItemAnimation } from '@/src/animations/ItemAnimation.js';
 
 export default class Refinement extends Item {
     constructor() {
@@ -14,13 +15,16 @@ export default class Refinement extends Item {
             if (card?.type === 'weapon') weaponCount++;
         });
         if (weaponCount === 0) return false;
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            gameManager.cardManager.getAllCards().forEach(card => {
-                if (card?.type === 'weapon') {
-               this.refinement(card as Weapon);
-                }
-            });
+        ItemAnimation.runAsync(gameManager.animationManager, this.image);
+        // gameManager.animationManager.startItemAnimation(this.image, () => {
+
+        // });
+        gameManager.cardManager.getAllCards().forEach(card => {
+            if (card?.type === 'weapon') {
+                this.refinement(card as Weapon);
+            }
         });
+
         return true;
     }
 

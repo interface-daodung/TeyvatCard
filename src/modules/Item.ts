@@ -1,5 +1,6 @@
 import type GameManager from '../core/GameManager.js';
 import { dataManager } from '../core/DataManager.js';
+import { ItemAnimation } from '../animations/ItemAnimation.js';
 
 /** Một cấp trong levelStats từ items.json */
 export interface ItemLevelStat {
@@ -66,9 +67,10 @@ export default class Item {
 
     effect(gameManager: GameManager): boolean {
         this.gameManager = gameManager;
-        this.gameManager.animationManager.startItemAnimation(this.image, () => {
-            console.log(`Sử dụng item: ${this.nameId}`);
-        });
+        ItemAnimation.runAsync(gameManager.animationManager, this.image); 
+        // this.gameManager.animationManager.startItemAnimation(this.image, () => {
+        //     console.log(`Sử dụng item: ${this.nameId}`);
+        // });
         return false;
     }
 

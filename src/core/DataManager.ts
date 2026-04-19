@@ -10,6 +10,20 @@ import Phaser from 'phaser';
 
 /** Đường dẫn gốc cho thư mục public/data (URL khi chạy app) */
 const DATA_BASE_PATH = '/data/';
+/** JSON app load từ public/data, sau khi load xong ghi vào dataManager.setFlag */
+const APP_DATA_PATHS = [
+  'About.json',
+  'dungeonList.json',
+  'libraryCards.json',
+  'cardCharacterList.json',
+  'items.json',
+] as const;
+/** Locale i18n (public/data/locales) – load xong ghi vào dataManager.setTranslations() */
+const LOCALE_DATA_PATHS = [
+  'locales/vi.json',
+  'locales/en.json',
+  'locales/ja.json',
+] as const;
 
 const IS_DEV = import.meta.env.VITE_IS_DEV === 'true';
 const SECRET_KEY = import.meta.env.VITE_STORAGE_SECRET_KEY || 'teyvat-default-obfuscation-key';
@@ -19,14 +33,14 @@ const PREFIX = 'T0vt';
 const KNOWN_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
   'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
-  'jwt', 'refreshToken', 'showCardName', 'theme'
+  'jwt', 'refreshToken', 'showCardName', 'theme', 'applyCharacterTheme'
 ]);
 
 /** Keys dùng cho cloud save (loại jwt, refreshToken). */
 const CLOUD_SAVE_KEYS = new Set([
   'totalCoin', 'highScores', 'characterHighScores', 'equipment', 'starterPackPurchased',
   'selectedCharacter', 'characterLevel', 'unlockedCharacters', 'itemLevel', 'gameLanguage', 'gameVolume', 'gameBGMVolume',
-  'showCardName', 'theme'
+  'showCardName', 'theme', 'applyCharacterTheme'
 ]);
 
 function serialize<T>(value: T): string {
@@ -214,6 +228,50 @@ class DataManager {
     }
     scene.load.json(key, fullUrl);
     return key;
+  }
+
+  /**
+   * Queue load app JSON + locales, xong thì ghi flag / setTranslations và gọi callback.
+   */
+  queueAppDataAndThenOnThemeLoaded(scene: Phaser.Scene, onThemeLoaded: () => void): void {
+    const appKeys = APP_DATA_PATHS.map((dataPath) => this.getDataCacheKey(dataPath));
+    const localeKeys = LOCALE_DATA_PATHS.map((dataPath) => this.getDataCacheKey(dataPath));
+    const hasAllCachedData = [...appKeys, ...localeKeys].every((key) => scene.cache.json.exists(key));
+
+    const hydrateCachedData = (): void => {
+      for (const key of appKeys) {
+        const data = this.getJsonFromCache<unknown>(scene, key);
+        if (data !== undefined) {
+          this.setFlag(key, data);
+        }
+      }
+      const vi = this.getJsonFromCache<Record<string, string>>(scene, 'locales_vi');
+      const en = this.getJsonFromCache<Record<string, string>>(scene, 'locales_en');
+      const ja = this.getJsonFromCache<Record<string, string>>(scene, 'locales_ja');
+      this.setTranslations({
+        vi: vi ?? {},
+        en: en ?? {},
+        ja: ja ?? {},
+      });
+    };
+
+    if (hasAllCachedData) {
+      hydrateCachedData();
+      onThemeLoaded();
+      return;
+    }
+
+    for (const dataPath of APP_DATA_PATHS) {
+      this.queueJsonFromData(scene, dataPath);
+    }
+    for (const dataPath of LOCALE_DATA_PATHS) {
+      this.queueJsonFromData(scene, dataPath);
+    }
+    scene.load.once('complete', () => {
+      hydrateCachedData();
+      onThemeLoaded();
+    });
+    scene.load.start();
   }
 
   /**

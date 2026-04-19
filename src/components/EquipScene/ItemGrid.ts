@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
 import { dataManager } from '../../core/DataManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import itemFactory from '../../modules/ItemFactory.js';
 import type { Item, EquipItemData } from './types.js';
 
@@ -60,7 +61,7 @@ export function createItemGrid(
             itemBg.fillRoundedRect(-itemSize / 2, -itemSize / 2, itemSize, itemSize, 15);
             itemBg.strokeRoundedRect(-itemSize / 2, -itemSize / 2, itemSize, itemSize, 15);
 
-            const itemIcon = scene.add.image(0, 0, 'item', itemKey);
+            const itemIcon = TextureManager.image(scene, 0, 0, itemKey);
             itemIcon.setDisplaySize(itemSize, itemSize);
             itemIcon.setOrigin(0.5);
 

@@ -9,6 +9,8 @@ import { dataManager } from './DataManager.js';
 import Card from '../modules/Card.js';
 import { Log } from '../utils/Log.js';
 import { soundManager } from './SoundManager.js';
+import { MoveAnimation } from '../animations/MoveAnimation.js';
+import { GameOverAnimation } from '../animations/GameOverAnimation.js';
 
 interface MovementItem {
     from: number;
@@ -62,30 +64,38 @@ export default class GameManager {
         this.itemEquipment = itemEquipment;
     }
 
-
+    isProcessing: boolean = false;
     /**
      * Di chuyển card từ vị trí cũ sang vị trí mới
      * @param index - Vị trí card cũ
      */
-    moveCharacter(index: number): void {
+    async moveCharacter(index: number): Promise<void> {
 
         // Nếu đang xử lý animation thì không di chuyển
-        if (this.animationManager.isProcessing || this.OnCompleteMoveCount !== 0) {
+        if (this.animationManager.isProcessing || this.OnCompleteMoveCount !== 0 || this.isProcessing) {
+            console.warn('Move blocked: animation in progress or waiting for completeMove');
+            console.log('animationManager.isProcessing:', this.animationManager.isProcessing);
+            console.log('OnCompleteMoveCount:', this.OnCompleteMoveCount);
+            console.log('isProcessing:', this.isProcessing);
             return;
         }
 
         const characterIndex = this.cardManager.getCharacterIndex();
 
         if (CalculatePositionCard.isValidMove(characterIndex, index)) {
-            const card = this.cardManager.getCard(index);
-            if ((card as Card)?.CardEffect()) {
+            this.isProcessing = true;
+            const card = this.cardManager.getCard(index) as Card;
+            if (await card?.CardEffect()) {
                 dataManager.setFlag('cardAtOldCharacterPos', undefined);
                 // Emit event completeMove để tất cả card có thể xử lý
                 this.emitter.emit('completeMove');
+                this.isProcessing = false;
                 return;
             }
             if (this.isGameOver) {
+                this.isProcessing = false;
                 return;
+
             }
             const movement = CalculatePositionCard.calculateMovement(characterIndex, index);
 
@@ -94,26 +104,28 @@ export default class GameManager {
             // check null và gọi ProgressDestroy nếu có
             (cardToDestroy as Card)?.ProgressDestroy?.();
 
-            this.animationManager.startMoveAnimation(movement, () => {
-                // Mục tiêu Corruption: thẻ ở vị trí cũ của nhân vật (B). Nhân vật B→A thì sau move
-                // thẻ tại movement[1].from sẽ dồn vào B → lưu thẻ đó trước khi moveCard.
-                dataManager.setFlag('cardAtOldCharacterPos', this.cardManager.getCard(movement[1].from));
+            await MoveAnimation.runAsync(this.animationManager, movement);
+            // this.animationManager.startMoveAnimation(movement, () => {
+            // Mục tiêu Corruption: thẻ ở vị trí cũ của nhân vật (B). Nhân vật B→A thì sau move
+            // thẻ tại movement[1].from sẽ dồn vào B → lưu thẻ đó trước khi moveCard.
+            dataManager.setFlag('cardAtOldCharacterPos', this.cardManager.getCard(movement[1].from));
 
-                movement.forEach(move => {
-                    // Sử dụng hàm moveCard an toàn từ CardManager
-                    this.cardManager.moveCard(move.from, move.to);
-                });
-
-                // Tạo card mới ở vị trí cuối của movement
-                const newCardIndex = movement[movement.length - 1].from;
-                const newCard = this.cardManager.cardFactory.createRandomCard(this.scene, newCardIndex) as Card;
-                const addedCard = this.cardManager.addCard(newCard, newCardIndex);
-                if (newCard && (addedCard as Card).processCreation) {
-                    (addedCard as Card).processCreation!();
-                }
-                // Emit event completeMove để tất cả card có thể xử lý
-                this.emitter.emit('completeMove');
+            movement.forEach(move => {
+                // Sử dụng hàm moveCard an toàn từ CardManager
+                this.cardManager.moveCard(move.from, move.to);
             });
+
+            // Tạo card mới ở vị trí cuối của movement
+            const newCardIndex = movement[movement.length - 1].from;
+            const newCard = this.cardManager.cardFactory.createRandomCard(this.scene, newCardIndex) as Card;
+            const addedCard = this.cardManager.addCard(newCard, newCardIndex);
+            if (newCard && (addedCard as Card).processCreation) {
+                (addedCard as Card).processCreation!();
+            }
+            // Emit event completeMove để tất cả card có thể xử lý
+            this.emitter.emit('completeMove');
+            this.isProcessing = false;
+            // });
 
         }
     }
@@ -176,7 +188,7 @@ export default class GameManager {
         Log.info(`GameManager: Added ${points} coins, total: ${this.coin}`);
     }
 
-    gameOver(): void {
+    async gameOver(): Promise<void> {
         Log.info('gameOver!');
         this.emitter.emit('gameOver');
         this.isGameOver = true;
@@ -213,10 +225,10 @@ export default class GameManager {
 
         // Destroy từng thẻ một cách tuần tự với delay 200ms
 
-        this.animationManager.startGameOverAnimation(CalculatePositionCard.
-            shuffleArray(this.cardManager.getAllCards()) as Card[], () => {
-                this.showGameOverDialog();
-            });
+        await GameOverAnimation.runAsync(this.animationManager,
+            CalculatePositionCard.shuffleArray(this.cardManager.getAllCards()) as Card[]);
+        this.showGameOverDialog();
+
 
     }
 

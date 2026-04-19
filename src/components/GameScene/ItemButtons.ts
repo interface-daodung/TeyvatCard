@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { themeManager } from '../../core/ThemeManager.js';
 import { dataManager } from '../../core/DataManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import itemFactory from '../../modules/ItemFactory.js';
 import { I18nText } from '../shared/index.js';
 import type { ItemData, ItemButton } from './types.js';
@@ -38,7 +39,7 @@ export function createItemButton(
     backgroundItem.fillRoundedRect(-buttonSize / 2, -buttonSize / 2, buttonSize, buttonSize, 20);
     backgroundItem.setAlpha(0.5);
 
-    const itemImage = scene.add.image(0, 0, 'item', itemData.image);
+    const itemImage = TextureManager.image(scene, 0, 0, itemData.image);
     itemImage.setDisplaySize(80, 80);
 
     const countText = scene.add.text(buttonSize / 2, -buttonSize / 2, itemData.cooldown.toString(), {

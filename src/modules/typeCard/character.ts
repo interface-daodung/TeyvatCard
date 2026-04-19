@@ -5,36 +5,71 @@ import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
-import Equipment from './equipment.js';
+import Equipment from '../weaponCategory/equipment.js';
 import { soundManager } from '../../core/SoundManager.js';
+import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
+import { animationCurse } from '@/src/animations/Sprites/animationCurse.js';
+import { ShowPopup, type PopupPayload } from '../../components/shared/index.js';
+import TextureManager from '../../core/TextureManager.js';
+import { CardShieldStackManager } from '../cardShieldStacks.js';
 
+export type DamageElement =
+    | 'anemo'
+    | 'cryo'
+    | 'dendro'
+    | 'electro'
+    | 'geo'
+    | 'hydro'
+    | 'pyro';
+
+export type DamageType =
+    | 'poisoning'
+    | 'damage'
+    | 'curse';
+
+export const CHARACTER_SPRITESHEET_MIN_LEVEL = 10;
 
 export default class Character extends Card {
     level: number;
     hp: number;
+    element: string = 'error';
     weapon: Equipment | null;
     hpDisplay!: CreateDisplayResult;
+    /** Tổng khiên (đồng bộ qua `shieldMgr`). */
+    shield = 0;
+    shieldDisplay!: CreateDisplayResult;
+    private readonly shieldMgr: CardShieldStackManager;
     weaponDisplay!: CreateDisplayResult;
     weaponBadgeDisplay!: { updateTexture: (texture: string) => void; destroy: () => void };
     /** HP base từ config (JSON/DEFAULT), dùng trong getMaxHP nếu có */
     configHp?: number;
+    private _elementalBurstCooldown: number = 0;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'character');
         this.level = this.getLevel();
         this.hp = this.getMaxHP();
         this.weapon = null;
+        this.shieldMgr = new CardShieldStackManager({
+            getScene: () => this.scene,
+            getDestroyed: () => this.destroyed,
+            getUnsubscribeList: () => this.unsubscribeList,
+            applyShieldTotal: (total) => {
+                this.shield = total;
+                this.shieldDisplay?.updateText(String(total));
+            }
+        });
     }
 
     override applyConfig(config: CardDefault): void {
         super.applyConfig(config);
-        if (config.element != null) (this as any).element = config.element;
+        if (config.element != null) this.element = config.element;
         if (config.hp != null) this.configHp = config.hp;
         this.hp = this.getMaxHP();
     }
 
     createCard(): void {
-        if (this.level > 2) {
+        if (this.level >= CHARACTER_SPRITESHEET_MIN_LEVEL) {
             this.cardImage = SpritesheetWrapper.CharacterAnimation(
                 this.scene,
                 0,
@@ -63,6 +98,33 @@ export default class Character extends Card {
             super.createCard();
         }
     }
+
+    /*
+    * Tạo display HUD cho nhân vật
+    * @param options: CreateDisplayOptions
+    * @param position: DisplayPosition = 'leftTop' | 'rightTop' | 'rightBottom' | 'leftBottom'
+    * @returns CreateDisplayResult
+    */
+    addDisplayHUD(): void {
+        this.hpDisplay = this.createDisplay(
+            { fillColor: 0xff0000, text: this.hp.toString() },
+            'rightTop' as DisplayPosition
+        );
+        this.shieldDisplay = this.createDisplay(
+            {
+                text: String(this.shield),
+                backgroundIcon: '🛡️',
+                backgroundIconSize: '36px'
+            },
+            'leftTop' as DisplayPosition
+        );
+        this.weaponDisplay = this.createDisplay(
+            { fillColor: 0xff6600, text: String(this.weapon?.durability ?? 0) },
+            'leftBottom' as DisplayPosition
+        );
+        this.weaponBadgeDisplay = this.createBadgeDisplay();
+    }
+
     // trạng thái bị đầu độc
     poisoning: boolean = false;
 
@@ -176,28 +238,48 @@ export default class Character extends Card {
         }
     }
 
-
-    addDisplayHUD(): void {
-        this.hpDisplay = this.createDisplay(
-            { fillColor: 0xff0000, text: this.hp.toString() },
-            'rightTop' as DisplayPosition
-        );
-        this.weaponDisplay = this.createDisplay(
-            { fillColor: 0xff6600, text: String(this.weapon?.durability ?? 0) },
-            'leftBottom' as DisplayPosition
-        );
-        this.weaponBadgeDisplay = this.createBadgeDisplay();
+    expireShield(): void {
+        this.shieldMgr.expireShield();
     }
 
-    takeDamage(damage: number, type: 'poisoning' | 'damage'): number {
-        // super.takeDamage(damage, type); //thêm hiệu ứng dmg mặc định
-        this.hp = Math.max(0, this.hp - damage);
-        this.hpDisplay.updateText(this.hp.toString());
+    addShield(amount: number, turnsToExpire: number = 1, nameIdOfShield: string = 'default'): boolean {
+        return this.shieldMgr.addShield(amount, turnsToExpire, nameIdOfShield);
+    }
+
+    takeDamage(
+        damage: number,
+        type: DamageType,
+        element: DamageElement | null = null
+    ): number {
         if (type === 'poisoning') {
-            SpritesheetWrapper.animationStatePoison(this.scene, this.x, this.y);
+            this.add(animationStatePoison(this.scene, 0, 0));
             soundManager.play('poison');
+            this.hp = Math.max(1, this.hp - damage);
+            this.hpDisplay.updateText(this.hp.toString());
+            this.showPopup(damage, type);
+        } else if (type === 'curse') {
+            this.add(animationCurse(this.scene, 0, 0));
+            this.hp = 1;
+            this.hpDisplay.updateText(this.hp.toString());
+            this.showPopup(damage, type);
+        } else {
+            let remaining = damage;
+            const shieldTotal = this.shieldMgr.getTotal();
+            if (shieldTotal > 0 && remaining > 0) {
+                const absorbed = Math.min(shieldTotal, remaining);
+                remaining -= absorbed;
+                this.shieldMgr.absorb(absorbed);
+                if (absorbed > 0) {
+                    this.showPopup(absorbed, { color: '#ffbb00', prefix: '⛨' });
+                }
+            }
+            if (remaining > 0) {
+                this.hp = Math.max(0, this.hp - remaining);
+                this.showPopup(remaining, type);
+            }
+            this.hpDisplay.updateText(this.hp.toString());
         }
-        this.showPopup(damage, type);
+
         if (this.hp <= 0) {
             this.scene.gameManager?.gameOver();
         }
@@ -212,44 +294,13 @@ export default class Character extends Card {
 
 
 
-    showPopup(amount: number, type: keyof typeof POPUP_CONFIG = 'error'): void {
-        const config = POPUP_CONFIG[type];
-        const color = config.color;
-        const prefix = config.prefix;
-
-        //(Math.random()*2-1)*max
-        const popupTextPosition = {
-            x: (Math.random() * 2 - 1) * 30,
-            y: (Math.random() * 2 - 1) * 30
-        };
-
-        const popupText = this.scene.add
-            .text(popupTextPosition.x, popupTextPosition.y, `${prefix}${amount}`, {
-                fontSize: '32px',
-                color: color,
-                fontFamily: 'Arial',
-                fontStyle: 'bold',
-                stroke: '#000000',
-                strokeThickness: 4
-            })
-            .setOrigin(0.5)
-            .setDepth(2002);
-
-        this.add(popupText);
-
-        this.scene.tweens.add({
-            targets: popupText,
-            y: -50,
-            alpha: 0.1,
-            duration: 2000,
-            ease: 'Power2',
-            onComplete: () => popupText.destroy()
-        });
+    showPopup(amount: number, type: PopupPayload = 'error'): void {
+        ShowPopup.show(this, amount, type);
     }
 
     getMaxHP(): number {
         const baseHp = this.configHp ?? (this.constructor as typeof Card & { DEFAULT?: { hp?: number } }).DEFAULT?.hp ?? 10;
-        return baseHp + this.getLevel() - 1;
+        return baseHp + this.getLevel();
     }
 
     getLevel(): number {
@@ -260,7 +311,7 @@ export default class Character extends Card {
     setWeapon(weapon: Equipment): void {
         const currentDurability = this.weapon?.durability ?? 0;
         if (weapon.durability > currentDurability) {
-            if(currentDurability>0){
+            if (currentDurability > 0) {
                 this.scene.gameManager?.addCoin(currentDurability);
             }
             this.weapon = weapon;
@@ -274,27 +325,28 @@ export default class Character extends Card {
     }
 
     createBadgeDisplay(texture: string = ''): { updateTexture: (newTexture: string) => void; destroy: () => void } {
+        const fallbackKey =
+            TextureManager.getFallbackTextureKeyForScene(this.scene) ?? '__MISSING';
         const badgeDisplay = this.scene.add
-            .image(0, 0, texture)
+            .image(0, 0, fallbackKey)
             .setOrigin(0.5)
             .setPosition(40, 96)
-            .setDisplaySize(10, 10);
+            .setDisplaySize(20, 20);
         this.add(badgeDisplay);
         if (texture === '') {
             badgeDisplay.setVisible(false);
+        } else {
+            TextureManager.setImageTexture(badgeDisplay, texture);
         }
 
         return {
             updateTexture: (newTexture: string) => {
-                if (this.weapon && (this.weapon as any).default?.category) {
-                    badgeDisplay.setTexture(
-                        'weapon-' + (this.weapon as any).default.category + '-badge',
-                        newTexture
-                    );
-                } else {
-                    badgeDisplay.setTexture(newTexture);
+                if (!newTexture) {
+                    badgeDisplay.setVisible(false);
+                    return;
                 }
-                badgeDisplay.setVisible(newTexture !== '');
+                TextureManager.setImageTexture(badgeDisplay, newTexture);
+                badgeDisplay.setVisible(true);
             },
             destroy: () => badgeDisplay.destroy()
         };
@@ -321,13 +373,30 @@ export default class Character extends Card {
             (this.scene as any).sellButton?.updateButton();
         }
     }
+
+    elementalBurst(): void {
+        // Logic của elemental burst
+        // Có thể thêm hiệu ứng hoặc âm thanh khi sử dụng elemental burst
+    }
+
+    get elementalBurstCooldown(): number {
+        return this._elementalBurstCooldown;
+    }
+
+    set elementalBurstCooldown(value: number) {
+        this._elementalBurstCooldown = Math.max(0, value);
+        (this.scene as any).updateSkillButtonCooldown?.();
+    }
+    // elementalBurstCooldownMax: number = 20; // Ví dụ: elemental burst có cooldown 5 lượt
+
+    /** Trùng `element` với nhân vật: −2 cooldown burst; khác: −1. Override nếu cần (vd. Zhongli). */
+    elementalRecharge(element: string): void {
+        if (element === this.element) {
+            this.elementalBurstCooldown -= 2;
+        } else {
+            this.elementalBurstCooldown--;
+        }
+        this.elementalBurstCooldown = Math.max(0, this.elementalBurstCooldown);
+    }
 }
 
-
-// Đặt bên ngoài class
-const POPUP_CONFIG = {
-    heal: { color: '#00ff00', prefix: '+' },
-    damage: { color: '#ff0000', prefix: '-' },
-    poisoning: { color: '#800080', prefix: '-' },
-    error: { color: '#ffffff', prefix: '' }
-} as const;

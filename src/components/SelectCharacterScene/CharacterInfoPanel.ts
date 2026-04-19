@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { localizationManager } from '../../core/LocalizationManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
+import TextureManager from '../../core/TextureManager.js';
 import { I18nText } from '../shared/index.js';
 import type { CardCharacter } from './types.js';
 
@@ -20,6 +21,11 @@ export interface CharacterInfoPanelRefs {
     cardDescriptionText: I18nText;
     cardHPText: I18nText & { hp: number };
     upgradeButton: Phaser.GameObjects.Text;
+}
+
+/** Key texture spritesheet nhân vật (Phaser), khớp `loadSpritesheet(\`${id}-sprite\`, ...)`. */
+export function getCharacterSpritesheetTextureKey(characterId: string): string {
+    return `${characterId}-sprite`;
 }
 
 export interface CharacterInfoPanelCallbacks {
@@ -70,7 +76,7 @@ export function createInfoPanel(
         fontStyle: 'bold'
     }, { level }).setOrigin(0.5);
 
-    const cardElementImage = scene.add.image(width * 0.1 + 32, height * 0.15 + 32, 'element', `element-${elementKey}`);
+    const cardElementImage = TextureManager.image(scene, width * 0.1 + 32, height * 0.15 + 32, `${elementKey}`);
     cardElementImage.setDisplaySize(32, 32);
 
     const cardDescriptionText = I18nText.create(scene, width * 0.5, height * 0.26, descriptionKey, {

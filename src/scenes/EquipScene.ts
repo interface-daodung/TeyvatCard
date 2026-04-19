@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { dataManager } from '../core/DataManager.js';
 import { HeaderUI } from '../utils/HeaderUI.js';
 import { themeManager } from '../core/ThemeManager.js';
+import TextureManager from '../core/TextureManager.js';
 import {
     createBackButton,
     createItemGrid,
@@ -29,7 +30,7 @@ export default class EquipScene extends Phaser.Scene {
     create(): void {
         const { width, height } = this.scale;
 
-        this.add.image(width / 2, height / 2, 'background');
+        TextureManager.image(this, width / 2, height / 2, 'background').setDisplaySize(width, height);
         const headerRef = HeaderUI.createHeaderUI(this, width, height);
         this.updateCoinDisplay = headerRef.updateCoinDisplay;
         GameTitle.create(this, width / 2, height * 0.18, 'equip_title');

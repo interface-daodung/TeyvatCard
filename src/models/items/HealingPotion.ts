@@ -1,5 +1,6 @@
 import Item from '../../modules/Item.js';
 import type GameManager from '../../core/GameManager.js';
+import { ItemAnimation } from '@/src/animations/ItemAnimation.js';
 
 export default class HealingPotion extends Item {
     constructor() {
@@ -8,13 +9,14 @@ export default class HealingPotion extends Item {
     }
 
     override effect(gameManager: GameManager): boolean {
-        const cardCharacter = gameManager.cardManager.CardCharacter as any;
+        const cardCharacter = gameManager.cardManager.CardCharacter;
         if (cardCharacter?.hp >= cardCharacter?.getMaxHP()) {
             return false;
         }
-        gameManager.animationManager.startItemAnimation(this.image, () => {
+        ItemAnimation.runAsync(gameManager.animationManager, this.image);
+        // gameManager.animationManager.startItemAnimation(this.image, () => {
             cardCharacter?.heal(this.power);
-        });
+        // });
         return true;
     }
 }

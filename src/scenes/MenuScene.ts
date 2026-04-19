@@ -11,12 +11,14 @@ import {
     type MenuButtonResult
 } from '../components/MenuScene/index.js';
 import { createTestDevButton } from '../components/TestDevButton.js';
+import TextureManager from '../core/TextureManager.js';
 
 export default class MenuScene extends Phaser.Scene {
     private cards: CardCharacter[] = [];
     private libraryButton?: MenuButtonResult;
     private exploreButton?: MenuButtonResult;
     private equipButton?: MenuButtonResult;
+    private backgroundImage?: Phaser.GameObjects.Image;
 
     constructor() {
         super({ key: 'MenuScene' });
@@ -33,8 +35,9 @@ export default class MenuScene extends Phaser.Scene {
     create(): void {
         const { width, height } = this.scale;
 
-        const background = this.add.image(width / 2, height / 2, 'background');
-        background.setDisplaySize(width, height);
+        this.backgroundImage = TextureManager.image(this, width / 2, height / 2, 'background')
+            .setDisplaySize(width, height)
+            .setDepth(-1000);
 
         HeaderUI.createHeaderUI(this, width, height);
         GameTitle.create(this, width / 2, height * 0.18, 'menu_title');
@@ -46,7 +49,7 @@ export default class MenuScene extends Phaser.Scene {
         this.libraryButton = createMenuButton(this, width / 2 - width * 0.3, height * 0.8, 'library', 'library', 'LibraryScene');
         this.exploreButton = createMenuButton(this, width / 2, height * 0.8, 'compass', 'explore', 'MapScenes');
         this.equipButton = createMenuButton(this, width / 2 + width * 0.3, height * 0.8, 'equip', 'equip', 'EquipScene');
-
+ 
         createTestDevButton(this, width / 2, height * 0.95, {
             onClick: () => {
                 this.scene.stop('GameScene');
@@ -65,5 +68,18 @@ export default class MenuScene extends Phaser.Scene {
         }
     }
 
-    shutdown(): void {}
+    // shutdown(): void {}
+
+    // /**
+    //  * Đổi texture của nền màn hình real-time.
+    //  * Lưu ý: không destroy/add lại để hạn chế lỗi render order/depth.
+    //  */
+    // public setBackgroundTexture(textureKey: string): void {
+    //     if (!this.backgroundImage) return;
+    //     if (TextureManager.has(textureKey)) {
+    //         TextureManager.setImageTexture(this.backgroundImage, textureKey);
+    //         return;
+    //     }
+    //     this.backgroundImage.setTexture(textureKey);
+    // }
 }

@@ -5,22 +5,6 @@ import { themeManager } from '../core/ThemeManager.js';
 import { localizationManager } from '../core/LocalizationManager.js';
 import { I18nText } from '../components/shared/index.js';
 
-/** JSON app load từ public/data, sau khi load xong ghi vào dataManager.setFlag */
-const APP_DATA_PATHS = [
-    'About.json',
-    'dungeonList.json',
-    'libraryCards.json',
-    'cardCharacterList.json',
-    'items.json',
-] as const;
-
-/** Locale i18n (public/data/locales) – load xong ghi vào dataManager.setTranslations() */
-const LOCALE_DATA_PATHS = [
-    'locales/vi.json',
-    'locales/en.json',
-    'locales/ja.json',
-] as const;
-
 interface SceneData {
     targetScene?: string;
     dataTargetScene?: Record<string, any>;
@@ -47,37 +31,8 @@ export default class LoadingScene extends Phaser.Scene {
     create(): void {
         // 1) Theme từ public/data/theme.json
         themeManager.loadTheme(this, 'theme.json').then(() => {
-            this.queueAppDataAndThenOnThemeLoaded();
+            dataManager.queueAppDataAndThenOnThemeLoaded(this, () => this.onThemeLoaded());
         });
-    }
-
-    /** Queue load app JSON + locales, xong thì ghi flag / setTranslations và gọi onThemeLoaded */
-    private queueAppDataAndThenOnThemeLoaded(): void {
-        for (const dataPath of APP_DATA_PATHS) {
-            dataManager.queueJsonFromData(this, dataPath);
-        }
-        for (const dataPath of LOCALE_DATA_PATHS) {
-            dataManager.queueJsonFromData(this, dataPath);
-        }
-        this.load.once('complete', () => {
-            for (const dataPath of APP_DATA_PATHS) {
-                const key = dataManager.getDataCacheKey(dataPath);
-                const data = dataManager.getJsonFromCache<unknown>(this, key);
-                if (data !== undefined) {
-                    dataManager.setFlag(key, data);
-                }
-            }
-            const vi = dataManager.getJsonFromCache<Record<string, string>>(this, 'locales_vi');
-            const en = dataManager.getJsonFromCache<Record<string, string>>(this, 'locales_en');
-            const ja = dataManager.getJsonFromCache<Record<string, string>>(this, 'locales_ja');
-            dataManager.setTranslations({
-                vi: vi ?? {},
-                en: en ?? {},
-                ja: ja ?? {},
-            });
-            this.onThemeLoaded();
-        });
-        this.load.start();
     }
 
     private onThemeLoaded(): void {
@@ -141,10 +96,16 @@ export default class LoadingScene extends Phaser.Scene {
             loop: true
         });
 
-        // Load assets sau khi UI đã hiển thị
-        assetManager.setScene(this);
-        assetManager.preloadSceneAssets(this.targetScene, () => {
-            this.scene.start(this.targetScene, this.dataTargetScene);
+        // Hiển thị UI ngay frame hiện tại, rồi mới bắt đầu preload ở luồng async kế tiếp.
+        this.startAssetPreloadAsync();
+    }
+
+    private startAssetPreloadAsync(): void {
+        this.time.delayedCall(0, () => {
+            assetManager.setScene(this);
+            assetManager.preloadSceneAssets(this.targetScene, () => {
+                this.scene.start(this.targetScene, this.dataTargetScene);
+            }, this.dataTargetScene);
         });
     }
 }

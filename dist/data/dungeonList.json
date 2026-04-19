@@ -44,7 +44,11 @@
         "Explosive"
       ]
     },
-    "map_background": "/assets/images/ui/background/BideBao.webp"
+    "map_background": "/assets/images/ui/background/BideBao.webp",
+    "image": "",
+    "imageSpritesheet": "",
+    "imageUnlock": "",
+    "attached": []
   },
   {
     "stageId": "Chuiliu_Swamp",
@@ -96,7 +100,11 @@
       ],
       "bombs": []
     },
-    "map_background": "/assets/images/ui/background/Chuiliu.webp"
+    "map_background": "/assets/images/ui/background/Chuiliu.webp",
+    "image": "",
+    "imageSpritesheet": "",
+    "imageUnlock": "",
+    "attached": []
   },
   {
     "stageId": "Howling_cliff",
@@ -144,7 +152,11 @@
       ],
       "bombs": []
     },
-    "map_background": "/assets/images/ui/background/XuanmuRen.webp"
+    "map_background": "/assets/images/ui/background/XuanmuRen.webp",
+    "image": "",
+    "imageSpritesheet": "",
+    "imageUnlock": "",
+    "attached": []
   },
   {
     "stageId": "babel_tower",
@@ -192,6 +204,10 @@
       ],
       "bombs": []
     },
-    "map_background": "/assets/images/ui/background/Fankang.webp"
+    "map_background": "/assets/images/ui/background/Fankang.webp",
+    "image": "",
+    "imageSpritesheet": "",
+    "imageUnlock": "",
+    "attached": []
   }
 ]

@@ -2,6 +2,7 @@ import Item from '../../modules/Item.js';
 import type GameManager from '../../core/GameManager.js';
 import { dataManager } from '../../core/DataManager.js';
 import Enemy from '../../modules/typeCard/enemy.js';
+import { ItemAnimation } from '@/src/animations/ItemAnimation.js';
 
 export default class Corruption extends Item {
     active: boolean;
@@ -14,9 +15,12 @@ export default class Corruption extends Item {
     override effect(gameManager: GameManager): boolean {
         if (this.active) return false;
         this.active = true;
-        gameManager.animationManager.startItemAnimation(this.image, () => {
-            gameManager.emitter.on('completeMove', this.onCompleteMove.bind(this), 10);
-        });
+        ItemAnimation.runAsync(gameManager.animationManager, this.image);
+        // gameManager.animationManager.startItemAnimation(this.image, () => {
+        //     gameManager.emitter.on('completeMove', this.onCompleteMove.bind(this), 10);
+        // });
+        gameManager.cardManager.CardCharacter.takeDamage(0, 'curse'); // Hiện hiệu ứng curse trên nhân vật
+        gameManager.emitter.on('completeMove', this.onCompleteMove.bind(this), 10);
         return true;
     }
 
