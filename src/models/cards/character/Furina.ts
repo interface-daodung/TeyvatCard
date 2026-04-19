@@ -2,6 +2,7 @@ import Character from '../../../modules/typeCard/character.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import type Enemy from '../../../modules/typeCard/enemy.js';
+import TextureManager from '../../../core/TextureManager.js';
 
 export default class Furina extends Character {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -15,8 +16,6 @@ export default class Furina extends Character {
 
         scene.add.existing(this);
 
-        // Preload token icons cho Ousia (để setToken() vẽ được ngay khi reload tăng).
-        this.preloadOusiaTokens();
     }
 
     Pneuma_or_Ousia: boolean = false;
@@ -55,8 +54,8 @@ export default class Furina extends Character {
     Surintendante_Chevalmarin?: Phaser.GameObjects.Image;
     Mademoiselle_Crabaletta?: Phaser.GameObjects.Image;
     /**
-     * Gentilhomme_Usher texture key: 'Gentilhomme-Usher'
-     * Surintendante_Chevalmarin texture key: 'Surintendante-Chevalmarin'
+     * Gentilhomme_Usher texture key: 'GentilhommeUsher'
+     * Surintendante_Chevalmarin texture key: 'SurintendanteChevalmarin'
      * Mademoiselle_Crabaletta texture key: 'Mademoiselle-Crabaletta'
      *  */
 
@@ -83,24 +82,24 @@ export default class Furina extends Character {
         const count = Phaser.Math.Clamp(Math.floor(this.Ousia_Reload), 0, this.Ousia_Reload_Max);
 
         // init (không add vào this/Furina container)
-        if (!this.Gentilhomme_Usher && this.scene?.textures?.exists('Gentilhomme-Usher')) {
-            this.Gentilhomme_Usher = this.scene.add.image(x1, tokenY, 'Gentilhomme-Usher')
+        if (!this.Gentilhomme_Usher && TextureManager.has('GentilhommeUsher')) {
+            this.Gentilhomme_Usher = TextureManager.image(this.scene, x1, tokenY, 'GentilhommeUsher')
                 .setOrigin(0.5)
                 .setDisplaySize(120, 120)
                 .setDepth(10)
                 .setVisible(false);
         }
 
-        if (!this.Surintendante_Chevalmarin && this.scene?.textures?.exists('Surintendante-Chevalmarin')) {
-            this.Surintendante_Chevalmarin = this.scene.add.image(x2, tokenY, 'Surintendante-Chevalmarin')
+        if (!this.Surintendante_Chevalmarin && TextureManager.has('SurintendanteChevalmarin')) {
+            this.Surintendante_Chevalmarin = TextureManager.image(this.scene, x2, tokenY, 'SurintendanteChevalmarin')
                 .setOrigin(0.5)
                 .setDisplaySize(120, 120)
                 .setDepth(10)
                 .setVisible(false);
         }
 
-        if (!this.Mademoiselle_Crabaletta && this.scene?.textures?.exists('Mademoiselle-Crabaletta')) {
-            this.Mademoiselle_Crabaletta = this.scene.add.image(x3, tokenY, 'Mademoiselle-Crabaletta')
+        if (!this.Mademoiselle_Crabaletta && TextureManager.has('MademoiselleCrabaletta')) {
+            this.Mademoiselle_Crabaletta = TextureManager.image(this.scene, x3, tokenY, 'MademoiselleCrabaletta')
                 .setOrigin(0.5)
                 .setDisplaySize(120, 120)
                 .setDepth(10)
@@ -112,33 +111,6 @@ export default class Furina extends Character {
         this.Surintendante_Chevalmarin?.setVisible(count >= 2);
         this.Mademoiselle_Crabaletta?.setVisible(count >= 3);
     }
-
-    /** preloadOusiaTokens method. */
-    private preloadOusiaTokens(): void {
-        if (!this.scene) return;
-
-        const toLoad: Array<{ key: string; url: string }> = [
-            { key: 'Gentilhomme-Usher', url: 'assets/images/skill/GentilhommeUsher.png' },
-            { key: 'Surintendante-Chevalmarin', url: 'assets/images/skill/SurintendanteChevalmarin.png' },
-            { key: 'Mademoiselle-Crabaletta', url: 'assets/images/skill/MademoiselleCrabaletta.png' },
-        ];
-
-        const queue = toLoad.filter(t => !this.scene.textures.exists(t.key));
-        if (queue.length === 0) {
-            this.setToken();
-            return;
-        }
-
-        for (const item of queue) {
-            this.scene.load.image(item.key, item.url);
-        }
-
-        this.scene.load.once('complete', () => {
-            this.setToken();
-        });
-        this.scene.load.start();
-    }
-
 
     // isIncrease = true: hp tăng, isIncrease = false: hp giảm
     /**

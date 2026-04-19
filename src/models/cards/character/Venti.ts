@@ -3,6 +3,7 @@ import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import { ShuffleAllCardsAnimation } from '@/src/animations/ShuffleAllCardsAnimation.js';
 import { SkillAnimation } from '@/src/animations/SkillAnimation.js';
+import { SpritesheetWrapper } from '@/src/utils/SpritesheetWrapper.js';
 
 export default class Venti extends Character {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -25,21 +26,22 @@ export default class Venti extends Character {
             return;
         }
 
-        // tiềm ẩn lỗi            
-        SkillAnimation.runAsync(this.scene.gameManager.animationManager, this.nameId);
+        const { width, height } = this.scene.scale;
+        SpritesheetWrapper.animationEffect(
+            this.scene,
+            width / 2,
+            height / 2,
+            'venti-skill-animations',
+            600,
+            600,
+            { start: 0, end: 5 },
+            10
+        );
+        console.warn('[info]EffectelementalBurst');
         ShuffleAllCardsAnimation.runAsync(this.scene.gameManager.animationManager);
 
-        // this.scene.gameManager?.emitter.once(
-        //     'completeMove',
-        //     this.EffectelementalBurst.bind(this),
-        //     10
-        // );
     }
 
-    EffectelementalBurst(): void {
-        SkillAnimation.runAsync(this.scene.gameManager.animationManager, this.nameId);
-        ShuffleAllCardsAnimation.runAsync(this.scene.gameManager.animationManager);
-    }
 
-    readonly elementalBurstCooldownMax = 20; // Số lượt cooldown cho elemental burst
+    readonly elementalBurstCooldownMax = 1; // Số lượt cooldown cho elemental burst
 }

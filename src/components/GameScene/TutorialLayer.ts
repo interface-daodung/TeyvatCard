@@ -13,9 +13,9 @@ const GUIDE_KEYS = ['tutorial_guide_1', 'tutorial_guide_2', 'tutorial_guide_3', 
 const HIGHLIGHT_STEPS: Array<null | [number, number, number, number]> = [
     null,
     [653, 31, 706, 82],
-    [278, 579, 439, 857],
     [76, 142, 359, 220],
-    [430, 1170, 646, 1256],
+    [278, 579, 439, 857], 
+    [278, 579, 439, 857], 
     null
 ];
 

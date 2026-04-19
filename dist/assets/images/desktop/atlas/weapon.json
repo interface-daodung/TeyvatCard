@@ -1,0 +1,373 @@
+{
+  "frames": {
+    "sword-traveler": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-steampunk": {
+      "frame": {
+        "x": 128,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-splendor": {
+      "frame": {
+        "x": 256,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-skyward": {
+      "frame": {
+        "x": 384,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-sacrificial": {
+      "frame": {
+        "x": 512,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-forest": {
+      "frame": {
+        "x": 640,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-foliar-incision": {
+      "frame": {
+        "x": 768,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-favonius": {
+      "frame": {
+        "x": 0,
+        "y": 128,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "sword-aquila": {
+      "frame": {
+        "x": 128,
+        "y": 128,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-vanquisher": {
+      "frame": {
+        "x": 256,
+        "y": 128,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-tassel": {
+      "frame": {
+        "x": 384,
+        "y": 128,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-steampunk": {
+      "frame": {
+        "x": 512,
+        "y": 128,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-skyward": {
+      "frame": {
+        "x": 640,
+        "y": 128,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-rightful": {
+      "frame": {
+        "x": 768,
+        "y": 128,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-lithic": {
+      "frame": {
+        "x": 0,
+        "y": 256,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-jade": {
+      "frame": {
+        "x": 128,
+        "y": 256,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-forest": {
+      "frame": {
+        "x": 256,
+        "y": 256,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "polearm-engulfing-lightning": {
+      "frame": {
+        "x": 384,
+        "y": 256,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-steampunk": {
+      "frame": {
+        "x": 512,
+        "y": 256,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-skyward": {
+      "frame": {
+        "x": 640,
+        "y": 256,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-sacrificial": {
+      "frame": {
+        "x": 768,
+        "y": 256,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-overlord": {
+      "frame": {
+        "x": 0,
+        "y": 384,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-iron": {
+      "frame": {
+        "x": 128,
+        "y": 384,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-gravestone": {
+      "frame": {
+        "x": 256,
+        "y": 384,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-forest": {
+      "frame": {
+        "x": 384,
+        "y": 384,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-bell": {
+      "frame": {
+        "x": 512,
+        "y": 384,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "claymore-beacon": {
+      "frame": {
+        "x": 640,
+        "y": 384,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-steampunk": {
+      "frame": {
+        "x": 768,
+        "y": 384,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-skyward": {
+      "frame": {
+        "x": 0,
+        "y": 512,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-sacrificial": {
+      "frame": {
+        "x": 128,
+        "y": 512,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-sacred-winds": {
+      "frame": {
+        "x": 256,
+        "y": 512,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-remembrance": {
+      "frame": {
+        "x": 384,
+        "y": 512,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-magic-guide": {
+      "frame": {
+        "x": 512,
+        "y": 512,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-forest": {
+      "frame": {
+        "x": 640,
+        "y": 512,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-flowing-purity": {
+      "frame": {
+        "x": 768,
+        "y": 512,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-eternal-flow": {
+      "frame": {
+        "x": 0,
+        "y": 640,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "catalyst-dreams": {
+      "frame": {
+        "x": 128,
+        "y": 640,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-skyward": {
+      "frame": {
+        "x": 256,
+        "y": 640,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-simulacra": {
+      "frame": {
+        "x": 384,
+        "y": 640,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-sacrificial": {
+      "frame": {
+        "x": 512,
+        "y": 640,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-raven": {
+      "frame": {
+        "x": 640,
+        "y": 640,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-fish": {
+      "frame": {
+        "x": 768,
+        "y": 640,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-elegy": {
+      "frame": {
+        "x": 0,
+        "y": 768,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-forest": {
+      "frame": {
+        "x": 128,
+        "y": 768,
+        "w": 128,
+        "h": 128
+      }
+    },
+    "bow-amos": {
+      "frame": {
+        "x": 256,
+        "y": 768,
+        "w": 128,
+        "h": 128
+      }
+    }
+  },
+  "meta": {
+    "image": "weapon.webp",
+    "size": {
+      "w": 896,
+      "h": 896
+    },
+    "scale": "1",
+    "path": "assets/desktop/atlas/weapon.webp"
+  }
+}

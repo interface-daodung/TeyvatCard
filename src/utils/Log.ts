@@ -1,5 +1,8 @@
 import { ApiConfig } from './ApiConfig.js';
 
+export const INFO_TAG_STYLE = 'color:#22c55e;font-weight:700';
+export const LINK_STYLE = 'color:#60a5fa;text-decoration:underline';
+
 function serializeArg(a: unknown): string {
   if (a instanceof Error) {
     return `${a.name}: ${a.message}`;
@@ -48,6 +51,22 @@ export class Log {
     if (import.meta.env.VITE_IS_DEV === 'true') {
       console.log(...args);
     }
+  }
+
+  static infoTag(scope: string, message: string, link?: string, payload?: unknown): void {
+    if (link) {
+      if (payload !== undefined) {
+        Log.info(`%c[info]%c ${scope} ${message} %c${link}`, INFO_TAG_STYLE, '', LINK_STYLE, payload);
+        return;
+      }
+      Log.info(`%c[info]%c ${scope} ${message} %c${link}`, INFO_TAG_STYLE, '', LINK_STYLE);
+      return;
+    }
+    if (payload !== undefined) {
+      Log.info(`%c[info]%c ${scope} ${message}`, INFO_TAG_STYLE, '', payload);
+      return;
+    }
+    Log.info(`%c[info]%c ${scope} ${message}`, INFO_TAG_STYLE, '');
   }
 
   static warn(...args: any[]) {

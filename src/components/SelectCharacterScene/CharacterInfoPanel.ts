@@ -23,6 +23,11 @@ export interface CharacterInfoPanelRefs {
     upgradeButton: Phaser.GameObjects.Text;
 }
 
+/** Key texture spritesheet nhân vật (Phaser), khớp `loadSpritesheet(\`${id}-sprite\`, ...)`. */
+export function getCharacterSpritesheetTextureKey(characterId: string): string {
+    return `${characterId}-sprite`;
+}
+
 export interface CharacterInfoPanelCallbacks {
     onUpgradeClick: () => void;
     onUpgradeHover: () => void;

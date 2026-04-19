@@ -136,6 +136,41 @@ export function loadStagePoolsFromDungeonList(
     return stageCardPools;
 }
 
+/**
+ * Trọng số các thẻ trong một pool của stage (ví dụ `enemies`): cùng công thức với
+ * {@link computeCardWeightsForStage} nhưng chỉ cho một `poolType` trong `availableCards`.
+ */
+export function computeCardWeightsForStagePoolType(
+    currentStage: StageCardPool | undefined,
+    poolType: string,
+    getCardConfig: (key: string) => CardDefault | undefined | null
+): Record<string, number> {
+    const cardWeights: Record<string, number> = {};
+    if (!currentStage?.typeRatios || !currentStage?.availableCards) {
+        return cardWeights;
+    }
+    const typeRatio = currentStage.typeRatios[poolType];
+    const cardNames = currentStage.availableCards[poolType];
+    if (typeRatio == null || typeRatio <= 0 || !cardNames?.length) {
+        return cardWeights;
+    }
+    let typeTotalWeight = 0;
+    for (const cardName of cardNames) {
+        const config = getCardConfig(cardName);
+        const rarity = config?.rarity;
+        if (rarity != null) typeTotalWeight += rarity * 10;
+    }
+    if (typeTotalWeight <= 0) return cardWeights;
+    for (const cardName of cardNames) {
+        const config = getCardConfig(cardName);
+        if (config?.rarity != null) {
+            const baseWeight = config.rarity * 10;
+            cardWeights[cardName] = (baseWeight / typeTotalWeight) * typeRatio;
+        }
+    }
+    return cardWeights;
+}
+
 export function computeCardWeightsForStage(
     currentStage: StageCardPool | undefined,
     getCardConfig: (key: string) => CardDefault | undefined | null

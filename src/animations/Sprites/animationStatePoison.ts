@@ -14,7 +14,7 @@ export function animationStatePoison(
         'state-poison-animations',
         170,
         170,
-        { start: 0, end: 15 },
+        { start: 0, end: 14 },
         10
     );
 }

@@ -105,7 +105,7 @@ export default class LoadingScene extends Phaser.Scene {
             assetManager.setScene(this);
             assetManager.preloadSceneAssets(this.targetScene, () => {
                 this.scene.start(this.targetScene, this.dataTargetScene);
-            });
+            }, this.dataTargetScene);
         });
     }
 }

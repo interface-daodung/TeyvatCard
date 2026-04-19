@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import TextureManager from '../../core/TextureManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
 import type { SellButton } from './types.js';
 
@@ -42,7 +43,8 @@ export function createSellWeapon(
         fontFamily: 'Arial, sans-serif'
     }).setOrigin(0.5);
 
-    const weaponImage = scene.add.image(-40, 0, '').setDisplaySize(6, 6);
+    const placeholderTextureKey = TextureManager.getFallbackTextureKeyForScene(scene) ?? '__WHITE';
+    const weaponImage = scene.add.image(-40, 0, placeholderTextureKey).setDisplaySize(6, 6);
 
     sellButtonContainer.add([buttonBackground, weaponImage, sellText, priceText]);
     sellButtonContainer.setInteractive(new Phaser.Geom.Rectangle(-90, -30, 180, 60), Phaser.Geom.Rectangle.Contains);
@@ -65,12 +67,7 @@ export function createSellWeapon(
                 sellButtonContainer.setVisible(true);
                 priceText.setText(weapon.price.toString());
                 const badgeKey = weapon.default.id + '-badge';
-                const atlasKey = 'weapon-' + weapon.default.category + '-badge';
-                if (scene.textures.exists(badgeKey)) {
-                    weaponImage.setTexture(badgeKey);
-                } else {
-                    weaponImage.setTexture(atlasKey, badgeKey);
-                }
+                TextureManager.setImageTexture(weaponImage, badgeKey);
                 weaponImage.setDisplaySize(40, 40);
             }
         },

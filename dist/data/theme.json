@@ -4,7 +4,7 @@
     "colors": {
       "primary": "#95245b",
       "secondary": "#96576a",
-      "accent": "#FFD700",
+      "accent": "#cbbd1b",
       "neutral": "#e0e0e0",
       "background": "#000000",
       "surface": "#1a1a2e",
@@ -13,6 +13,14 @@
       "warning": "#f1c40f",
       "error": "#e74c3c",
       "info": "#3498db"
+    },
+    "assets": {
+      "background": "/assets/images/ui/background/default.webp",
+      "icons": {
+        "compass": "/assets/images/ui/compass/default.webp",
+        "equip": "/assets/images/ui/equip/default.webp",
+        "library": "/assets/images/ui/library/default.webp"
+      }
     }
   },
   "furina": {
@@ -20,23 +28,31 @@
     "colors": {
       "primary": "#525dff",
       "secondary": "#1ccac7",
-      "accent": "#fbdf41",
+      "accent": "#4157fb",
       "neutral": "#e0e0e0",
       "background": "#000000",
-      "surface": "#4b4bd2",
+      "surface": "#0d0d45",
       "text": "#ffffff",
       "success": "#2ecc71",
       "warning": "#f1c40f",
       "error": "#e74c3c",
       "info": "#3498db"
+    },
+    "assets": {
+      "background": "/assets/images/ui/background/Gejuyuan.webp",
+      "icons": {
+        "compass": "/assets/images/ui/compass/fontaine.webp",
+        "equip": "/assets/images/ui/equip/fish-box.webp",
+        "library": "/assets/images/ui/library/fontaine.png"
+      }
     }
   },
-  "green": {
-    "name": "green",
+  "nahida": {
+    "name": "nahida",
     "colors": {
       "primary": "#24942b",
       "secondary": "#569577",
-      "accent": "#FFD700",
+      "accent": "#00ffee",
       "neutral": "#e0e0e0",
       "background": "#000000",
       "surface": "#1a1a2e",
@@ -45,6 +61,110 @@
       "warning": "#f1c40f",
       "error": "#e74c3c",
       "info": "#3498db"
+    },
+    "assets": {
+      "background": "/assets/images/ui/background/Xumi.webp",
+      "icons": {
+        "compass": "/assets/images/ui/compass/sumeru.webp",
+        "equip": "/assets/images/ui/equip/case.webp",
+        "library": "/assets/images/ui/library/sumeru.png"
+      }
+    }
+  },
+  "zhongli": {
+    "name": "zhongli",
+    "colors": {
+      "primary": "#947c24",
+      "secondary": "#955656",
+      "accent": "#89721f",
+      "neutral": "#e0e0e0",
+      "background": "#000000",
+      "surface": "#2e271a",
+      "text": "#ffffff",
+      "success": "#2ecc71",
+      "warning": "#f1c40f",
+      "error": "#e74c3c",
+      "info": "#3498db"
+    },
+    "assets": {
+      "background": "/assets/images/ui/background/Wangshukezhan.webp",
+      "icons": {
+        "compass": "/assets/images/ui/compass/liyue.webp",
+        "equip": "/assets/images/ui/equip/chest.webp",
+        "library": "/assets/images/ui/library/liyue.png"
+      }
+    }
+  },
+  "mavuika": {
+    "name": "mavuika",
+    "colors": {
+      "primary": "#b50d0d",
+      "secondary": "#e28c12",
+      "accent": "#ec8836",
+      "neutral": "#e0e0e0",
+      "background": "#000000",
+      "surface": "#1a1a2e",
+      "text": "#ffffff",
+      "success": "#2ecc71",
+      "warning": "#f1c40f",
+      "error": "#e74c3c",
+      "info": "#3498db"
+    },
+    "assets": {
+      "background": "/assets/images/ui/background/JingjiChang.webp",
+      "icons": {
+        "compass": "/assets/images/ui/compass/natlan.webp",
+        "equip": "/assets/images/ui/equip/armor.png",
+        "library": "/assets/images/ui/library/natlan.png"
+      }
+    }
+  },
+  "raiden": {
+    "name": "raiden",
+    "colors": {
+      "primary": "#962c93",
+      "secondary": "#624f96",
+      "accent": "#cd21e4",
+      "neutral": "#e0e0e0",
+      "background": "#000000",
+      "surface": "#1a1a2e",
+      "text": "#ffffff",
+      "success": "#2ecc71",
+      "warning": "#f1c40f",
+      "error": "#e74c3c",
+      "info": "#3498db"
+    },
+    "assets": {
+      "background": "/assets/images/ui/background/Tianshou.webp",
+      "icons": {
+        "compass": "/assets/images/ui/compass/inazuma.webp",
+        "equip": "/assets/images/ui/equip/hutch.png",
+        "library": "/assets/images/ui/library/inazuma.png"
+      }
+    }
+  },
+  "venti": {
+    "name": "venti",
+    "colors": {
+      "primary": "#199f77",
+      "secondary": "#0ecad8",
+      "accent": "#37a7c3",
+      "neutral": "#e0e0e0",
+      "background": "#000000",
+      "surface": "#1a1a2e",
+      "text": "#ffffff",
+      "success": "#2ecc71",
+      "warning": "#f1c40f",
+      "error": "#e74c3c",
+      "info": "#3498db"
+    },
+    "assets": {
+      "background": "/assets/images/ui/background/FavoniusChurch.webp",
+      "icons": {
+        "compass": "/assets/images/ui/compass/mondstadt.webp",
+        "equip": "/assets/images/ui/equip/box.png",
+        "library": "/assets/images/ui/library/mondstadt.png"
+      }
     }
   }
 }

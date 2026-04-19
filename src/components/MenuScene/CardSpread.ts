@@ -9,6 +9,7 @@ const CARD_HEIGHT = 445.7142;
 const SPACING = -180;
 const ROTATION_ANGLES = [-15, 0, 15];
 const CARD_ORDER = [0, 2, 1];
+const CHARACTER_SPRITESHEET_MIN_LEVEL = 10;
 
 function resolveTextureCards(
     cards: CardCharacter[],
@@ -27,7 +28,11 @@ function resolveTextureCards(
             if (characterLevel != null) {
                 textureCard = textureCard.map(texture => {
                     const level = characterLevel[texture];
-                    return level && level > 2 ? texture + '-sprite' : texture;
+                    if (level == null || level === 0) {
+                        const unlockTextureKey = `unlock${texture.charAt(0).toUpperCase()}${texture.slice(1)}`;
+                        return TextureManager.has(unlockTextureKey) ? unlockTextureKey : texture;
+                    }
+                    return level >= CHARACTER_SPRITESHEET_MIN_LEVEL ? texture + '-sprite' : texture;
                 });
             }
         }

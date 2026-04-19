@@ -14,7 +14,7 @@ export function animationArrow(
         'arrow-animations',
         300,
         300,
-        { start: 4, end: 15 },
+        { start: 3, end: 10 },
         10
     );
 }

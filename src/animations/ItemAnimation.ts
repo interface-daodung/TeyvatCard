@@ -1,3 +1,4 @@
+import TextureManager from '../core/TextureManager.js';
 import type { AnimationManager } from './types.js';
 
 const PRIORITY = 7; // Đặt độ ưu tiên cho ItemAnimation, có thể điều chỉnh nếu cần thiết
@@ -24,10 +25,10 @@ export class ItemAnimation {
                 return;
             }
 
-            const item = manager.scene.add.image(
+            const item = TextureManager.image(
+                manager.scene,
                 coordinates.x,
                 coordinates.y,
-                'item',
                 itemImage
             );
             item.setDepth(200);

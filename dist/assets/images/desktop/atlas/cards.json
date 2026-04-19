@@ -1,0 +1,413 @@
+{
+  "frames": {
+    "explosive": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "anemo-fragment": {
+      "frame": {
+        "x": 210,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "cryo-fragment": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "dendro-fragment": {
+      "frame": {
+        "x": 630,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "electro-fragment": {
+      "frame": {
+        "x": 840,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "geo-fragment": {
+      "frame": {
+        "x": 1050,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "hydro-fragment": {
+      "frame": {
+        "x": 1260,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "pyro-fragment": {
+      "frame": {
+        "x": 1470,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "empty": {
+      "frame": {
+        "x": 1680,
+        "y": 0,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "anemo-samachurl": {
+      "frame": {
+        "x": 0,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "berserker": {
+      "frame": {
+        "x": 210,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "blazing": {
+      "frame": {
+        "x": 420,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "crackling": {
+      "frame": {
+        "x": 630,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "cryo-shooter": {
+      "frame": {
+        "x": 840,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "dendro-samachurl": {
+      "frame": {
+        "x": 1050,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "electro-samachurl": {
+      "frame": {
+        "x": 1260,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "electro-shooter": {
+      "frame": {
+        "x": 1470,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "fighter": {
+      "frame": {
+        "x": 1680,
+        "y": 360,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "geo-samachurl": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "hilistray-water": {
+      "frame": {
+        "x": 210,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "hydro-samachurl": {
+      "frame": {
+        "x": 420,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "ice-shieldwall": {
+      "frame": {
+        "x": 630,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "lawachurl": {
+      "frame": {
+        "x": 840,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "rock-shieldwall": {
+      "frame": {
+        "x": 1050,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "shooter": {
+      "frame": {
+        "x": 1260,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "wooden-shieldwall": {
+      "frame": {
+        "x": 1470,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "life-essence": {
+      "frame": {
+        "x": 1680,
+        "y": 720,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "macarons": {
+      "frame": {
+        "x": 0,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "mystique-soup": {
+      "frame": {
+        "x": 210,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "pizza": {
+      "frame": {
+        "x": 420,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "roast-chicken": {
+      "frame": {
+        "x": 630,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "abyss-call": {
+      "frame": {
+        "x": 840,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "breathe-fire": {
+      "frame": {
+        "x": 1050,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "quicksand": {
+      "frame": {
+        "x": 1260,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "bribery": {
+      "frame": {
+        "x": 1470,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "chest": {
+      "frame": {
+        "x": 1680,
+        "y": 1080,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "gold-mine": {
+      "frame": {
+        "x": 0,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "catalyst-dreams": {
+      "frame": {
+        "x": 210,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "catalyst-forest": {
+      "frame": {
+        "x": 420,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "catalyst-magic-guide": {
+      "frame": {
+        "x": 630,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "catalyst-remembrance": {
+      "frame": {
+        "x": 840,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "catalyst-sacrificial": {
+      "frame": {
+        "x": 1050,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "catalyst-skyward": {
+      "frame": {
+        "x": 1260,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "catalyst-steampunk": {
+      "frame": {
+        "x": 1470,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "sword-forest": {
+      "frame": {
+        "x": 1680,
+        "y": 1440,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "sword-sacrificial": {
+      "frame": {
+        "x": 0,
+        "y": 1800,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "sword-skyward": {
+      "frame": {
+        "x": 210,
+        "y": 1800,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "sword-splendor": {
+      "frame": {
+        "x": 420,
+        "y": 1800,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "sword-steampunk": {
+      "frame": {
+        "x": 630,
+        "y": 1800,
+        "w": 210,
+        "h": 360
+      }
+    },
+    "sword-traveler": {
+      "frame": {
+        "x": 840,
+        "y": 1800,
+        "w": 210,
+        "h": 360
+      }
+    }
+  },
+  "meta": {
+    "image": "cards.webp",
+    "size": {
+      "w": 1890,
+      "h": 2160
+    },
+    "scale": "1",
+    "path": "assets/desktop/atlas/cards.webp"
+  }
+}

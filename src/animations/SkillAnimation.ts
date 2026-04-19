@@ -30,28 +30,32 @@ export class SkillAnimation {
                 coordinates.y,
                 itemImage + '-skill'
             );
-            
+
+            skill.setDisplaySize(420, 720);
+            const baseScaleX = skill.scaleX;
+            const baseScaleY = skill.scaleY;
+
             skill.setDepth(200);
-            
+
             // Khởi tạo: Ẩn và thu nhỏ một chút để chuẩn bị "co bóp" hiện ra
             skill.setAlpha(0);
-            skill.setScale(0.4);
+            skill.setScale(baseScaleX * 0.4, baseScaleY * 0.4);
 
             // --- PHASER 3.60+ CHAINING ---
             manager.scene.tweens.add({
                 targets: skill,
                 // Giai đoạn 1: Fade In + Phình to ra (Co bóp xuất hiện)
                 alpha: 1,
-                scaleX: 1.8, // Phình to hơn mức bình thường một chút
-                scaleY: 1.5, // Phình to hơn mức bình thường một chút
+                scaleX: baseScaleX * 1.8, // Phình to hơn mức bình thường một chút
+                scaleY: baseScaleY * 1.5, // Phình to hơn mức bình thường một chút
                 duration: 80,
                 ease: 'Back.easeOut',
                 onComplete: () => {
                     // Giai đoạn 2: Co về kích thước chuẩn và đứng yên một lát
                     manager.scene.tweens.add({
                         targets: skill,
-                        scaleX: 1.2,
-                        scaleY: 1.2,
+                        scaleX: baseScaleX * 1.2,
+                        scaleY: baseScaleY * 1.2,
                         duration: 80,
                         ease: 'Linear',
                         completeDelay: 100, // Đợi 100ms trước khi chạy onComplete
@@ -60,8 +64,8 @@ export class SkillAnimation {
                             manager.scene.tweens.add({
                                 targets: skill,
                                 alpha: 0,
-                                scaleX: 0.5,
-                                scaleY: 0.8,
+                                scaleX: baseScaleX * 0.5,
+                                scaleY: baseScaleY * 0.8,
                                 duration: 50,
                                 ease: 'Back.easeIn',
                                 onComplete: () => {

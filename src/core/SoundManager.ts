@@ -106,8 +106,17 @@ export default class SoundManager {
      */
     play(key: string, config?: Phaser.Types.Sound.SoundConfig): void {
         if (!this.game?.sound) return;
+        if (!this.hasAudioKey(key)) {
+            console.warn(`[SoundManager] Audio key "${key}" not found in cache`);
+            return;
+        }
+
         const opts = { ...config, volume: this._volume };
-        this.game.sound.play(key, opts);
+        try {
+            this.game.sound.play(key, opts);
+        } catch (error) {
+            console.warn(`[SoundManager] Failed to play audio "${key}"`, error);
+        }
     }
 
     /**
@@ -124,10 +133,19 @@ export default class SoundManager {
     playBGM(): void {
         if (!this.game?.sound) return;
         if (this._bgm && (this._bgm as any).isPlaying) return;
+        if (!this.hasAudioKey(BGM_KEY)) {
+            console.warn(`[SoundManager] BGM key "${BGM_KEY}" not found in cache`);
+            return;
+        }
         this.stopBGM();
-        this._bgm = this.game.sound.add(BGM_KEY, { loop: true, volume: this._bgmVolume });
-        this._bgm.play();
-        this._bgmUnlockedThisSession = true;
+        try {
+            this._bgm = this.game.sound.add(BGM_KEY, { loop: true, volume: this._bgmVolume });
+            this._bgm.play();
+            this._bgmUnlockedThisSession = true;
+        } catch (error) {
+            console.warn(`[SoundManager] Failed to play BGM "${BGM_KEY}"`, error);
+            this._bgm = null;
+        }
     }
 
     /**
@@ -139,6 +157,22 @@ export default class SoundManager {
             this._bgm.destroy();
             this._bgm = null;
         }
+    }
+
+    private hasAudioKey(key: string): boolean {
+        const audioCache = (this.game as Phaser.Game & {
+            cache?: {
+                audio?: {
+                    exists?: (cacheKey: string) => boolean;
+                };
+            };
+        } | null)?.cache?.audio;
+
+        if (typeof audioCache?.exists !== 'function') {
+            return true;
+        }
+
+        return audioCache.exists(key);
     }
 }
 

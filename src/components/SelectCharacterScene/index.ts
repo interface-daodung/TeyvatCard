@@ -1,6 +1,7 @@
 export { createBackButton } from '../shared/BackButton.js';
 export {
     createInfoPanel,
+    getCharacterSpritesheetTextureKey,
     type CharacterInfoPanelRefs,
     type CharacterInfoPanelCallbacks
 } from './CharacterInfoPanel.js';

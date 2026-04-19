@@ -1,19 +1,14 @@
-import Phaser from 'phaser';
-import Enemy from '../../../modules/typeCard/enemy.js';
+import Samachurl from '../../../modules/clan/Samachurl.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
+import type Enemy from '../../../modules/typeCard/enemy.js';
 
-const HILICHURL_TOKEN_TEXTURE = 'hilichurlToken';
-const SAMA_TOKEN_SPACING = 22;
-const SAMA_TOKEN_SIZE = 20;
-/** Vị trí dải token trên thẻ (tọa độ local, gần mép dưới). */
-const SAMA_TOKEN_CONTAINER_Y = 118;
+/** Nguồn stack khiên buff hilichurl (ghi đè theo luật `addShield` cùng nguồn). */
+const HILICHURL_BUFF_SHIELD_SOURCE = 'geo-samachurl-hilichurl';
+/** Số lượt `completeMove` trước khi layer buff hết hạn. */
+const HILICHURL_BUFF_SHIELD_TURNS = 3;
 
-export default class GeoSamachurl extends Enemy {
-    /** Đếm số lần `completeMove`; đủ ngưỡng thì kích hoạt hiệu ứng buff. */
-    samaCount = 0;
-    private samaTokenContainer!: Phaser.GameObjects.Container;
-
+export default class GeoSamachurl extends Samachurl {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('GeoSamachurl') ?? { id: 'geo-samachurl', name: 'Geo Samachurl', description: '', element: 'geo', clan: 'hilichurl', rarity: 3 };
         super(scene, x, y, index, config.name!, config.id!);
@@ -21,34 +16,18 @@ export default class GeoSamachurl extends Enemy {
         // this.health = this.GetRandom(3, 10);
         // this.score = this.GetRandom(1, 9);
         this.createCard();
-        this.samaTokenContainer = this.scene.add.container(0, SAMA_TOKEN_CONTAINER_Y);
-        this.add(this.samaTokenContainer);
-        this.refreshSamaTokens();
-        const unsub = this.scene.gameManager?.emitter.on(
-            'completeMove',
-            this.onCompleteMoveSama.bind(this),
-            7
-        );
-        if (unsub) this.unsubscribeList.push(unsub);
+        this.initSamachurlAbility();
         scene.add.existing(this);
     }
 
-    onCompleteMoveSama(): void {
-        this.samaCount++;
-        this.refreshSamaTokens();
-        if (this.samaCount <= 5) return;
-
-        // Kích hoạt hiệu ứng rồi reset token để có thể tích lại sau.
-        this.samaCount = -1;
-        this.refreshSamaTokens();
-
+    protected override onSamaThresholdReached(): void {
         this.buffHilichurlEnemies();
     }
 
-    /** Buff: tất cả `Enemy` có `clan === 'hilichurl'` nhận thêm HP. */
+    /** Buff: mọi `Enemy` `clan === 'hilichurl'` nhận khiên (1/3 máu Geo Samachurl, làm tròn xuống, tối thiểu 1). */
     private buffHilichurlEnemies(): void {
         const allCards = this.scene.gameManager?.cardManager?.getAllCards?.() ?? [];
-        const addHealth = Math.max(1, Math.floor(this.health / 3)); // 1/3, làm tròn xuống, min = 1
+        const shieldAmount = Math.max(1, Math.floor(this.health / 3));
 
         for (const card of allCards) {
             if (!card || card.type !== 'enemy') continue;
@@ -56,24 +35,9 @@ export default class GeoSamachurl extends Enemy {
             const target = card as unknown as Enemy;
             if (target.clan !== 'hilichurl') continue;
 
-            target.health = (target.health ?? 0) + addHealth;
-            target.hpDisplay?.updateText(target.health.toString());
-            target.showPopup(addHealth, 'heal');
-        }
-    }
-
-    /** Đồng bộ số ảnh token với `samaCount` (tăng/giảm đều cập nhật container). */
-    private refreshSamaTokens(): void {
-        this.samaTokenContainer.removeAll(true);
-        const n = this.samaCount;
-        if (n <= 0) return;
-
-        const totalWidth = (n - 1) * SAMA_TOKEN_SPACING;
-        const startX = -totalWidth / 2;
-        for (let i = 0; i < n; i++) {
-            const img = this.scene.add.image(startX + i * SAMA_TOKEN_SPACING, 0, HILICHURL_TOKEN_TEXTURE);
-            img.setDisplaySize(SAMA_TOKEN_SIZE, SAMA_TOKEN_SIZE);
-            this.samaTokenContainer.add(img);
+            if (target.addShield(shieldAmount, HILICHURL_BUFF_SHIELD_TURNS, HILICHURL_BUFF_SHIELD_SOURCE)) {
+                target.showPopup(shieldAmount, { color: '#ffbb00', prefix: '⛨' });
+            }
         }
     }
 }

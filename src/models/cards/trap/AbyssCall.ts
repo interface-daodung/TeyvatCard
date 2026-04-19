@@ -1,10 +1,7 @@
 import Trap from '../../../modules/typeCard/trap.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
-import { getEnemyKeysByClan } from '../../../modules/card/cardFactoryLibrary.js';
 import { Log } from '../../../utils/Log.js';
-
-const HILICHURL_CLAN = 'hilichurl';
 
 export default class AbyssCall extends Trap {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -18,18 +15,14 @@ export default class AbyssCall extends Trap {
     CardEffect(): Promise<boolean> {
         this.ProgressDestroy();
         const factory = this.scene.gameManager?.cardManager?.cardFactory;
-        const keys = factory
-            ? getEnemyKeysByClan(factory.cardClasses, factory.enemyClasses, HILICHURL_CLAN)
-            : [];
-        if (keys.length === 0) {
-            Log.warn(`[AbyssCall.CardEffect] Không có enemy nào có clan "${HILICHURL_CLAN}". Kiểm tra enemyClasses và libraryCards (clan).`);
+        const newCard = factory?.createRandomCardFromStagePoolType(this.scene, this.index, 'enemies') ?? null;
+        if (!newCard) {
+            Log.warn(
+                '[AbyssCall.CardEffect] Không tạo được enemy từ pool màn (dungeonList availableCards.enemies, rarity). Kiểm tra stage và card config.'
+            );
             return Promise.resolve(true);
         }
-        const key = keys[Math.floor(Math.random() * keys.length)];
-        const newCard = factory?.createCardByKey(this.scene, this.index, key) ?? null;
-        if (newCard) {
-            this.scene.gameManager?.cardManager?.addCard(newCard, this.index).processCreation?.();
-        }
+        this.scene.gameManager?.cardManager?.addCard(newCard, this.index).processCreation?.();
         return Promise.resolve(true);
     }
 }

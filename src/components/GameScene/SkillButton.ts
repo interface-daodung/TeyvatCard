@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import TextureManager from '../../core/TextureManager.js';
 import { themeManager } from '../../core/ThemeManager.js';
 import type { SkillButton } from './types.js';
 
@@ -19,7 +20,7 @@ export function createSkillButton(
     background.fillRoundedRect(-buttonSize / 2, -buttonSize / 2, buttonSize, buttonSize, 20);
     background.setAlpha(0.5);
 
-    const skillImage = scene.add.image(0, 0, imageKey);
+    const skillImage = TextureManager.image(scene, 0, 0, imageKey);
     skillImage.setDisplaySize(80, 80);
 
     const countText = scene.add.text(buttonSize / 2, -buttonSize / 2, initialCooldown.toString(), {
@@ -65,7 +66,7 @@ export function createSkillButton(
          * Không destroy/add lại để tránh lệch render order.
          */
         setTextureKey: (textureKey: string): void => {
-            skillImage.setTexture(textureKey);
+            TextureManager.setImageTexture(skillImage, textureKey);
         }
     } as SkillButton;
 

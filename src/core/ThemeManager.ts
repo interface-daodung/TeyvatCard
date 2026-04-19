@@ -56,6 +56,48 @@ export function toPhaserHex(hexStr: string): number {
 
 const HEX_REG = /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/;
 
+/**
+ * Ngưỡng level (theo nhân vật đang chọn) tối thiểu để áp dụng theme theo `selectedCharacter`.
+ * `characterLevel` là object `{ [characterId]: level }`; level đọc theo key = `selectedCharacter`.
+ * Dưới ngưỡng → luôn theme `default` dù `applyCharacterTheme === true`.
+ */
+export const CHARACTER_THEME_APPLY_MIN_LEVEL = 10;
+
+function coerceStoredLevelValue(v: unknown): number {
+    if (typeof v === 'number' && Number.isFinite(v)) return Math.trunc(v);
+    if (typeof v === 'string') {
+        const n = parseInt(v, 10);
+        return Number.isFinite(n) ? n : 0;
+    }
+    return 0;
+}
+
+/** Level của nhân vật đang chọn từ local `characterLevel` (map) hoặc legacy một số. */
+function getCharacterLevelForSelected(selectedCharacter: string | null | undefined): number {
+    const raw = dataManager.get<unknown>('characterLevel');
+    if (raw == null) return 0;
+
+    if (typeof raw === 'number' && Number.isFinite(raw)) return Math.trunc(raw);
+    if (typeof raw === 'string') {
+        const n = parseInt(raw, 10);
+        return Number.isFinite(n) ? n : 0;
+    }
+
+    if (typeof raw !== 'object' || Array.isArray(raw)) return 0;
+
+    const map = raw as Record<string, unknown>;
+    const name = typeof selectedCharacter === 'string' ? selectedCharacter.trim() : '';
+    if (!name) return 0;
+
+    let entry = map[name];
+    if (entry === undefined) entry = map[name.toLowerCase()];
+    if (entry === undefined) {
+        const found = Object.keys(map).find((k) => k.toLowerCase() === name.toLowerCase());
+        if (found !== undefined) entry = map[found];
+    }
+    return coerceStoredLevelValue(entry);
+}
+
 function parseOneThemeColors(obj: unknown): ThemePalette {
     if (!obj || typeof obj !== 'object') {
         throw new Error('Theme item must be an object');
@@ -302,7 +344,8 @@ export default class ThemeManager {
 
     /**
      * Áp theme theo local: `applyCharacterTheme === false` → luôn theme tên `"default"`;
-     * `true` → theme trùng `selectedCharacter`, không có thì fallback `"default"`.
+     * `true` → nếu level của `selectedCharacter` trong map `characterLevel` dưới {@link CHARACTER_THEME_APPLY_MIN_LEVEL} vẫn `"default"`;
+     * ngược lại theme trùng `selectedCharacter`, không có thì fallback `"default"`.
      */
     applyThemeFromDataPreferences(): void {
         if (!this._loaded || this.themeList.length === 0) return;
@@ -317,6 +360,12 @@ export default class ThemeManager {
         }
 
         const selectedCharacter = dataManager.get<string>('selectedCharacter');
+        const level = getCharacterLevelForSelected(selectedCharacter);
+        if (level < CHARACTER_THEME_APPLY_MIN_LEVEL) {
+            this.setThemeByName(defaultNamed.name);
+            return;
+        }
+
         const characterTheme =
             selectedCharacter != null
                 ? this.themeList.find((t) => t.name === selectedCharacter)

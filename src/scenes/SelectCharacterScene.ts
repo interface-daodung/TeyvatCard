@@ -11,6 +11,7 @@ import {
     createInfoPanel,
     createCurrentCardDisplay,
     createNavigationButtons,
+    getCharacterSpritesheetTextureKey,
     initializeCurrentCardIndex,
     type CardCharacter,
     type HighScores,
@@ -20,6 +21,7 @@ import {
 } from '../components/SelectCharacterScene/index.js';
 import { GameTitle, I18nText } from '../components/shared/index.js';
 import { Log } from '../utils/Log.js';
+import { CHARACTER_SPRITESHEET_MIN_LEVEL } from '../modules/typeCard/character.js';
 
 export default class SelectCharacterScene extends Phaser.Scene {
     private cards: CardCharacter[] = [];
@@ -181,7 +183,9 @@ export default class SelectCharacterScene extends Phaser.Scene {
 
         this.currentCardContainer.remove(this.currentCardImage, true);
         if (!isUnlocked) {
-            this.currentCardImage = TextureManager.image(this, 0, 0, 'empty');
+            const unlockTextureKey = `unlock${currentCard.id.charAt(0).toUpperCase()}${currentCard.id.slice(1)}`;
+            const lockedTextureKey = TextureManager.has(unlockTextureKey) ? unlockTextureKey : 'empty';
+            this.currentCardImage = TextureManager.image(this, 0, 0, lockedTextureKey);
             this.currentCardImage.setDisplaySize(300, 514);
             this.currentCardImage.setOrigin(0.5, 0.5);
             this.currentCardContainer.add(this.currentCardImage);
@@ -190,7 +194,7 @@ export default class SelectCharacterScene extends Phaser.Scene {
             this.cardBorder.strokeRoundedRect(-152, -259, 304, 518, 28);
             this.currentCardContainer.remove(this.cardBorder, false);
             this.currentCardContainer.add(this.cardBorder);
-        } else if (level > 8) {
+        } else if (level >= CHARACTER_SPRITESHEET_MIN_LEVEL) {
             this.currentCardImage = SpritesheetWrapper.CharacterAnimation(this, 0, 0, currentCard.id + '-sprite', 300, 514);
             this.currentCardContainer.add(this.currentCardImage);
             this.cardBorder.clear();
@@ -266,6 +270,13 @@ export default class SelectCharacterScene extends Phaser.Scene {
         if (level === 0) {
             const next = Array.from(new Set([...unlocked, currentCard.id]));
             dataManager.set('unlockedCharacters', next);
+        }
+
+        const spriteKey = getCharacterSpritesheetTextureKey(currentCard.id);
+        if (newLevel === CHARACTER_SPRITESHEET_MIN_LEVEL && !this.textures.exists(spriteKey)) {
+            dataManager.set('selectedCharacter', currentCard.id);
+            this.scene.start('LoadingScene', { targetScene: 'SelectCharacterScene' });
+            return;
         }
 
         this.updateCardDisplay();

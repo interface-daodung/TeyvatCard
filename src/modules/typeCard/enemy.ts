@@ -1,29 +1,52 @@
 import Card from '../Card.js';
 import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
-import { SpritesheetWrapper } from '../../utils/SpritesheetWrapper.js';
 import type { SceneWithGameManager } from '../Card.js';
 import { soundManager } from '../../core/SoundManager.js';
 import Character, { type DamageElement } from './character.js';
 import { animationSlash } from '@/src/animations/Sprites/animationSlash.js';
 import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
 import { ShowPopup, type PopupPayload } from '../../components/shared/index.js';
+import { CardShieldStackManager } from '../cardShieldStacks.js';
+
+export type { CardShieldStack as EnemyShieldStack } from '../cardShieldStacks.js';
 
 export default class Enemy extends Card {
     poisoning: boolean;
     health!: number;
+    /** Tổng khiên (đồng bộ qua `shieldMgr`). */
+    shield = 0;
+    private readonly shieldMgr: CardShieldStackManager;
     score!: number;
     hpDisplay!: CreateDisplayResult;
+    shieldDisplay!: CreateDisplayResult;
     clan!: string;
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'enemy');
         this.poisoning = false;
+        this.shieldMgr = new CardShieldStackManager({
+            getScene: () => this.scene,
+            getDestroyed: () => this.destroyed,
+            getUnsubscribeList: () => this.unsubscribeList,
+            applyShieldTotal: (total) => {
+                this.shield = total;
+                this.shieldDisplay?.updateText(String(total));
+            }
+        });
     }
 
     addDisplayHUD(): void {
         this.hpDisplay = this.createDisplay(
             { fillColor: 0xff0000, text: String(this.health) },
             'rightTop' as DisplayPosition
+        );
+        this.shieldDisplay = this.createDisplay(
+            {
+                text: String(this.shield),
+                backgroundIcon: '🛡️',
+                backgroundIconSize: '36px'
+            },
+            'leftTop' as DisplayPosition
         );
     }
 
@@ -57,32 +80,62 @@ export default class Enemy extends Card {
         if (this.health > 1 && this.poisoning) {
             this.takeDamage(1, 'poisoning');
         }
-        console.log(`Enemy ${this.nameId} takes 1 poison damage, health is now ${this.health}.`);
+        console.log(
+            `Enemy ${this.nameId} takes 1 poison damage, health is now ${this.health}, shield ${this.shield}.`
+        );
+    }
+
+    expireShield(): void {
+        this.shieldMgr.expireShield();
+    }
+
+    addShield(amount: number, turnsToExpire: number = 1, nameIdOfShield: string = 'default'): boolean {
+        return this.shieldMgr.addShield(amount, turnsToExpire, nameIdOfShield);
     }
 
     takeDamage(damage: number, type?: string, element: DamageElement | null = null): number {
         if (this.health <= 0) return 0;
-        // super.takeDamage(damage, type);
-        this.health -= damage;
-        this.hpDisplay.updateText(this.health.toString());
-        if (type === 'slash') {
-            animationSlash(this.scene, this.x, this.y);
-            soundManager.play('sword-sound');
-        } else if (type === 'poisoning') {
-            const effect = animationStatePoison(this.scene, 0, 0); // 0,0 = tâm card
-            this.add(effect); // ✅ gắn làm con → tự follow card khi di chuyển
-            // soundManager.play('poison');
 
+        let absorbedByShield = 0;
+        let hpLoss = 0;
+
+        if (type === 'poisoning') {
+            const effect = animationStatePoison(this.scene, 0, 0);
+            this.add(effect);
+            hpLoss = damage;
+            this.health -= hpLoss;
+            this.hpDisplay.updateText(this.health.toString());
+            this.showPopup(hpLoss, 'poisoning');
+        } else {
+            let remaining = damage;
+            const shieldTotal = this.shieldMgr.getTotal();
+            if (shieldTotal > 0 && remaining > 0) {
+                absorbedByShield = Math.min(shieldTotal, remaining);
+                remaining -= absorbedByShield;
+                this.shieldMgr.absorb(absorbedByShield);
+                if (absorbedByShield > 0) {
+                    this.showPopup(absorbedByShield, { color: '#ffbb00', prefix: '⛨' });
+                }
+            }
+            if (remaining > 0) {
+                hpLoss = remaining;
+                this.health -= hpLoss;
+                this.hpDisplay.updateText(this.health.toString());
+                this.showPopup(remaining, 'damage');
+            }
+            if (type === 'slash') {
+                animationSlash(this.scene, this.x, this.y);
+                soundManager.play('sword-sound');
+            }
         }
 
-        const popupType: PopupPayload = type === 'poisoning' ? 'poisoning' : 'damage';
-        this.showPopup(damage, popupType);
         this.cardImage.setTint(0xe05656);
         setTimeout(() => this.cardImage.clearTint(), 200);
+
         if (this.health <= 0) {
             this.die();
         }
-        return damage;
+        return absorbedByShield + hpLoss;
     }
 
     showPopup(amount: number, type: PopupPayload = 'heal'): void {
@@ -107,7 +160,10 @@ export default class Enemy extends Card {
         const cardCharacter = this.scene.gameManager?.cardManager.CardCharacter as Character;
         const weapon = cardCharacter?.weapon;
         if (weapon?.durability > 0) {
-            const actualDamage = Math.min(weapon.durability, this.health);
+            const actualDamage = Math.min(
+                weapon.durability,
+                this.shieldMgr.getTotal() + this.health
+            );
             cardCharacter.weapon.Effect(this, actualDamage, cardCharacter);
             cardCharacter.reduceDurability(actualDamage);
             return Promise.resolve(true); // Enemy biến mất ngay sau khi dùng, nên trả về true để emit 'completeMove';

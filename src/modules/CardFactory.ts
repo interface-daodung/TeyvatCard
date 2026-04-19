@@ -10,6 +10,9 @@ import {
     populateLibraryCardLists
 } from './card/cardFactoryLibrary.js';
 import {
+    cardStageRuntime,
+    computeCardWeightsForStagePoolType,
+    ensureStagePoolsLoaded,
     getCachedCardWeightsForCurrentStage,
     getDynamicCardWeightsForCurrentStage,
     resolveWeightedCardKey
@@ -124,6 +127,27 @@ export class CardFactory {
         ) => Card | undefined;
         if (typeof CardClass !== 'function') return null;
         return new CardClass(scene, x, y, index);
+    }
+
+    /**
+     * Chọn một thẻ ngẫu nhiên theo trọng số rarity trong pool `poolType` của màn hiện tại
+     * (dungeonList → stageCardPools → availableCards[poolType]).
+     */
+    createRandomCardFromStagePoolType(
+        scene: SceneWithGameManager,
+        index: number,
+        poolType: string
+    ): Card | null {
+        ensureStagePoolsLoaded();
+        const currentStage = cardStageRuntime.stageCardPools[cardStageRuntime.currentStage];
+        const cardWeights = computeCardWeightsForStagePoolType(currentStage, poolType, getCardConfig);
+        const pickedKey = resolveWeightedCardKey(cardWeights, (k) => {
+            if (k === 'add') return false;
+            const C = (this.cardClasses as Record<string, unknown>)[k];
+            return typeof C === 'function';
+        });
+        if (!pickedKey) return null;
+        return this.createCardByKey(scene, index, pickedKey);
     }
 
     createCard(scene: SceneWithGameManager, index: number, validCardKeys: string[]): Card | null {

@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import GameManager from '../core/GameManager.js';
 import { dataManager } from '../core/DataManager.js';
+import AssetManager from '../core/AssetManager.js';
+import TextureManager from '../core/TextureManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import {
     createGameUI,
@@ -56,15 +58,10 @@ export default class GameScene extends Phaser.Scene {
         const dungeon = arr.find(d => d.stageId === this.stageId);
         this.dungeonStageName = dungeon?.name || '';
 
-        // Background per dungeon (from dungeonList.json)
-        const mapBackgroundUri = dungeon?.map_background;
-        if (typeof mapBackgroundUri === 'string') {
-            const fileName = mapBackgroundUri.split('/').pop() ?? '';
-            const textureKey = fileName.replace(/\.[^/.]+$/i, '');
-            // Only switch background if texture is available (loaded during LoadingScene preload).
-            if (textureKey && this.textures.exists(textureKey)) {
-                this.backgroundTextureKey = textureKey;
-            }
+        // Background per dungeon (from dungeonList.json), key được AssetManager preload + register.
+        const stageBackgroundKey = AssetManager.getGameSceneBackgroundTextureKey(this.stageId);
+        if (TextureManager.has(stageBackgroundKey)) {
+            this.backgroundTextureKey = stageBackgroundKey;
         }
 
         this.gameManager = new GameManager(this);
@@ -73,7 +70,7 @@ export default class GameScene extends Phaser.Scene {
     create(): void {
         const { width, height } = this.scale;
 
-        this.backgroundImage = this.add.image(width / 2, 0, this.backgroundTextureKey)
+        this.backgroundImage = TextureManager.image(this, width / 2, 0, this.backgroundTextureKey)
             .setDepth(-1000);
         this.backgroundOverlay = this.add.rectangle(width / 2, height / 2, width, height, themeManager.getBackgroundPhaser())
             .setAlpha(0.5)
@@ -82,7 +79,7 @@ export default class GameScene extends Phaser.Scene {
         // COVER mode: giữ tỉ lệ và phủ kín full màn hình theo overlay.
         // Để giảm hiện tượng bị cắt "phía trên", mình căn ảnh theo mép trên
         // (cắt chủ yếu ở phía dưới khi tỉ lệ không khớp).
-        this.applyBackgroundCover(width, height, this.backgroundTextureKey);
+        this.applyBackgroundCover(width, height);
 
         const uiRefs = createGameUI(
             this,
@@ -188,23 +185,23 @@ export default class GameScene extends Phaser.Scene {
                 : textureKey;
 
         if (!this.backgroundImage) return;
-        if (!this.textures.exists(keyToSet)) {
-            console.warn('setBackgroundTexture failed (texture not found):', keyToSet);
+
+        if (!TextureManager.has(keyToSet)) {
+            console.warn('setBackgroundTexture failed (logical key not found):', keyToSet);
             return;
         }
-
-        this.backgroundImage.setTexture(keyToSet);
+        TextureManager.applyThemeTextureToImage(this.backgroundImage, keyToSet);
 
         // Khi đổi sang texture có tỉ lệ khác, cần re-apply cover để tránh bị lệch crop.
         const { width, height } = this.scale;
         if (typeof width === 'number' && typeof height === 'number') {
-            this.applyBackgroundCover(width, height, keyToSet);
+            this.applyBackgroundCover(width, height);
         }
     }
 
-    private applyBackgroundCover(width: number, height: number, textureKey: string): void {
+    private applyBackgroundCover(width: number, height: number): void {
         if (!this.backgroundImage) return;
-
+        const textureKey = this.backgroundImage.texture.key;
         const texture = this.textures.get(textureKey);
         const sourceImage = texture?.getSourceImage?.() as HTMLImageElement | undefined;
         const imgW = sourceImage?.width ?? 0;
