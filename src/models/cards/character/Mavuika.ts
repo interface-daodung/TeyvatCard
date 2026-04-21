@@ -5,6 +5,7 @@ import type { SceneWithGameManager } from '../../../modules/Card.js';
 import { soundManager } from '../../../core/SoundManager.js';
 import Weapon from '../../../modules/typeCard/weapon.js';
 import { animationRefinement } from '@/src/animations/Sprites/animationRefinement.js';
+import TextureManager from '../../../core/TextureManager.js';
 
 const MAX_EQUIPMENT_SLOTS = 3;
 
@@ -88,27 +89,21 @@ export default class Mavuika extends Character {
                 continue;
             }
 
-            const atlasKey = 'weapon-' + category + '-badge';
-            const singleBadgeKey = frame;
-            const hasSingleBadgeTexture = this.scene.textures.exists(singleBadgeKey);
-            if (!hasSingleBadgeTexture && !this.scene.textures.exists(atlasKey)) {
+            const badgeKey = frame;
+            const hasBadgeTexture = this.scene.textures.exists(badgeKey) || TextureManager.has(badgeKey);
+            if (!hasBadgeTexture) {
                 img?.setVisible(false);
                 continue;
             }
 
             if (!img) {
-                this.slotTokenImages[i] = this.scene.add
-                    .image(xs[i], tokenY, hasSingleBadgeTexture ? singleBadgeKey : atlasKey, hasSingleBadgeTexture ? undefined : frame)
+                this.slotTokenImages[i] = TextureManager.image(this.scene, xs[i], tokenY, badgeKey)
                     .setOrigin(0.5)
                     .setDisplaySize(120, 120)
                     .setDepth(10)
                     .setVisible(true);
             } else {
-                if (hasSingleBadgeTexture) {
-                    img.setTexture(singleBadgeKey);
-                } else {
-                    img.setTexture(atlasKey, frame);
-                }
+                TextureManager.setImageTexture(img, badgeKey);
                 img.setPosition(xs[i], tokenY);
                 img.setVisible(true);
             }

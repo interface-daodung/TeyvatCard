@@ -165,7 +165,10 @@ export default class AssetManager {
         }
         this.loadCharacterAsset(dataManager.get<string | { id?: string }>('selectedCharacter'));
         this.loadItemAsset(dataManager.get<unknown>('equipment'));
-        this.loadCardsByMaps(stageId, callback);
+        // `token.json` + ảnh: logic json cache / queue atlas đã nằm trong `preloadAtlasAssetsFromJsonFiles` (dùng chung với Menu/Library).
+        this.preloadAtlasAssetsFromJsonFiles(['token.json'], 'game-scene-token-atlas', () => {
+            this.loadCardsByMaps(stageId, callback);
+        });
     }
 
     private loadItemAsset(equipment: unknown): void {
@@ -201,10 +204,6 @@ export default class AssetManager {
                 continue;
             }
 
-            // const itemImage = typeof item.image === 'string' ? item.image.trim() : '';
-            // if (itemImage) {
-            //     this.loadImage(itemNameId, itemImage);
-            // }
             if (Array.isArray(item.attached) && item.attached.length > 0) {
                 this.routeRawAttachedAssets(item.attached, itemNameId);
             }
@@ -735,6 +734,13 @@ export default class AssetManager {
     }
 
     /**
+     * Texture Phaser đã tồn tại cho `key` (đã load xong) — không cần queue `load.image` lại.
+     */
+    private isImageTextureRegistered(key: string): boolean {
+        return this.scene !== null && this.scene.textures.exists(key);
+    }
+
+    /**
      * Load image thông thường
      */
     loadImage(key: string, path: string): void {
@@ -742,7 +748,23 @@ export default class AssetManager {
             Log.warn('AssetManager: Scene chưa được set');
             return;
         }
+
         const resolvedPath = this.shouldKeepOriginalPath(key) ? path : this.resolveImagePathByGpuProfile(path);
+
+        if (this.isImageTextureRegistered(key)) {
+            Log.info('[AssetManager] loadImage skipped (texture already registered)', {
+                key,
+                source: path,
+                resolved: resolvedPath,
+            });
+            try {
+                registerDefaultTextureBindingsForImageKey(key);
+            } catch (error) {
+                Log.info('[AssetManager] register image binding (already loaded) failed', { key, error });
+            }
+            return;
+        }
+
         Log.info('[AssetManager] load image', { key, source: path, resolved: resolvedPath });
         // Đăng ký sớm logical key -> texture key để tránh cảnh báo "Unknown key"
         // khi UI gọi TextureManager trước lúc filecomplete.
@@ -752,16 +774,10 @@ export default class AssetManager {
             Log.warn('[AssetManager] register image key before load failed', { key, error });
         }
 
-        if (!this.scene.textures.exists(key)) {
-            this.scene.load.once(`filecomplete-image-${key}`, () => {
-                registerDefaultTextureBindingsForImageKey(key);
-            });
-            this.scene.load.image(key, resolvedPath);
-            // console.log(`AssetManager: Đã load image ${key} từ ${path}`);
-        } else {
-            // console.log(`AssetManager: ${key} đã tồn tại`);
+        this.scene.load.once(`filecomplete-image-${key}`, () => {
             registerDefaultTextureBindingsForImageKey(key);
-        }
+        });
+        this.scene.load.image(key, resolvedPath);
     }
 
     loadSpritesheet(key: string, path: string): void {

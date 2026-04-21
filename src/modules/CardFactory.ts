@@ -29,7 +29,6 @@ export class CardFactory {
     foodClasses: (typeof Card)[];
     trapClasses: (typeof Card)[];
     treasureClasses: (typeof Card)[];
-    element: string;
 
     constructor() {
         if (CardFactory.instance) {
@@ -59,8 +58,6 @@ export class CardFactory {
 
         defineCardClassesAdd(this.cardClasses);
 
-        this.element = 'cryo';
-
         CardFactory.instance = this;
     }
 
@@ -89,17 +86,28 @@ export class CardFactory {
         return new CardClass(scene, x, y, index);
     }
 
-    /** Tạo coin khi enemy chết: dùng element hiện tại để chọn class (pyro, hydro, ...). */
+    /** Tạo coin theo pool coin của stage hiện tại (dungeonList -> loadStagePoolsFromDungeonList). */
     createCoin(scene: SceneWithGameManager, index: number, score?: number | null): Card | null {
-        const coords = scene.gameManager!.cardManager.getGridPositionCoordinates(index);
-        const x = coords?.x ?? 0;
-        const y = coords?.y ?? 0;
-        const CoinClass = this.coinClasses[this.element];
-        if (!CoinClass) {
-            console.error(`[CardFactory] Coin class for element "${this.element}" is not registered. Coin will not spawn.`);
+        ensureStagePoolsLoaded();
+        const currentStage = cardStageRuntime.stageCardPools[cardStageRuntime.currentStage];
+        const poolTypeCandidates = ['coin', 'coins'];
+        const poolType = poolTypeCandidates.find((k) => Array.isArray(currentStage?.availableCards?.[k]) && currentStage.availableCards[k].length > 0);
+        if (!poolType) {
+            console.error('[CardFactory] Current stage has no coin pool (expected "coin" or "coins"). Coin will not spawn.');
             return null;
         }
-        const coin = new CoinClass(scene, x, y, index) as Card & { setScore?: (s: number) => void };
+        const cardWeights = computeCardWeightsForStagePoolType(currentStage, poolType, getCardConfig);
+        const pickedKey = resolveWeightedCardKey(cardWeights, (k) => {
+            if (k === 'add') return false;
+            const C = (this.cardClasses as Record<string, unknown>)[k];
+            return typeof C === 'function';
+        });
+        if (!pickedKey) {
+            console.error(`[CardFactory] No valid coin key in stage pool "${poolType}". Coin will not spawn.`);
+            return null;
+        }
+        const coin = this.createCardByKey(scene, index, pickedKey) as (Card & { setScore?: (s: number) => void }) | null;
+        if (!coin) return null;
         if (score != null && coin.setScore) coin.setScore(score);
         return coin;
     }
@@ -172,20 +180,14 @@ export class CardFactory {
         const nameId = dataManager.get<string>('selectedCharacter');
 
         if (!nameId) {
-            const cfg = getCardConfig('eula');
-            this.element = cfg?.element ?? 'cryo';
             return new CardClasses.Eula(scene, x, y, index) as Card;
         }
 
         const characterClass = this.characterClasses[nameId];
         if (characterClass) {
-            const cfg = getCardConfig(nameId);
-            this.element = cfg?.element ?? 'cryo';
             return new characterClass(scene, x, y, index);
         }
 
-        const cfg = getCardConfig('eula');
-        this.element = cfg?.element ?? 'cryo';
         return new CardClasses.Eula(scene, x, y, index) as Card;
     }
 }

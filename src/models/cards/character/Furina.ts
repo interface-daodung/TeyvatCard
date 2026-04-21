@@ -2,7 +2,10 @@ import Character from '../../../modules/typeCard/character.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import type Enemy from '../../../modules/typeCard/enemy.js';
+import { showFrameLayerOnce } from '../../../modules/card/cardDisplay.js';
+import { SpritesheetWrapper } from '../../../utils/SpritesheetWrapper.js';
 import TextureManager from '../../../core/TextureManager.js';
+import { dataManager } from '../../../core/DataManager.js';
 
 export default class Furina extends Character {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -121,6 +124,9 @@ export default class Furina extends Character {
         if (this.Pneuma_or_Ousia) {
             // Pneuma: chỉ phản ứng khi HP giảm => heal Many_heal (default 1).
             if (!isIncrease) {
+                showFrameLayerOnce(this.scene, this, {
+                    textureKey: 'singer-of-many-waters',
+                });
                 this.heal(this.Many_heal);
             }
             return;
@@ -143,7 +149,7 @@ export default class Furina extends Character {
         const times = Math.max(0, Math.floor(this.Ousia_Reload));
         for (let i = 0; i < times; i++) {
             console.log('Furina Retaliate', i);
-            this.Retaliate();
+            this.Retaliate(i);
         }
 
         // Sau khi dùng hết thì reset; Ousia_Reload chỉ được tăng ở nhánh 'increase'.
@@ -152,7 +158,7 @@ export default class Furina extends Character {
     }
 
     /** Retaliate method. */
-    private Retaliate(): void {
+    private Retaliate(shotIndex: number): void {
         const gameManager = this.scene.gameManager;
         if (!gameManager) return;
 
@@ -164,14 +170,91 @@ export default class Furina extends Character {
 
         // Chọn 1 enemy ngẫu nhiên để gây sát thương.
         const target = enemies[Math.floor(Math.random() * enemies.length)] as Enemy;
-        target.takeDamage?.(this.Ousia_DMG);
+
+        const shotOrigin = this.getShotOriginByIndex(shotIndex);
+        const targetCenter = this.getTargetCenter(target);
+
+        const projectileTextureKey = this.getProjectileTextureKeyByIndex(shotIndex);
+        const projectile = TextureManager.image(this.scene, shotOrigin.x, shotOrigin.y, projectileTextureKey)
+            .setOrigin(0.5)
+            .setDisplaySize(52, 52)
+            .setDepth(30);
+
+        this.scene.tweens.add({
+            targets: projectile,
+            x: targetCenter.x,
+            y: targetCenter.y,
+            duration: 260,
+            ease: 'Sine.easeIn',
+            onComplete: () => {
+                projectile.destroy();
+                this.playFurinaPetAnimationEffect(targetCenter.x, targetCenter.y);
+                target.takeDamage?.(this.Ousia_DMG);
+            }
+        });
         console.log('Furina Retaliate target', target);
+    }
+
+    private getShotOriginByIndex(shotIndex: number): Phaser.Math.Vector2 {
+        const shots: Array<Phaser.GameObjects.Image | undefined> = [
+            this.Gentilhomme_Usher,
+            this.Surintendante_Chevalmarin,
+            this.Mademoiselle_Crabaletta
+        ];
+        const token = shots[shotIndex];
+        if (token?.active && token.visible) {
+            return new Phaser.Math.Vector2(token.x, token.y);
+        }
+        return new Phaser.Math.Vector2(this.x, this.y);
+    }
+
+    private getProjectileTextureKeyByIndex(shotIndex: number): string {
+        const projectileKeys = [
+            'GentilhommeUsher',
+            'SurintendanteChevalmarin',
+            'MademoiselleCrabaletta'
+        ] as const;
+        return projectileKeys[shotIndex] ?? projectileKeys[0];
+    }
+
+    private getTargetCenter(target: Enemy): Phaser.Math.Vector2 {
+        if (typeof (target as any).getBounds === 'function') {
+            const bounds = (target as any).getBounds() as Phaser.Geom.Rectangle;
+            return new Phaser.Math.Vector2(bounds.centerX, bounds.centerY);
+        }
+        return new Phaser.Math.Vector2((target as any).x ?? 0, (target as any).y ?? 0);
+    }
+
+    private playFurinaPetAnimationEffect(x: number, y: number): void {
+        const effect = SpritesheetWrapper.animationEffect(
+            this.scene,
+            x,
+            y,
+            'furina-pet-animations',
+            90,
+            90,
+            { start: 0, end: 8 },
+            10
+        );
+        effect.setDepth(31);
     }
 
     /** elementalBurst method. */
     elementalBurst(): void {
         // Logic của elemental burst
         this.Pneuma_or_Ousia = !this.Pneuma_or_Ousia;
+
+        const characterLevel = dataManager.get<Record<string, number>>('characterLevel');
+        const furinaLevel = characterLevel?.furina ?? this.level;
+        if (furinaLevel < 10) {
+            if (this.cardImage instanceof Phaser.GameObjects.Image) {
+                TextureManager.setImageTexture(
+                    this.cardImage,
+                    this.Pneuma_or_Ousia ? 'furina-pneuma' : 'furina'
+                );
+            }
+ 
+        }
 
         // Update skill icon based on current form (Pneuma/Ousia).
         // The skill button is owned by GameScene; Card instances access it via the Phaser scene reference.

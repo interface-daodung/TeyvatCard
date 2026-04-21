@@ -12,15 +12,9 @@ import { animationCurse } from '@/src/animations/Sprites/animationCurse.js';
 import { ShowPopup, type PopupPayload } from '../../components/shared/index.js';
 import TextureManager from '../../core/TextureManager.js';
 import { CardShieldStackManager } from '../cardShieldStacks.js';
+import type { CardElement } from '../card/cardDisplay.js';
 
-export type DamageElement =
-    | 'anemo'
-    | 'cryo'
-    | 'dendro'
-    | 'electro'
-    | 'geo'
-    | 'hydro'
-    | 'pyro';
+export type DamageElement = CardElement;
 
 export type DamageType =
     | 'poisoning'

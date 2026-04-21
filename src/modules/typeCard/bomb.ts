@@ -46,11 +46,6 @@ export default class Bomb extends Card {
     async CardEffect(): Promise<boolean> {
         await SwapCardsAnimation.runAsync(this.scene.gameManager!.animationManager,
             this.index, this.scene.gameManager!.cardManager.getCharacterIndex());
-        // this.scene.gameManager?.animationManager.startSwapCardsAnimation(
-        //     this.index,
-        //     this.scene.gameManager.cardManager.getCharacterIndex(),
-        //     () => { }
-        // );
         return Promise.resolve(true); // Bomb biến mất ngay sau khi dùng, nên trả về true để emit 'completeMove';
     }
 }

@@ -2,18 +2,26 @@ import Card from '../Card.js';
 import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
+import type Phaser from 'phaser';
+import { SwapCardsAnimation } from '@/src/animations/SwapCardsAnimation.js';
 import { soundManager } from '../../core/SoundManager.js';
 import Character, { type DamageElement } from './character.js';
 import { animationSlash } from '@/src/animations/Sprites/animationSlash.js';
 import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoison.js';
 import { ShowPopup, type PopupPayload } from '../../components/shared/index.js';
 import { CardShieldStackManager } from '../cardShieldStacks.js';
+import { setFrameLayer, toDamageElement } from '../card/cardDisplay.js';
 
 export type { CardShieldStack as EnemyShieldStack } from '../cardShieldStacks.js';
 
 export default class Enemy extends Card {
     poisoning: boolean;
+    frozen: boolean;
+    protected frozenTurnsRemaining: number;
+    private unsubDefrost?: (() => void) | null;
+    private pendingDefrostRegistration: boolean;
     health!: number;
+    private hideFrozenLayerFn: (() => void) | null;
     /** Tổng khiên (đồng bộ qua `shieldMgr`). */
     shield = 0;
     private readonly shieldMgr: CardShieldStackManager;
@@ -24,6 +32,11 @@ export default class Enemy extends Card {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number, name: string, nameId: string) {
         super(scene, x, y, index, name, nameId, 'enemy');
         this.poisoning = false;
+        this.frozen = false;
+        this.frozenTurnsRemaining = 0;
+        this.unsubDefrost = null;
+        this.pendingDefrostRegistration = false;
+        this.hideFrozenLayerFn = null;
         this.shieldMgr = new CardShieldStackManager({
             getScene: () => this.scene,
             getDestroyed: () => this.destroyed,
@@ -89,8 +102,71 @@ export default class Enemy extends Card {
         this.shieldMgr.expireShield();
     }
 
+    /** Đặt mọi stack khiên về 0 (subclass gọi khi cần, ví dụ Pyro phá khiên băng). */
+    protected clearAllShields(): void {
+        this.shieldMgr.clearAll();
+    }
+
     addShield(amount: number, turnsToExpire: number = 1, nameIdOfShield: string = 'default'): boolean {
         return this.shieldMgr.addShield(amount, turnsToExpire, nameIdOfShield);
+    }
+
+    protected setFrozenForOneTurn(): void {
+        this.setFrozenForTurns(1);
+    }
+
+    protected setFrozenForTurns(turns: number): void {
+        const normalizedTurns = Math.max(1, Math.floor(turns));
+        if (!this.frozen) {
+            this.frozen = true;
+            this.cardImage.setTint(0x66ccff);
+            this.showFrozenLayer();
+        }
+        this.frozenTurnsRemaining = Math.max(this.frozenTurnsRemaining, normalizedTurns);
+        if (this.unsubDefrost || this.pendingDefrostRegistration) return;
+        this.pendingDefrostRegistration = true;
+        Promise.resolve().then(() => {
+            this.pendingDefrostRegistration = false;
+            if (!this.frozen || this.unsubDefrost || this.destroyed) return;
+            this.unsubDefrost = this.scene.gameManager?.emitter.on(
+                'completeMove',
+                this.handleFrozenTurnEnd.bind(this),
+                9
+            ) ?? null;
+            if (this.unsubDefrost) this.unsubscribeList.push(this.unsubDefrost);
+        });
+    }
+
+    private handleFrozenTurnEnd(): void {
+        if (!this.frozen) return;
+        this.frozenTurnsRemaining = Math.max(0, this.frozenTurnsRemaining - 1);
+        if (this.frozenTurnsRemaining <= 0) {
+            this.defrost();
+        }
+    }
+
+    private defrost(): void {
+        this.frozen = false;
+        this.frozenTurnsRemaining = 0;
+        if (this.unsubDefrost) {
+            this.unsubDefrost();
+            this.unsubDefrost = null;
+        }
+        this.cardImage.clearTint();
+        this.hideFrozenLayer();
+    }
+
+    private showFrozenLayer(): void {
+        if (!this.hideFrozenLayerFn) {
+            this.hideFrozenLayerFn = setFrameLayer(this, this.cardImage, {
+                textureKey: 'frozen'
+            });
+        }
+    }
+
+    private hideFrozenLayer(): void {
+        this.hideFrozenLayerFn?.();
+        this.hideFrozenLayerFn = null;
     }
 
     takeDamage(damage: number, type?: string, element: DamageElement | null = null): number {
@@ -129,9 +205,6 @@ export default class Enemy extends Card {
             }
         }
 
-        this.cardImage.setTint(0xe05656);
-        setTimeout(() => this.cardImage.clearTint(), 200);
-
         if (this.health <= 0) {
             this.die();
         }
@@ -156,7 +229,15 @@ export default class Enemy extends Card {
         }
     }
 
-    CardEffect(): Promise<boolean> {
+    async CardEffect(): Promise<boolean> {
+        if (this.frozen) {
+            await SwapCardsAnimation.runAsync(
+                this.scene.gameManager!.animationManager,
+                this.index,
+                this.scene.gameManager!.cardManager.getCharacterIndex()
+            );
+            return Promise.resolve(true);
+        }
         const cardCharacter = this.scene.gameManager?.cardManager.CardCharacter as Character;
         const weapon = cardCharacter?.weapon;
         if (weapon?.durability > 0) {

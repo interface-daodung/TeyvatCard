@@ -1,10 +1,13 @@
-import Samachurl from '../../../modules/clan/Samachurl.js';
+import Hilichurl from '../../../modules/clan/Hilichurl.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import type Enemy from '../../../modules/typeCard/enemy.js';
 
-export default class HydroSamachurl extends Samachurl {
-    protected override samaFullCount = 5;
+/** Lượng HP hồi cho mỗi Hilichurl khi Hydro Samachurl kích hoạt burst. */
+const HYDRO_BURST_HEAL_AMOUNT = 1;
+
+export default class HydroSamachurl extends Hilichurl {
+    protected samaFullCount = 3;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('HydroSamachurl') ?? { id: 'hydro-samachurl', name: 'Hydro Samachurl', description: '', element: 'hydro', clan: 'hilichurl', rarity: 3 };
@@ -13,18 +16,21 @@ export default class HydroSamachurl extends Samachurl {
         // this.health = this.GetRandom(3, 10);
         // this.score = this.GetRandom(1, 9);
         this.createCard();
-        this.initSamachurlAbility();
+        this.initHilichurlTokenCounter({
+            fullCount: this.samaFullCount,
+            resetValue: -1,
+            onThreshold: () => this.onSamaThresholdReached()
+        });
         scene.add.existing(this);
     }
 
-    protected override onSamaThresholdReached(): void {
+    protected onSamaThresholdReached(): void {
         this.healHilichurlEnemiesByHydroBurst();
     }
 
     /**
      * Hồi: tất cả `Enemy` có `clan === 'hilichurl'`
-     * - tăng thêm 20% `target.health` (làm tròn lên)
-     * - min = 1
+     * - mỗi mục tiêu +{@link HYDRO_BURST_HEAL_AMOUNT} HP
      */
     private healHilichurlEnemiesByHydroBurst(): void {
         const allCards = this.scene.gameManager?.cardManager?.getAllCards?.() ?? [];
@@ -35,7 +41,7 @@ export default class HydroSamachurl extends Samachurl {
             const target = card as unknown as Enemy;
             if (target.clan !== 'hilichurl') continue;
 
-            const addHealth = Math.max(1, Math.ceil((target.health ?? 0) * 0.2));
+            const addHealth = HYDRO_BURST_HEAL_AMOUNT;
             target.health = (target.health ?? 0) + addHealth;
             target.hpDisplay?.updateText(target.health.toString());
             target.showPopup(addHealth, 'heal');

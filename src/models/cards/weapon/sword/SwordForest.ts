@@ -23,7 +23,7 @@ export default class SwordForest extends Weapon {
 class SwordForest_equipment extends Equipment {
     Effect(enemy: Enemy, damage: number): boolean {
         enemy.setPoisoning();
-        enemy.takeDamage(damage, 'slash');
+        enemy.takeDamage(damage, 'slash', 'dendro');
         return true;
     }
 }

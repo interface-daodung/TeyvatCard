@@ -22,8 +22,7 @@ export default class SwordSacrificial extends Weapon {
 
 class SwordSacrificial_equipment extends Equipment {
     Effect(enemy: Enemy, damage: number, character?: Character): boolean {
-        character.takeDamage(1, 'damage');
-        enemy.takeDamage(damage, 'slash');
-        return true;
+        character?.takeDamage(1, 'damage');
+        return super.Effect(enemy, damage, character);
     }
 }

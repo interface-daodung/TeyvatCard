@@ -209,5 +209,67 @@
     "imageSpritesheet": "",
     "imageUnlock": "",
     "attached": []
+  },
+  {
+    "stageId": "hilichurl_camp",
+    "name": "map.hilichurl_camp.name",
+    "typeRatios": {
+      "enemies": 22,
+      "food": 20,
+      "weapons": 20,
+      "coins": 30,
+      "traps": 1,
+      "treasures": 6,
+      "bombs": 1
+    },
+    "availableCards": {
+      "enemies": [
+        "Blazing",
+        "Crackling",
+        "DendroSamachurl",
+        "HilichurlFighter",
+        "IceShieldwall",
+        "HilistrayWater",
+        "HydroSamachurl",
+        "RockShieldwall",
+        "Lawachurl",
+        "Shooter",
+        "WoodenShieldwall"
+      ],
+      "food": [
+        "RoastChicken",
+        "Macarons",
+        "Pizza",
+        "MystiqueSoup"
+      ],
+      "weapons": [
+        "CatalystDreams",
+        "CatalystForest",
+        "CatalystMagicGuide",
+        "SwordForest",
+        "SwordSplendor",
+        "SwordTraveler",
+        "SwordSkyward"
+      ],
+      "coins": [
+        "PyroFragment",
+        "HydroFragment"
+      ],
+      "traps": [
+        "AbyssCall",
+        "BreatheFire"
+      ],
+      "treasures": [
+        "Chest"
+      ],
+      "bombs": [
+        "Explosive"
+      ]
+    },
+    "map_background": "/assets/images/ui/background/HillTower.png",
+    "image": "",
+    "imageSpritesheet": "",
+    "imageUnlock": "",
+    "attached": []
   }
 ]

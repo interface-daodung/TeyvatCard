@@ -1,10 +1,10 @@
-import Samachurl from '../../../modules/clan/Samachurl.js';
+import Hilichurl from '../../../modules/clan/Hilichurl.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import type Character from '../../../modules/typeCard/character.js';
 
-export default class ElectroSamachurl extends Samachurl {
-    protected override samaFullCount = 6;
+export default class ElectroSamachurl extends Hilichurl {
+    protected samaFullCount = 6;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('ElectroSamachurl') ?? { id: 'electro-samachurl', name: 'Electro Samachurl', description: '', element: 'electro', clan: 'hilichurl', rarity: 3 };
@@ -13,11 +13,15 @@ export default class ElectroSamachurl extends Samachurl {
         // this.health = this.GetRandom(3, 10);
         // this.score = this.GetRandom(1, 9);
         this.createCard();
-        this.initSamachurlAbility();
+        this.initHilichurlTokenCounter({
+            fullCount: this.samaFullCount,
+            resetValue: -1,
+            onThreshold: () => this.onSamaThresholdReached()
+        });
         scene.add.existing(this);
     }
 
-    protected override onSamaThresholdReached(): void {
+    protected onSamaThresholdReached(): void {
         const character = this.scene.gameManager?.cardManager?.CardCharacter as Character | undefined;
         if (!character) return;
 

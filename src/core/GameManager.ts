@@ -42,6 +42,7 @@ export default class GameManager {
     public emitter: PriorityEmitter;
     public animationManager: AnimationManager;
     public itemEquipment?: any[];
+    private hasPersistedGameOverStats: boolean;
 
     constructor(scene: SceneWithGameManager) {
         this.scene = scene;
@@ -55,9 +56,44 @@ export default class GameManager {
         this.cardManager = new CardManager(scene);
 
         this.emitter = new PriorityEmitter();
+        this.hasPersistedGameOverStats = false;
 
         // Tạo AnimationManager để quản lý animation (sẽ được khởi tạo với scene sau)
         this.animationManager = new AnimationManager(scene);
+    }
+
+    private persistGameOverStats(): void {
+        if (this.hasPersistedGameOverStats) {
+            return;
+        }
+
+        // Lấy tên character hiện tại (từ nameId hoặc config)
+        const card = this.cardManager.CardCharacter as any;
+        const characterName = card?.nameId ?? card?.constructor?.DEFAULT?.id;
+
+        if (characterName) {
+            const characterHighScores = dataManager.get<Record<string, number>>('characterHighScores') || {};
+
+            // Kiểm tra và cập nhật highScore cho character
+            if (!characterHighScores[characterName] || this.coin > characterHighScores[characterName]) {
+                characterHighScores[characterName] = this.coin;
+                dataManager.set('characterHighScores', characterHighScores);
+                Log.info(`GameManager: New character high score for ${characterName}: ${this.coin}`);
+            }
+        }
+
+        // Kiểm tra và cập nhật highScore cho stage hiện tại
+        if (this.coin > this.highScore) {
+            this.setHighScore(this.coin);
+            this.highScore = this.coin; // Cập nhật highScore local
+            Log.info(`GameManager: New high score for ${this.scene.stageId}: ${this.coin}`);
+        }
+
+        // Cộng dồn coin vào totalCoin
+        const currentTotalCoin = dataManager.get<number>('totalCoin') ?? 0;
+        const newTotalCoin = currentTotalCoin + this.coin;
+        dataManager.set('totalCoin', newTotalCoin);
+        this.hasPersistedGameOverStats = true;
     }
 
     setItemEquipment(itemEquipment: any[]): void {
@@ -188,7 +224,10 @@ export default class GameManager {
         Log.info(`GameManager: Added ${points} coins, total: ${this.coin}`);
     }
 
-    async gameOver(): Promise<void> {
+    async gameOver(options?: { withAnimation?: boolean; withDialog?: boolean }): Promise<void> {
+        const withAnimation = options?.withAnimation ?? true;
+        const withDialog = options?.withDialog ?? true;
+
         Log.info('gameOver!');
         this.emitter.emit('gameOver');
         this.isGameOver = true;
@@ -196,38 +235,18 @@ export default class GameManager {
             this.scene.sellButton.hideButton();
         }
 
-        // Lấy tên character hiện tại (từ nameId hoặc config)
-        const card = this.cardManager.CardCharacter as any;
-        const characterName = card?.nameId ?? card?.constructor?.DEFAULT?.id;
-
-        if (characterName) {
-            const characterHighScores = dataManager.get<Record<string, number>>('characterHighScores') || {};
-
-            // Kiểm tra và cập nhật highScore cho character
-            if (!characterHighScores[characterName] || this.coin > characterHighScores[characterName]) {
-                characterHighScores[characterName] = this.coin;
-                dataManager.set('characterHighScores', characterHighScores);
-                Log.info(`GameManager: New character high score for ${characterName}: ${this.coin}`);
-            }
-        }
-
-        // Kiểm tra và cập nhật highScore cho stage hiện tại
-        if (this.coin > this.highScore) {
-            this.setHighScore(this.coin);
-            this.highScore = this.coin; // Cập nhật highScore local
-            Log.info(`GameManager: New high score for ${this.scene.stageId}: ${this.coin}`);
-        }
-
-        // Cộng dồn coin vào totalCoin
-        const currentTotalCoin = dataManager.get<number>('totalCoin') ?? 0;
-        const newTotalCoin = currentTotalCoin + this.coin;
-        dataManager.set('totalCoin', newTotalCoin);
+        this.persistGameOverStats();
 
         // Destroy từng thẻ một cách tuần tự với delay 200ms
-
-        await GameOverAnimation.runAsync(this.animationManager,
-            CalculatePositionCard.shuffleArray(this.cardManager.getAllCards()) as Card[]);
-        this.showGameOverDialog();
+        if (withAnimation) {
+            await GameOverAnimation.runAsync(
+                this.animationManager,
+                CalculatePositionCard.shuffleArray(this.cardManager.getAllCards()) as Card[]
+            );
+        }
+        if (withDialog) {
+            this.showGameOverDialog();
+        }
 
 
     }

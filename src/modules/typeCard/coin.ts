@@ -2,6 +2,7 @@ import Card from '../Card.js';
 import type { CardDefault } from '../Card.js';
 import type { CreateDisplayResult, DisplayPosition } from '../Card.js';
 import type { SceneWithGameManager } from '../Card.js';
+import TextureManager from '../../core/TextureManager.js';
 
 export default class Coin extends Card {
     score!: number;
@@ -39,7 +40,7 @@ export default class Coin extends Card {
         this.nameId = this.nameId.replace('fragment', 'resonance');
         const resonanceDesc = this.config?.resonanceDescription ?? (this.constructor as typeof Card & { DEFAULT?: { resonanceDescription?: string } }).DEFAULT?.resonanceDescription;
         if (resonanceDesc) this.description = resonanceDesc;
-        this.cardImage.setTexture(this.type, this.nameId);
+        TextureManager.setImageTexture(this.cardImage, this.nameId);
         this.coinDisplay.updateText(this.score);
         this.processCreation();
     }

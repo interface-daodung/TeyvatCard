@@ -1,4 +1,4 @@
-import Samachurl from '../../../modules/clan/Samachurl.js';
+import Hilichurl from '../../../modules/clan/Hilichurl.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import type Enemy from '../../../modules/typeCard/enemy.js';
@@ -8,7 +8,9 @@ const HILICHURL_BUFF_SHIELD_SOURCE = 'geo-samachurl-hilichurl';
 /** Số lượt `completeMove` trước khi layer buff hết hạn. */
 const HILICHURL_BUFF_SHIELD_TURNS = 3;
 
-export default class GeoSamachurl extends Samachurl {
+export default class GeoSamachurl extends Hilichurl {
+    protected samaFullCount = 6;
+
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('GeoSamachurl') ?? { id: 'geo-samachurl', name: 'Geo Samachurl', description: '', element: 'geo', clan: 'hilichurl', rarity: 3 };
         super(scene, x, y, index, config.name!, config.id!);
@@ -16,11 +18,15 @@ export default class GeoSamachurl extends Samachurl {
         // this.health = this.GetRandom(3, 10);
         // this.score = this.GetRandom(1, 9);
         this.createCard();
-        this.initSamachurlAbility();
+        this.initHilichurlTokenCounter({
+            fullCount: this.samaFullCount,
+            resetValue: -1,
+            onThreshold: () => this.onSamaThresholdReached()
+        });
         scene.add.existing(this);
     }
 
-    protected override onSamaThresholdReached(): void {
+    protected onSamaThresholdReached(): void {
         this.buffHilichurlEnemies();
     }
 

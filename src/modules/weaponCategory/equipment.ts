@@ -1,5 +1,6 @@
-import Character from "../typeCard/character.js";
+import Character, { type DamageElement } from "../typeCard/character.js";
 import Enemy from "../typeCard/enemy.js";
+import { toDamageElement } from "../card/cardDisplay.js";
 
 export default class Equipment {
 
@@ -29,11 +30,12 @@ export default class Equipment {
     * @param damage The amount of damage being dealt to the enemy
     * @returns A boolean indicating whether the effect was successfully applied
     */
-    Effect(enemy: Enemy, damage: number, character?: Character): boolean {
-        // Implement the effect of the equipment on the enemy here
-        enemy.takeDamage(damage, 'slash');
-
-        console.log('Equipment effect' + this.default.id + ' triggered on ' + enemy.name + ' for ' + damage + ' damage.');
+    Effect(
+        enemy: Enemy,
+        damage: number,
+        character?: Character,
+    ): boolean {
+        enemy.takeDamage(damage, 'slash', character?.element as DamageElement);
         return true;
     }
 

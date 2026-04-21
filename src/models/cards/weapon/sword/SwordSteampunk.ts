@@ -24,7 +24,7 @@ export default class SwordSteampunk extends Weapon {
 
 class SwordSteampunk_equipment extends Equipment {
     Effect(enemy: Enemy, damage: number, character?: Character): boolean {
-        enemy.takeDamage(damage, 'slash');
+        super.Effect(enemy, damage, character);
         if (character && character.weapon) {
             if (Math.random() < 0.2) {
                 character.weapon.durability += damage; // Tăng độ bền của vũ khí lên 1

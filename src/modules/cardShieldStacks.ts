@@ -66,6 +66,14 @@ export class CardShieldStackManager {
         this.clearUnsubIfNoStacks();
     }
 
+    /** Xóa toàn bộ stack khiên (ví dụ Pyro tan băng). */
+    clearAll(): void {
+        if (this.stacks.length === 0) return;
+        this.stacks = [];
+        this.sync();
+        this.clearUnsubIfNoStacks();
+    }
+
     absorb(amount: number): void {
         if (amount <= 0) return;
         let left = amount;

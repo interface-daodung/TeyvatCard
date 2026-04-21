@@ -6,6 +6,7 @@ import TextureManager from '../core/TextureManager.js';
 import { themeManager } from '../core/ThemeManager.js';
 import {
     createGameUI,
+    createIconActionButton,
     createItemButton,
     createItemButtonsFromStorage,
     createSkillButton,
@@ -20,6 +21,7 @@ import {
 import { getShowGuideSetting, setShowGuideSetting } from '../components/SettingsScene/GameSettingPopup.js';
 import Character from '../modules/typeCard/character.js';
 import Mavuika from '../models/cards/character/Mavuika.js';
+import { I18nText } from '../components/shared/index.js';
 
 interface SceneData {
     stageId?: string;
@@ -43,6 +45,7 @@ export default class GameScene extends Phaser.Scene {
     public cardCharacter?: Character;
     public sellButton!: SellButton;
     private backgroundImage?: Phaser.GameObjects.Image;
+    private navigationModal?: Phaser.GameObjects.Container;
     private backgroundOverlay?: Phaser.GameObjects.Rectangle;
     private backgroundTextureKey: string = 'background';
 
@@ -88,7 +91,7 @@ export default class GameScene extends Phaser.Scene {
             this.dungeonStageName,
             this.gameManager.highScore,
             this.gameManager.coin,
-            () => this.scene.start('MenuScene')
+            () => this.openNavigationModal()
         );
         this.stageText = uiRefs.stageText;
         this.highScoreText = uiRefs.highScoreText;
@@ -159,6 +162,11 @@ export default class GameScene extends Phaser.Scene {
             setShowGuideSetting(false);
             createTutorialLayer(this, width, height, () => {});
         }
+
+        this.input.keyboard?.on('keydown-ESC', this.handleEscKey, this);
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            this.input.keyboard?.off('keydown-ESC', this.handleEscKey, this);
+        });
     }
 
     public updateSkillButtonCooldown(): void {
@@ -223,5 +231,90 @@ export default class GameScene extends Phaser.Scene {
             .setPosition(width / 2, 0)
             .setScale(coverScale)
             .setDepth(-1000);
+    }
+
+    private closeNavigationModal(): void {
+        if (!this.navigationModal) return;
+        this.navigationModal.destroy(true);
+        this.navigationModal = undefined;
+    }
+
+    private handleEscKey(): void {
+        if (this.navigationModal) {
+            this.closeNavigationModal();
+            return;
+        }
+        this.openNavigationModal();
+    }
+
+    private openNavigationModal(): void {
+        if (this.navigationModal || this.gameManager.animationManager.isProcessing) return;
+
+        const { width, height } = this.scale;
+        const modal = this.add.container(0, 0).setDepth(200);
+        const overlay = this.add.rectangle(0, 0, width, height, themeManager.getBackgroundPhaser(), 0.75)
+            .setOrigin(0, 0)
+            .setInteractive({ useHandCursor: true });
+        overlay.on('pointerdown', () => this.closeNavigationModal());
+
+        const panel = this.add.graphics();
+        panel.fillStyle(themeManager.getSurfacePhaser(), 0.96);
+        panel.lineStyle(3, themeManager.getPrimaryPhaser(), 1);
+        panel.fillRoundedRect(width / 2 - 235, height / 2 - 125, 470, 250, 20);
+        panel.strokeRoundedRect(width / 2 - 235, height / 2 - 125, 470, 250, 20);
+
+        modal.add([overlay, panel]);
+
+        const modalTitle = I18nText.create(this, width / 2, height / 2 - 68, 'paused', {
+            fontSize: '34px',
+            color: themeManager.getPrimary(),
+            fontFamily: 'Arial, sans-serif',
+            fontStyle: 'bold',
+            stroke: themeManager.getBackground(),
+            strokeThickness: 3
+        }).setOrigin(0.5);
+        modal.add(modalTitle);
+
+        createIconActionButton({
+            scene: this,
+            parent: modal,
+            x: width / 2 - 120,
+            y: height / 2 + 40,
+            icon: '↻',
+            tooltipKey: 'restart',
+            color: themeManager.getSuccessPhaser(),
+            onClick: async () => {
+                this.closeNavigationModal();
+                await this.gameManager.gameOver({ withAnimation: false, withDialog: false });
+                this.scene.restart();
+            }
+        });
+
+        createIconActionButton({
+            scene: this,
+            parent: modal,
+            x: width / 2,
+            y: height / 2 + 40,
+            icon: '⌂',
+            tooltipKey: 'menu_button',
+            color: themeManager.getWarningPhaser(),
+            onClick: () => {
+                this.closeNavigationModal();
+                this.scene.start('MenuScene');
+            }
+        });
+
+        createIconActionButton({
+            scene: this,
+            parent: modal,
+            x: width / 2 + 120,
+            y: height / 2 + 40,
+            icon: '▶',
+            tooltipKey: 'continue',
+            color: themeManager.getInfoPhaser(),
+            onClick: () => this.closeNavigationModal()
+        });
+
+        this.navigationModal = modal;
     }
 }

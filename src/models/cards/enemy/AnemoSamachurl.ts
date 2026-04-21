@@ -1,11 +1,11 @@
-import Samachurl from '../../../modules/clan/Samachurl.js';
+import Hilichurl from '../../../modules/clan/Hilichurl.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import { ShuffleAllCardsAnimation } from '@/src/animations/ShuffleAllCardsAnimation.js';
 import { SkillAnimation } from '@/src/animations/SkillAnimation.js';
 
-export default class AnemoSamachurl extends Samachurl {
-    protected override samaFullCount = 3;
+export default class AnemoSamachurl extends Hilichurl {
+    protected samaFullCount = 4;
 
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
         const config = getCardConfig('AnemoSamachurl') ?? { id: 'anemo-samachurl', name: 'Anemo Samachurl', description: '', element: 'anemo', clan: 'hilichurl', rarity: 3 };
@@ -14,18 +14,29 @@ export default class AnemoSamachurl extends Samachurl {
         // this.health = this.GetRandom(3, 10);
         // this.score = this.GetRandom(1, 9);
         this.createCard();
-        this.initSamachurlAbility();
+        this.initHilichurlTokenCounter({
+            fullCount: this.samaFullCount,
+            resetValue: -1,
+            onThreshold: () => this.onSamaThresholdReached()
+        });
         scene.add.existing(this);
     }
 
-    protected override onSamaThresholdReached(): void {
-        this.scene.gameManager?.emitter.once(
+    protected onSamaThresholdReached(): void {
+        const gameManager = this.scene.gameManager;
+        if (!gameManager) return;
+
+        const unsub = gameManager.emitter.once(
             'completeMove',
             () => {
-                void ShuffleAllCardsAnimation.runAsync(this.scene.gameManager!.animationManager);
-                void SkillAnimation.runAsync(this.scene.gameManager.animationManager, this.nameId);
+                const activeGameManager = this.scene.gameManager;
+                if (this.destroyed || !activeGameManager) return;
+
+                void ShuffleAllCardsAnimation.runAsync(activeGameManager.animationManager);
+                void SkillAnimation.runAsync(activeGameManager.animationManager, this.nameId);
             },
             15
         );
+        this.unsubscribeList.push(unsub);
     }
 }
