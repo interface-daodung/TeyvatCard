@@ -2,6 +2,7 @@ import Hilichurl from '../../../modules/clan/Hilichurl.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import type Character from '../../../modules/typeCard/character.js';
+import { SpritesheetWrapper } from '../../../utils/SpritesheetWrapper.js';
 
 export default class ElectroSamachurl extends Hilichurl {
     protected samaFullCount = 6;
@@ -27,6 +28,17 @@ export default class ElectroSamachurl extends Hilichurl {
 
         const damage = Math.floor(character.hp / 2);
         if (damage <= 0) return;
+
+        SpritesheetWrapper.animationEffect(
+            this.scene,
+            character.x,
+            character.y,
+            'electro-samachurl-skill-animations',
+            200,
+            200,
+            { start: 0, end: 8 },
+            20
+        );
 
         character.takeDamage(damage, 'damage', 'electro');
     }

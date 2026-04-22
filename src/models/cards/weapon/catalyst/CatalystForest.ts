@@ -2,8 +2,11 @@ import Weapon from '../../../../modules/typeCard/weapon.js';
 import { getCardConfig } from '../../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../../modules/Card.js';
 import Equipment from '@/src/modules/weaponCategory/equipment.js';
-import CatalystEquipment, { type GridCardManager } from '@/src/modules/weaponCategory/CatalystEquipment.js';
+import CatalystEquipment from '@/src/modules/weaponCategory/CatalystEquipment.js';
+import type { DamageElement } from '@/src/modules/typeCard/character.js';
 import Enemy from '@/src/modules/typeCard/enemy.js';
+
+const DENDRO_ELEMENT: DamageElement = 'dendro';
 
 export default class CatalystForest extends Weapon {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -22,18 +25,15 @@ export default class CatalystForest extends Weapon {
 
 class CatalystForest_equipment extends CatalystEquipment {
     Effect(enemy: Enemy, damage: number): boolean {
-        const cardManager = enemy.scene?.gameManager?.cardManager as GridCardManager | undefined;
-        if (!cardManager) return false;
+        const effectData = this.getAffectedTargetIndexes(enemy);
+        if (!effectData) return false;
 
-        enemy.setPoisoning();
- 
-        const attackerIndex = cardManager.CardCharacter?.index;
-        const targetIndex = enemy.index;
-        if (attackerIndex == null || targetIndex == null) return false;
-
-        const cardsBehindTarget = this.getCardsBehindTarget(cardManager, attackerIndex, targetIndex);
-        cardsBehindTarget.forEach((card) => {
-            card.takeDamage?.(damage, 'poisoning');
+        // CatalystForest fixed element is dendro; special effect only adds poisoning on enemy cards.
+        const { cardManager, affectedTargetIndexes } = effectData;
+        affectedTargetIndexes.forEach((index) => {
+            const card = cardManager.getCard(index);
+            if (!card) return;
+            card.takeDamage?.(damage, 'Catalyst', DENDRO_ELEMENT);
             if (card.type === 'enemy') {
                 card.setPoisoning?.();
             }

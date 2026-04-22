@@ -11,6 +11,7 @@ import { animationStatePoison } from '@/src/animations/Sprites/animationStatePoi
 import { ShowPopup, type PopupPayload } from '../../components/shared/index.js';
 import { CardShieldStackManager } from '../cardShieldStacks.js';
 import { setFrameLayer, toDamageElement } from '../card/cardDisplay.js';
+import { animationCatalyst } from '@/src/animations/Sprites/animationCatalyst.js';
 
 export type { CardShieldStack as EnemyShieldStack } from '../cardShieldStacks.js';
 
@@ -203,6 +204,11 @@ export default class Enemy extends Card {
                 animationSlash(this.scene, this.x, this.y);
                 soundManager.play('sword-sound');
             }
+            if (type === 'Catalyst') {
+                animationCatalyst(this.scene, this.x, this.y, element as DamageElement);
+                soundManager.play('catalyst-sound');
+            }
+
         }
 
         if (this.health <= 0) {

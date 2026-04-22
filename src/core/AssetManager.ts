@@ -57,6 +57,7 @@ interface DungeonData {
 
 interface CharacterAssetData {
     id: string;
+    element?: string;
     imageSpritesheet?: string;
     attached?: CharacterAttachedAsset[];
 }
@@ -64,6 +65,9 @@ interface CharacterAssetData {
 interface CharacterAttachedAsset {
     nameId: string;
     image: string;
+    type?: string;
+    frameRate?: number;
+    frameTotal?: number;
 }
 
 interface LibraryCardEntry {
@@ -163,7 +167,7 @@ export default class AssetManager {
             });
             this.loadImage(backgroundAsset.key, backgroundAsset.path);
         }
-        this.loadCharacterAsset(dataManager.get<string | { id?: string }>('selectedCharacter'));
+        this.loadCharacterAsset(dataManager.get<string | { id?: string }>('selectedCharacter'), stageId);
         this.loadItemAsset(dataManager.get<unknown>('equipment'));
         // `token.json` + ảnh: logic json cache / queue atlas đã nằm trong `preloadAtlasAssetsFromJsonFiles` (dùng chung với Menu/Library).
         this.preloadAtlasAssetsFromJsonFiles(['token.json'], 'game-scene-token-atlas', () => {
@@ -241,6 +245,8 @@ export default class AssetManager {
                     : '';
         const nameId = nameIdRaw.trim();
         const path = pathRaw.trim();
+        const frameRate = typeof attached.frameRate === 'number' ? attached.frameRate : undefined;
+        const frameTotal = typeof attached.frameTotal === 'number' ? attached.frameTotal : undefined;
         if (!nameId || !path) {
             return;
         }
@@ -250,7 +256,7 @@ export default class AssetManager {
             return;
         }
         if (this.isAnimationAssetPath(path)) {
-            this.loadAnimations(nameId, path);
+            this.loadAnimations(nameId, path, frameRate, frameTotal);
             return;
         }
         Log.infoTag('[AssetManager]', 'queue item attached image', path, { ownerId, attachedId: nameId });
@@ -478,6 +484,15 @@ export default class AssetManager {
                 continue;
             }
             attached.push({ nameId, image });
+            if (typeof item.type === 'string') {
+                attached[attached.length - 1].type = item.type;
+            }
+            if (typeof item.frameRate === 'number') {
+                attached[attached.length - 1].frameRate = item.frameRate;
+            }
+            if (typeof item.frameTotal === 'number') {
+                attached[attached.length - 1].frameTotal = item.frameTotal;
+            }
         }
         return attached;
     }
@@ -495,6 +510,9 @@ export default class AssetManager {
                     {
                         nameId: attachedAsset.nameId,
                         image: attachedAsset.image,
+                        type: attachedAsset.type,
+                        frameRate: attachedAsset.frameRate,
+                        frameTotal: attachedAsset.frameTotal,
                     },
                     item.id,
                 );
@@ -517,6 +535,9 @@ export default class AssetManager {
                         {
                             nameId: attachedAsset.nameId,
                             image: attachedAsset.image,
+                            type: attachedAsset.type,
+                            frameRate: attachedAsset.frameRate,
+                            frameTotal: attachedAsset.frameTotal,
                         },
                         item.id,
                     );
@@ -533,6 +554,9 @@ export default class AssetManager {
                     {
                         nameId: attachedAsset.nameId,
                         image: attachedAsset.image,
+                        type: attachedAsset.type,
+                        frameRate: attachedAsset.frameRate,
+                        frameTotal: attachedAsset.frameTotal,
                     },
                     item.id,
                 );
@@ -540,7 +564,7 @@ export default class AssetManager {
         }
     }
 
-    private loadCharacterAsset(selectedCharacter: string | { id?: string } | null): void {
+    private loadCharacterAsset(selectedCharacter: string | { id?: string } | null, stageId?: string): void {
         if (!this.scene) {
             return;
         }
@@ -563,8 +587,11 @@ export default class AssetManager {
 
         const character = cardCharacterList.find((item) => item.id === selectedCharacterId);
         if (!character?.attached || !Array.isArray(character.attached)) {
+            this.loadElementCatalyst(character?.element, stageId);
             return;
         }
+
+        this.loadElementCatalyst(character.element, stageId);
 
         for (const asset of character.attached) {
             if (
@@ -580,10 +607,44 @@ export default class AssetManager {
                 {
                     nameId: asset.nameId.trim(),
                     image: asset.image.trim(),
+                    type: asset.type,
+                    frameRate: typeof asset.frameRate === 'number' ? asset.frameRate : undefined,
+                    frameTotal: typeof asset.frameTotal === 'number' ? asset.frameTotal : undefined,
                 },
                 selectedCharacterId,
             );
         }
+    }
+
+    private loadElementCatalyst(element: string | undefined, stageId?: string): void {
+        if (!this.scene || typeof element !== 'string' || !element.trim() || !stageId?.trim()) {
+            return;
+        }
+
+        const dungeonList = dataManager.getFlag<DungeonData[]>('dungeonList');
+        if (!Array.isArray(dungeonList) || dungeonList.length === 0) {
+            return;
+        }
+
+        const dungeon = dungeonList.find((item) => item?.stageId === stageId);
+        const weaponClassNames = dungeon?.availableCards?.weapons;
+        if (!Array.isArray(weaponClassNames) || weaponClassNames.length === 0) {
+            return;
+        }
+
+        const hasCatalystWeapon = weaponClassNames.some(
+            (className) => typeof className === 'string' && className.trim().startsWith('Catalyst'),
+        );
+        if (!hasCatalystWeapon) {
+            return;
+        }
+
+        const normalizedElement = element.trim().toLowerCase();
+        this.loadAudio('catalyst-sound', '/assets/sounds/SE/catalyst-sound.ogg');
+        this.loadAnimations(
+            `catalyst-${normalizedElement}`,
+            `/assets/images/animations/catalyst-${normalizedElement}-animations.webp`,
+        );
     }
 
     private preloadMenuSceneCharacterSpritesheets(): void {
@@ -798,13 +859,97 @@ export default class AssetManager {
         });
     }
 
-    loadAnimations(key: string, path: string): void {
+    private resolveAnimationMeta(
+        key: string,
+        path: string,
+        frameRate?: number,
+        frameTotal?: number,
+    ): { frameRate: number; frameTotal: number } | null {
+        if (typeof frameRate === 'number' && typeof frameTotal === 'number') {
+            return { frameRate, frameTotal };
+        }
+
+        const normalizedKey = key.endsWith('-animations') ? key.slice(0, -'-animations'.length) : key;
+        const datasets: unknown[] = [
+            dataManager.getFlag<unknown>('cardCharacterList'),
+            dataManager.getFlag<unknown>('libraryCards'),
+            dataManager.getFlag<unknown>('items'),
+        ];
+
+        for (const dataset of datasets) {
+            const found = this.findAnimationMetaInUnknown(dataset, normalizedKey, path);
+            if (found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    private findAnimationMetaInUnknown(
+        value: unknown,
+        key: string,
+        path: string,
+    ): { frameRate: number; frameTotal: number } | null {
+        if (Array.isArray(value)) {
+            for (const item of value) {
+                const found = this.findAnimationMetaInUnknown(item, key, path);
+                if (found) return found;
+            }
+            return null;
+        }
+        if (!value || typeof value !== 'object') {
+            return null;
+        }
+
+        const record = value as Record<string, unknown>;
+        if (Array.isArray(record.attached)) {
+            for (const attached of record.attached) {
+                if (!attached || typeof attached !== 'object') continue;
+                const attachment = attached as Record<string, unknown>;
+                const nameId = typeof attachment.nameId === 'string' ? attachment.nameId.trim() : '';
+                const image = typeof attachment.image === 'string' ? attachment.image.trim() : '';
+                const metaFrameRate = attachment.frameRate;
+                const metaFrameTotal = attachment.frameTotal;
+                const matchedName =
+                    nameId === key || nameId === `${key}-animations` || nameId.replace(/-animations$/, '') === key;
+                const matchedPath = image === path;
+                if (
+                    (matchedName || matchedPath) &&
+                    typeof metaFrameRate === 'number' &&
+                    typeof metaFrameTotal === 'number'
+                ) {
+                    return { frameRate: metaFrameRate, frameTotal: metaFrameTotal };
+                }
+            }
+        }
+
+        for (const child of Object.values(record)) {
+            const found = this.findAnimationMetaInUnknown(child, key, path);
+            if (found) return found;
+        }
+        return null;
+    }
+
+    loadAnimations(key: string, path: string, frameRate?: number, frameTotal?: number): void {
         if (!this.scene) {
             Log.warn('AssetManager: Scene chưa được set');
             return;
         }
         const animationKey = key.endsWith('-animations') ? key : `${key}-animations`;
         const resolvedPath = this.shouldKeepOriginalPath(animationKey) ? path : this.resolveImagePathByGpuProfile(path);
+        const animationMeta = this.resolveAnimationMeta(key, path, frameRate, frameTotal);
+
+        if (animationMeta) {
+            try {
+                TextureManager.registerAnimationFrameDefault(
+                    animationKey,
+                    animationMeta.frameRate,
+                    animationMeta.frameTotal,
+                );
+            } catch (error) {
+                Log.warn('[AssetManager] register animation metadata failed', { key: animationKey, error });
+            }
+        }
         Log.info('[AssetManager] load animations', { key: animationKey, source: path, resolved: resolvedPath });
 
         if (this.scene.textures.exists(animationKey)) {

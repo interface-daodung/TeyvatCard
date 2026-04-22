@@ -1,11 +1,10 @@
 import Equipment from './equipment.js';
 import Enemy from '../typeCard/enemy.js';
-import { animationBreatheFire } from '@/src/animations/Sprites/animationBreatheFire.js';
-import Card from '../Card.js';
+import Character, { type DamageElement } from '../typeCard/character.js';
 
 export type EffectTargetCard = {
     type?: string;
-    takeDamage?: (damage: number, type?: string) => unknown;
+    takeDamage?: (damage: number, type?: string, element?: DamageElement) => unknown;
     setPoisoning?: () => void;
 };
 
@@ -15,11 +14,25 @@ export type GridCardManager = {
 };
 
 export default class CatalystEquipment extends Equipment {
-    protected getCardsBehindTarget(
-        cardManager: GridCardManager,
-        attackerIndex: number,
-        targetIndex: number
-    ): EffectTargetCard[] {
+    protected getAffectedTargetIndexes(
+        enemy: Enemy
+    ): { cardManager: GridCardManager; affectedTargetIndexes: number[] } | null {
+        const cardManager = enemy.scene?.gameManager?.cardManager as GridCardManager | undefined;
+        if (!cardManager) {
+            console.warn('[CatalystEquipment] cardManager is null/undefined.');
+            return null;
+        }
+
+        const attackerIndex = cardManager.CardCharacter?.index;
+        const targetIndex = enemy.index;
+        if (attackerIndex == null || targetIndex == null) {
+            console.warn('[CatalystEquipment] attackerIndex or targetIndex is null.', {
+                attackerIndex,
+                targetIndex,
+            });
+            return null;
+        }
+
         const GRID_SIZE = 3;
 
         const attackerRow = Math.floor(attackerIndex / GRID_SIZE);
@@ -30,38 +43,37 @@ export default class CatalystEquipment extends Equipment {
         // Hướng "đứng sau" được tính theo vector attacker -> target
         const rowStep = Math.sign(targetRow - attackerRow);
         const colStep = Math.sign(targetCol - attackerCol);
-        if (rowStep === 0 && colStep === 0) return [];
+        if (rowStep === 0 && colStep === 0) {
+            return { cardManager, affectedTargetIndexes: [targetIndex] };
+        }
 
-        const affectedCards: EffectTargetCard[] = [];
+        const affectedTargetIndexes: number[] = [targetIndex];
         let row = targetRow + rowStep;
         let col = targetCol + colStep;
 
         while (row >= 0 && row < GRID_SIZE && col >= 0 && col < GRID_SIZE) {
             const cardIndex = row * GRID_SIZE + col;
-            const cardBehind = cardManager.getCard(cardIndex);
-            if (cardBehind) {
-                affectedCards.push(cardBehind);
-            }
+            affectedTargetIndexes.push(cardIndex);
             row += rowStep;
             col += colStep;
         }
 
-        return affectedCards;
+        return { cardManager, affectedTargetIndexes };
     }
 
-    override Effect(enemy: Enemy, damage: number): boolean {
-        const cardManager = enemy.scene?.gameManager?.cardManager as GridCardManager | undefined;
-        if (!cardManager) return false;
-        enemy.add(animationBreatheFire(enemy.scene, 0,0)); 
-        enemy.takeDamage(damage, 'damage');
-        const attackerIndex = cardManager.CardCharacter?.index;
-        const targetIndex = enemy.index;
-        if (attackerIndex == null || targetIndex == null) return false;
+    override Effect(enemy: Enemy, damage: number, character?: Character): boolean {
+        const effectData = this.getAffectedTargetIndexes(enemy);
+        if (!effectData) return false;
 
-        const cardsBehindTarget = this.getCardsBehindTarget(cardManager, attackerIndex, targetIndex);
-        cardsBehindTarget.forEach((card) => {
-            (card as Card).add(animationBreatheFire(enemy.scene, 0,0)); 
-            (card as Card).takeDamage?.(damage, 'damage');
+        // Tính trước toàn bộ index mục tiêu bị ảnh hưởng rồi xử lý damage theo một vòng lặp duy nhất.
+        const { cardManager, affectedTargetIndexes } = effectData;
+        affectedTargetIndexes.forEach((index) => {
+            const card = cardManager.getCard(index);
+            if (!card) {
+                console.warn('[CatalystEquipment] Target card is null at index.', { index });
+                return;
+            }
+            card.takeDamage?.(damage, 'Catalyst', character?.element as DamageElement);
         });
 
         return true;

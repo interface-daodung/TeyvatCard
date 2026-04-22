@@ -6,6 +6,11 @@ type TextureBinding =
     | { kind: 'atlas'; atlasKey: string; frameName: string }
     | { kind: 'image'; textureKey: string };
 
+type AnimationFrameMeta = {
+    frameRate: number;
+    frameTotal: number;
+};
+
 function getScene(parent: Phaser.Scene | Phaser.GameObjects.Container): Phaser.Scene {
     if (parent instanceof Phaser.GameObjects.Container) {
         return parent.scene;
@@ -31,6 +36,7 @@ function getFallbackTextureKey(scene: Phaser.Scene): string | null {
  */
 export default class TextureManager {
     private static readonly registry = new Map<string, TextureBinding>();
+    private static readonly animationFrameRegistry = new Map<string, AnimationFrameMeta>();
 
     /** Binding vật lý (atlas+frame hoặc texture đơn) → `keyName` logic đăng ký đầu tiên — để cảnh báo trùng. */
     private static readonly firstLogicalKeyByPhysical = new Map<string, string>();
@@ -158,6 +164,47 @@ export default class TextureManager {
 
     static has(keyName: string): boolean {
         return TextureManager.registry.has(keyName);
+    }
+
+    private static toAnimationTextureKey(keyName: string): string {
+        return keyName.endsWith('-animations') ? keyName : `${keyName}-animations`;
+    }
+
+    static registerAnimationFrame(
+        keyName: string,
+        frameRate: number,
+        frameTotal: number,
+    ): void {
+        const normalizedKey = TextureManager.toAnimationTextureKey(keyName);
+        if (TextureManager.animationFrameRegistry.has(normalizedKey)) {
+            throw new Error(
+                `TextureManager: animation metadata for key "${normalizedKey}" is already registered.`,
+            );
+        }
+        TextureManager.animationFrameRegistry.set(normalizedKey, { frameRate, frameTotal });
+    }
+
+    static registerAnimationFrameDefault(
+        keyName: string,
+        frameRate: number,
+        frameTotal: number,
+    ): void {
+        const normalizedKey = TextureManager.toAnimationTextureKey(keyName);
+        const existing = TextureManager.animationFrameRegistry.get(normalizedKey);
+        if (existing) {
+            if (existing.frameRate === frameRate && existing.frameTotal === frameTotal) {
+                return;
+            }
+            throw new Error(
+                `TextureManager: animation metadata for key "${normalizedKey}" already registered with different values.`,
+            );
+        }
+        TextureManager.animationFrameRegistry.set(normalizedKey, { frameRate, frameTotal });
+    }
+
+    static getAnimationFrame(keyName: string): AnimationFrameMeta | undefined {
+        const normalizedKey = TextureManager.toAnimationTextureKey(keyName);
+        return TextureManager.animationFrameRegistry.get(normalizedKey);
     }
 
     static getFallbackTextureKeyForScene(scene: Phaser.Scene): string | null {
