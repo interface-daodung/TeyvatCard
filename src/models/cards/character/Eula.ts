@@ -15,7 +15,7 @@ export default class Eula extends Character {
         scene.add.existing(this);
     }
 
-    private elementalBurstCooldownMax = 3;
+    private elementalBurstCooldownMax = 10;
     private DamageCount = 1;
 
     reduceDurability(damage: number): void {

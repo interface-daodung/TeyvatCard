@@ -152,6 +152,13 @@
           "nameId": "sword-traveler-badge",
           "image": "/assets/images/badge/sword/traveler.webp",
           "type": "image"
+        },
+        {
+          "nameId": "add-Shield",
+          "image": "/assets/images/animations/StateUp2.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 23
         }
       ],
       "category": "sword",
@@ -204,6 +211,13 @@
           "nameId": "catalyst-dreams-badge",
           "image": "/assets/images/badge/catalyst/dreams.webp",
           "type": "image"
+        },
+        {
+          "nameId": "catalyst-dendro-animations",
+          "image": "/assets/images/animations/catalyst-dendro-animations.webp",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 6
         }
       ],
       "category": "catalyst",
@@ -284,6 +298,13 @@
           "nameId": "catalyst-forest-badge",
           "image": "/assets/images/badge/catalyst/forest.webp",
           "type": "image"
+        },
+        {
+          "nameId": "catalyst-dendro-animations",
+          "image": "/assets/images/animations/catalyst-dendro-animations.webp",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 6
         }
       ],
       "category": "catalyst",
@@ -343,11 +364,6 @@
       "image": "/assets/images/cards/enemy/hilichurl/anemo-samachurl.webp",
       "attached": [
         {
-          "nameId": "hilichurlToken",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
-        },
-        {
           "nameId": "anemo-samachurl-skill",
           "image": "/assets/images/skill/anemo-samachurl.webp",
           "type": "image"
@@ -371,9 +387,11 @@
       "image": "/assets/images/cards/enemy/hilichurl/electro-samachurl.webp",
       "attached": [
         {
-          "nameId": "hilichurl",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
+          "nameId": "electro-samachurl-skill",
+          "image": "/assets/images/animations/electro-samachurl.webp",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 9
         }
       ],
       "element": "electro",
@@ -392,13 +410,7 @@
       "description": "adventureCard.dendro-samachurl.description",
       "className": "DendroSamachurl",
       "image": "/assets/images/cards/enemy/hilichurl/dendro-samachurl.webp",
-      "attached": [
-        {
-          "nameId": "hilichurl",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
-        }
-      ],
+      "attached": [],
       "element": "dendro",
       "clan": "hilichurl",
       "rarity": 2,
@@ -415,13 +427,7 @@
       "description": "adventureCard.geo-samachurl.description",
       "className": "GeoSamachurl",
       "image": "/assets/images/cards/enemy/hilichurl/geo-samachurl.webp",
-      "attached": [
-        {
-          "nameId": "hilichurl",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
-        }
-      ],
+      "attached": [],
       "element": "geo",
       "clan": "hilichurl",
       "rarity": 4,
@@ -438,13 +444,7 @@
       "description": "adventureCard.hydro-samachurl.description",
       "className": "HydroSamachurl",
       "image": "/assets/images/cards/enemy/hilichurl/hydro-samachurl.webp",
-      "attached": [
-        {
-          "nameId": "hilichurl",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
-        }
-      ],
+      "attached": [],
       "element": "hydro",
       "clan": "hilichurl",
       "rarity": 2,
@@ -494,7 +494,13 @@
       "description": "adventureCard.wooden-shieldwall.description",
       "className": "WoodenShieldwall",
       "image": "/assets/images/cards/enemy/hilichurl/wooden-shieldwall.webp",
-      "attached": [],
+      "attached": [
+        {
+          "nameId": "seed",
+          "image": "/assets/images/skill/Seed.webp",
+          "type": "image"
+        }
+      ],
       "element": "dendro",
       "clan": "hilichurl",
       "rarity": 4,
@@ -576,7 +582,13 @@
       "description": "adventureCard.ice-shieldwall.description",
       "className": "IceShieldwall",
       "image": "/assets/images/cards/enemy/hilichurl/ice-shieldwall.webp",
-      "attached": [],
+      "attached": [
+        {
+          "nameId": "frozen",
+          "image": "/assets/images/skill/Frozen.webp",
+          "type": "image"
+        }
+      ],
       "element": "cryo",
       "clan": "hilichurl",
       "rarity": 4,
@@ -594,11 +606,6 @@
       "className": "Shooter",
       "image": "/assets/images/cards/enemy/hilichurl/shooter.webp",
       "attached": [
-        {
-          "nameId": "hilichurl",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
-        },
         {
           "nameId": "arrow",
           "image": "/assets/images/animations/ArrowSpecial.png",
@@ -641,11 +648,6 @@
       "image": "/assets/images/cards/enemy/hilichurl/cryo-shooter.webp",
       "attached": [
         {
-          "nameId": "hilichurl",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
-        },
-        {
           "nameId": "arrow",
           "image": "/assets/images/animations/ArrowSpecial.png",
           "type": "animation",
@@ -670,11 +672,6 @@
       "className": "ElectroShooter",
       "image": "/assets/images/cards/enemy/hilichurl/electro-shooter.webp",
       "attached": [
-        {
-          "nameId": "hilichurl",
-          "image": "/assets/images/skill/token/hilichurl.webp",
-          "type": "image"
-        },
         {
           "nameId": "arrow",
           "image": "/assets/images/animations/ArrowSpecial.png",
@@ -946,11 +943,6 @@
           "nameId": "pyro-resonance",
           "image": "/assets/images/cards/coin/pyro-resonance.webp",
           "type": "image"
-        },
-        {
-          "nameId": "Coin-sound",
-          "image": "/assets/sounds/SE/Coin.ogg",
-          "type": "SE"
         }
       ],
       "element": "pyro",
@@ -969,11 +961,6 @@
           "nameId": "hydro-resonance",
           "image": "/assets/images/cards/coin/hydro-resonance.webp",
           "type": "image"
-        },
-        {
-          "nameId": "Coin-sound",
-          "image": "/assets/sounds/SE/Coin.ogg",
-          "type": "SE"
         }
       ],
       "element": "hydro",
@@ -992,11 +979,6 @@
           "nameId": "geo-resonance",
           "image": "/assets/images/cards/coin/geo-resonance.webp",
           "type": "image"
-        },
-        {
-          "nameId": "Coin-sound",
-          "image": "/assets/sounds/SE/Coin.ogg",
-          "type": "SE"
         }
       ],
       "element": "geo",
@@ -1015,11 +997,6 @@
           "nameId": "anemo-resonance",
           "image": "/assets/images/cards/coin/anemo-resonance.webp",
           "type": "image"
-        },
-        {
-          "nameId": "Coin-sound",
-          "image": "/assets/sounds/SE/Coin.ogg",
-          "type": "SE"
         }
       ],
       "element": "anemo",
@@ -1038,11 +1015,6 @@
           "nameId": "electro-resonance",
           "image": "/assets/images/cards/coin/electro-resonance.webp",
           "type": "image"
-        },
-        {
-          "nameId": "Coin-sound",
-          "image": "/assets/sounds/SE/Coin.ogg",
-          "type": "SE"
         }
       ],
       "element": "electro",
@@ -1061,11 +1033,6 @@
           "nameId": "cryo-resonance",
           "image": "/assets/images/cards/coin/cryo-resonance.webp",
           "type": "image"
-        },
-        {
-          "nameId": "Coin-sound",
-          "image": "/assets/sounds/SE/Coin.ogg",
-          "type": "SE"
         }
       ],
       "element": "cryo",
@@ -1084,11 +1051,6 @@
           "nameId": "dendro-resonance",
           "image": "/assets/images/cards/coin/dendro-resonance.webp",
           "type": "image"
-        },
-        {
-          "nameId": "Coin-sound",
-          "image": "/assets/sounds/SE/Coin.ogg",
-          "type": "SE"
         }
       ],
       "element": "dendro",

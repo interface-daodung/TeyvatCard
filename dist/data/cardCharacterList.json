@@ -56,6 +56,11 @@
         "nameId": "eula-icon-skill",
         "image": "/assets/images/skill/eula/skill-icon.webp",
         "type": "image"
+      },
+      {
+        "nameId": "skill",
+        "image": "/assets/images/skill/eula/skill.png",
+        "type": "image"
       }
     ]
   },
@@ -143,8 +148,15 @@
         "type": "image"
       },
       {
-        "nameId": "FurinaOusiaChange",
-        "image": "/assets/images/skill/furina/FurinaOusiaChange.png",
+        "nameId": "furina-pet",
+        "image": "/assets/images/animations/furina-pet.webp",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 9
+      },
+      {
+        "nameId": "singer-of-many-waters",
+        "image": "/assets/images/skill/furina/singer-of-many-waters.webp",
         "type": "image"
       }
     ]
@@ -213,6 +225,11 @@
         "type": "animation",
         "frameRate": 10,
         "frameTotal": 18
+      },
+      {
+        "nameId": "mavuika-nightsoul",
+        "image": "/assets/images/skill/mavuika/mavuika-nightsoul.png",
+        "type": "image"
       }
     ]
   },
@@ -340,16 +357,21 @@
         "type": "image"
       },
       {
-        "nameId": "raiden-skill",
+        "nameId": "raiden-skill-token",
         "image": "/assets/images/skill/raiden/raiden.png",
         "type": "image"
       },
       {
         "nameId": "raiden-skill-animations",
-        "image": "/assets/images/animations/StateParalys.png",
+        "image": "/assets/images/animations/Thunder4.png",
         "type": "animation",
         "frameRate": 10,
-        "frameTotal": 1
+        "frameTotal": 12
+      },
+      {
+        "nameId": "raiden-skill",
+        "image": "/assets/images/skill/raiden/skill.png",
+        "type": "image"
       }
     ]
   },

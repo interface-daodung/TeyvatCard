@@ -171,7 +171,7 @@ export default class Enemy extends Card {
     }
 
     takeDamage(damage: number, type?: string, element: DamageElement | null = null): number {
-        if (this.health <= 0) return 0;
+        if (typeof this.health !== 'number' || this.health <= 0) return 0;
 
         let absorbedByShield = 0;
         let hpLoss = 0;

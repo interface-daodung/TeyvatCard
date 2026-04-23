@@ -298,8 +298,9 @@ export default class GameScene extends Phaser.Scene {
             icon: '⌂',
             tooltipKey: 'menu_button',
             color: themeManager.getWarningPhaser(),
-            onClick: () => {
+            onClick: async () => {
                 this.closeNavigationModal();
+                await this.gameManager.gameOver({ withAnimation: false, withDialog: false });
                 this.scene.start('MenuScene');
             }
         });

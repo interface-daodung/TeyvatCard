@@ -3,6 +3,8 @@ import Trap from '../../../modules/typeCard/trap.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import Card from '../../../modules/Card.js';
+import Character, { type DamageElement } from '../../../modules/typeCard/character.js';
+import Enemy from '../../../modules/typeCard/enemy.js';
 import { BreatheFireAnimation } from '@/src/animations/BreatheFireAnimation.js';
 
 type ArrowDirection = 'top' | 'bottom' | 'left' | 'right';
@@ -43,7 +45,11 @@ export default class BreatheFire extends Trap {
         this.findAdjacentTargets().forEach(cardIndex => {
             const card = this.scene.gameManager?.cardManager.getCard(cardIndex) as Card;
             if (card?.takeDamage) {
-                card.takeDamage(this.damage, 'damage');
+                if (card instanceof Character || card instanceof Enemy) {
+                    card.takeDamage(this.damage, 'damage', 'pyro' as DamageElement);
+                } else {
+                    card.takeDamage(this.damage, 'damage');
+                }
             }
         });
         await BreatheFireAnimation.runAsync(this.scene.gameManager!.animationManager, this.damage, this.findAdjacentTargets());

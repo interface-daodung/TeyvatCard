@@ -1,6 +1,6 @@
 {
   "menu": "☰",
-  "menu_button": "MENU",
+  "menu_button": "Menu",
   "settings": "Cài đặt",
   "settings_icon": "⚙️",
   "payment": "Nạp xu",
@@ -11,7 +11,7 @@
   "sell": "BÁN",
   "buy": "MUA",
   "start": "BẮT ĐẦU",
-  "continue": "TIẾP TỤC",
+  "continue": "Tiếp tục",
   "back": "Quay lại",
   "confirm": "Xác nhận",
   "cancel": "Hủy",
@@ -60,7 +60,7 @@
   "character_title": "NHÂN VẬT",
   "level_text": "cấp {level}",
   "test_dev": "Test dev",
-  "restart": "CHƠI LẠI",
+  "restart": "Chơi lại",
   "select": "Chọn",
   "close": "X",
   "back_short": "QUAY LẠI",
@@ -276,5 +276,5 @@
   "adventureCard.catalyst-remembrance.description": "Tiếng ngân vang vọng từ cõi chết, đánh thức những linh hồn lang thang. Mỗi hồi chuông là một lời triệu hồi, kết nối thực tại với hư vô bằng giai điệu u buồn đến xé lòng.",
   "map.babel_tower.name": "Tháp Babel",
   "apply_character_theme": "Áp dụng theme chủ đề nhân vật",
-  "map.hilichurl_camp.name": "trại hilichurl"
+  "map.hilichurl_camp.name": "Trại hilichurl"
 }
