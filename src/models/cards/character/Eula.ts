@@ -2,6 +2,7 @@ import Character from '../../../modules/typeCard/character.js';
 import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import Enemy from '@/src/modules/typeCard/enemy.js';
+import { showFrameLayerOnce } from '@/src/modules/card/cardDisplay.js';
 
 export default class Eula extends Character {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -16,16 +17,16 @@ export default class Eula extends Character {
     }
 
     private elementalBurstCooldownMax = 10;
-    private DamageCount = 1;
+    private DamageCount = 3;
 
-    reduceDurability(damage: number): void {
+    override reduceDurability(damage: number): void {
         if (!this.weapon) return;
-        this.DamageCount += 1;
+        this.DamageCount += 2;
         super.reduceDurability(damage);
         console.warn(this.DamageCount,'DamageCount by Eula');
     }
 
-    elementalBurst(): void {
+    override elementalBurst(): void {
         let enemyCount = 0;
         this.scene.gameManager.cardManager.getAllCards().forEach(card => {
             if (card?.type === 'enemy') enemyCount++;
@@ -35,7 +36,7 @@ export default class Eula extends Character {
         this.scene.gameManager.cardManager.getAllCards().forEach(card => {
             if (card?.type === 'enemy' && (card as Enemy).takeDamage) {
                 (card as Enemy).takeDamage(this.DamageCount, 'slash', 'cryo');
-                // card.add(animationSlash(this.scene, 0, 0).setDepth(10));
+                showFrameLayerOnce(this.scene, card, { textureKey: 'eula-skill' });
             }
         });
         this.DamageCount = 1;

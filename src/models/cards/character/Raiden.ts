@@ -4,9 +4,10 @@ import { getCardConfig } from '../../../modules/getCardConfig.js';
 import type { SceneWithGameManager } from '../../../modules/Card.js';
 import Enemy from '@/src/modules/typeCard/enemy.js';
 import { animationRaidenSkill } from '@/src/animations/Sprites/animationRaidenSkill.js';
+import { showFrameLayerOnce } from '@/src/modules/card/cardDisplay.js';
 
 /** Texture của token gắn lên quái khi dùng burst — dùng để nhận diện thẻ bị đánh lan. */
-const RAIDEN_TOKEN_TEXTURE_KEY = 'raiden-skill';
+const RAIDEN_TOKEN_TEXTURE_KEY = 'raiden-skill-token';
 
 export default class Raiden extends Character {
     constructor(scene: SceneWithGameManager, x: number, y: number, index: number) {
@@ -20,9 +21,10 @@ export default class Raiden extends Character {
         scene.add.existing(this);
     }
 
-    private readonly elementalBurstCooldownMax = 8; // Số lượt cooldown cho elemental burst   
+    private readonly elementalBurstCooldownMax = 3; // Số lượt cooldown cho elemental burst   
 
     override elementalBurst(): void {
+        this.elementalBurstCooldown = this.elementalBurstCooldownMax;;
         let enemyCount = 0;
         this.scene.gameManager.cardManager.getAllCards().forEach(card => {
             if (card?.type === 'enemy') enemyCount++;
@@ -31,6 +33,7 @@ export default class Raiden extends Character {
 
         this.scene.gameManager.cardManager.getAllCards().forEach(card => {
             if (card?.type === 'enemy' && (card as Enemy).takeDamage) {
+                showFrameLayerOnce(this.scene, card, { textureKey: 'raiden-skill' });
                 card.add(tokenRaiden(this.scene, -45, 110).setDepth(10).setScale(0.5));
             }//-60, 90
         });
@@ -45,7 +48,7 @@ export default class Raiden extends Character {
         for (const card of gm.cardManager.getAllCards()) {
             if (!cardHasRaidenToken(card)) continue;
             if (card.type === 'enemy') {
-                (card as Enemy).takeDamage(splash, 'damage','electro');
+                (card as Enemy).takeDamage(splash, 'damage', 'electro');
                 (card as Enemy).add(animationRaidenSkill(this.scene, 0, 0).setDepth(10));
             }
         }
