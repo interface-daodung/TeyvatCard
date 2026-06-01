@@ -10,7 +10,7 @@ lerna-debug.log*
 node_modules
 # dist/
 # dist
-public
+# public
 dist-ssr
 dev-dist/
 *.local

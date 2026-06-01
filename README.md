@@ -38,7 +38,7 @@
 
 Website luôn được cập nhật tự động! 🎉
 
-[![Deploy Status](https://github.com/your-username/TeyvatCard/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/your-username/TeyvatCard/actions)
+[![Deploy Status](https://github.com/interface-daodung/TeyvatCard/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/your-username/TeyvatCard/actions)
 
 ### ✅ Tính năng tự động:
 - ✅ Auto-deploy mỗi khi push code lên main branch

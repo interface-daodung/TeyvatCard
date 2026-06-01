@@ -1,0 +1,505 @@
+[
+  {
+    "id": "eula",
+    "name": "character.eula.name",
+    "description": "character.eula.description",
+    "hp": 10,
+    "element": "cryo",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/eula.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/eula-sprite.webp",
+    "imageUnlock": "",
+    "attached": [
+      {
+        "nameId": "eula-icon-skill",
+        "image": "/assets/images/skill/eula/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "eula-skill",
+        "image": "/assets/images/skill/eula/skill.png",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "furina",
+    "name": "character.furina.name",
+    "description": "character.furina.description",
+    "hp": 10,
+    "element": "hydro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/furina.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/furina-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockFurina.webp",
+    "attached": [
+      {
+        "nameId": "furina-icon-skill",
+        "image": "/assets/images/skill/furina/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "furina-icon-skill-2",
+        "image": "/assets/images/skill/furina/skill-icon-1.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "GentilhommeUsher",
+        "image": "/assets/images/skill/furina/GentilhommeUsher.png",
+        "type": "image"
+      },
+      {
+        "nameId": "MademoiselleCrabaletta",
+        "image": "/assets/images/skill/furina/MademoiselleCrabaletta.png",
+        "type": "image"
+      },
+      {
+        "nameId": "SurintendanteChevalmarin",
+        "image": "/assets/images/skill/furina/SurintendanteChevalmarin.png",
+        "type": "image"
+      },
+      {
+        "nameId": "furina-pneuma",
+        "image": "/assets/images/skill/furina/furina-pneuma.png",
+        "type": "image"
+      },
+      {
+        "nameId": "furina-pet",
+        "image": "/assets/images/animations/furina-pet.webp",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 9
+      },
+      {
+        "nameId": "singer-of-many-waters",
+        "image": "/assets/images/skill/furina/singer-of-many-waters.webp",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "mavuika",
+    "name": "character.mavuika.name",
+    "description": "character.mavuika.description",
+    "hp": 55,
+    "element": "pyro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/mavuika.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/mavuika-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockMavuika.webp",
+    "attached": [
+      {
+        "nameId": "mavuika-icon-skill",
+        "image": "/assets/images/skill/mavuika/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "refinement",
+        "image": "/assets/images/animations/StateUp1.png",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 18
+      },
+      {
+        "nameId": "mavuika-nightsoul",
+        "image": "/assets/images/skill/mavuika/mavuika-nightsoul.png",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "nahida",
+    "name": "character.nahida.name",
+    "description": "character.nahida.description",
+    "hp": 8,
+    "element": "dendro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/nahida.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/nahida-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockNahida.webp",
+    "attached": [
+      {
+        "nameId": "background",
+        "image": "/assets/images/skill/nahida/background.png",
+        "type": "image"
+      },
+      {
+        "nameId": "nahida-icon-skill",
+        "image": "/assets/images/skill/nahida/skill-icon.webp",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "raiden",
+    "name": "character.raiden.name",
+    "description": "character.raiden.description",
+    "hp": 8,
+    "element": "electro",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/raiden.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/raiden-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockRaiden.webp",
+    "attached": [
+      {
+        "nameId": "raiden-icon-skill",
+        "image": "/assets/images/skill/raiden/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "raiden-skill-token",
+        "image": "/assets/images/skill/raiden/raiden.png",
+        "type": "image"
+      },
+      {
+        "nameId": "raiden-skill-animations",
+        "image": "/assets/images/animations/Thunder4.png",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 12
+      },
+      {
+        "nameId": "raiden-skill",
+        "image": "/assets/images/skill/raiden/skill.png",
+        "type": "image"
+      }
+    ]
+  },
+  {
+    "id": "venti",
+    "name": "character.venti.name",
+    "description": "character.venti.description",
+    "hp": 8,
+    "element": "anemo",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/venti.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/venti-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockVenti.webp",
+    "attached": [
+      {
+        "nameId": "venti-icon-skill",
+        "image": "/assets/images/skill/venti/skill-icon.webp",
+        "type": "image"
+      },
+      {
+        "nameId": "venti-skill",
+        "image": "/assets/images/animations/venti.png",
+        "type": "animation",
+        "frameRate": 10,
+        "frameTotal": 5
+      }
+    ]
+  },
+  {
+    "id": "zhongli",
+    "name": "character.zhongli.name",
+    "description": "character.zhongli.description",
+    "hp": 9,
+    "element": "geo",
+    "maxLevel": 10,
+    "levelStats": [
+      {
+        "level": 1,
+        "price": 100
+      },
+      {
+        "level": 2,
+        "price": 200
+      },
+      {
+        "level": 3,
+        "price": 300
+      },
+      {
+        "level": 4,
+        "price": 400
+      },
+      {
+        "level": 5,
+        "price": 500
+      },
+      {
+        "level": 6,
+        "price": 600
+      },
+      {
+        "level": 7,
+        "price": 700
+      },
+      {
+        "level": 8,
+        "price": 800
+      },
+      {
+        "level": 9,
+        "price": 900
+      },
+      {
+        "level": 10,
+        "price": 1000
+      }
+    ],
+    "image": "/assets/images/cards/character/zhongli.webp",
+    "imageSpritesheet": "/assets/images/Spritesheet/zhongli-sprite.webp",
+    "imageUnlock": "/assets/images/cards/unlock/unlockZhongli.webp",
+    "attached": [
+      {
+        "nameId": "zhongli-icon-skill",
+        "image": "/assets/images/skill/zhongli/skill-icon.webp",
+        "type": "image"
+      }
+    ]
+  }
+]

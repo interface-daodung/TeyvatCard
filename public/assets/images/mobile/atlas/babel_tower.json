@@ -1,0 +1,277 @@
+{
+  "frames": {
+    "geo-fragment": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "pyro-fragment": {
+      "frame": {
+        "x": 105,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "berserker": {
+      "frame": {
+        "x": 210,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "blazing": {
+      "frame": {
+        "x": 315,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "crackling": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "electro-samachurl": {
+      "frame": {
+        "x": 525,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "catalyst-remembrance": {
+      "frame": {
+        "x": 630,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "catalyst-sacrificial": {
+      "frame": {
+        "x": 735,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "catalyst-skyward": {
+      "frame": {
+        "x": 0,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "catalyst-steampunk": {
+      "frame": {
+        "x": 105,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "catalyst-forest": {
+      "frame": {
+        "x": 210,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "catalyst-dreams": {
+      "frame": {
+        "x": 315,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "catalyst-magic-guide": {
+      "frame": {
+        "x": 420,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "chest": {
+      "frame": {
+        "x": 525,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "hydro-fragment": {
+      "frame": {
+        "x": 630,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "anemo-fragment": {
+      "frame": {
+        "x": 735,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "electro-fragment": {
+      "frame": {
+        "x": 0,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "cryo-fragment": {
+      "frame": {
+        "x": 105,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "dendro-fragment": {
+      "frame": {
+        "x": 210,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "sword-splendor": {
+      "frame": {
+        "x": 315,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "sword-traveler": {
+      "frame": {
+        "x": 420,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "sword-forest": {
+      "frame": {
+        "x": 525,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "sword-steampunk": {
+      "frame": {
+        "x": 630,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "roast-chicken": {
+      "frame": {
+        "x": 735,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "pizza": {
+      "frame": {
+        "x": 0,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "macarons": {
+      "frame": {
+        "x": 105,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "sword-sacrificial": {
+      "frame": {
+        "x": 210,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "abyss-call": {
+      "frame": {
+        "x": 315,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "fighter": {
+      "frame": {
+        "x": 420,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "bribery": {
+      "frame": {
+        "x": 525,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "mystique-soup": {
+      "frame": {
+        "x": 630,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "explosive": {
+      "frame": {
+        "x": 735,
+        "y": 540,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "quicksand": {
+      "frame": {
+        "x": 0,
+        "y": 720,
+        "w": 105,
+        "h": 180
+      }
+    }
+  },
+  "meta": {
+    "image": "babel_tower.webp",
+    "size": {
+      "w": 840,
+      "h": 900
+    },
+    "scale": "1",
+    "path": "assets/mobile/atlas/babel_tower.webp"
+  }
+}

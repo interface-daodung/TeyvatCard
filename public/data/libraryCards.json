@@ -1,0 +1,1072 @@
+{
+  "weapon": [
+    {
+      "id": "sword-steampunk",
+      "name": "adventureCard.sword-steampunk.name",
+      "type": "weapon",
+      "description": "adventureCard.sword-steampunk.description",
+      "className": "SwordSteampunk",
+      "image": "/assets/images/cards/weapon/sword/steampunk.webp",
+      "attached": [
+        {
+          "nameId": "Slash",
+          "image": "/assets/images/animations/Slash.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "sword-sound",
+          "image": "/assets/sounds/SE/sword.ogg",
+          "type": "SE"
+        },
+        {
+          "nameId": "sword-steampunk-badge",
+          "image": "/assets/images/badge/sword/steampunk.webp",
+          "type": "image"
+        }
+      ],
+      "category": "sword",
+      "rarity": 3,
+      "durabilityMin": 4,
+      "durabilityMax": 18,
+      "contents": []
+    },
+    {
+      "id": "sword-forest",
+      "name": "adventureCard.sword-forest.name",
+      "type": "weapon",
+      "description": "adventureCard.sword-forest.description",
+      "className": "SwordForest",
+      "image": "/assets/images/cards/weapon/sword/forest.webp",
+      "attached": [
+        {
+          "nameId": "Slash",
+          "image": "/assets/images/animations/Slash.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "sword-sound",
+          "image": "/assets/sounds/SE/sword.ogg",
+          "type": "SE"
+        },
+        {
+          "nameId": "sword-forest-badge",
+          "image": "/assets/images/badge/sword/forest.webp",
+          "type": "image"
+        }
+      ],
+      "category": "sword",
+      "rarity": 3,
+      "durabilityMin": 1,
+      "durabilityMax": 6,
+      "contents": []
+    },
+    {
+      "id": "sword-skyward",
+      "name": "adventureCard.sword-skyward.name",
+      "type": "weapon",
+      "description": "adventureCard.sword-skyward.description",
+      "className": "SwordSkyward",
+      "image": "/assets/images/cards/weapon/sword/skyward.webp",
+      "attached": [
+        {
+          "nameId": "Slash",
+          "image": "/assets/images/animations/Slash.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "sword-sound",
+          "image": "/assets/sounds/SE/sword.ogg",
+          "type": "SE"
+        },
+        {
+          "nameId": "sword-skyward-badge",
+          "image": "/assets/images/badge/sword/skyward.webp",
+          "type": "image"
+        }
+      ],
+      "category": "sword",
+      "rarity": 4,
+      "durabilityMin": 7,
+      "durabilityMax": 16,
+      "contents": []
+    },
+    {
+      "id": "sword-splendor",
+      "name": "adventureCard.sword-splendor.name",
+      "type": "weapon",
+      "description": "adventureCard.sword-splendor.description",
+      "className": "SwordSplendor",
+      "image": "/assets/images/cards/weapon/sword/splendor.webp",
+      "attached": [
+        {
+          "nameId": "Slash",
+          "image": "/assets/images/animations/Slash.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "sword-sound",
+          "image": "/assets/sounds/SE/sword.ogg",
+          "type": "SE"
+        },
+        {
+          "nameId": "sword-splendor-badge",
+          "image": "/assets/images/badge/sword/splendor.webp",
+          "type": "image"
+        }
+      ],
+      "category": "sword",
+      "rarity": 4,
+      "durabilityMin": 6,
+      "durabilityMax": 17,
+      "contents": []
+    },
+    {
+      "id": "sword-traveler",
+      "name": "adventureCard.sword-traveler.name",
+      "type": "weapon",
+      "description": "adventureCard.sword-traveler.description",
+      "className": "SwordTraveler",
+      "image": "/assets/images/cards/weapon/sword/traveler.webp",
+      "attached": [
+        {
+          "nameId": "slash",
+          "image": "/assets/images/animations/Slash.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "sword-sound",
+          "image": "/assets/sounds/SE/sword.ogg",
+          "type": "SE"
+        },
+        {
+          "nameId": "sword-traveler-badge",
+          "image": "/assets/images/badge/sword/traveler.webp",
+          "type": "image"
+        },
+        {
+          "nameId": "add-Shield",
+          "image": "/assets/images/animations/StateUp2.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 23
+        }
+      ],
+      "category": "sword",
+      "rarity": 4,
+      "durabilityMin": 4,
+      "durabilityMax": 10,
+      "contents": []
+    },
+    {
+      "id": "sword-sacrificial",
+      "name": "adventureCard.sword-sacrificial.name",
+      "type": "weapon",
+      "description": "adventureCard.sword-sacrificial.description",
+      "className": "SwordSacrificial",
+      "image": "/assets/images/cards/weapon/sword/sacrificial.webp",
+      "attached": [
+        {
+          "nameId": "Slash",
+          "image": "/assets/images/animations/Slash.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "sword-sound",
+          "image": "/assets/sounds/SE/sword.ogg",
+          "type": "SE"
+        },
+        {
+          "nameId": "sword-sacrificial-badge",
+          "image": "/assets/images/badge/sword/sacrificial.webp",
+          "type": "image"
+        }
+      ],
+      "category": "sword",
+      "rarity": 4,
+      "durabilityMin": 1,
+      "durabilityMax": 14,
+      "contents": []
+    },
+    {
+      "id": "catalyst-dreams",
+      "name": "adventureCard.catalyst-dreams.name",
+      "type": "weapon",
+      "description": "adventureCard.catalyst-dreams.description",
+      "className": "CatalystDreams",
+      "image": "/assets/images/cards/weapon/catalyst/dreams.webp",
+      "attached": [
+        {
+          "nameId": "catalyst-dreams-badge",
+          "image": "/assets/images/badge/catalyst/dreams.webp",
+          "type": "image"
+        },
+        {
+          "nameId": "catalyst-dendro-animations",
+          "image": "/assets/images/animations/catalyst-dendro-animations.webp",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 6
+        }
+      ],
+      "category": "catalyst",
+      "rarity": 1,
+      "durabilityMin": 7,
+      "durabilityMax": 22,
+      "contents": []
+    },
+    {
+      "id": "catalyst-magic-guide",
+      "name": "adventureCard.catalyst-magic-guide.name",
+      "type": "weapon",
+      "description": "adventureCard.catalyst-magic-guide.description",
+      "className": "CatalystMagicGuide",
+      "image": "/assets/images/cards/weapon/catalyst/magic-guide.webp",
+      "attached": [
+        {
+          "nameId": "catalyst-magic-guide-badge",
+          "image": "/assets/images/badge/catalyst/magic-guide.webp",
+          "type": "image"
+        }
+      ],
+      "category": "catalyst",
+      "rarity": 5,
+      "durabilityMin": 4,
+      "durabilityMax": 10,
+      "contents": []
+    },
+    {
+      "id": "catalyst-skyward",
+      "name": "adventureCard.catalyst-skyward.name",
+      "type": "weapon",
+      "description": "adventureCard.catalyst-skyward.description",
+      "className": "CatalystSkyward",
+      "image": "/assets/images/cards/weapon/catalyst/skyward.webp",
+      "attached": [
+        {
+          "nameId": "catalyst-skyward-badge",
+          "image": "/assets/images/badge/catalyst/skyward.webp",
+          "type": "image"
+        }
+      ],
+      "category": "catalyst",
+      "rarity": 1,
+      "durabilityMin": 7,
+      "durabilityMax": 18,
+      "contents": []
+    },
+    {
+      "id": "catalyst-steampunk",
+      "name": "adventureCard.catalyst-steampunk.name",
+      "type": "weapon",
+      "description": "adventureCard.catalyst-steampunk.description",
+      "className": "CatalystSteampunk",
+      "image": "/assets/images/cards/weapon/catalyst/steampunk.webp",
+      "attached": [
+        {
+          "nameId": "catalyst-steampunk-badge",
+          "image": "/assets/images/badge/catalyst/steampunk.webp",
+          "type": "image"
+        }
+      ],
+      "category": "catalyst",
+      "rarity": 3,
+      "durabilityMin": 6,
+      "durabilityMax": 13,
+      "contents": []
+    },
+    {
+      "id": "catalyst-forest",
+      "name": "adventureCard.catalyst-forest.name",
+      "type": "weapon",
+      "description": "adventureCard.catalyst-forest.description",
+      "className": "CatalystForest",
+      "image": "/assets/images/cards/weapon/catalyst/forest.webp",
+      "attached": [
+        {
+          "nameId": "catalyst-forest-badge",
+          "image": "/assets/images/badge/catalyst/forest.webp",
+          "type": "image"
+        },
+        {
+          "nameId": "catalyst-dendro-animations",
+          "image": "/assets/images/animations/catalyst-dendro-animations.webp",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 6
+        }
+      ],
+      "category": "catalyst",
+      "rarity": 2,
+      "durabilityMin": 1,
+      "durabilityMax": 4,
+      "contents": []
+    },
+    {
+      "id": "catalyst-sacrificial",
+      "name": "adventureCard.catalyst-sacrificial.name",
+      "type": "weapon",
+      "description": "adventureCard.catalyst-sacrificial.description",
+      "className": "CatalystSacrificial",
+      "image": "/assets/images/cards/weapon/catalyst/sacrificial.webp",
+      "attached": [
+        {
+          "nameId": "catalyst-sacrificial-badge",
+          "image": "/assets/images/badge/catalyst/sacrificial.webp",
+          "type": "image"
+        }
+      ],
+      "category": "catalyst",
+      "rarity": 4,
+      "durabilityMin": 7,
+      "durabilityMax": 20,
+      "contents": []
+    },
+    {
+      "id": "catalyst-remembrance",
+      "name": "adventureCard.catalyst-remembrance.name",
+      "type": "weapon",
+      "description": "adventureCard.catalyst-remembrance.description",
+      "className": "CatalystRemembrance",
+      "image": "/assets/images/cards/weapon/catalyst/remembrance.webp",
+      "attached": [
+        {
+          "nameId": "catalyst-remembrance-badge",
+          "image": "/assets/images/badge/catalyst/remembrance.webp",
+          "type": "image"
+        }
+      ],
+      "category": "catalyst",
+      "rarity": 3,
+      "durabilityMin": 3,
+      "durabilityMax": 13,
+      "contents": []
+    }
+  ],
+  "enemy": [
+    {
+      "id": "anemo-samachurl",
+      "name": "adventureCard.anemo-samachurl.name",
+      "type": "enemy",
+      "description": "adventureCard.anemo-samachurl.description",
+      "className": "AnemoSamachurl",
+      "image": "/assets/images/cards/enemy/hilichurl/anemo-samachurl.webp",
+      "attached": [
+        {
+          "nameId": "anemo-samachurl-skill",
+          "image": "/assets/images/skill/anemo-samachurl.webp",
+          "type": "image"
+        }
+      ],
+      "element": "anemo",
+      "clan": "hilichurl",
+      "rarity": 3,
+      "healthMin": 1,
+      "healthMax": 15,
+      "scoreMin": 4,
+      "scoreMax": 10,
+      "contents": []
+    },
+    {
+      "id": "electro-samachurl",
+      "name": "adventureCard.electro-samachurl.name",
+      "type": "enemy",
+      "description": "adventureCard.electro-samachurl.description",
+      "className": "ElectroSamachurl",
+      "image": "/assets/images/cards/enemy/hilichurl/electro-samachurl.webp",
+      "attached": [
+        {
+          "nameId": "electro-samachurl-skill",
+          "image": "/assets/images/animations/electro-samachurl.webp",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 9
+        }
+      ],
+      "element": "electro",
+      "clan": "hilichurl",
+      "rarity": 2,
+      "healthMin": 1,
+      "healthMax": 11,
+      "scoreMin": 1,
+      "scoreMax": 13,
+      "contents": []
+    },
+    {
+      "id": "dendro-samachurl",
+      "name": "adventureCard.dendro-samachurl.name",
+      "type": "enemy",
+      "description": "adventureCard.dendro-samachurl.description",
+      "className": "DendroSamachurl",
+      "image": "/assets/images/cards/enemy/hilichurl/dendro-samachurl.webp",
+      "attached": [],
+      "element": "dendro",
+      "clan": "hilichurl",
+      "rarity": 2,
+      "healthMin": 4,
+      "healthMax": 13,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "contents": []
+    },
+    {
+      "id": "geo-samachurl",
+      "name": "adventureCard.geo-samachurl.name",
+      "type": "enemy",
+      "description": "adventureCard.geo-samachurl.description",
+      "className": "GeoSamachurl",
+      "image": "/assets/images/cards/enemy/hilichurl/geo-samachurl.webp",
+      "attached": [],
+      "element": "geo",
+      "clan": "hilichurl",
+      "rarity": 4,
+      "healthMin": 5,
+      "healthMax": 15,
+      "scoreMin": 5,
+      "scoreMax": 11,
+      "contents": []
+    },
+    {
+      "id": "hydro-samachurl",
+      "name": "adventureCard.hydro-samachurl.name",
+      "type": "enemy",
+      "description": "adventureCard.hydro-samachurl.description",
+      "className": "HydroSamachurl",
+      "image": "/assets/images/cards/enemy/hilichurl/hydro-samachurl.webp",
+      "attached": [],
+      "element": "hydro",
+      "clan": "hilichurl",
+      "rarity": 2,
+      "healthMin": 2,
+      "healthMax": 10,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "contents": []
+    },
+    {
+      "id": "fighter",
+      "name": "adventureCard.fighter.name",
+      "type": "enemy",
+      "description": "adventureCard.fighter.description",
+      "className": "HilichurlFighter",
+      "image": "/assets/images/cards/enemy/hilichurl/fighter.webp",
+      "attached": [],
+      "element": "physical",
+      "clan": "hilichurl",
+      "rarity": 1,
+      "healthMin": 1,
+      "healthMax": 10,
+      "scoreMin": 5,
+      "scoreMax": 10
+    },
+    {
+      "id": "hilistray-water",
+      "name": "adventureCard.hilistray-water.name",
+      "type": "enemy",
+      "description": "adventureCard.hilistray-water.description",
+      "className": "HilistrayWater",
+      "image": "/assets/images/cards/enemy/hilichurl/hilistray-water.webp",
+      "attached": [],
+      "element": "hydro",
+      "clan": "hilichurl",
+      "rarity": 5,
+      "healthMin": 2,
+      "healthMax": 11,
+      "scoreMin": 1,
+      "scoreMax": 12,
+      "contents": []
+    },
+    {
+      "id": "wooden-shieldwall",
+      "name": "adventureCard.wooden-shieldwall.name",
+      "type": "enemy",
+      "description": "adventureCard.wooden-shieldwall.description",
+      "className": "WoodenShieldwall",
+      "image": "/assets/images/cards/enemy/hilichurl/wooden-shieldwall.webp",
+      "attached": [
+        {
+          "nameId": "seed",
+          "image": "/assets/images/skill/Seed.webp",
+          "type": "image"
+        }
+      ],
+      "element": "dendro",
+      "clan": "hilichurl",
+      "rarity": 4,
+      "healthMin": 7,
+      "healthMax": 15,
+      "scoreMin": 5,
+      "scoreMax": 14,
+      "contents": []
+    },
+    {
+      "id": "lawachurl",
+      "name": "adventureCard.lawachurl.name",
+      "type": "enemy",
+      "description": "adventureCard.lawachurl.description",
+      "className": "Lawachurl",
+      "image": "/assets/images/cards/enemy/hilichurl/lawachurl.webp",
+      "attached": [],
+      "element": "geo",
+      "clan": "hilichurl",
+      "rarity": 1,
+      "healthMin": 10,
+      "healthMax": 30,
+      "scoreMin": 5,
+      "scoreMax": 15
+    },
+    {
+      "id": "rock-shieldwall",
+      "name": "adventureCard.rock-shieldwall.name",
+      "type": "enemy",
+      "description": "adventureCard.rock-shieldwall.description",
+      "className": "RockShieldwall",
+      "image": "/assets/images/cards/enemy/hilichurl/rock-shieldwall.webp",
+      "attached": [],
+      "element": "geo",
+      "clan": "hilichurl",
+      "rarity": 4,
+      "healthMin": 3,
+      "healthMax": 6,
+      "scoreMin": 6,
+      "scoreMax": 18,
+      "contents": []
+    },
+    {
+      "id": "berserker",
+      "name": "adventureCard.berserker.name",
+      "type": "enemy",
+      "description": "adventureCard.berserker.description",
+      "className": "Berserker",
+      "image": "/assets/images/cards/enemy/hilichurl/berserker.webp",
+      "attached": [],
+      "element": "pyro",
+      "clan": "hilichurl",
+      "rarity": 5,
+      "healthMin": 5,
+      "healthMax": 15,
+      "scoreMin": 5,
+      "scoreMax": 12
+    },
+    {
+      "id": "blazing",
+      "name": "adventureCard.blazing.name",
+      "type": "enemy",
+      "description": "adventureCard.blazing.description",
+      "className": "Blazing",
+      "image": "/assets/images/cards/enemy/hilichurl/blazing.webp",
+      "attached": [],
+      "element": "pyro",
+      "clan": "hilichurl",
+      "rarity": 3,
+      "healthMin": 7,
+      "healthMax": 17,
+      "scoreMin": 3,
+      "scoreMax": 13
+    },
+    {
+      "id": "ice-shieldwall",
+      "name": "adventureCard.ice-shieldwall.name",
+      "type": "enemy",
+      "description": "adventureCard.ice-shieldwall.description",
+      "className": "IceShieldwall",
+      "image": "/assets/images/cards/enemy/hilichurl/ice-shieldwall.webp",
+      "attached": [
+        {
+          "nameId": "frozen",
+          "image": "/assets/images/skill/Frozen.webp",
+          "type": "image"
+        }
+      ],
+      "element": "cryo",
+      "clan": "hilichurl",
+      "rarity": 4,
+      "healthMin": 6,
+      "healthMax": 8,
+      "scoreMin": 5,
+      "scoreMax": 10,
+      "contents": []
+    },
+    {
+      "id": "shooter",
+      "name": "adventureCard.shooter.name",
+      "type": "enemy",
+      "description": "adventureCard.shooter.description",
+      "className": "Shooter",
+      "image": "/assets/images/cards/enemy/hilichurl/shooter.webp",
+      "attached": [
+        {
+          "nameId": "arrow",
+          "image": "/assets/images/animations/ArrowSpecial.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        }
+      ],
+      "element": "physical",
+      "clan": "hilichurl",
+      "rarity": 5,
+      "healthMin": 2,
+      "healthMax": 12,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "contents": []
+    },
+    {
+      "id": "crackling",
+      "name": "adventureCard.crackling.name",
+      "type": "enemy",
+      "description": "adventureCard.crackling.description",
+      "className": "Crackling",
+      "image": "/assets/images/cards/enemy/hilichurl/crackling.webp",
+      "attached": [],
+      "element": "electro",
+      "clan": "hilichurl",
+      "rarity": 3,
+      "healthMin": 7,
+      "healthMax": 17,
+      "scoreMin": 3,
+      "scoreMax": 10
+    },
+    {
+      "id": "cryo-shooter",
+      "name": "adventureCard.cryo-shooter.name",
+      "type": "enemy",
+      "description": "adventureCard.cryo-shooter.description",
+      "className": "CryoShooter",
+      "image": "/assets/images/cards/enemy/hilichurl/cryo-shooter.webp",
+      "attached": [
+        {
+          "nameId": "arrow",
+          "image": "/assets/images/animations/ArrowSpecial.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        }
+      ],
+      "element": "cryo",
+      "clan": "hilichurl",
+      "rarity": 5,
+      "healthMin": 1,
+      "healthMax": 12,
+      "scoreMin": 1,
+      "scoreMax": 10,
+      "contents": []
+    },
+    {
+      "id": "electro-shooter",
+      "name": "adventureCard.electro-shooter.name",
+      "type": "enemy",
+      "description": "adventureCard.electro-shooter.description",
+      "className": "ElectroShooter",
+      "image": "/assets/images/cards/enemy/hilichurl/electro-shooter.webp",
+      "attached": [
+        {
+          "nameId": "arrow",
+          "image": "/assets/images/animations/ArrowSpecial.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        }
+      ],
+      "element": "electro",
+      "clan": "hilichurl",
+      "rarity": 4,
+      "healthMin": 1,
+      "healthMax": 13,
+      "scoreMin": 3,
+      "scoreMax": 16,
+      "contents": []
+    }
+  ],
+  "food": [
+    {
+      "id": "life-essence",
+      "name": "adventureCard.life-essence.name",
+      "type": "food",
+      "description": "adventureCard.life-essence.description",
+      "className": "LifeEssence",
+      "image": "/assets/images/cards/food/life-essence.webp",
+      "attached": [],
+      "rarity": 5,
+      "foodMin": 6,
+      "foodMax": 10
+    },
+    {
+      "id": "mystique-soup",
+      "name": "adventureCard.mystique-soup.name",
+      "type": "food",
+      "description": "adventureCard.mystique-soup.description",
+      "className": "MystiqueSoup",
+      "image": "/assets/images/cards/food/mystique-soup.webp",
+      "attached": [
+        {
+          "nameId": "state-poison",
+          "image": "/assets/images/animations/StatePoison.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "poison",
+          "image": "/assets/sounds/SE/Poison.ogg",
+          "type": "SE"
+        }
+      ],
+      "rarity": 1,
+      "foodMin": 1,
+      "foodMax": 3,
+      "contents": []
+    },
+    {
+      "id": "pizza",
+      "name": "adventureCard.pizza.name",
+      "type": "food",
+      "description": "adventureCard.pizza.description",
+      "className": "Pizza",
+      "image": "/assets/images/cards/food/pizza.webp",
+      "attached": [],
+      "rarity": 2,
+      "foodMin": 3,
+      "foodMax": 6
+    },
+    {
+      "id": "roast-chicken",
+      "name": "adventureCard.roast-chicken.name",
+      "type": "food",
+      "description": "adventureCard.roast-chicken.description",
+      "className": "RoastChicken",
+      "image": "/assets/images/cards/food/roast-chicken.webp",
+      "attached": [],
+      "rarity": 3,
+      "foodMin": 1,
+      "foodMax": 16
+    },
+    {
+      "id": "macarons",
+      "name": "adventureCard.macarons.name",
+      "type": "food",
+      "description": "adventureCard.macarons.description",
+      "className": "Macarons",
+      "image": "/assets/images/cards/food/macarons.webp",
+      "attached": [],
+      "rarity": 3,
+      "foodMin": 6,
+      "foodMax": 9
+    }
+  ],
+  "trap": [
+    {
+      "id": "abyss-call",
+      "name": "adventureCard.abyss-call.name",
+      "type": "trap",
+      "description": "adventureCard.abyss-call.description",
+      "className": "AbyssCall",
+      "image": "/assets/images/cards/trap/abyss-call.webp",
+      "attached": [],
+      "rarity": 2,
+      "damageMin": 1,
+      "damageMax": 10,
+      "contents": []
+    },
+    {
+      "id": "quicksand",
+      "name": "adventureCard.quicksand.name",
+      "type": "trap",
+      "description": "adventureCard.quicksand.description",
+      "className": "Quicksand",
+      "image": "/assets/images/cards/trap/quicksand.webp",
+      "attached": [
+        {
+          "nameId": "Quicksand-sound",
+          "image": "/assets/sounds/SE/Quicksand.ogg",
+          "type": "SE"
+        }
+      ],
+      "rarity": 2,
+      "damageMin": 1,
+      "damageMax": 10,
+      "contents": []
+    },
+    {
+      "id": "breathe-fire",
+      "name": "adventureCard.breathe-fire.name",
+      "type": "trap",
+      "description": "adventureCard.breathe-fire.description",
+      "className": "BreatheFire",
+      "image": "/assets/images/cards/trap/breathe-fire.webp",
+      "attached": [
+        {
+          "nameId": "breathe-fire",
+          "image": "/assets/images/animations/Breath.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "breathe-fire-sound",
+          "image": "/assets/sounds/SE/breathe-fire.ogg",
+          "type": "SE"
+        }
+      ],
+      "rarity": 2,
+      "damageMin": 1,
+      "damageMax": 10,
+      "contents": []
+    }
+  ],
+  "treasure": [
+    {
+      "id": "chest",
+      "name": "adventureCard.chest.name",
+      "type": "treasure",
+      "description": "adventureCard.chest.description",
+      "className": "Chest",
+      "image": "/assets/images/cards/treasure/chest.webp",
+      "attached": [],
+      "rarity": 4,
+      "durabilityMin": 1,
+      "durabilityMax": 6,
+      "contents": [
+        "GeoFragment",
+        "HydroFragment",
+        "AnemoFragment",
+        "ElectroFragment",
+        "CryoFragment",
+        "DendroFragment",
+        "SwordSplendor",
+        "SwordTraveler",
+        "SwordForest",
+        "SwordSteampunk",
+        "RoastChicken",
+        "Pizza",
+        "Macarons",
+        "SwordSacrificial"
+      ]
+    },
+    {
+      "id": "bribery",
+      "name": "adventureCard.bribery.name",
+      "type": "treasure",
+      "description": "adventureCard.bribery.description",
+      "className": "Bribery",
+      "image": "/assets/images/cards/treasure/bribery.webp",
+      "attached": [],
+      "rarity": 3,
+      "durabilityMin": 3,
+      "durabilityMax": 11,
+      "contents": [
+        "MystiqueSoup",
+        "Explosive",
+        "Quicksand"
+      ]
+    },
+    {
+      "id": "gold-mine",
+      "name": "adventureCard.gold-mine.name",
+      "type": "treasure",
+      "description": "adventureCard.gold-mine.description",
+      "className": "GoldMine",
+      "image": "/assets/images/cards/treasure/gold-mine.webp",
+      "attached": [
+        {
+          "nameId": "exploit",
+          "image": "/assets/images/animations/Earth3.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        }
+      ],
+      "rarity": 3,
+      "durabilityMin": 1,
+      "durabilityMax": 10,
+      "contents": [
+        "GeoFragment",
+        "HydroFragment",
+        "AnemoFragment",
+        "ElectroFragment",
+        "CryoFragment",
+        "DendroFragment"
+      ]
+    }
+  ],
+  "bomb": [
+    {
+      "id": "explosive",
+      "name": "adventureCard.explosive.name",
+      "type": "bomb",
+      "description": "adventureCard.explosive.description",
+      "className": "Explosive",
+      "image": "/assets/images/cards/bomb/explosive.webp",
+      "attached": [
+        {
+          "nameId": "bomb",
+          "image": "/assets/images/animations/Explosion1.png",
+          "type": "animation",
+          "frameRate": 10,
+          "frameTotal": 1
+        },
+        {
+          "nameId": "bomb-sound",
+          "image": "/assets/sounds/SE/explosive.ogg",
+          "type": "SE"
+        }
+      ],
+      "rarity": 3,
+      "damageMin": 3,
+      "damageMax": 8,
+      "countdown": 5,
+      "contents": []
+    }
+  ],
+  "coin": [
+    {
+      "id": "pyro-fragment",
+      "name": "adventureCard.pyro-fragment.name",
+      "type": "coin",
+      "description": "adventureCard.pyro-fragment.description",
+      "className": "PyroFragment",
+      "image": "/assets/images/cards/coin/pyro-fragment.webp",
+      "attached": [
+        {
+          "nameId": "pyro-resonance",
+          "image": "/assets/images/cards/coin/pyro-resonance.webp",
+          "type": "image"
+        }
+      ],
+      "element": "pyro",
+      "rarity": 1,
+      "contents": []
+    },
+    {
+      "id": "hydro-fragment",
+      "name": "adventureCard.hydro-fragment.name",
+      "type": "coin",
+      "description": "adventureCard.hydro-fragment.description",
+      "className": "HydroFragment",
+      "image": "/assets/images/cards/coin/hydro-fragment.webp",
+      "attached": [
+        {
+          "nameId": "hydro-resonance",
+          "image": "/assets/images/cards/coin/hydro-resonance.webp",
+          "type": "image"
+        }
+      ],
+      "element": "hydro",
+      "rarity": 1,
+      "contents": []
+    },
+    {
+      "id": "geo-fragment",
+      "name": "adventureCard.geo-fragment.name",
+      "type": "coin",
+      "description": "adventureCard.geo-fragment.description",
+      "className": "GeoFragment",
+      "image": "/assets/images/cards/coin/geo-fragment.webp",
+      "attached": [
+        {
+          "nameId": "geo-resonance",
+          "image": "/assets/images/cards/coin/geo-resonance.webp",
+          "type": "image"
+        }
+      ],
+      "element": "geo",
+      "rarity": 1,
+      "contents": []
+    },
+    {
+      "id": "anemo-fragment",
+      "name": "adventureCard.anemo-fragment.name",
+      "type": "coin",
+      "description": "adventureCard.anemo-fragment.description",
+      "className": "AnemoFragment",
+      "image": "/assets/images/cards/coin/anemo-fragment.webp",
+      "attached": [
+        {
+          "nameId": "anemo-resonance",
+          "image": "/assets/images/cards/coin/anemo-resonance.webp",
+          "type": "image"
+        }
+      ],
+      "element": "anemo",
+      "rarity": 1,
+      "contents": []
+    },
+    {
+      "id": "electro-fragment",
+      "name": "adventureCard.electro-fragment.name",
+      "type": "coin",
+      "description": "adventureCard.electro-fragment.description",
+      "className": "ElectroFragment",
+      "image": "/assets/images/cards/coin/electro-fragment.webp",
+      "attached": [
+        {
+          "nameId": "electro-resonance",
+          "image": "/assets/images/cards/coin/electro-resonance.webp",
+          "type": "image"
+        }
+      ],
+      "element": "electro",
+      "rarity": 1,
+      "contents": []
+    },
+    {
+      "id": "cryo-fragment",
+      "name": "adventureCard.cryo-fragment.name",
+      "type": "coin",
+      "description": "adventureCard.cryo-fragment.description",
+      "className": "CryoFragment",
+      "image": "/assets/images/cards/coin/cryo-fragment.webp",
+      "attached": [
+        {
+          "nameId": "cryo-resonance",
+          "image": "/assets/images/cards/coin/cryo-resonance.webp",
+          "type": "image"
+        }
+      ],
+      "element": "cryo",
+      "rarity": 1,
+      "contents": []
+    },
+    {
+      "id": "dendro-fragment",
+      "name": "adventureCard.dendro-fragment.name",
+      "type": "coin",
+      "description": "adventureCard.dendro-fragment.description",
+      "className": "DendroFragment",
+      "image": "/assets/images/cards/coin/dendro-fragment.webp",
+      "attached": [
+        {
+          "nameId": "dendro-resonance",
+          "image": "/assets/images/cards/coin/dendro-resonance.webp",
+          "type": "image"
+        }
+      ],
+      "element": "dendro",
+      "rarity": 1,
+      "contents": []
+    }
+  ],
+  "empty": [
+    {
+      "id": "empty",
+      "name": "adventureCard.empty.name",
+      "type": "empty",
+      "description": "adventureCard.empty.description",
+      "className": "Empty",
+      "image": "/assets/images/cards/empty/empty.webp",
+      "attached": []
+    }
+  ]
+}

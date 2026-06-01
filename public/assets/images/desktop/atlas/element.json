@@ -1,0 +1,69 @@
+{
+  "frames": {
+    "pyro": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 30,
+        "h": 30
+      }
+    },
+    "hydro": {
+      "frame": {
+        "x": 30,
+        "y": 0,
+        "w": 30,
+        "h": 30
+      }
+    },
+    "geo": {
+      "frame": {
+        "x": 60,
+        "y": 0,
+        "w": 30,
+        "h": 30
+      }
+    },
+    "electro": {
+      "frame": {
+        "x": 0,
+        "y": 30,
+        "w": 30,
+        "h": 30
+      }
+    },
+    "dendro": {
+      "frame": {
+        "x": 30,
+        "y": 30,
+        "w": 30,
+        "h": 30
+      }
+    },
+    "cryo": {
+      "frame": {
+        "x": 60,
+        "y": 30,
+        "w": 30,
+        "h": 30
+      }
+    },
+    "anemo": {
+      "frame": {
+        "x": 0,
+        "y": 60,
+        "w": 30,
+        "h": 30
+      }
+    }
+  },
+  "meta": {
+    "image": "element.webp",
+    "size": {
+      "w": 90,
+      "h": 90
+    },
+    "scale": "1",
+    "path": "assets/desktop/atlas/element.webp"
+  }
+}

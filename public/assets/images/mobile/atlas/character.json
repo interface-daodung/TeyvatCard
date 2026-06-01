@@ -1,0 +1,125 @@
+{
+  "frames": {
+    "zhongli": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "venti": {
+      "frame": {
+        "x": 105,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "raiden": {
+      "frame": {
+        "x": 210,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "nahida": {
+      "frame": {
+        "x": 315,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "mavuika": {
+      "frame": {
+        "x": 420,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "furina": {
+      "frame": {
+        "x": 0,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "eula": {
+      "frame": {
+        "x": 105,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "unlockZhongli": {
+      "frame": {
+        "x": 210,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "unlockVenti": {
+      "frame": {
+        "x": 315,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "unlockRaiden": {
+      "frame": {
+        "x": 420,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "unlockNahida": {
+      "frame": {
+        "x": 0,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "unlockMavuika": {
+      "frame": {
+        "x": 105,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "unlockFurina": {
+      "frame": {
+        "x": 210,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "empty": {
+      "frame": {
+        "x": 315,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    }
+  },
+  "meta": {
+    "image": "character.webp",
+    "size": {
+      "w": 525,
+      "h": 540
+    },
+    "scale": "1",
+    "path": "assets/mobile/atlas/character.webp"
+  }
+}

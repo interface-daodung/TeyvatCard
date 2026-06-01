@@ -1,0 +1,18 @@
+{
+  "blocks": [
+    { "type": "heading", "size": 1, "key": "developer.title" },
+    { "type": "paragraph", "key": "developer.name" },
+
+    { "type": "heading", "size": 1, "key": "developer.roleTitle" },
+    { "type": "paragraph", "key": "developer.role" },
+
+    { "type": "heading", "size": 1, "key": "project.title" },
+    { "type": "paragraph", "key": "project.description" },
+
+    { "type": "heading", "size": 1, "key": "tech.coreTitle" },
+    { "type": "paragraph", "key": "tech.coreList" },
+
+    { "type": "heading", "size": 1, "key": "tech.toolsTitle" },
+    { "type": "paragraph", "key": "tech.toolsList" }
+  ]
+}

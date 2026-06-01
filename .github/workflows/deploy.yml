@@ -33,17 +33,34 @@ jobs:
     - name: Build
       run: npm run build
 
-    # 🔹 Thêm bước debug dist
-    - name: List dist folder
+    # Vite xóa dist/ khi build; public/ không có trên CI (.gitignore).
+    # Khôi phục data/assets/icons đã commit trong dist/ — không ghi đè bundle JS mới.
+    - name: Restore static files into dist after build
       run: |
-        echo "Listing dist folder content:"
-        ls -R dist
+        restore_if_tracked() {
+          for path in "$@"; do
+            if git ls-files --error-unmatch "$path" >/dev/null 2>&1; then
+              git checkout HEAD -- "$path"
+              echo "restored: $path"
+            fi
+          done
+        }
+        restore_if_tracked \
+          dist/data \
+          dist/favicon.ico \
+          dist/icon-192.webp \
+          dist/background.html \
+          dist/payment-return.html \
+          dist/verify-email.html \
+          dist/mailBg.webp
+        restore_if_tracked dist/assets/images dist/assets/sounds
+        restore_if_tracked dist/assets/desktop dist/assets/mobile
 
-    # 🔹 Thêm bước hiển thị sample asset URL
-    - name: Show sample asset URLs
+    - name: Verify dist has required static files
       run: |
-        echo "Sample asset URL:"
-        echo "https://$GITHUB_REPOSITORY.github.io/DungeonCard/assets/images/cards/character/nahida.webp"
+        test -f dist/data/theme.json || (echo "Missing dist/data/theme.json" && exit 1)
+        test -f dist/icon-192.webp || (echo "Missing dist/icon-192.webp" && exit 1)
+        echo "dist/data and PWA icons OK"
       
     - name: Setup Pages
       uses: actions/configure-pages@v4
