@@ -7,6 +7,7 @@
  */
 
 import Phaser from 'phaser';
+import { publicUrl } from '../pwa/base.js';
 import { dataManager } from './DataManager.js';
 import { Log } from '../utils/Log.js';
 import AssetManager from './AssetManager.js';
@@ -300,7 +301,7 @@ export default class ThemeManager {
             bindFallback('complete-without-texture');
         });
         scene.load.on('loaderror', onError);
-        scene.load.image(textureKey, finalUrl);
+        scene.load.image(textureKey, publicUrl(finalUrl));
     }
 
     private queueThemeTextureBindings(themeName: string): void {

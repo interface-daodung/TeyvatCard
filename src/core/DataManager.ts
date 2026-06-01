@@ -7,9 +7,10 @@
 
 import CryptoJS from 'crypto-js';
 import Phaser from 'phaser';
+import { publicUrl } from '../pwa/base.js';
 
 /** Đường dẫn gốc cho thư mục public/data (URL khi chạy app) */
-const DATA_BASE_PATH = '/data/';
+const DATA_BASE_PATH = publicUrl('data/');
 /** JSON app load từ public/data, sau khi load xong ghi vào dataManager.setFlag */
 const APP_DATA_PATHS = [
   'About.json',

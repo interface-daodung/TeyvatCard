@@ -504,8 +504,8 @@
       "element": "dendro",
       "clan": "hilichurl",
       "rarity": 4,
-      "healthMin": 8,
-      "healthMax": 22,
+      "healthMin": 7,
+      "healthMax": 15,
       "scoreMin": 5,
       "scoreMax": 14,
       "contents": []
@@ -537,10 +537,10 @@
       "element": "geo",
       "clan": "hilichurl",
       "rarity": 4,
-      "healthMin": 5,
-      "healthMax": 18,
-      "scoreMin": 4,
-      "scoreMax": 14,
+      "healthMin": 3,
+      "healthMax": 6,
+      "scoreMin": 6,
+      "scoreMax": 18,
       "contents": []
     },
     {
@@ -592,9 +592,9 @@
       "element": "cryo",
       "clan": "hilichurl",
       "rarity": 4,
-      "healthMin": 7,
-      "healthMax": 20,
-      "scoreMin": 1,
+      "healthMin": 6,
+      "healthMax": 8,
+      "scoreMin": 5,
       "scoreMax": 10,
       "contents": []
     },

@@ -248,7 +248,6 @@
         "CatalystMagicGuide",
         "SwordForest",
         "SwordSplendor",
-        "SwordTraveler",
         "SwordSkyward"
       ],
       "coins": [
@@ -267,6 +266,57 @@
       ]
     },
     "map_background": "/assets/images/ui/background/HillTower.png",
+    "image": "",
+    "imageSpritesheet": "",
+    "imageUnlock": "",
+    "attached": []
+  },
+  {
+    "stageId": "DouWutai",
+    "name": "map.DouWutai.name",
+    "typeRatios": {
+      "enemies": 15,
+      "food": 15,
+      "weapons": 15,
+      "coins": 20,
+      "traps": 10,
+      "treasures": 21,
+      "bombs": 4
+    },
+    "availableCards": {
+      "enemies": [
+        "Blazing",
+        "Berserker",
+        "ElectroSamachurl"
+      ],
+      "food": [
+        "Macarons",
+        "MystiqueSoup",
+        "Pizza"
+      ],
+      "weapons": [
+        "CatalystSacrificial",
+        "CatalystSkyward",
+        "SwordForest",
+        "SwordSteampunk",
+        "SwordTraveler"
+      ],
+      "coins": [
+        "PyroFragment"
+      ],
+      "traps": [
+        "AbyssCall",
+        "BreatheFire"
+      ],
+      "treasures": [
+        "Chest",
+        "GoldMine"
+      ],
+      "bombs": [
+        "Explosive"
+      ]
+    },
+    "map_background": "/assets/images/ui/background/DouWuTai.webp",
     "image": "",
     "imageSpritesheet": "",
     "imageUnlock": "",

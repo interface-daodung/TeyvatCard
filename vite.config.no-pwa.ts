@@ -1,5 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite';
+import { APP_BASE } from './src/pwa/base';
 
 /**
  * Config build KHÔNG dùng vite-plugin-pwa và vite-plugin-remove-console.
@@ -7,6 +8,7 @@ import { defineConfig } from 'vite';
  * Chạy: npm run build:no-pwa
  */
 export default defineConfig({
+  base: APP_BASE,
   server: {
     port: 3000,
     host: '0.0.0.0',

@@ -1,11 +1,13 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { APP_BASE } from './src/pwa/base';
 import { pwaOptions } from './src/pwa/config';
 
 // Tạm bỏ vite-plugin-remove-console: gây lỗi "(0 , w1.default)(...).find is not a function" với Vite 6.
 // Có thể bật lại khi plugin đã tương thích.
 export default defineConfig({
+  base: APP_BASE,
   define: {
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'dev': process.env.NODE_ENV === 'development'

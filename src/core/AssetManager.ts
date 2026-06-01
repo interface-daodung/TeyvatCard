@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { publicUrl } from '../pwa/base.js';
 import { Log } from '../utils/Log.js';
 import {
     registerDefaultTextureBindingsForAtlas,
@@ -325,7 +326,7 @@ export default class AssetManager {
             return;
         }
 
-        this.scene.load.json(atlasJsonKey, atlasJsonPath);
+        this.scene.load.json(atlasJsonKey, publicUrl(atlasJsonPath));
         this.scene.load.once('complete', () => {
             queueByAtlasOrFallback();
             this.scene?.load.once('complete', finish);
@@ -703,7 +704,7 @@ export default class AssetManager {
             if (this.scene.cache.json.exists(entry.jsonKey)) {
                 continue;
             }
-            this.scene.load.json(entry.jsonKey, entry.jsonPath);
+            this.scene.load.json(entry.jsonKey, publicUrl(entry.jsonPath));
             queuedJsonCount += 1;
         }
 
@@ -791,7 +792,7 @@ export default class AssetManager {
         this.scene.load.once('complete', () => {
             registerAtlasBindingsIfLoaded();
         });
-        this.scene.load.atlas(atlasKey, imageURL, jsonURL);
+        this.scene.load.atlas(atlasKey, publicUrl(imageURL), publicUrl(jsonURL));
     }
 
     /**
@@ -838,7 +839,7 @@ export default class AssetManager {
         this.scene.load.once(`filecomplete-image-${key}`, () => {
             registerDefaultTextureBindingsForImageKey(key);
         });
-        this.scene.load.image(key, resolvedPath);
+        this.scene.load.image(key, publicUrl(resolvedPath));
     }
 
     loadSpritesheet(key: string, path: string): void {
@@ -853,7 +854,7 @@ export default class AssetManager {
             return;
         }
 
-        this.scene.load.spritesheet(key, resolvedPath, {
+        this.scene.load.spritesheet(key, publicUrl(resolvedPath), {
             frameWidth: 350,
             frameHeight: 590
         });
@@ -956,7 +957,7 @@ export default class AssetManager {
             return;
         }
 
-        this.scene.load.spritesheet(animationKey, resolvedPath, {
+        this.scene.load.spritesheet(animationKey, publicUrl(resolvedPath), {
             frameWidth: 192,
             frameHeight: 192
         });
@@ -1011,7 +1012,7 @@ export default class AssetManager {
             }
             registerAtlasBindingsIfLoaded();
         });
-        this.scene.load.atlas(atlasKey, imageURL, jsonData);
+        this.scene.load.atlas(atlasKey, publicUrl(imageURL), jsonData);
     }
 
     /**
@@ -1024,7 +1025,7 @@ export default class AssetManager {
         }
 
         if (!this.scene.cache.audio.exists(key)) {
-            this.scene.load.audio(key, path);
+            this.scene.load.audio(key, publicUrl(path));
         }
     }
 

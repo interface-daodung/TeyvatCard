@@ -1,6 +1,6 @@
 {
   "frames": {
-    "hydro-fragment": {
+    "explosive": {
       "frame": {
         "x": 0,
         "y": 0,
@@ -8,7 +8,7 @@
         "h": 180
       }
     },
-    "blazing": {
+    "pyro-fragment": {
       "frame": {
         "x": 105,
         "y": 0,
@@ -16,7 +16,7 @@
         "h": 180
       }
     },
-    "crackling": {
+    "blazing": {
       "frame": {
         "x": 210,
         "y": 0,
@@ -24,7 +24,7 @@
         "h": 180
       }
     },
-    "dendro-samachurl": {
+    "berserker": {
       "frame": {
         "x": 315,
         "y": 0,
@@ -40,98 +40,26 @@
         "h": 180
       }
     },
-    "anemo-samachurl": {
-      "frame": {
-        "x": 525,
-        "y": 0,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "berserker": {
-      "frame": {
-        "x": 630,
-        "y": 0,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "cryo-shooter": {
-      "frame": {
-        "x": 735,
-        "y": 0,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "fighter": {
-      "frame": {
-        "x": 0,
-        "y": 180,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "electro-shooter": {
-      "frame": {
-        "x": 105,
-        "y": 180,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "geo-samachurl": {
-      "frame": {
-        "x": 210,
-        "y": 180,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "hydro-samachurl": {
-      "frame": {
-        "x": 315,
-        "y": 180,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "shooter": {
-      "frame": {
-        "x": 420,
-        "y": 180,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "roast-chicken": {
-      "frame": {
-        "x": 525,
-        "y": 180,
-        "w": 105,
-        "h": 180
-      }
-    },
-    "pizza": {
-      "frame": {
-        "x": 630,
-        "y": 180,
-        "w": 105,
-        "h": 180
-      }
-    },
     "macarons": {
       "frame": {
-        "x": 735,
-        "y": 180,
+        "x": 525,
+        "y": 0,
         "w": 105,
         "h": 180
       }
     },
     "mystique-soup": {
       "frame": {
+        "x": 630,
+        "y": 0,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "pizza": {
+      "frame": {
         "x": 0,
-        "y": 360,
+        "y": 180,
         "w": 105,
         "h": 180
       }
@@ -139,7 +67,7 @@
     "abyss-call": {
       "frame": {
         "x": 105,
-        "y": 360,
+        "y": 180,
         "w": 105,
         "h": 180
       }
@@ -147,7 +75,7 @@
     "breathe-fire": {
       "frame": {
         "x": 210,
-        "y": 360,
+        "y": 180,
         "w": 105,
         "h": 180
       }
@@ -155,7 +83,7 @@
     "chest": {
       "frame": {
         "x": 315,
-        "y": 360,
+        "y": 180,
         "w": 105,
         "h": 180
       }
@@ -163,22 +91,30 @@
     "geo-fragment": {
       "frame": {
         "x": 420,
-        "y": 360,
+        "y": 180,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "hydro-fragment": {
+      "frame": {
+        "x": 525,
+        "y": 180,
         "w": 105,
         "h": 180
       }
     },
     "anemo-fragment": {
       "frame": {
-        "x": 525,
-        "y": 360,
+        "x": 630,
+        "y": 180,
         "w": 105,
         "h": 180
       }
     },
     "electro-fragment": {
       "frame": {
-        "x": 630,
+        "x": 0,
         "y": 360,
         "w": 105,
         "h": 180
@@ -186,7 +122,7 @@
     },
     "cryo-fragment": {
       "frame": {
-        "x": 735,
+        "x": 105,
         "y": 360,
         "w": 105,
         "h": 180
@@ -194,39 +130,47 @@
     },
     "dendro-fragment": {
       "frame": {
-        "x": 0,
-        "y": 540,
+        "x": 210,
+        "y": 360,
         "w": 105,
         "h": 180
       }
     },
     "sword-splendor": {
       "frame": {
-        "x": 105,
-        "y": 540,
+        "x": 315,
+        "y": 360,
         "w": 105,
         "h": 180
       }
     },
     "sword-traveler": {
       "frame": {
-        "x": 210,
-        "y": 540,
+        "x": 420,
+        "y": 360,
         "w": 105,
         "h": 180
       }
     },
     "sword-forest": {
       "frame": {
-        "x": 315,
-        "y": 540,
+        "x": 525,
+        "y": 360,
         "w": 105,
         "h": 180
       }
     },
     "sword-steampunk": {
       "frame": {
-        "x": 420,
+        "x": 630,
+        "y": 360,
+        "w": 105,
+        "h": 180
+      }
+    },
+    "roast-chicken": {
+      "frame": {
+        "x": 0,
         "y": 540,
         "w": 105,
         "h": 180
@@ -234,44 +178,44 @@
     },
     "sword-sacrificial": {
       "frame": {
-        "x": 525,
+        "x": 105,
         "y": 540,
         "w": 105,
         "h": 180
       }
     },
-    "bribery": {
+    "gold-mine": {
       "frame": {
-        "x": 630,
+        "x": 210,
         "y": 540,
         "w": 105,
         "h": 180
       }
     },
-    "explosive": {
+    "catalyst-sacrificial": {
       "frame": {
-        "x": 735,
+        "x": 315,
         "y": 540,
         "w": 105,
         "h": 180
       }
     },
-    "quicksand": {
+    "catalyst-skyward": {
       "frame": {
-        "x": 0,
-        "y": 720,
+        "x": 420,
+        "y": 540,
         "w": 105,
         "h": 180
       }
     }
   },
   "meta": {
-    "image": "Chuiliu_Swamp.webp",
+    "image": "DouWutai.webp",
     "size": {
-      "w": 840,
-      "h": 900
+      "w": 735,
+      "h": 720
     },
     "scale": "1",
-    "path": "assets/images/mobile/atlas/Chuiliu_Swamp.webp"
+    "path": "assets/images/mobile/atlas/DouWutai.webp"
   }
 }

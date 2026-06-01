@@ -58,7 +58,7 @@
         "type": "image"
       },
       {
-        "nameId": "skill",
+        "nameId": "eula-skill",
         "image": "/assets/images/skill/eula/skill.png",
         "type": "image"
       }
@@ -165,7 +165,7 @@
     "id": "mavuika",
     "name": "character.mavuika.name",
     "description": "character.mavuika.description",
-    "hp": 8,
+    "hp": 55,
     "element": "pyro",
     "maxLevel": 10,
     "levelStats": [
