@@ -9,7 +9,7 @@
 
 **A card-based combat game built with Phaser 3 and TypeScript**
 
-[🎮 Play Demo](https://your-username.github.io/TeyvatCard/) • [📖 Documentation](#-features) • [🐛 Report Bug](https://github.com/your-username/TeyvatCard/issues)
+[🎮 Play Demo](https://interface-daodung.github.io/TeyvatCard/) • [📖 Documentation](#-features) • [🐛 Report Bug](https://github.com/interface-daodung/TeyvatCard/issues)
 
 </div>
 
@@ -38,7 +38,7 @@
 
 Website luôn được cập nhật tự động! 🎉
 
-[![Deploy Status](https://github.com/interface-daodung/TeyvatCard/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/your-username/TeyvatCard/actions)
+[![Deploy Status](https://github.com/interface-daodung/TeyvatCard/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/interface-daodung/TeyvatCard/actions)
 
 ### ✅ Tính năng tự động:
 - ✅ Auto-deploy mỗi khi push code lên main branch
